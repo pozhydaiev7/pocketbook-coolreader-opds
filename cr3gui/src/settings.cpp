@@ -1064,10 +1064,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
   props( newProps ),
   _menuAccelerators( menuAccelerators ), _menuItemId(mm_Last)
 {
-    if( (
-        pbSkinFileName == lString16("pb626fw5.cr3skin") ||
-        pbSkinFileName == lString16("pb631fw5.cr3skin")
-        ) &&
+    if( isTouchFw5Skin() &&
         props->getIntDef(PROP_FONT_ANTIALIASING, 2) == 0
         )
         forcePartialBwUpdates = true;
@@ -1289,6 +1286,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {"200", "200"},
         {"250", "250"},
         {"300", "300"},
+        {"350", "350"},
     // #endif
         {NULL, NULL},
     };
@@ -1898,12 +1896,18 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                 LVFontRef() ) );
     }
 
-    // OTA UPDATE
-    #ifdef POCKETBOOK_PRO
-    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OTA_UPDATE,
-                _("OTA Update"),
+    // OPDS CATALOG
+    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_BROWSER,
+                _("OPDS catalog"),
                 LVImageSourceRef(),
                 LVFontRef() ) );
+    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_SET_URL,
+                _("OPDS catalog address"),
+                LVImageSourceRef(),
+                LVFontRef() ) );
+
+    // OTA UPDATE: hidden in this build, it would replace it with the original upstream build.
+    #ifdef POCKETBOOK_PRO
 
     // OTA UPDATE DEV
     if( useDeveloperFeatures ) {

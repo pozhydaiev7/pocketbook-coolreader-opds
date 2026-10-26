@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:search::пелевин:0</id>
+ <title>Результат поиска</title>
+ <updated>2026-10-26T19:28:19+01:00</updated>
+ <icon>/favicon.ico</icon>
+ <link href="/opds-opensearch.xml" rel="search" type="application/opensearchdescription+xml" />
+ <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
+ <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
+ <entry> <updated>2026-10-26T19:28:19+01:00</updated>
+ <id>tag:search:author</id>
+ <title>Поиск авторов</title>
+ <content type="text">Поиск авторов по фамилии</content>
+ <link href="/opds/search?searchType=authors&amp;searchTerm=%D0%BF%D0%B5%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+ <entry> <updated>2026-10-26T19:28:19+01:00</updated>
+ <id>tag:search:title</id>
+ <title>Поиск книг</title>
+ <content type="text">Поиск книг по названию</content>
+ <link href="/opds/search?searchType=books&amp;searchTerm=%D0%BF%D0%B5%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+</feed>

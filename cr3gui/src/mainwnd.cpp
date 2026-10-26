@@ -59,6 +59,19 @@ DECL_DEF_CR_FONT_SIZES;
 
 #define PROGRESS_ICON_FILE lString16("cr3_wait_icon.png")
 
+/// Battery gauge icon for the page header; enlarged on high-density PocketBook screens.
+static LVImageSourceRef batteryIcon( const char ** xpm )
+{
+    LVImageSourceRef img = LVCreateXPMImageSource( xpm );
+#ifdef CR_POCKETBOOK
+    int k = pbScaledSize(2); // 3 on high-density screens, 2 otherwise
+    if ( k > 2 && !img.isNull() )
+        img = LVCreateStretchFilledTransform( img, img->GetWidth() * k / 2, img->GetHeight() * k / 2,
+                                              IMG_TRANSFORM_STRETCH, IMG_TRANSFORM_STRETCH );
+#endif
+    return img;
+}
+
 V3DocViewWin::V3DocViewWin( CRGUIWindowManager * wm, lString16 dataDir )
 : CRViewDialog ( wm, lString16::empty_str, lString8::empty_str, lvRect(), false, false ), _dataDir(dataDir), _loadFileStart(0)
 {
@@ -330,21 +343,21 @@ V3DocViewWin::V3DocViewWin( CRGUIWindowManager * wm, lString16 dataDir )
         "   .0000000000000000000000000000000.",
         "   .................................",
     };
-    icons.add( LVCreateXPMImageSource( battery_charge ) );
+    icons.add( batteryIcon( battery_charge ) );
 //#ifdef NO_BATTERY_GAUGE
 //    icons.add( LVCreateXPMImageSource( battery_frame ) );
 //#else
-    icons.add( LVCreateXPMImageSource( battery0 ) );
-    icons.add( LVCreateXPMImageSource( battery1 ) );
-    icons.add( LVCreateXPMImageSource( battery2 ) );
-    icons.add( LVCreateXPMImageSource( battery3 ) );
-    icons.add( LVCreateXPMImageSource( battery4 ) );
-    icons.add( LVCreateXPMImageSource( battery5 ) );
-    icons.add( LVCreateXPMImageSource( battery6 ) );
-    icons.add( LVCreateXPMImageSource( battery7 ) );
-    icons.add( LVCreateXPMImageSource( battery8 ) );
+    icons.add( batteryIcon( battery0 ) );
+    icons.add( batteryIcon( battery1 ) );
+    icons.add( batteryIcon( battery2 ) );
+    icons.add( batteryIcon( battery3 ) );
+    icons.add( batteryIcon( battery4 ) );
+    icons.add( batteryIcon( battery5 ) );
+    icons.add( batteryIcon( battery6 ) );
+    icons.add( batteryIcon( battery7 ) );
+    icons.add( batteryIcon( battery8 ) );
 //#endif
-    icons.add( LVCreateXPMImageSource( battery_frame ) );
+    icons.add( batteryIcon( battery_frame ) );
     _docview->setBatteryIcons( icons );
     _wm->setBatteryIcons(icons);
     setAccelerators( _wm->getAccTables().get("main") );

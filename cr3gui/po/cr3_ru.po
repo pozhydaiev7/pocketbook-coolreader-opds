@@ -1936,3 +1936,99 @@ msgstr "Установлена пользовательская системна
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."
 msgstr "Восстановлена системная тема по умолчанию. CR3 будет перезапущен."
+
+#: ../src/settings.cpp
+msgid "OPDS catalog"
+msgstr "Каталог книг (OPDS)"
+
+#: ../src/settings.cpp
+msgid "OPDS catalog address"
+msgstr "Адрес OPDS-каталога"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Cannot load the catalog. Check Wi-Fi and the catalog address."
+msgstr "Не удалось загрузить каталог. Проверьте Wi-Fi и адрес каталога."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The server did not return an OPDS catalog."
+msgstr "Сервер вернул не OPDS-каталог."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Back"
+msgstr "Назад"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Search..."
+msgstr "Поиск..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Next page"
+msgstr "Следующая страница"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog start page"
+msgstr "В начало каталога"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog address..."
+msgstr "Адрес каталога..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Close catalog"
+msgstr "Закрыть каталог"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Back to the list"
+msgstr "Назад к списку"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "About the book"
+msgstr "О книге"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Download and open"
+msgstr "Скачать и открыть"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "CoolReader cannot open this format"
+msgstr "CoolReader не открывает этот формат"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Download failed."
+msgstr "Не удалось скачать книгу."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Cannot save the book file."
+msgstr "Не удалось сохранить файл книги."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The book file was not written."
+msgstr "Файл книги не записан."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The downloaded file is empty."
+msgstr "Скачанный файл пустой."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The server returned a web page instead of the book."
+msgstr "Сервер вернул веб-страницу вместо книги."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "No network connection. Turn on Wi-Fi and try again."
+msgstr "Нет подключения к сети. Включите Wi-Fi и попробуйте снова."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Search: author or title"
+msgstr "Поиск: автор или название"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Next"
+msgstr "Далее"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Page"
+msgstr "Стр."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog menu"
+msgstr "Меню"

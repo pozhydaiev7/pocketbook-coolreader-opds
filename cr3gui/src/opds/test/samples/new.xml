@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:search:new:book:0</id>
+ <title>Новинки с 19.10.2026 по 26.10.2026</title>
+ <updated>2026-10-26T19:11:40+01:00</updated>
+ <icon>/favicon.ico</icon>
+ <link href="/opds-opensearch.xml" rel="search" type="application/opensearchdescription+xml" />
+ <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
+ <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
+ <entry> <updated>2026-10-26T19:11:40+01:00</updated>
+ <id>tag:search:new:books</id>
+ <title>Все новинки</title>
+ <content>371 новая книга</content>
+ <link href="/opds/new/0/new" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+ <entry> <updated>2026-10-26T19:11:43+01:00</updated>
+ <id>tag:search:new:genres</id>
+ <title>По жанрам</title>
+ <content>Новые книги по жанрам</content>
+ <link href="/opds/newgenres" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+ <entry> <updated>2026-10-26T19:11:43+01:00</updated>
+ <id>tag:search:new:authors</id>
+ <title>По авторам</title>
+ <content>Новые книги по авторам</content>
+ <link href="/opds/newauthors" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+ <entry> <updated>2026-10-26T19:11:43+01:00</updated>
+ <id>tag:search:new:authors:watched</id>
+ <title>По отслеживаемым авторам</title>
+ <content>Новые книги по авторам (требуется логин)</content>
+ <link href="/opds/newauthorswatched" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+ <entry> <updated>2026-10-26T19:11:43+01:00</updated>
+ <id>tag:search:new:sequences</id>
+ <title>По сериям</title>
+ <content>Новые книги по сериям</content>
+ <link href="/opds/newsequences" type="application/atom+xml;profile=opds-catalog" />
+</entry>
+</feed>

@@ -22,22 +22,75 @@
     #define CITETOOLBAR_BUTTONS 5
 #endif
 
+#ifdef POCKETBOOK_PRO
+// Roles of the cite toolbar buttons on touch devices.
+enum CiteButtonRole {
+    CITE_ROLE_SAVE,
+    CITE_ROLE_MOVE,          // "A": select next/previous paragraph
+    CITE_ROLE_GROW,          // "A+"
+    CITE_ROLE_SHRINK,        // "A-"
+    CITE_ROLE_GROW_PHRASE,   // "C+"
+    CITE_ROLE_SHRINK_PHRASE, // "C-"
+    CITE_ROLE_CANCEL,
+    CITE_ROLE_DOWN,          // apply the selected action downwards (same as the "next" key)
+    CITE_ROLE_UP,            // apply the selected action upwards (same as the "prev" key)
+    CITE_ROLE_NONE
+};
+
+// Original 7-button skins (pb626fw5, pb631fw5): Save, A, A+, A-, C+, C-, Cancel.
+static const CiteButtonRole citeLayout7[] = {
+    CITE_ROLE_SAVE, CITE_ROLE_MOVE, CITE_ROLE_GROW, CITE_ROLE_SHRINK,
+    CITE_ROLE_GROW_PHRASE, CITE_ROLE_SHRINK_PHRASE, CITE_ROLE_CANCEL
+};
+// 9-button skins from 4pda (pb740fw5): Cancel, A, A+, A-, C+, C-, Down, Up, Save.
+static const CiteButtonRole citeLayout9[] = {
+    CITE_ROLE_CANCEL, CITE_ROLE_MOVE, CITE_ROLE_GROW, CITE_ROLE_SHRINK,
+    CITE_ROLE_GROW_PHRASE, CITE_ROLE_SHRINK_PHRASE, CITE_ROLE_DOWN, CITE_ROLE_UP, CITE_ROLE_SAVE
+};
+#endif
+
 class CiteToolBar : public CRToolBar
 {
+    int _defaultButtons;
 public:
     CiteToolBar(CRGUIWindowBase *window, lString16 id, CRToolBarSkinRef tbskin, bool active = true)
-        :  CRToolBar(window, id, tbskin, active)
+        :  CRToolBar(window, id, tbskin, active), _defaultButtons(CITETOOLBAR_BUTTONS)
     {
+#ifdef POCKETBOOK_PRO
+        // Take the button count from the skin, so 9-button skins get Up/Down buttons.
+        if (!tbskin.isNull() && !tbskin->getButtons().isNull() && tbskin->getButtons()->length() == 9)
+            _defaultButtons = 9;
+#endif
         init();
     }
     virtual ~CiteToolBar()
     {}
     virtual void initDefault()
     {
-        for (int i=0; i<CITETOOLBAR_BUTTONS; i++) {
+        for (int i=0; i<_defaultButtons; i++) {
             addButton(new CRToolButton(this, i, lString16(), DCMD_BUTTON_PRESSED));
         }
     }
+#ifdef POCKETBOOK_PRO
+    CiteButtonRole roleOf(int index)
+    {
+        if (index < 0 || index >= m_buttons.length())
+            return CITE_ROLE_NONE;
+        int id = m_buttons[index]->getId();
+        if (m_buttons.length() == 9 && id >= 0 && id < 9)
+            return citeLayout9[id];
+        if (id >= 0 && id < 7)
+            return citeLayout7[id];
+        return CITE_ROLE_NONE;
+    }
+    int indexOfRole(CiteButtonRole role)
+    {
+        for (int i = 0; i < m_buttons.length(); i++)
+            if (roleOf(i) == role)
+                return i;
+        return -1;
+    }
+#endif
     bool isDefault()
     {
         bool ret = (5 == m_buttons.length());
@@ -80,56 +133,16 @@ class CiteWindow : public BackgroundFitWindow
     {
         if ( NULL == toolbar )
             return -1;
+#ifdef POCKETBOOK_PRO
+        // Up/Down buttons (and an unknown button) apply the last selected action.
+        CiteButtonRole role = toolbar->roleOf(toolbar->getCurrentButtonIndex());
+        if (role == CITE_ROLE_UP || role == CITE_ROLE_DOWN || role == CITE_ROLE_NONE)
+            role = _action;
+        return roleCommand(role, command);
+#else
         int index = getSelectedIndex();
         switch (index) {
 
-        #ifdef POCKETBOOK_PRO
-
-            case 0:
-                // Ok
-                return MCMD_OK;
-                break;
-            case 1:
-                //move
-                if (command == MCMD_SCROLL_BACK)
-                    return MCMD_SELECT_5; //up
-                else if (command == MCMD_SCROLL_FORWARD)
-                    return MCMD_SELECT_6; //down
-                break;
-            case 2:
-                //grow
-                if (command == MCMD_SCROLL_BACK)
-                    return MCMD_SELECT_1; //up
-                else if (command == MCMD_SCROLL_FORWARD)
-                    return MCMD_SELECT_0; //down
-                break;
-            case 3:
-                //shrink
-                if (command == MCMD_SCROLL_BACK)
-                    return MCMD_SELECT_9;
-                else if (command == MCMD_SCROLL_FORWARD)
-                    return MCMD_SELECT_2;
-                break;
-            case 4:
-                // grow phrase:
-                if (command == MCMD_SCROLL_BACK)
-                    return MCMD_SELECT_3; // up
-                else if (command == MCMD_SCROLL_FORWARD)
-                    return MCMD_SELECT_8; // down
-            case 5:
-                // Shrink phrase
-                if (command == MCMD_SCROLL_BACK)
-                    return MCMD_SELECT_7;
-                else if (command == MCMD_SCROLL_FORWARD)
-                    return MCMD_SELECT_4;
-                break;
-            case 6:
-                // Close
-                return MCMD_CANCEL;
-                break;
-
-        #else
-
             case 0:
                 //move
                 if (command == MCMD_SCROLL_BACK)
@@ -164,14 +177,57 @@ class CiteWindow : public BackgroundFitWindow
                 else if (command == MCMD_SCROLL_FORWARD)
                     return MCMD_SELECT_4;
                 break;
-
-        #endif
 
         default:
             break;
         }
         return -1;
+#endif
     }
+#ifdef POCKETBOOK_PRO
+    CiteButtonRole _action; // action applied by the Up/Down buttons and the prev/next keys
+
+    static int roleCommand(CiteButtonRole role, int command)
+    {
+        bool up = (command == MCMD_SCROLL_BACK);
+        switch (role) {
+        case CITE_ROLE_SAVE:          return MCMD_OK;
+        case CITE_ROLE_CANCEL:        return MCMD_CANCEL;
+        case CITE_ROLE_MOVE:          return up ? MCMD_SELECT_5 : MCMD_SELECT_6;
+        case CITE_ROLE_GROW:          return up ? MCMD_SELECT_1 : MCMD_SELECT_0;
+        case CITE_ROLE_SHRINK:        return up ? MCMD_SELECT_9 : MCMD_SELECT_2;
+        case CITE_ROLE_GROW_PHRASE:   return up ? MCMD_SELECT_3 : MCMD_SELECT_8;
+        case CITE_ROLE_SHRINK_PHRASE: return up ? MCMD_SELECT_7 : MCMD_SELECT_4;
+        default:                      return -1;
+        }
+    }
+
+    // A toolbar button was tapped (it is already the current button).
+    void onButtonTapped()
+    {
+        CiteButtonRole role = toolbar ? toolbar->roleOf(toolbar->getCurrentButtonIndex()) : CITE_ROLE_NONE;
+        switch (role) {
+        case CITE_ROLE_SAVE:
+            _wm->postCommand(MCMD_OK, 0);
+            break;
+        case CITE_ROLE_CANCEL:
+            _wm->postCommand(MCMD_CANCEL, 0);
+            break;
+        case CITE_ROLE_UP:
+            _wm->postCommand(roleCommand(_action, MCMD_SCROLL_BACK), 0);
+            break;
+        case CITE_ROLE_DOWN:
+            _wm->postCommand(roleCommand(_action, MCMD_SCROLL_FORWARD), 0);
+            break;
+        case CITE_ROLE_NONE:
+            break;
+        default:
+            _action = role; // A, A+, A-, C+, C-: choose the action
+            setDirty();
+            break;
+        }
+    }
+#endif
 #endif
 protected:
     virtual void draw()
@@ -257,6 +313,12 @@ public:
             if (index > 0)
                 toolbar->selectButton(index);
             toolbar->selectNextButton();
+#ifdef POCKETBOOK_PRO
+            // Start with "A" (select paragraph) selected, as described for the 4pda build.
+            int moveIndex = toolbar->indexOfRole(CITE_ROLE_MOVE);
+            if (moveIndex >= 0)
+                toolbar->selectButton(moveIndex);
+#endif
 
             toolbar->getRect(toolbarRect);
             _rect.top = _rect.bottom - toolbarRect.height();
@@ -267,11 +329,29 @@ public:
 #ifdef CR_POCKETBOOK
       _noClose= true;
 #endif
+#ifdef POCKETBOOK_PRO
+      _action = CITE_ROLE_MOVE;
+#endif
     }
+
+#ifdef POCKETBOOK_PRO
+    // Keeps the Up/Down action in sync when the current button is changed with the keys.
+    void syncActionWithCurrentButton()
+    {
+        CiteButtonRole role = toolbar ? toolbar->roleOf(toolbar->getCurrentButtonIndex()) : CITE_ROLE_NONE;
+        if (role >= CITE_ROLE_MOVE && role <= CITE_ROLE_SHRINK_PHRASE)
+            _action = role;
+    }
+#endif
 
     bool onCommand( int command, int params )
     {
         switch ( command ) {
+#ifdef POCKETBOOK_PRO
+        case DCMD_BUTTON_PRESSED:
+            onButtonTapped();
+            break;
+#endif
         case MCMD_SELECT_1:
             selector_.growUp();
             setDirty();
@@ -340,10 +420,16 @@ public:
         case PB_CMD_RIGHT:
             if (toolbar && toolbar->selectNextButton())
                 setDirty();
+#ifdef POCKETBOOK_PRO
+            syncActionWithCurrentButton();
+#endif
             break;
         case PB_CMD_LEFT:
             if (toolbar && toolbar->selectPrevButton())
                 setDirty();
+#ifdef POCKETBOOK_PRO
+            syncActionWithCurrentButton();
+#endif
             break;
 #endif
         }

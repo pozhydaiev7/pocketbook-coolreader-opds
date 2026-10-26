@@ -26,6 +26,7 @@
     #include "pb_toc.h"
     #include "readingStats.h"
 #endif
+#include "opdsbrowser.h"
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
@@ -951,7 +952,7 @@ public:
     }
 };
 
-#define TM_NB_ICONS 7
+#define TM_NB_ICONS 8
 
 const char *touchMenuIcons[TM_NB_ICONS] = {
     "home",
@@ -961,6 +962,7 @@ const char *touchMenuIcons[TM_NB_ICONS] = {
     "bookmarks",
     "dictionary",
     "search",
+    "opds",
     "rotate",
     "settings"
 };
@@ -1215,6 +1217,11 @@ public:
         }
         else if( strcmp(touchMenuIcons[iconKey], "search") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 2);
+        }
+        else if( strcmp(touchMenuIcons[iconKey], "opds") == 0 ) {
+            // Posted, not executed: the catalog loads over the network and opens a window,
+            // which must happen after this touch event has been fully processed.
+            CRPocketBookWindowManager::instance->postCommand(PB_CMD_OPDS_BROWSER, 0);
         }
         else if( strcmp(touchMenuIcons[iconKey], "rotate") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 5);
@@ -1507,10 +1514,7 @@ public:
     virtual bool TouchMenuCanBeUsed() {
         CRLog::trace("CRPocketBookQuickMenuWindow::TouchMenuCanBeUsed()");
         return
-            (
-                pbSkinFileName == lString16("pb626fw5.cr3skin") ||
-                pbSkinFileName == lString16("pb631fw5.cr3skin")
-                ) &&
+            isTouchFw5Skin() &&
             CRPocketBookScreen::instance->isTouchSupported() && /*touch device*/
             max(ScreenWidth(), ScreenHeight()) > 800; /*resolution greater than 600x800*/
     }
@@ -1578,6 +1582,78 @@ public:
         OpenKeyboard(const_cast<char *>("@Search"), key_buffer, KEY_BUFFER_LEN, 0, searchHandler);
     }
 };
+
+// Placeholder window for an on-screen keyboard opened from a CR3 menu (OPDS search, catalog address).
+// It keeps CR3 from repainting over the keyboard, swallows the rest of the tap that opened it, and
+// opens the keyboard a moment later, when that tap has been fully processed.
+class CRPocketBookKeyboardWindow : public CRPocketBookInkViewWindow
+{
+    const char * _title;
+    char * _buffer;
+    int _maxlen;
+    void (*_handler)(char *);
+    bool _opened;
+    static CRPocketBookKeyboardWindow * _pending;
+
+    static void openPending()
+    {
+        if (!_pending)
+            return;
+        CRLog::info("Opening keyboard: %s", _pending->_title);
+        _pending->_opened = true;
+        OpenKeyboard(_pending->_title, _pending->_buffer, _pending->_maxlen, 0, _pending->_handler);
+    }
+public:
+    CRPocketBookKeyboardWindow( CRGUIWindowManager * wm, const char * title, char * buffer, int maxlen,
+                                void (*handler)(char *) )
+        : CRPocketBookInkViewWindow( wm ), _title(title), _buffer(buffer), _maxlen(maxlen), _handler(handler),
+          _opened(false) {}
+    virtual ~CRPocketBookKeyboardWindow()
+    {
+        if (_pending == this)
+            _pending = NULL;
+    }
+    virtual void showWindow()
+    {
+        _pending = this;
+        SetWeakTimer("CR3Keyboard", openPending, 300);
+    }
+    virtual bool onCommand( int command, int params = 0 )
+    {
+        if (OpdsBrowser::isOpdsCommand(command)) {
+            // The keyboard handler executes this command: hand it to the reader window.
+            _pending = NULL;
+            _wm->postCommand(command, params);
+            _wm->closeWindow( this );
+            return true;
+        }
+        return CRPocketBookInkViewWindow::onCommand(command, params);
+    }
+    virtual bool onTouch( int x, int y, CRGUITouchEventType evType )
+    {
+        if (!_opened)
+            return true; // rest of the tap that opened the keyboard
+        // The keyboard is gone without calling back: get out of the way.
+        CRLog::info("Keyboard placeholder: touch after the keyboard closed, closing placeholder");
+        _pending = NULL;
+        return CRPocketBookInkViewWindow::onTouch(x, y, evType);
+    }
+    virtual bool onKeyPressed( int key, int flags )
+    {
+        if (!_opened)
+            return true;
+        _pending = NULL;
+        return CRPocketBookInkViewWindow::onKeyPressed(key, flags);
+    }
+};
+
+CRPocketBookKeyboardWindow * CRPocketBookKeyboardWindow::_pending = NULL;
+
+void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handler)(char *))
+{
+    CRPocketBookWindowManager::instance->activateWindow(
+        new CRPocketBookKeyboardWindow(CRPocketBookWindowManager::instance, title, buffer, maxlen, handler));
+}
 
 class CRPocketBookContentsWindow : public CRPocketBookInkViewWindow
 {
@@ -1697,6 +1773,10 @@ public:
     int getTopItem() { return _topItem; }
     int getSelectedItem() { return _selectedItem; }
     const char * getCurItemWord();
+    // Index of the list item drawn at screen row y, or -1 (uses the same geometry as CRMenu::drawClient).
+    int itemIndexAt(int y);
+    // How many list rows fit into the dictionary window, at least the skin's min-item-count.
+    int fittingPageItems();
     int getPageInItemCount()
     {
         CRMenuSkinRef skin = getSkin();
@@ -2398,6 +2478,23 @@ public:
         instance = this;
     }
 
+    // Opens a book downloaded from an OPDS catalog, the same way a recent book is switched to.
+    void openDownloadedBook(const lString16 & fn)
+    {
+        CRLog::info("openDownloadedBook(%s)", UnicodeToUtf8(fn).c_str());
+#ifdef BACKGROUND_CACHE_FILE_CREATION
+        CRPocketBookWindowManager::instance->cancelCacheSwap();
+#endif
+        pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
+        _docview->savePosition();
+        saveHistory(lString16::empty_str);
+        pbGlobals->setFileName(fn);
+        if (!loadDocument(fn)) {
+            Message(ICON_WARNING, const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
+        }
+        _wm->update(true);
+    }
+
     virtual void closing()
     {
         CRLog::trace("V3DocViewWin::closing();");
@@ -2435,6 +2532,18 @@ public:
 
     bool onCommand(int command, int params)
     {
+        // OPDS catalog browser
+        if (OpdsBrowser::isOpdsCommand(command))
+            return OpdsBrowser::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_OPDS_BROWSER) {
+            OpdsBrowser::instance().open(_wm);
+            return true;
+        }
+        if (command == PB_CMD_OPDS_SET_URL) {
+            OpdsBrowser::instance().editUrl(_wm);
+            return true;
+        }
+
         #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
         if( systemPanelShown() ) {
             toggleSystemPanel();
@@ -3648,11 +3757,11 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
                 tmpRc.right  -= clientRc.width() * 1/3;
                 tmpRc.bottom -= clientRc.height()/2;
 
-                int strcount= clientRc.height()/pnItm.y;
-                int pgitcount= _dictMenu->getPageInItemCount();
-                int nselect= ( y - clientRc.top ) / pnItm.y;
+                // Same row geometry as the list drawing; out-of-list taps are ignored
+                // instead of turning the page (the PB743 word selection problem).
+                int nselect = _dictMenu->itemIndexAt( y );
 
-                if( nselect >= 0 && nselect <= pgitcount ) {
+                if( nselect >= 0 ) {
 
                     if ( nselect != _dictMenu->getSelectedItem() )
                         _dictMenu->setCurItem( nselect );
@@ -3661,7 +3770,8 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
                     _wm->postCommand( PB_DICT_DEACTIVATE, 0 );
                 }
 
-                CRLog::trace("CRDV::onTouchEvent() PB_DICT_ARTICLE_LIST tmpRc ( %d, %d, %d, %d ) _SelectedItem=%d _topItem=%d strcount%d  pgitcount=%d  nselect= %d" , tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom, _dictMenu->getSelectedItem(), _dictMenu->getTopItem(), strcount, _dictMenu->getPageInItemCount(),  nselect );
+                CRLog::trace("CRDV::onTouchEvent() PB_DICT_ARTICLE_LIST y=%d _SelectedItem=%d _topItem=%d nselect=%d",
+                             y, _dictMenu->getSelectedItem(), _dictMenu->getTopItem(), nselect );
 
                 return true;
             }
@@ -3811,9 +3921,9 @@ void CRPbDictionaryView::translate(const lString16 &w)
         lString8 what = UnicodeToUtf8( s16 );
         char *word = NULL, *translation = NULL;
 
-        CRLog::trace("CRPbDictionaryView::translate() LookupWordExact");
-        _translateResult = LookupWordExact((char *)what.c_str(), &word, &translation);
-        CRLog::trace("LookupWordExact(%s) returned %d", what.c_str(), _translateResult);
+        // Exact-match lookup is disabled (as in the 4pda 0.0.6-17-62.2 build): LookupWord also
+        // returns the nearest words, so word forms that are not in the dictionary still get a list.
+        _translateResult = 0;
 
         if( _translateResult == 0 ) {
             word = NULL;
@@ -3981,9 +4091,52 @@ CRPbDictionaryMenu::CRPbDictionaryMenu(CRGUIWindowManager * wm, CRPbDictionaryVi
     setSkinName(lString16("#dict-list"));
 }
 
+static int dictMenuSeparatorHeight(CRMenuSkinRef skin)
+{
+    if (skin.isNull() || skin->getSeparatorSkin().isNull())
+        return 0;
+    return skin->getSeparatorSkin()->getMinSize().y;
+}
+
+int CRPbDictionaryMenu::itemIndexAt(int y)
+{
+    lvRect client;
+    if (!getClientRect(client))
+        return -1;
+    int step = getMaxItemSize().y + dictMenuSeparatorHeight(getSkin());
+    if (step <= 0 || y < client.top || y >= client.bottom)
+        return -1;
+    int index = (y - client.top) / step;
+    if (index >= _pageItems || _topItem + index >= _items.length())
+        return -1;
+    return _topItem + index;
+}
+
+int CRPbDictionaryMenu::fittingPageItems()
+{
+    CRMenuSkinRef skin = getSkin();
+    int minItems = skin.isNull() ? 0 : skin->getMinItemCount();
+    if (minItems <= 0)
+        minItems = _pageItems > 0 ? _pageItems : 7;
+    lvRect client;
+    if (!getClientRect(client) || client.height() <= 0)
+        return minItems;
+    int sep = dictMenuSeparatorHeight(skin);
+    int step = getMaxItemSize().y + sep;
+    if (step <= 0)
+        return minItems;
+    int fit = (client.height() + sep) / step;
+    if (fit < minItems)
+        return minItems;
+    if (fit > 30)
+        fit = 30;
+    return fit;
+}
+
 bool CRPbDictionaryMenu::newPage(const char *firstWord, const char *firstTranslation)
 {
     char *word = NULL, *translation = NULL;
+    _pageItems = fittingPageItems();
     _items.clear();
     addItem(new CRPbDictionaryMenuItem(this, 0, firstWord, firstTranslation));
     for (int i = 1; i < _pageItems; i++) {
@@ -4106,9 +4259,10 @@ void CRPbDictionaryMenu::reconfigure( int flags )
 {
     int pageitems = _pageItems;
     CRMenu::reconfigure(flags);
+    _pageItems = fittingPageItems();
     if (_items.length() == 0)
         return;
-    if (_pageItems > pageitems) {
+    if (_pageItems != pageitems) {
         CRPbDictionaryMenuItem *item = static_cast<CRPbDictionaryMenuItem *>(_items[0]);
         if (_parent->isArticleListActive())
             // reload menu contents
@@ -5687,7 +5841,8 @@ int main_handler(int type, int par1, int par2)
         break;
     case EVT_INIT:
         SetPanelType(1);
-        pbCrFontSize = round(PanelHeight()*0.32);
+        // Page counter / chapter text in the touch menu: larger on high-density screens.
+        pbCrFontSize = round(PanelHeight() * (pbScaledSize(2) > 2 ? 0.42 : 0.32));
         pbCrFontAA = OpenFont(DEFAULTFONT, pbCrFontSize, 1);
         pbCrFont = OpenFont(DEFAULTFONT, pbCrFontSize, 0);
         SetPanelType(0);
@@ -5983,15 +6138,32 @@ bool fontAntiAliasingActivated() {
     return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_FONT_ANTIALIASING, 2) != 0;
 }
 
+int pbScaledSize(int size) {
+    int longSide = max(ScreenWidth(), ScreenHeight());
+    return longSide >= 1400 ? size * 3 / 2 : size;
+}
+
+bool isTouchFw5Skin() {
+    return
+        pbSkinFileName == lString16("pb626fw5.cr3skin") ||
+        pbSkinFileName == lString16("pb631fw5.cr3skin") ||
+        pbSkinFileName == lString16("pb740fw5.cr3skin") ||
+        pbSkinFileName == lString16("pb700fw5.cr3skin") ||
+        pbSkinFileName == lString16("pbXfw5.cr3skin") ||
+        pbSkinFileName == lString16("pb617fw5.cr3skin");
+}
+
+void pbOpenDownloadedBook(const lString16 & path) {
+    if (CRPocketBookDocView::instance)
+        CRPocketBookDocView::instance->openDownloadedBook(path);
+}
+
 #ifdef POCKETBOOK_PRO
 bool canUseNewTouchToc() {
     return
         QueryTouchpanel() != 0 &&
         max(ScreenWidth(), ScreenHeight()) > 800 &&
-        (
-            pbSkinFileName == lString16("pb626fw5.cr3skin") ||
-            pbSkinFileName == lString16("pb631fw5.cr3skin")
-            );
+        isTouchFw5Skin();
 }
 #endif
 

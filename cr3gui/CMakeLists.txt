@@ -44,7 +44,10 @@ if (DEFINED POCKETBOOK_PRO)
     src/ota_update.cpp
     src/readingStats.cpp
     src/pb_toc.cpp
+    src/opds/opdsfeed.cpp
+    src/opds/opdsbrowser.cpp
   )
+  include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/src/opds )
 else ()
   SET (CR3_SOURCES 
     src/bgfit.cpp
@@ -278,6 +281,10 @@ elseif (${GUI} STREQUAL CRGUI_PB)
     ADD_CUSTOM_COMMAND(OUTPUT ${cr3_skin_pb631fw5} COMMAND ${ZIP_EXECUTABLE} -j ${cr3_skin_pb631fw5} ${CMAKE_CURRENT_SOURCE_DIR}/data/devices/${DEVICE_NAME}/skins/pb631fw5/* )
     ADD_CUSTOM_TARGET( skin_pb631fw5 ALL DEPENDS ${cr3_skin_pb631fw5} )
 
+    SET( cr3_skin_pb740fw5 ${CMAKE_CURRENT_BINARY_DIR}/pb740fw5.cr3skin )
+    ADD_CUSTOM_COMMAND(OUTPUT ${cr3_skin_pb740fw5} COMMAND ${ZIP_EXECUTABLE} -j ${cr3_skin_pb740fw5} ${CMAKE_CURRENT_SOURCE_DIR}/data/devices/${DEVICE_NAME}/skins/pb740fw5/* )
+    ADD_CUSTOM_TARGET( skin_pb740fw5 ALL DEPENDS ${cr3_skin_pb740fw5} )
+
     INSTALL( FILES ${CR3_STYLES} DESTINATION system/share/cr3)
     INSTALL( DIRECTORY data/hyph/ DESTINATION system/share/cr3/hyph
       FILES_MATCHING PATTERN "*.pdb" )
@@ -290,6 +297,7 @@ elseif (${GUI} STREQUAL CRGUI_PB)
     INSTALL( FILES ${cr3_skin_pb62x} DESTINATION system/share/cr3/skins )
     INSTALL( FILES ${cr3_skin_pb626fw5} DESTINATION system/share/cr3/skins )
     INSTALL( FILES ${cr3_skin_pb631fw5} DESTINATION system/share/cr3/skins )
+    INSTALL( FILES ${cr3_skin_pb740fw5} DESTINATION system/share/cr3/skins )
     INSTALL( DIRECTORY data/devices/${DEVICE_NAME}/keymaps/ DESTINATION system/share/cr3/keymaps )
     INSTALL( DIRECTORY data/manual/ DESTINATION system/share/cr3/manual )
 

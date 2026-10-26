@@ -6019,7 +6019,7 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
         11,12,13,14,15,16,17,18,19,20,
         22,24,25,30,35,40,45,50,60,70,80,90,100,
         110,120,130,140,150,160,170,180,190,200,
-        250,300};
+        250,300,350};
 	props->limitValueList(PROP_PAGE_MARGIN_TOP, def_margin, sizeof(def_margin)/sizeof(int));
 	props->limitValueList(PROP_PAGE_MARGIN_BOTTOM, def_margin, sizeof(def_margin)/sizeof(int));
 	props->limitValueList(PROP_PAGE_MARGIN_LEFT, def_margin, sizeof(def_margin)/sizeof(int));

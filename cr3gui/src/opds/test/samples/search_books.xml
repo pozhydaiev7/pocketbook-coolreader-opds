@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:search:books:пелевин:0</id>
+ <title>Результат поиска</title>
+ <updated>2026-10-26T19:28:26+01:00</updated>
+ <icon>/favicon.ico</icon>
+ <link href="/opds-opensearch.xml" rel="search" type="application/opensearchdescription+xml" />
+ <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
+ <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
+ <link href="/opds/search?searchTerm=%D0%BF%D0%B5%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD" rel="up" type="application/atom+xml;profile=opds-catalog" />
+ <link href="/opds/search?searchType=books&amp;searchTerm=%D0%BF%D0%B5%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD&amp;pageNumber=1" rel="next" type="application/atom+xml;profile=opds-catalog" />
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>&quot;Нео-пелевин&quot;</title>
+ <author> <name>Сеновский Вадим</name>
+ <uri>/a/225324</uri>
+</author>
+ <link href="/opds/author/225324" rel="related" type="application/atom+xml" title="Все книги автора Сеновский Вадим" />
+ <category term="Контркультура" label="Контркультура" />
+ <category term="Самиздат, сетевая литература" label="Самиздат, сетевая литература" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 40 Kb&lt;br/&gt;Скачиваний: 2165&lt;br/&gt;</content>
+ <link href="/b/300887/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/300887/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/300887/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/300887/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/300887/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/300887/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/300887" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:42c48a678e008dcc37c5166fe3e03ca2</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>46 интервью с Пелевиным. 46 интервью с писателем, который никогда не дает интервью</title>
+ <author> <name>Пелевин Виктор Олегович</name>
+ <uri>/a/9450</uri>
+</author>
+ <link href="/opds/author/9450" rel="related" type="application/atom+xml" title="Все книги автора Пелевин Виктор Олегович" />
+ <category term="Анекдоты" label="Анекдоты" />
+ <category term="Биографии и мемуары: прочее" label="Биографии и мемуары: прочее" />
+ <category term="Драматургия" label="Драматургия" />
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Комедия" label="Комедия" />
+ <category term="Культурология" label="Культурология" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2019</dc:issued>
+ <link href="/opds/sequencebooks/57058" rel="related" type="application/atom+xml" title="Все книги серии &quot;Эксклюзивное мнение&quot;" />
+ <content type="text/html">46 интервью с Виктором Пелевиным  с сайта pelevinlive.ru, для удобства чтения представленные в fb2. Дополнено расшифровкой двух видеоинтервью.
+&lt;br/&gt;Год издания: 2019&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 2461 Kb&lt;br/&gt;Скачиваний: 9960&lt;br/&gt;Серия: Эксклюзивное мнение #2&lt;br/&gt;</content>
+ <link href="/i/33/703433/_0.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/33/703433/_0.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/33/703433/_0.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/33/703433/_0.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/703433/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/703433/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/703433/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/703433/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/703433/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/703433/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/703433" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:204e741b52bb4282b50b8d0dc4ed31d2</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Быков о Пелевине. Лекция вторая</title>
+ <author> <name>Быков Дмитрий Львович</name>
+ <uri>/a/1840</uri>
+</author>
+ <link href="/opds/author/1840" rel="related" type="application/atom+xml" title="Все книги автора Быков Дмитрий Львович" />
+ <category term="Критика" label="Критика" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">
+        &lt;p class=&quot;book&quot;&gt;«Этой лекции сопутствует добрый дух скандала, как сказал когда-то Набоков о книге Годунова-Чердынцева, потому что без скандала нет успеха.&lt;/p&gt;
+        &lt;p class=&quot;book&quot;&gt;Дело в том, что наша предыдущая лекция сподобилась вызвать гнев сообщества «РУ. Пелевин». И они даже обещали сегодня обязательно прислать кого-нибудь из своих людей, чтобы дать мне по лбу, не знаю только – морально или физически. В любом случае, я вас, ребята, приветствую, потому что благодаря вам я многое понял…»&lt;/p&gt;
+      &lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 284 Kb&lt;br/&gt;Скачиваний: 4063&lt;br/&gt;</content>
+ <link href="/i/50/504650/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/50/504650/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/50/504650/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/50/504650/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/504650/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/504650/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/504650/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/504650/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/504650/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/504650/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/504650" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:c3806e9831b10248f5f02cfb5d082d87</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Быков о Пелевине. Путь вниз. Лекция первая</title>
+ <author> <name>Быков Дмитрий Львович</name>
+ <uri>/a/1840</uri>
+</author>
+ <link href="/opds/author/1840" rel="related" type="application/atom+xml" title="Все книги автора Быков Дмитрий Львович" />
+ <category term="Критика" label="Критика" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">
+        &lt;p class=&quot;book&quot;&gt;«Мы имеем с вами отличный шанс убедиться, что главное в успехе лекции – не лектор, а тема. Потому что Виктор Пелевин – писатель, который доставляет нам, как сказали бы китайцы в английском переводе, «triple delight» – знаменитое название блюда из трех составляющих: морупродуктов, мяса и курицы…»&lt;/p&gt;
+      &lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 275 Kb&lt;br/&gt;Скачиваний: 4781&lt;br/&gt;</content>
+ <link href="/i/49/504649/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/49/504649/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/49/504649/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/49/504649/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/504649/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/504649/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/504649/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/504649/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/504649/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/504649/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/504649" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:8b5e469193328c9609bf0713d9b8319c</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Визионерские мотивы в постмодернистской прозе 1960-1990-х годов (Вен. Ерофеев, А. Битов, Т. Толстая, В. Пелевин)</title>
+ <author> <name>Шилова Наталья Леонидовна</name>
+ <uri>/a/43358</uri>
+</author>
+ <link href="/opds/author/43358" rel="related" type="application/atom+xml" title="Все книги автора Шилова Наталья Леонидовна" />
+ <category term="Литературоведение" label="Литературоведение" />
+ <dc:language>ru</dc:language>
+ <dc:format>pdf+zip</dc:format>
+ <dc:issued>2011</dc:issued>
+ <content type="text/html">
+    &lt;p class=book&gt;В учебном пособии рассмотрена одна из самых устойчивых и в то же время малоизученных тем в литературе — тема визионерства. Внимание уделяется как истокам визионерской образности в историческом прошлом мировой и русской культуры, так и ее значению в творчестве современных писателей. В издание вошел анализ программных произведений прозы второй половины XX века — «Москва-Петушки» Вен. Ерофеева, «Кысь» Т. Толстой, рассказов и романов А. Битова и В. Пелевина. Обращенное к новому литературному материалу, учебное пособие дополняет существующие вузовские учебники по истории русской постмодернистской литературы и может оказаться полезным широкому кругу филологов, преподавателей, студентов, вовлеченных в ее изучение или просто ею интересующихся.&lt;/p&gt;
+   &lt;br/&gt;Год издания: 2011&lt;br/&gt;Формат: pdf&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 553 Kb&lt;br/&gt;Скачиваний: 798&lt;br/&gt;</content>
+ <link href="/b/299141/download" rel="http://opds-spec.org/acquisition/open-access" type="application/pdf+zip" />
+ <link href="/b/299141" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:95cc75768095f6f6b02d799036058998</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Виктор Пелевин - Синий фонарь</title>
+ <author> <name>Бережной Сергей Валерьевич</name>
+ <uri>/a/1137</uri>
+</author>
+ <link href="/opds/author/1137" rel="related" type="application/atom+xml" title="Все книги автора Бережной Сергей Валерьевич" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 2938 B&lt;br/&gt;Скачиваний: 5948&lt;br/&gt;</content>
+ <link href="/b/6381/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/6381/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/6381/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/6381/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/6381/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/6381/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/6381" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:3fd938485643458fef45c6b92c779123</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Виктор Пелевин и эффект Пустоты</title>
+ <author> <name>Осинский Валерий Аркадьевич</name>
+ <uri>/a/38461</uri>
+</author>
+ <link href="/opds/author/38461" rel="related" type="application/atom+xml" title="Все книги автора Осинский Валерий Аркадьевич" />
+ <category term="Критика" label="Критика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2011</dc:issued>
+ <content type="text/html">Год издания: 2011&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 42 Kb&lt;br/&gt;Скачиваний: 2021&lt;br/&gt;</content>
+ <link href="/b/275965/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/275965/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/275965/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/275965/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/275965/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/275965/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/275965" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:02dc1babba88fbaa03ecdbbebb271d9a</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Виктор Пелевин спрашивает PRов</title>
+ <author> <name>Пелевин Виктор Олегович</name>
+ <uri>/a/9450</uri>
+</author>
+ <link href="/opds/author/9450" rel="related" type="application/atom+xml" title="Все книги автора Пелевин Виктор Олегович" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 20 Kb&lt;br/&gt;Скачиваний: 12399&lt;br/&gt;</content>
+ <link href="/b/42099/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/42099/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/42099/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/42099/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/42099/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/42099/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/42099" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:c3fd8553178f087d553f3bd1a12d1f13</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Виктор Пелевин: эволюция в постмодернизме</title>
+ <author> <name>Сиротин Сергей Викторович</name>
+ <uri>/a/95455</uri>
+</author>
+ <link href="/opds/author/95455" rel="related" type="application/atom+xml" title="Все книги автора Сиротин Сергей Викторович" />
+ <category term="Критика" label="Критика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2012</dc:issued>
+ <content type="text/html">Год издания: 2012&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 95 Kb&lt;br/&gt;Скачиваний: 1567&lt;br/&gt;</content>
+ <link href="/b/275927/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/275927/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/275927/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/275927/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/275927/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/275927/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/275927" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:5db84a22b5d4e15ca044e4f30f56f88f</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Впечатления от книги Пелевина &#039;Generation П&#039;</title>
+ <author> <name>Каганов Леонид</name>
+ <uri>/a/5329</uri>
+</author>
+ <link href="/opds/author/5329" rel="related" type="application/atom+xml" title="Все книги автора Каганов Леонид" />
+ <category term="Критика" label="Критика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 13 Kb&lt;br/&gt;Скачиваний: 8967&lt;br/&gt;</content>
+ <link href="/b/24867/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/24867/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/24867/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/24867/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/24867/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/24867/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/24867" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:c9f7170bb5bea21da8db25573092467d</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Золотая Пуля, или Последнее Путешествие Пелевина</title>
+ <author> <name>Сердюк Андрей</name>
+ <uri>/a/11018</uri>
+</author>
+ <link href="/opds/author/11018" rel="related" type="application/atom+xml" title="Все книги автора Сердюк Андрей" />
+ <category term="Фэнтези" label="Фэнтези" />
+ <category term="Юмористическая фантастика и фэнтези" label="Юмористическая фантастика и фэнтези" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">
+    &lt;p class=book&gt;Повесть, которую найдёшь ты, мой читатель, под этой невзрачной обложкой — быть может сбивчивый и не совсем умелый, зато на удивление правдивый рассказ о том, что произошло на самом деле, хотя, в действительности, возможно, и не случилось, в те самые-самые, ныне легендарные, времена, когда Последняя Битва За Сознание Масс была уже так близка и неотвратима, что грядущий её пепел холодил своим чёрным шелестом всякое умное сердце, а угасающие надежды людей, считающих себя вменяемыми, были связаны с семёркой отважных бойцов под водительством героя, имя которому Пелевин.&lt;/p&gt;
+    &lt;p class=book&gt;Всем тем, кто, как и я, так ничего и не понял, посвящается.&lt;/p&gt;
+    &lt;p class=book&gt;Все совпадения имён вымышленных героев с именами реальными персонажей до такой степени преднамеренны, что не могут ни быть случайными.&lt;/p&gt;
+    &lt;p class=book&gt;Автор не считает себя обязанным нести ответственность за выбор читателя, поскольку такой выбор реален лишь до момента его осуществления.&lt;/p&gt;
+    &lt;p class=book&gt;Использование при наборе текста всех известных букв русского алфавита произведено концептуально.&lt;/p&gt;
+   &lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 425 Kb&lt;br/&gt;Скачиваний: 3451&lt;br/&gt;</content>
+ <link href="/b/159838/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/159838/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/159838/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/159838/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/159838/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/159838/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/159838" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:ab622695bf3ae1fe268baec8bc85c1b5</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Интервью с Виктором Пелевиным</title>
+ <author> <name>Пелевин Виктор Олегович</name>
+ <uri>/a/9450</uri>
+</author>
+ <link href="/opds/author/9450" rel="related" type="application/atom+xml" title="Все книги автора Пелевин Виктор Олегович" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 8323 B&lt;br/&gt;Скачиваний: 10637&lt;br/&gt;</content>
+ <link href="/b/42064/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/42064/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/42064/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/42064/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/42064/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/42064/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/42064" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:990c81e9091d0272c34a39223462f63e</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Интервью с Виктором Пелевиным (2)</title>
+ <author> <name>Пелевин Виктор Олегович</name>
+ <uri>/a/9450</uri>
+</author>
+ <link href="/opds/author/9450" rel="related" type="application/atom+xml" title="Все книги автора Пелевин Виктор Олегович" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 11 Kb&lt;br/&gt;Скачиваний: 10064&lt;br/&gt;</content>
+ <link href="/b/178168/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/178168/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/178168/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/178168/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/178168/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/178168/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/178168" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:bdf6567abcb4e44b0226fe9bca929433</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>К вопросу о влиянии творчества К Кастанеды на В О Пелевина</title>
+ <author> <name>Белов Андрей</name>
+ <uri>/a/1063</uri>
+</author>
+ <link href="/opds/author/1063" rel="related" type="application/atom+xml" title="Все книги автора Белов Андрей" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <content type="text/html">Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 24 Kb&lt;br/&gt;Скачиваний: 2396&lt;br/&gt;</content>
+ <link href="/b/6034/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/6034/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/6034/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/6034/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/6034/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/6034/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/6034" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:a21d67426d0ef56d30abc6f2b13a8b7d</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Карлос Кастанеда, книги 1-2 (ред. В.О.Пелевин, carlitoska)</title>
+ <author> <name>Кастанеда Карлос</name>
+ <uri>/a/5609</uri>
+</author>
+ <link href="/opds/author/5609" rel="related" type="application/atom+xml" title="Все книги автора Кастанеда Карлос" />
+ <category term="Эзотерика, эзотерическая литература" label="Эзотерика, эзотерическая литература" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <link href="/opds/sequencebooks/14756" rel="related" type="application/atom+xml" title="Все книги серии &quot;Русский Кастанеда&quot;" />
+ <content type="text/html">
+    &lt;blockquote class=book&gt;
+     &lt;br&gt;
+    &lt;/blockquote&gt;
+   &lt;br/&gt;Перевод: Максимов Василий Павлович&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1792 Kb&lt;br/&gt;Скачиваний: 5341&lt;br/&gt;Серия: Русский Кастанеда #2&lt;br/&gt;</content>
+ <link href="/i/90/366990/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/90/366990/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/90/366990/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/90/366990/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/366990/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/366990/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/366990/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/366990/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/366990/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/366990/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/366990" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:4f95373066dd8ca223bd536403c920d4</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Концепции Карлоса Кастанеды в современной русской словесности: от Летова до Пелевина и Фрая</title>
+ <author> <name>Любарский Руслан Васильевич</name>
+ <uri>/a/322052</uri>
+</author>
+ <link href="/opds/author/322052" rel="related" type="application/atom+xml" title="Все книги автора Любарский Руслан Васильевич" />
+ <category term="Критика" label="Критика" />
+ <category term="Культурология" label="Культурология" />
+ <category term="Языкознание, иностранные языки" label="Языкознание, иностранные языки" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2025</dc:issued>
+ <content type="text/html">&lt;p class=&quot;book&quot;&gt;Творчество одного из самых загадочных писателей XX века Карлоса Кастанеды представляет собой уникальный художественный мир, наполненный мистическими воззрениями. Кастанедовские концепции оказали влияние на художественное развитие всей мировой культуры. В этой книге отражена попытка анализа влияния воззрений мистика на российскую рок-поэзию и литературу. Исследована художественная адаптация кастанедовских концепций в произведениях Виктора Пелевина, Макса Фрая, Егора Летова, Дельфина, группы «Пилот» и др. Книга адресована специалистам в области русской и зарубежной литературы и философии, а также всем любителям современной музыки, поэзии и прозы.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;В формате PDF A4 сохранён издательский дизайн.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2025&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1281 Kb&lt;br/&gt;Скачиваний: 514&lt;br/&gt;</content>
+ <link href="/i/77/832977/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/77/832977/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/77/832977/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/77/832977/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/832977/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/832977/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/832977/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/832977/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/832977/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/832977/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/832977" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:2a5db04c383a467f3a77ba9360952a4b</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Пелевин  Виктор</title>
+ <author> <name>Пелевин Виктор Олегович</name>
+ <uri>/a/9450</uri>
+</author>
+ <link href="/opds/author/9450" rel="related" type="application/atom+xml" title="Все книги автора Пелевин Виктор Олегович" />
+ <category term="Юмор" label="Юмор" />
+ <category term="Юмористическая проза" label="Юмористическая проза" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2009</dc:issued>
+ <content type="text/html">
+        &lt;p class=&quot;book&quot;&gt;Мегапроект «Антология сатиры и юмора России XX века» — первая попытка собрать воедино творения лучших сатириков и юмористов уходящего столетия.&lt;/p&gt;
+        &lt;p class=&quot;book&quot;&gt;&lt;b&gt;Внимание&lt;/b&gt;: книга содержит нецензурную лексику!&lt;/p&gt;
+        &lt;p class=&quot;book&quot;&gt;
+          &lt;BR&gt;&lt;/BR&gt;
+        &lt;/p&gt;
+      &lt;br/&gt;Год издания: 2009&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1842 Kb&lt;br/&gt;Скачиваний: 5234&lt;br/&gt;</content>
+ <link href="/i/39/745039/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/39/745039/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/39/745039/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/39/745039/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/745039/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/745039/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/745039/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/745039/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/745039/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/745039/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/745039" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:4132a9976165f60795e7a8e72907c84e</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Пелевин и несвобода. Поэтика, политика, метафизика</title>
+ <author> <name>Хаги Софья</name>
+ <uri>/a/285594</uri>
+</author>
+ <link href="/opds/author/285594" rel="related" type="application/atom+xml" title="Все книги автора Хаги Софья" />
+ <category term="Критика" label="Критика" />
+ <category term="Литературоведение" label="Литературоведение" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2023</dc:issued>
+ <content type="text/html">&lt;p class=&quot;book&quot;&gt;Проза Виктора Пелевина стала выражением сомнений и страхов поколения 1990-х годов, пытавшегося сформулировать и выстроить новые жизненные стратегии на руинах распавшейся империи. Несмотря на многолетний читательский успех, тексты Пелевина долго не становились предметом серьезной литературоведческой рефлексии. Книга Софьи Хаги призвана восполнить этот пробел; в центре внимания автора – философская проблема свободы в контексте художественного мировоззрения писателя. Как Пелевин перешел от деконструкции советской идеологии к критике сегодняшней глобальной реальности? Какие опасности писатель видит в ускоренном технологическом развитии? Почему, по его мнению, понятие свободы в современном обществе радикально искажено? Автор ищет ответы на эти вопросы, предлагая пристальное прочтение созданного Пелевиным уникального социально-метафизического фэнтези. Софья Хаги – профессор русской литературы на кафедре славянских языков и литератур в Мичиганском университете (г. Энн Арбор).&lt;/p&gt;
+&lt;br/&gt;Перевод: Пирусская Татьяна Александровна&lt;br/&gt;Год издания: 2023&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1577 Kb&lt;br/&gt;Скачиваний: 1793&lt;br/&gt;</content>
+ <link href="/i/46/740946/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/46/740946/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/46/740946/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/46/740946/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/740946/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/740946/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/740946/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/740946/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/740946/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/740946/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/740946" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:a410e14e1038115ace550548a855aca5</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Пелевин и поколение пустоты</title>
+ <author> <name>Полотовский Сергей</name>
+ <uri>/a/84329</uri>
+</author>
+ <link href="/opds/author/84329" rel="related" type="application/atom+xml" title="Все книги автора Полотовский Сергей" />
+ <author> <name>Козак Роман</name>
+ <uri>/a/92058</uri>
+</author>
+ <link href="/opds/author/92058" rel="related" type="application/atom+xml" title="Все книги автора Козак Роман" />
+ <category term="Биографии и мемуары: прочее" label="Биографии и мемуары: прочее" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2012</dc:issued>
+ <content type="text/html">&lt;p class=book&gt;Книга-расследование критика Сергея Полотовского и журналиста Романа Козака – первая попытка описать жизненный путь Виктора Пелевина, одного из самых влиятельных и загадочных писателей современной России. Кто прототипы самых известных героев пелевинских произведений? Что скрыто в книгах Пелевина между строк? И каков истинный смысл его романов? В конечном счете все эти вопросы приводят авторов к одному главному: какова роль писателя в современном мире, когда настало время айпадов и андроидов, интернет-телевидения и фейсбука?&lt;/p&gt;
+&lt;p class=book&gt;Чтобы написать первую биографию Виктора Пелевина, авторы в течение года исследовали произведения писателя, разыскивали и интервьюировали людей, которые учились, работали и путешествовали с ним. А также поговорили о Пелевине и современной литературе со множеством замечательных людей, среди которых Леонид Парфенов, Сергей Шнуров, Владимир Сорокин, Лев Рубинштейн, Михаил Елизаров, Марат Гельман, Александр Генис, Захар Прилепин и многие другие.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2012&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1508 Kb&lt;br/&gt;Скачиваний: 3929&lt;br/&gt;</content>
+ <link href="/i/9/267209/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/9/267209/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/9/267209/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/9/267209/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/267209/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/267209/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/267209/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/267209/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/267209/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/267209/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/267209" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:75724daa6f660a16c9c8d5a63ec37a66</id>
+</entry>
+ <entry> <updated>2026-10-26T19:28:26+01:00</updated>
+ <title>Формотворческие тенденции в прозе конца ХХ века  (В. Маканин, Л. Петрушевская, В. Пелевин)</title>
+ <author> <name>Маркова Татьяна Николаевна</name>
+ <uri>/a/251744</uri>
+</author>
+ <link href="/opds/author/251744" rel="related" type="application/atom+xml" title="Все книги автора Маркова Татьяна Николаевна" />
+ <category term="Литературоведение" label="Литературоведение" />
+ <dc:language>ru</dc:language>
+ <dc:format>pdf</dc:format>
+ <dc:issued>2003</dc:issued>
+ <content type="text/html">Год издания: 2003&lt;br/&gt;Формат: pdf&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 452 Kb&lt;br/&gt;Скачиваний: 349&lt;br/&gt;</content>
+ <link href="/b/648905/download" rel="http://opds-spec.org/acquisition/open-access" type="application/pdf" />
+ <link href="/b/648905" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:14f84b4ff5ab2113ef57a2894fed6353</id>
+</entry>
+</feed>

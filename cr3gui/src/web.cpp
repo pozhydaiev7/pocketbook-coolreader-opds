@@ -84,24 +84,29 @@ string web::easycurl(const string &url, bool post, const string &postparamstring
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);  // this line makes it work under https
       curl_easy_setopt(curl, CURLOPT_COOKIEFILE, LIB_CURL_COOKIES_FILE);//read from
       curl_easy_setopt(curl, CURLOPT_COOKIEJAR, LIB_CURL_COOKIES_FILE); //write to
- 
+      // Never block the UI for minutes: fail fast when the server does not answer.
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+      curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20L);
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, 60L);
+
       // Attempt to retrieve the remote page
       CRLog::trace("web::easycurl(): Attempt to retrieve the remote page");
       result = curl_easy_perform(curl);
- 
+      long httpCode = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
       // Always cleanup
       curl_easy_cleanup(curl);
- 
+
       // Did we succeed?
       if (result == CURLE_OK)
       {
-          CRLog::trace("web::easycurl(): Got page");
+          CRLog::info("web::easycurl(%s): HTTP %ld, %d bytes", url.c_str(), httpCode, (int)buffer.length());
           return buffer;
       }
       else
       {
-          CRLog::trace("web::easycurl(): Couldn't get page");
-          cerr << "error:" << errorBuffer <<endl;
+          CRLog::error("web::easycurl(%s): curl error %d: %s", url.c_str(), (int)result, errorBuffer);
           return "";
       }
     }
@@ -129,6 +134,11 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       // Open file for writing
       CRLog::trace("web::easycurlBinary(): Open file for writing");
       fp = fopen(outfilename.c_str(),"wb");
+      if (!fp) {
+          CRLog::error("web::easycurlBinary(): cannot open %s for writing", outfilename.c_str());
+          curl_easy_cleanup(curl);
+          return false;
+      }
 
       // Now set up all of the curl options
       CRLog::trace("web::easycurlBinary(): Now set up all of the curl options");
@@ -148,15 +158,22 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);  // this line makes it work under https
       curl_easy_setopt(curl, CURLOPT_COOKIEFILE, LIB_CURL_COOKIES_FILE);//read from
       curl_easy_setopt(curl, CURLOPT_COOKIEJAR, LIB_CURL_COOKIES_FILE); //write to
- 
+      // Fail when the server does not answer or the transfer stalls (no total limit for big books).
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+      curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20L);
+      curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 100L);
+      curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 60L);
+
       // Attempt to retrieve the remote page
       CRLog::trace("web::easycurlBinary(): Attempt to retrieve the remote binary");
       result = curl_easy_perform(curl);
- 
+      long httpCode = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
       // Always cleanup
       CRLog::trace("web::easycurlBinary(): Cleanup");
       curl_easy_cleanup(curl);
- 
+
       // Close file handle
       CRLog::trace("web::easycurlBinary(): Close file handle");
       fclose(fp);
@@ -164,13 +181,12 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       // Did we succeed?
       if (result == CURLE_OK)
       {
-          CRLog::trace("web::easycurlBinary(): Got page");
+          CRLog::info("web::easycurlBinary(%s): HTTP %ld", url.c_str(), httpCode);
           return true;
       }
       else
       {
-          CRLog::trace("web::easycurlBinary(): Couldn't get page");
-          cerr << "error:" << errorBuffer <<endl;
+          CRLog::error("web::easycurlBinary(%s): curl error %d: %s", url.c_str(), (int)result, errorBuffer);
           return false;
       }
     }

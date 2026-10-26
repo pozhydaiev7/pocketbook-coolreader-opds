@@ -16,9 +16,17 @@
 #include <crgui.h>
 #include "fsmenu.h"
 
+#ifdef CR_POCKETBOOK
+// Scales a UI size for high-density screens (long side >= 1400 px, e.g. PB740/PB743G): x1.5.
+int pbScaledSize(int size);
+#define MENU_FONT_SIZE pbScaledSize(28)
+#define MENU_FONT_FACE_SIZE pbScaledSize(36)
+#define VALUE_FONT_SIZE pbScaledSize(24)
+#else
 #define MENU_FONT_SIZE 28
 #define MENU_FONT_FACE_SIZE 36
 #define VALUE_FONT_SIZE 24
+#endif
 
 #define PROP_KEYMAP_FILE "app.keymap.file"
 #define PROP_SKIN_FILE "app.skin.file"

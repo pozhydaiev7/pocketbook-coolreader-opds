@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:search:new:book:0</id>
+ <title>Новинки с 19.10.2026 по 26.10.2026</title>
+ <updated>2026-10-26T18:56:45+01:00</updated>
+ <icon>/favicon.ico</icon>
+ <link href="/opds-opensearch.xml" rel="search" type="application/opensearchdescription+xml" />
+ <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
+ <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
+ <link href="/opds/new/1/new/" rel="next" type="application/atom+xml;profile=opds-catalog" />
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Мастер</title>
+ <author> <name>Шимохин Дмитрий</name>
+ <uri>/a/262790</uri>
+</author>
+ <link href="/opds/author/262790" rel="related" type="application/atom+xml" title="Все книги автора Шимохин Дмитрий" />
+ <category term="Неотсортированное" label="Неотсортированное" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <category term="Приключения" label="Приключения" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/113031" rel="related" type="application/atom+xml" title="Все книги серии &quot;Пришлый&quot;" />
+ <link href="/opds/sequencebooks/106546" rel="related" type="application/atom+xml" title="Все книги серии &quot;Пришлый [Шимохин, Коллингвуд]&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Статус и золото — лишь приятные декорации. Но когда слова сказаны и враги достают стволы, время светских реверансов проходит.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Наступает время ремесла и платы по счетам. Они думали, что загнали меня в угол? Забыли, с кем связались.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Время слов кончилось. За дело берется Мастер.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 767 Kb&lt;br/&gt;Серия: Пришлый #10&lt;br/&gt;Серия: Пришлый [Шимохин, Коллингвуд] #10&lt;br/&gt;</content>
+ <link href="/i/94/893694/4acffe6d-2a9f-487b-9d18-5967de52e517.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/94/893694/4acffe6d-2a9f-487b-9d18-5967de52e517.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/94/893694/4acffe6d-2a9f-487b-9d18-5967de52e517.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/94/893694/4acffe6d-2a9f-487b-9d18-5967de52e517.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893694/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893694/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893694/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893694/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893694/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893694/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893694" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:7704f670fe5eb7de6dcc9e044663e804</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Чёрный ратник 7</title>
+ <author> <name>Гато Макс</name>
+ <uri>/a/309793</uri>
+</author>
+ <link href="/opds/author/309793" rel="related" type="application/atom+xml" title="Все книги автора Гато Макс" />
+ <category term="Неотсортированное" label="Неотсортированное" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/105691" rel="related" type="application/atom+xml" title="Все книги серии &quot;Черный ратник&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Это седьмой том. ПЕРВЫЙ ЗДЕСЬ: &lt;a  l:href = &quot;https://author.today/work/460887&quot;&gt;https://author.today/work/460887&lt;/a&gt;&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Я был первым Черным Ратником, чья аура стояла на вершине Империи. Вместо благодарности я был предан и поплатился жизнью.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Мой дух пробудился, когда последний наследник моего рода пал от подлого удара в подставном поединке.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Очнувшись, я понял, что мир изменился: империя трещит по швам, маги плетут тайные заговоры, а ратники скованы магическими клятвами Императору.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Я отыщу врагов, виновных в падении моего Рода. Даже если черная аура - это клеймо, грозящее смертью.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 716 Kb&lt;br/&gt;Серия: Черный ратник #7&lt;br/&gt;</content>
+ <link href="/i/93/893693/21d5b847-7916-4c79-afa4-7aeb9c8ccbea.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/93/893693/21d5b847-7916-4c79-afa4-7aeb9c8ccbea.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/93/893693/21d5b847-7916-4c79-afa4-7aeb9c8ccbea.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/93/893693/21d5b847-7916-4c79-afa4-7aeb9c8ccbea.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893693/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893693/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893693/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893693/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893693/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893693/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893693" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:98389cc002afb8b256f451bd36b472c5</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Все ангелы живут здесь [сборник]</title>
+ <author> <name>Малкин Анатолий</name>
+ <uri>/a/346768</uri>
+</author>
+ <link href="/opds/author/346768" rel="related" type="application/atom+xml" title="Все книги автора Малкин Анатолий" />
+ <category term="Современная русская и зарубежная проза" label="Современная русская и зарубежная проза" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2017</dc:issued>
+ <content type="text/html">
+        &lt;p class=&quot;book&quot;&gt;		Анатолий Малкин — один из немногих, кто отваживается сегодня писать о любви, не боясь при этом ни откровенности, ни трагизма, ни собственной авторской и человеческой беспомощности. Сборник его новых повестей — опасная и виртуозная игра с читателем. Повести Малкина показывают, каким может быть прозаический текст в руках опытного кинематографиста, для которого удерживать внимание аудитории — основа профессии. Впрочем, профессионализм никогда не мешает Малкину быть непосредственным и свободным в проявлении своих чувств. Поэтому к героям его произведений читатели испытывают не только уважительные, но и братские чувства.&lt;/p&gt;
+      &lt;br/&gt;Год издания: 2017&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 961 Kb&lt;br/&gt;</content>
+ <link href="/i/92/893692/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/92/893692/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/92/893692/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/92/893692/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893692/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893692/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893692/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893692/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893692/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893692/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893692" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:6bf5e7db89b4ffbb9ef7521a34f1afda</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сегурант. Утерянный роман о рыцаре Круглого стола</title>
+ <author> <name>Ариоли Эмануэле</name>
+ <uri>/a/346766</uri>
+</author>
+ <link href="/opds/author/346766" rel="related" type="application/atom+xml" title="Все книги автора Ариоли Эмануэле" />
+ <category term="Европейская старинная литература" label="Европейская старинная литература" />
+ <category term="Литературоведение" label="Литературоведение" />
+ <category term="Мифы. Легенды. Эпос" label="Мифы. Легенды. Эпос" />
+ <category term="Научная литература" label="Научная литература" />
+ <category term="Приключения" label="Приключения" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <content type="text/html">
+    &lt;p class=&quot;book&quot;&gt;Пожалуй, каждому знаком сюжет о короле Артуре и рыцарях Круглого стола. Может показаться, что мы знаем о легендарных подвигах этих героев практически все… Однако необыкновенные приключения Сегуранта, рыцаря, до сих пор не известного широкой публике, были преданы забвению на несколько веков. Рассеянные среди множества средневековых манускриптов, рукописи «Сегуранта» терпеливо ждали своего часа на протяжении длительного времени…&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;Удивительная история о доблестном герое Средневековья оживает на страницах этой книги, представая перед читателем как одно из величайших литературных событий XXI века!&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;В книгу включен текст самого романа, дополнительные и альтернативные версии XIII–XV веков, научные комментарии исследователя Эмануэле Ариоли, а также иллюстрации из оригинальных рукописей.&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;В формате PDF A4 сохранён издательский дизайн.&lt;/p&gt;
+   &lt;br/&gt;Перевод: Поляков Яков Алексеевич&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 12508 Kb&lt;br/&gt;</content>
+ <link href="/i/91/893691/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/91/893691/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/91/893691/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/91/893691/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893691/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893691/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893691/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893691/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893691/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893691/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893691" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:b78c05dbcb561cf6d0ab26293ad3bac0</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Незримый фронт</title>
+ <author> <name>Савостьянов В. И.</name>
+ <uri>/a/346764</uri>
+</author>
+ <link href="/opds/author/346764" rel="related" type="application/atom+xml" title="Все книги автора Савостьянов В. И." />
+ <category term="Биографии и мемуары: прочее" label="Биографии и мемуары: прочее" />
+ <category term="Проза о войне" label="Проза о войне" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>1961</dc:issued>
+ <content type="text/html">
+    &lt;p class=&quot;book&quot;&gt;В предлагаемом широкому кругу читателей сборнике воспоминаний освещается героическая борьба советских военнопленных и людей, угнанных гитлеровцами из разных стран Европы, в одном из самых мрачных фашистских застенков — концентрационном лагере Заксенхаузен в 1941–1945 гг.&lt;/p&gt;
+   &lt;br/&gt;Год издания: 1961&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 10634 Kb&lt;br/&gt;</content>
+ <link href="/i/90/893690/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/90/893690/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/90/893690/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/90/893690/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893690/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893690/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893690/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893690/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893690/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893690/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893690" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:f107b6b0f182f032a40a8d88b597651c</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Русский мотор</title>
+ <author> <name>Гросов Виктор</name>
+ <uri>/a/255290</uri>
+</author>
+ <link href="/opds/author/255290" rel="related" type="application/atom+xml" title="Все книги автора Гросов Виктор" />
+ <category term="Неотсортированное" label="Неотсортированное" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/113975" rel="related" type="application/atom+xml" title="Все книги серии &quot;Русский мотор&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Не хочу менять историю. Не хочу себе всех этих проблем. Но создать автопром в России?&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Внедорожники для брутальных мужчин и кабриолеты для дам? Почему нет?&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Можно и бижутерию развить - есть такое хобби у меня.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Меняется история? Да что ж такое...&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 4967 Kb&lt;br/&gt;Серия: Русский мотор #1&lt;br/&gt;</content>
+ <link href="/i/89/893689/3eb1f49c-0b99-436b-a5ab-f0f6f7973134.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/89/893689/3eb1f49c-0b99-436b-a5ab-f0f6f7973134.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/89/893689/3eb1f49c-0b99-436b-a5ab-f0f6f7973134.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/89/893689/3eb1f49c-0b99-436b-a5ab-f0f6f7973134.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893689/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893689/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893689/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893689/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893689/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893689/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893689" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:edf244f3f2549b5e9782ef592e127925</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Товарищ военврач 7</title>
+ <author> <name>Дмитриев Олег</name>
+ <uri>/a/306513</uri>
+</author>
+ <link href="/opds/author/306513" rel="related" type="application/atom+xml" title="Все книги автора Дмитриев Олег" />
+ <author> <name>Гуров Валерий Александрович</name>
+ <uri>/a/270716</uri>
+</author>
+ <link href="/opds/author/270716" rel="related" type="application/atom+xml" title="Все книги автора Гуров Валерий Александрович" />
+ <category term="Альтернативная история" label="Альтернативная история" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <category term="Самиздат, сетевая литература" label="Самиздат, сетевая литература" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/110906" rel="related" type="application/atom+xml" title="Все книги серии &quot;Товарищ военврач&quot;" />
+ <content type="text/html">
+    &lt;p class=&quot;book&quot;&gt;Зима в разгаре. На новом месте доктора Николина ждёт не только работа, не только задачи, поставленные старшими товарищами. В бесконечную череду крови и смертей, привычную для военного врача, продолжают вплетаться чужие интересы. Международного уровня.&lt;/p&gt;
+   &lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 771 Kb&lt;br/&gt;Серия: Товарищ военврач #7&lt;br/&gt;</content>
+ <link href="/i/88/893688/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/88/893688/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/88/893688/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/88/893688/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893688/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893688/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893688/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893688/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893688/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893688/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893688" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:e01c31170c611c5ab8d01a35d4e5218c</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сеанс № 32 Недостаточно реальности</title>
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Кино" label="Кино" />
+ <dc:language>ru</dc:language>
+ <dc:format>cbz</dc:format>
+ <dc:issued>2007</dc:issued>
+ <content type="text/html">В «Недостаточно реальности» документальный концепт «Сеанса» выходит на мировой уровень. Мы говорим с теми кто делает документальное кино для телевидения: с англичанами с BBC и Channel 4, рассказываем о цензуре, которой питается телевидение, и судьбе одной из его жертв — великом Питере Уоткинсе. Станислав Зельвенский разбирается с мокьюментари в целом, а Олег Ковалов с «Временем первых» Алексея Федорченко в частности. Большой портрет Роберта Флаэрти предлагает вниманию читателя Елена Грачева, а Алексей Гусев размышляет о границе, которая пролегает между игровым и неигровым кино, а также авторах, которые ее с легкостью пересекают. В финале журнала — «шокументари» и охота за мгновением.&lt;br/&gt;Год издания: 2007&lt;br/&gt;Формат: cbz&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 166021 Kb&lt;br/&gt;</content>
+ <link href="/b/893687/download" rel="http://opds-spec.org/acquisition/open-access" type="application/cbz" />
+ <link href="/b/893687" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:1c55baafe905a404a1b0475f1abfcc01</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>У зеленому курені</title>
+ <author> <name>Банась Сильвестр</name>
+ <uri>/a/346760</uri>
+</author>
+ <link href="/opds/author/346760" rel="related" type="application/atom+xml" title="Все книги автора Банась Сильвестр" />
+ <category term="Детская проза: приключения" label="Детская проза: приключения" />
+ <dc:language>uk</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>1975</dc:issued>
+ <content type="text/html">&lt;p class=&quot;book&quot;&gt;Юні герої повісті «У зеленому курені» мріють стати видатними спортсменами, світовими чемпіонами. Щоб змужніти й загартуватися, вони надумали під час літніх канікул пожити в лісі як робінзони.&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;3 хлопцями трапляється чимало пригод: вони допомагають спіймати грабіжників, знаходять старовинний скарб, гасять лісову пожежу.&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;Написана жвавою, образною мовою, пройнята легким гумором, повість, безперечно, зацікавить юних читачів.&lt;/p&gt;
+    &lt;br&gt;
+    &lt;p class=&quot;book&quot;&gt;Перекладено з видання: Sylwester Banaś. W zielonym szałasie. — Naszа Księgarnia, Warszawa, 1963&lt;/p&gt;&lt;br/&gt;Перевод: Пасична Волина Петровна&lt;br/&gt;Год издания: 1975&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: uk&lt;br/&gt;Размер: 6234 Kb&lt;br/&gt;</content>
+ <link href="/i/86/893686/_001.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/86/893686/_001.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/86/893686/_001.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/86/893686/_001.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893686/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893686/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893686/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893686/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893686/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893686/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893686" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:cfb469c29da61223b9641a2fc6343b00</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сеанс № 31 Реальности недостаточно</title>
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Кино" label="Кино" />
+ <dc:language>ru</dc:language>
+ <dc:format>cbz</dc:format>
+ <dc:issued>2007</dc:issued>
+ <content type="text/html">Первая часть двойного специального выпуска «Сеанса», посвященного документальному кино. «Реальности недостаточно» — в большей степени о документальном кино в России и о России в документальном кино. Мы говорим с главными режиссерами нашей документалистики и смотрим их фильмы. Внутри: Косаковский, Расторгуев, Дворцевой, Манский и многие другие. Особый раздел посвящен документалистике исторической, основанной на хронике и взгляду на Россию из-за границы. Продолжение в «Сеансе» №32.&lt;br/&gt;Год издания: 2007&lt;br/&gt;Формат: cbz&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 140677 Kb&lt;br/&gt;</content>
+ <link href="/b/893685/download" rel="http://opds-spec.org/acquisition/open-access" type="application/cbz" />
+ <link href="/b/893685" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:063dba61abd63ef7a151ae6d827e4a5c</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Чужой голос</title>
+ <author> <name>Свободная Аня</name>
+ <uri>/a/336039</uri>
+</author>
+ <link href="/opds/author/336039" rel="related" type="application/atom+xml" title="Все книги автора Свободная Аня" />
+ <category term="Проза" label="Проза" />
+ <category term="Самиздат, сетевая литература" label="Самиздат, сетевая литература" />
+ <category term="Современная русская и зарубежная проза" label="Современная русская и зарубежная проза" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/108401" rel="related" type="application/atom+xml" title="Все книги серии &quot;Anya-280&quot;" />
+ <content type="text/html">Семья Алехандро, Ани и Лизы живёт в Парагвае своей тихой, но насыщенной жизнью: дети, сад, споры на террасе, работа. Лусия идёт в школу, продолжает интересоваться насекомыми, задаёт взрослые вопросы и впервые по-настоящему проверяет границы — свои и чужие. Ваня растёт. Кошки продолжают считать дом своим.
+Параллельно идет долгая переписка с Дмитрием Соколовым — человеком, который выбрал независимость как рабочий принцип и считает вредным почти все, что не является необходимым. Их разговоры о взрослости, приватности, форме и содержании, о том, что общество должно считать нормой, становятся для семьи способом думать вслух, а для Соколова — возможностью проверить собственную ясность на прочность.
+В этом же году история Алехандро, Ани и Лизы возвращается к ним уже в чужом пересказе — громком и упрощённом. А к концу года накопленные споры превращаются в сборник. Семья решает опубликовать его — очищенным от личных деталей, но не сглаженным. В то же время в Швейцарии человек с кошкой по имени Нова снова убеждается, что выбранный им образ жизни по-прежнему лучше всего подходит ему.
+«Чужой голос» — повесть о том, как растут дети и не заканчиваются разговоры, о границах между личным и общим, о праве на «лишнее» и о том, что одиночество и семья могут быть одинаково цельными формами жизни.&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 706 Kb&lt;br/&gt;Серия: Anya-280 #5&lt;br/&gt;</content>
+ <link href="/i/84/893684/img_0" rel="http://opds-spec.org/image" type="image/" />
+ <link href="/i/84/893684/img_0" rel="x-stanza-cover-image" type="image/" />
+ <link href="/i/84/893684/img_0" rel="http://opds-spec.org/thumbnail" type="image/" />
+ <link href="/i/84/893684/img_0" rel="x-stanza-cover-image-thumbnail" type="image/" />
+ <link href="/b/893684/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893684/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893684/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893684/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893684/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893684/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893684" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:89b9298647a9cb8baa74ca6e9ca43f7a</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сеанс № 25/26 Солнце</title>
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Кино" label="Кино" />
+ <dc:language>ru</dc:language>
+ <dc:format>cbz</dc:format>
+ <dc:issued>2005</dc:issued>
+ <content type="text/html">На обложке — «Солнце» Александра Сокурова. Внутри помимо него: большая дискуссия о дебютантах, Папа Иоанн Павел II, Г.-К. Честертон, Андрей Платонов, попытки переформулировать понятие кинематографа, размышление об этике в документальном кино, а также рубрика «История вопроса» с рассказом о судебной драме&lt;br/&gt;Год издания: 2005&lt;br/&gt;Формат: cbz&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 196443 Kb&lt;br/&gt;</content>
+ <link href="/b/893683/download" rel="http://opds-spec.org/acquisition/open-access" type="application/cbz" />
+ <link href="/b/893683" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:db161ba2244db6cdb053ccc8faa2af6a</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Лучший травник СССР 4</title>
+ <author> <name>Богдашов Сергей Александрович</name>
+ <uri>/a/170682</uri>
+</author>
+ <link href="/opds/author/170682" rel="related" type="application/atom+xml" title="Все книги автора Богдашов Сергей Александрович" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <category term="Фэнтези" label="Фэнтези" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/110950" rel="related" type="application/atom+xml" title="Все книги серии &quot;Травник [Богдашов]&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Внук друида и эльфийки попадает в наш мир, во времена СССР, 1981 год. Вот только дембель не совсем с ним согласен. И пусть он не особо грубит трёхсотлетнему Травнику, но у него и не побалуешь!&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 837 Kb&lt;br/&gt;Серия: Травник [Богдашов] #3&lt;br/&gt;</content>
+ <link href="/i/82/893682/8621ce4c-552e-4d9d-a968-2a59f65f3e6f.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/82/893682/8621ce4c-552e-4d9d-a968-2a59f65f3e6f.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/82/893682/8621ce4c-552e-4d9d-a968-2a59f65f3e6f.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/82/893682/8621ce4c-552e-4d9d-a968-2a59f65f3e6f.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893682/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893682/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893682/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893682/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893682/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893682/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893682" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:18289d4639c0321fded002fa82b0814b</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сеанс № 23/24 Время проекта</title>
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Кино" label="Кино" />
+ <dc:language>ru</dc:language>
+ <dc:format>cbz</dc:format>
+ <dc:issued>2005</dc:issued>
+ <content type="text/html">«Проект» — это слово становится знаковым для кинопроизводства середины нулевых. Продюсеры мыслят не фильмами, а проектами. Режиссеры снимают не фильмы, но делают проекты. Звучит и слово «блокбастер». Но что такое русский блокбастер? И чем обеспечен этот феномен? «Сеанс» изучает успешные проекты не только в кино, но и в литературе: один из важнейших героев номера — Б. Акунин. «Сеанс» изучает технологии успеха и, вообще, технологию — по Кодзи Судзуки и Дэвиду Кроненбергу&lt;br/&gt;Год издания: 2005&lt;br/&gt;Формат: cbz&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 187883 Kb&lt;br/&gt;</content>
+ <link href="/b/893681/download" rel="http://opds-spec.org/acquisition/open-access" type="application/cbz" />
+ <link href="/b/893681" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:70f39a4fa8b187e4e5b67ad896e7222e</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Прокурор Брише</title>
+ <author> <name>Шаветт Эжен</name>
+ <uri>/a/109215</uri>
+</author>
+ <link href="/opds/author/109215" rel="related" type="application/atom+xml" title="Все книги автора Шаветт Эжен" />
+ <category term="Исторический детектив" label="Исторический детектив" />
+ <category term="Классический детектив" label="Классический детектив" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2011</dc:issued>
+ <content type="text/html">&lt;p class=&quot;book&quot;&gt;Эжен Шаветт (настоящая фамилия Вашетт; 1827–1902) – французский писатель и поэт, младший современник и последователь Дюма, Габорио, Сю – основоположников национальной школы приключенческого романа. В 70–80-х годах XIX столетия на русском языке было издано много его произведений. «Куртизанка», «Роковое наследство», «По туманным следам», «Сбежавший нотариус», «Комната преступления» – их названия говорят сами за себя. Практически обязательным атрибутом каждого из них была какая-то роковая тайна. В данном томе представлен роман «Прокурор Брише», где основная интрига разворачивается вокруг личности верного слуги закона, случайно названного приговоренным к смерти преступником в числе своих сообщников, а возможно и умышленно оговоренного им. Последующее исчезновение прокурора только запутывает дело: то ли он пустился в бега, то ли был убит или похищен… События принимают головокружительный оборот, но поскольку среди родственников и друзей главного героя желающих узнать истину практически столько же, сколько и заинтересованных в ее сокрытии, роман держит читателя в напряжении до последней страницы.&lt;/p&gt;&lt;br/&gt;Перевод: Солодовникова Ольга Борисовна&lt;br/&gt;Год издания: 2011&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1253 Kb&lt;br/&gt;</content>
+ <link href="/i/80/893680/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/80/893680/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/80/893680/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/80/893680/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893680/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893680/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893680/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893680/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893680/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893680/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893680" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:6643fa34f927f8ccb9167a384f322a4c</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Кодекс физрука</title>
+ <author> <name>Мусаниф Сергей Сергеевич</name>
+ <uri>/a/28816</uri>
+</author>
+ <link href="/opds/author/28816" rel="related" type="application/atom+xml" title="Все книги автора Мусаниф Сергей Сергеевич" />
+ <category term="Попаданцы" label="Попаданцы" />
+ <category term="Приключения" label="Приключения" />
+ <category term="Фэнтези" label="Фэнтези" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/113974" rel="related" type="application/atom+xml" title="Все книги серии &quot;Кодекс физрука&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Он был богом кровавого воздаяния, первым среди равных, существом вне рейтингов и категорий, а потом что-то случилось, и он очнулся в теле умирающего юноши в параллельном мире, где существуют магия и Российская империя, где хрустят булками, звенят саблями и жгут файерболами. Теперь он — наследник знатного, но обедневшего рода. Отец в опале, семья в забытьи, империя в упадке, кругом враги, предатели, британцы и рептилоиды, и другой на его месте точно опустил бы руки.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Но он не привык сдаваться.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Он сделает все, что надо и узнает Страшную Правду (зачеркнуто), что случилось.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Ведь он все еще физрук.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;А физрук никогда не меняется.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 801 Kb&lt;br/&gt;Серия: Кодекс физрука #1&lt;br/&gt;</content>
+ <link href="/i/79/893679/fa272c7b-c770-4d20-b660-d23a908d4605.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/79/893679/fa272c7b-c770-4d20-b660-d23a908d4605.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/79/893679/fa272c7b-c770-4d20-b660-d23a908d4605.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/79/893679/fa272c7b-c770-4d20-b660-d23a908d4605.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893679/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893679/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893679/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893679/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893679/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893679/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893679" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:3d543f58cab9dd3ccfcdd05bf69d295a</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Сеанс № 21/22 Трудно быть богом</title>
+ <category term="Журналы, газеты" label="Журналы, газеты" />
+ <category term="Кино" label="Кино" />
+ <dc:language>ru</dc:language>
+ <dc:format>cbz</dc:format>
+ <dc:issued>2004</dc:issued>
+ <content type="text/html">Большие герои нового «Сеанса» — «Солнце» Александра Сокурова и «Трудно быть богом» Алексея Германа (еще есть надежда, что фильм выйдет совсем скоро). Между ними — полная картина российского кинематографа, жанрового, пышного, порой даже радикального. В новой рубрике Biopic — обширный рассказ об издателе Алексее Суворине, своего рода намек амбициозными кинопродюсерам. Так же Петр Багров пишет о Сергее Юткевиче, Алексей Гусев о Марлоне Брандо, а Михаил Ямпольский о Жаке Дерриде.&lt;br/&gt;Год издания: 2004&lt;br/&gt;Формат: cbz&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 168057 Kb&lt;br/&gt;</content>
+ <link href="/b/893678/download" rel="http://opds-spec.org/acquisition/open-access" type="application/cbz" />
+ <link href="/b/893678" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:256850ab1286e0d7faf58f88f09e1e9e</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Доктор Никто</title>
+ <author> <name>Габор Андор</name>
+ <uri>/a/346762</uri>
+</author>
+ <link href="/opds/author/346762" rel="related" type="application/atom+xml" title="Все книги автора Габор Андор" />
+ <category term="Роман, повесть" label="Роман, повесть" />
+ <category term="Сатира" label="Сатира" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>1978</dc:issued>
+ <content type="text/html">
+    &lt;p class=&quot;book&quot;&gt;Андор Габор (1884–1953) — крупный венгерский писатель, критик, публицист. В сатирическом романе «Доктор Никто» (1918) представлен паразитический мир высшего общества Венгрии времен императора Франца Иосифа I. Герой романа — бездарный журналист, типичный представитель будапештской богемы — с помощью связей, денег и влиятельных куртизанок добивается головокружительной карьеры, становится депутатом парламента, доктором наук, зятем банкира-миллионера.&lt;/p&gt;
+   &lt;br/&gt;Перевод: Салимон Иван, Лейбутин Геннадий Савельевич&lt;br/&gt;Год издания: 1978&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 1823 Kb&lt;br/&gt;</content>
+ <link href="/i/77/893677/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/77/893677/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/77/893677/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/77/893677/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893677/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893677/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893677/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893677/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893677/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893677/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893677" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:57189619cd74b43ce7d65aad4eaad86b</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>В тени восьмиконечного креста. Мальтийский орден и его связи с Россией</title>
+ <author> <name>Стегний Петр</name>
+ <uri>/a/346761</uri>
+</author>
+ <link href="/opds/author/346761" rel="related" type="application/atom+xml" title="Все книги автора Стегний Петр" />
+ <category term="История" label="История" />
+ <category term="Публицистика" label="Публицистика" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <content type="text/html">
+    &lt;p class=&quot;book&quot;&gt;Книга посвящена истории Ордена мальтийских рыцарей, его связям с Россией, которые особенно активно развивались во второй половине XVIII — начале XIX в. Обращаясь к ярким, но малоизученным страницам русской внешней политики времен Екатерины II и Павла I, автор использует широкий круг отечественных и зарубежных источников, в том числе материалы Архива внешней политики России.&lt;/p&gt;
+    &lt;p class=&quot;book&quot;&gt;Для широкого круга читателей.&lt;/p&gt;
+   &lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 2066 Kb&lt;br/&gt;</content>
+ <link href="/i/76/893676/cover.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/76/893676/cover.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/76/893676/cover.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/76/893676/cover.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893676/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893676/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893676/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893676/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893676/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893676/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893676" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:24ce4abf1d0ee75bc620d0fe3407fa29</id>
+</entry>
+ <entry> <updated>2026-10-26T18:56:45+01:00</updated>
+ <title>Рекапитуляция</title>
+ <author> <name>Ким Сергей Александрович</name>
+ <uri>/a/70463</uri>
+</author>
+ <link href="/opds/author/70463" rel="related" type="application/atom+xml" title="Все книги автора Ким Сергей Александрович" />
+ <category term="Неотсортированное" label="Неотсортированное" />
+ <dc:language>ru</dc:language>
+ <dc:format>fb2+zip</dc:format>
+ <dc:issued>2026</dc:issued>
+ <link href="/opds/sequencebooks/74430" rel="related" type="application/atom+xml" title="Все книги серии &quot;Чужая жизнь&quot;" />
+ <content type="text/html">
+&lt;p class=&quot;book&quot;&gt;Студент Виктор Северов попал из России 2012 г. в Японию 2016 г.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Но это не просто будущее, это другой мир.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Здесь в 1999 г. в Антарктиде рухнул метеорит, вызвав глобальные изменения климата, а череда природных катаклизмов и войн изменили планету.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Но теперь миру угрожает новая опасность - гигантские монстры-кайдзю. Уничтожить их способно лишь ядерное оружие... и огромные пилотируемые биомеханоиды - Призраки.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;Именно пилотом Призрака-01 и становится Виктор, попавший в тело обычного японского школьника Акиры Нагумо.&lt;/p&gt;
+&lt;p class=&quot;book&quot;&gt;И теперь именно ему и специальному институту &quot;Иджис&quot; предстоит защитить планету.&lt;/p&gt;
+&lt;br/&gt;Год издания: 2026&lt;br/&gt;Формат: fb2&lt;br/&gt;Язык: ru&lt;br/&gt;Размер: 829 Kb&lt;br/&gt;Серия: Чужая жизнь #1&lt;br/&gt;</content>
+ <link href="/i/75/893675/3048b505-1fc5-419c-a5c0-8a35cfd155ce.jpg" rel="http://opds-spec.org/image" type="image/jpeg" />
+ <link href="/i/75/893675/3048b505-1fc5-419c-a5c0-8a35cfd155ce.jpg" rel="x-stanza-cover-image" type="image/jpeg" />
+ <link href="/i/75/893675/3048b505-1fc5-419c-a5c0-8a35cfd155ce.jpg" rel="http://opds-spec.org/thumbnail" type="image/jpeg" />
+ <link href="/i/75/893675/3048b505-1fc5-419c-a5c0-8a35cfd155ce.jpg" rel="x-stanza-cover-image-thumbnail" type="image/jpeg" />
+ <link href="/b/893675/fb2" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/b/893675/html" rel="http://opds-spec.org/acquisition/open-access" type="application/html+zip" />
+ <link href="/b/893675/txt" rel="http://opds-spec.org/acquisition/open-access" type="application/txt+zip" />
+ <link href="/b/893675/rtf" rel="http://opds-spec.org/acquisition/open-access" type="application/rtf+zip" />
+ <link href="/b/893675/epub" rel="http://opds-spec.org/acquisition/open-access" type="application/epub+zip" />
+ <link href="/b/893675/mobi" rel="http://opds-spec.org/acquisition/open-access" type="application/x-mobipocket-ebook" />
+ <link href="/b/893675" rel="alternate" type="text/html" title="Книга на сайте" />
+ <id>tag:book:823dda888fec95bb0ab2185287f194ca</id>
+</entry>
+</feed>

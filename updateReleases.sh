@@ -98,6 +98,7 @@ function doUpdate {
 		fi
 		if [ "$1" = "pro5" ]; then
 			cp -f "$sdk/pb$1/cr3gui/pb631fw5.cr3skin" "$package/system/share/cr3/skins/"
+			cp -f "$sdk/pb$1/cr3gui/pb740fw5.cr3skin" "$package/system/share/cr3/skins/"
 		fi
 
 		echo " - package.version > package"
