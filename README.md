@@ -81,7 +81,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Install
 
-1. Download `cr3-v0.0.6-17-62.2-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
+1. Download `cr3-v0.0.6-17-63-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
 2. Connect the reader by USB. Back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
 3. Copy the `system` folder from the archive to the root of the reader's storage, replacing the existing files.
 

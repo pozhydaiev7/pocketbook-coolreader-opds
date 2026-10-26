@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.6-17-62.2-opds — 2026-10-26
+## 0.0.6-17-63-opds — 2026-10-26
 
 Based on blchinezu/pocketbook-coolreader 0.0.6-17-62.1.
 
