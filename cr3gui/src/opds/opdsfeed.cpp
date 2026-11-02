@@ -459,6 +459,12 @@ bool Feed::parse(const std::string & xml, const std::string & url, std::string &
             if (c.name == "author") {
                 std::string name = collapseSpaces(c.childText("name"));
                 if (!name.empty()) e.authors.push_back(name);
+            } else if (c.name == "category") {
+                std::string label = collapseSpaces(c.attr("label"));
+                if (label.empty())
+                    label = collapseSpaces(c.attr("term"));
+                if (!label.empty())
+                    e.categories.push_back(label);
             } else if ((c.name == "content" || c.name == "summary") && e.summary.empty()) {
                 std::string type = c.attr("type");
                 e.summary = contains(type, "html") ? htmlToText(c.text) : collapseSpaces(trim(c.text));

@@ -85,6 +85,7 @@ int main(int argc, char ** argv)
         CHECK(b.related.size() == 3);
         CHECK(b.summary.find("Статус и золото") == 0);
         CHECK(b.summary.find("&lt;") == std::string::npos && b.summary.find("<p") == std::string::npos);
+        CHECK(b.categories.size() == 3 && b.categories[1] == "Попаданцы");
         CHECK(opds::makeBookFileName(b, b.formats[0]) == "Шимохин Дмитрий - Мастер.fb2.zip");
         printf("summary: %.200s\n", b.summary.c_str());
     }

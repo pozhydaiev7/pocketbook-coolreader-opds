@@ -8,6 +8,12 @@
 #include <lvfntman.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "mainwnd.h"
 #include "fsmenu.h"
@@ -57,14 +63,87 @@ lString16 fitText(LVFontRef font, const lString16 & text, int maxWidth)
     return res;
 }
 
+int textWidth(LVFontRef font, const lString16 & text)
+{
+    return font->getTextWidth(text.c_str(), text.length());
+}
+
+// Splits a paragraph into lines: the first one fits firstWidth, the others fit width.
+// A word longer than the line stays whole and is cut with an ellipsis when drawn.
+std::vector<lString16> wrapText(LVFontRef font, const lString16 & text, int firstWidth, int width)
+{
+    std::vector<lString16> lines;
+    lString16 line, word;
+    for (int i = 0; i <= text.length(); i++) {
+        lChar16 ch = i < text.length() ? text[i] : L' ';
+        if (ch != L' ' && ch != L'\t' && ch != L'\r' && ch != L'\n') {
+            word << ch;
+            continue;
+        }
+        if (word.empty())
+            continue;
+        lString16 candidate = line.empty() ? word : line + L" " + word;
+        int limit = lines.empty() ? firstWidth : width;
+        if (line.empty() || textWidth(font, candidate) <= limit) {
+            line = candidate;
+        } else {
+            lines.push_back(line);
+            line = word;
+        }
+        word.clear();
+    }
+    if (!line.empty())
+        lines.push_back(line);
+    return lines;
+}
+
+// One line of the book description screen: an optional bold label, then the text.
+// A line without text is a gap between blocks.
+struct InfoLine {
+    lString16 label;
+    lString16 text;
+    LVFontRef font;
+    int indent;
+    InfoLine() : indent(0) {}
+};
+
+// "Year: 2026" style lines that Flibusta appends to the description.
+bool isFieldLine(const lString16 & paragraph, int & colon)
+{
+    colon = paragraph.pos(L": ");
+    if (colon < 2 || colon > 30 || paragraph.length() > 120)
+        return false;
+    for (int i = 0; i < colon; i++) {
+        lChar16 ch = paragraph[i];
+        if (ch == L'.' || ch == L'!' || ch == L'?' || ch == L',')
+            return false;
+    }
+    return true;
+}
+
+// Menu skin for the catalog screens. The touch-TOC skin exists only in the FW5 touch skins;
+// with any other skin a missing menu skin has no item or title parts, and drawing it crashes.
+lString16 menuSkinName(CRGUIWindowManager * wm)
+{
+    static const lChar16 * const ids[] = { L"touch-toc", L"settings", L"main" };
+    CRSkinRef skin = wm->getSkin();
+    if (!skin.isNull()) {
+        for (size_t i = 0; i < sizeof(ids) / sizeof(ids[0]); i++)
+            if (!skin->pathById(ids[i]).empty())
+                return lString16(L"#") + ids[i];
+    }
+    return lString16(L"#main");
+}
+
 class OpdsMenu;
 
 // One row of the catalog list: title (bold) and an optional second line (author or description),
-// or the paging row with three tap zones: previous | service menu | next.
+// two lines of plain text (book description), or the paging row with three tap zones:
+// previous | service menu | next.
 class OpdsItem : public CRMenuItem
 {
 public:
-    enum Kind { ROW, PAGER };
+    enum Kind { ROW, TEXT, PAGER };
 
     OpdsItem(OpdsMenu * menu, int id, const lString16 & title, const lString16 & subtitle, Kind kind = ROW);
     virtual void Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected);
@@ -73,8 +152,12 @@ public:
     // Paging row texts; an empty side is disabled.
     lString16 left, center, right;
     int leftCommand, rightCommand;
+    // Description row lines.
+    InfoLine first, second;
 
 private:
+    void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y);
+
     OpdsMenu * _owner;
     lString16 _title;
     lString16 _subtitle;
@@ -90,17 +173,21 @@ class OpdsMenu : public CRFullScreenMenu
 public:
     LVFontRef titleFont;
     LVFontRef subFont;
+    LVFontRef labelFont; // bold, the size of subFont
+    LVFontRef bodyFont;  // book description text
 
     OpdsMenu(CRGUIWindowManager * wm, const lString16 & caption, lvRect & rc, bool paged)
         : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _lastTouchX(-1), _paged(paged)
     {
         if (!fontAntiAliasingActivated())
             forcePartialBwUpdates = true;
-        setSkinName(L"#touch-toc");
+        setSkinName(menuSkinName(wm));
         _fullscreen = true;
         setAccelerators(wm->getAccTables().get("menu"));
         titleFont = fontMan->GetFont(pbScaledSize(26), 600, false, css_ff_sans_serif, lString8("Liberation Sans"));
         subFont = fontMan->GetFont(pbScaledSize(22), 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
+        labelFont = fontMan->GetFont(pbScaledSize(22), 600, false, css_ff_sans_serif, lString8("Liberation Sans"));
+        bodyFont = fontMan->GetFont(pbScaledSize(24), 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
     }
 
     virtual ~OpdsMenu()
@@ -172,6 +259,20 @@ public:
 
     int lastTouchX() const { return _lastTouchX; }
 
+    // Width available for the text of a row (see OpdsItem::Draw).
+    int rowTextWidth()
+    {
+        lvRect client;
+        getClientRect(client);
+        int width = client.width() - 2 * (titleFont->getHeight() / 3);
+        CRMenuSkinRef skin = getSkin();
+        if (!skin.isNull() && !skin->getItemSkin().isNull()) {
+            lvRect borders = skin->getItemSkin()->getBorderWidths();
+            width -= borders.left + borders.right;
+        }
+        return width;
+    }
+
     void add(int command, const lString16 & title, const lString16 & subtitle = lString16::empty_str)
     {
         addItem(new OpdsItem(this, command, title, subtitle));
@@ -221,6 +322,14 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
                            c.c_str(), c.length(), L'?', NULL, false, 0);
         int rw = tf->getTextWidth(rt.c_str(), rt.length());
         tf->DrawTextString(&buf, r.right - rw, y, rt.c_str(), rt.length(), L'?', NULL, false, 0);
+    } else if (_kind == TEXT) {
+        int gap = sf->getHeight() / 8;
+        int h1 = first.font.isNull() ? 0 : first.font->getHeight();
+        int h2 = second.font.isNull() ? 0 : second.font->getHeight();
+        int total = h1 + (h2 > 0 ? gap + h2 : 0);
+        int y = r.top + (r.height() - total) / 2;
+        drawLine(buf, first, r, y);
+        drawLine(buf, second, r, y + h1 + gap);
     } else if (_subtitle.empty()) {
         lString16 t = fitText(tf, _title, r.width());
         tf->DrawTextString(&buf, r.left, r.top + (r.height() - tf->getHeight()) / 2,
@@ -235,6 +344,21 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
         sf->DrawTextString(&buf, r.left, y + tf->getHeight() + gap, s.c_str(), s.length(), L'?', NULL, false, 0);
     }
     buf.SetClipRect(&oldClip);
+}
+
+void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y)
+{
+    if (line.font.isNull() || (line.text.empty() && line.label.empty()))
+        return;
+    int x = r.left + line.indent;
+    if (!line.label.empty()) {
+        LVFontRef lf = _owner->labelFont;
+        lString16 l = fitText(lf, line.label, r.right - x);
+        lf->DrawTextString(&buf, x, y, l.c_str(), l.length(), L'?', NULL, false, 0);
+        x += textWidth(lf, l);
+    }
+    lString16 t = fitText(line.font, line.text, r.right - x);
+    line.font->DrawTextString(&buf, x, y, t.c_str(), t.length(), L'?', NULL, false, 0);
 }
 
 int OpdsItem::onSelect()
@@ -274,11 +398,6 @@ void searchKeyboardHandler(char * s)
     executeCommand((s && *s) ? OPDS_CMD_SEARCH_APPLY : OPDS_CMD_SHOW_LIST, 0);
 }
 
-void infoDialogHandler(int)
-{
-    executeCommand(OPDS_CMD_SHOW_BOOK, 0);
-}
-
 // Connects Wi-Fi through the firmware when it is not connected (system dialog / last network).
 bool ensureNetwork()
 {
@@ -295,6 +414,135 @@ bool endsWith(const std::string & s, const char * suffix)
 {
     size_t n = strlen(suffix);
     return s.size() >= n && s.compare(s.size() - n, n, suffix) == 0;
+}
+
+// ------------------------------------------------------------ firmware library scan
+// The firmware library lists files from its database, which the system scanner fills in on
+// USB disconnect or reboot. BookPreparing/BookReady did not add a downloaded file on
+// InkPad 4 (6.11.1683), so after a download the scanner is started the way inkshelf does it
+// (github.com/N-Combinator/inkshelf, library_scan.c): from a detached supervisor process that
+// outlives CoolReader, stops the scanner once it reports "Scan finished" (it may stay alive
+// afterwards) and kills it after two minutes. The supervisor is a fork of a multithreaded
+// process, so it only makes async-signal-safe calls.
+
+const char * const SCAN_LOG = "/tmp/cr3-library-scan.log";
+const int SCAN_TIMEOUT_MS = 120000;
+
+void sleepMs(int ms)
+{
+    struct timespec delay;
+    delay.tv_sec = ms / 1000;
+    delay.tv_nsec = (ms % 1000) * 1000000L;
+    while (nanosleep(&delay, &delay) != 0 && errno == EINTR) {}
+}
+
+// True when the scanner output contains its completion line.
+bool scanFinished()
+{
+    int fd = open(SCAN_LOG, O_RDONLY);
+    if (fd < 0)
+        return false;
+    static const char marker[] = "Scan finished";
+    const size_t keep = sizeof(marker) - 1;
+    char buf[1024];
+    size_t have = 0;
+    bool found = false;
+    for (;;) {
+        ssize_t n = read(fd, buf + have, sizeof(buf) - have);
+        if (n <= 0)
+            break;
+        have += (size_t)n;
+        for (size_t i = 0; i + keep <= have && !found; i++)
+            if (memcmp(buf + i, marker, keep) == 0)
+                found = true;
+        if (found)
+            break;
+        if (have > keep) { // keep a tail so a marker split between reads is still found
+            memmove(buf, buf + have - keep, keep);
+            have = keep;
+        }
+    }
+    close(fd);
+    return found;
+}
+
+// Supervisor body: runs the scanner and waits for it. Never returns.
+void superviseScanner(const char * scanner)
+{
+    setsid();
+    signal(SIGCHLD, SIG_DFL);
+    signal(SIGTERM, SIG_DFL);
+    signal(SIGHUP, SIG_IGN);
+    sigset_t none;
+    sigemptyset(&none);
+    sigprocmask(SIG_SETMASK, &none, NULL);
+    for (int fd = 3; fd < 1024; fd++) // sockets, files and pipes of the reader
+        close(fd);
+    int nullfd = open("/dev/null", O_RDWR);
+    if (nullfd >= 0) {
+        dup2(nullfd, 0);
+        dup2(nullfd, 1);
+        dup2(nullfd, 2);
+        if (nullfd > 2) close(nullfd);
+    }
+    pid_t pid = fork();
+    if (pid < 0)
+        _exit(1);
+    if (pid == 0) {
+        int out = open(SCAN_LOG, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (out >= 0) {
+            dup2(out, 1);
+            dup2(out, 2);
+            if (out > 2) close(out);
+        }
+        execl(scanner, scanner, (char *)NULL);
+        _exit(127);
+    }
+    int status;
+    for (int waited = 0; ; waited += 200) {
+        pid_t rc = waitpid(pid, &status, WNOHANG);
+        if (rc == pid || (rc < 0 && errno != EINTR))
+            _exit(0);
+        if (scanFinished() || waited >= SCAN_TIMEOUT_MS) {
+            kill(pid, SIGTERM);
+            for (int i = 0; i < 20 && waitpid(pid, &status, WNOHANG) == 0; i++)
+                sleepMs(100);
+            kill(pid, SIGKILL);
+            waitpid(pid, &status, 0);
+            _exit(0);
+        }
+        sleepMs(200);
+    }
+}
+
+// Starts a library scan in the background; does nothing when the firmware has no scanner.
+void requestLibraryScan()
+{
+    const char * scanner = NULL;
+    if (access("/ebrmain/bin/scanner.app", X_OK) == 0)
+        scanner = "/ebrmain/bin/scanner.app";
+    else if (access("/ebrmain/cramfs/bin/scanner.app", X_OK) == 0)
+        scanner = "/ebrmain/cramfs/bin/scanner.app";
+    if (!scanner) {
+        CRLog::info("OPDS: no firmware scanner, the library lists the book after the next scan");
+        return;
+    }
+    pid_t pid = fork();
+    if (pid < 0) {
+        CRLog::error("OPDS: cannot start the library scan: fork failed");
+        return;
+    }
+    if (pid == 0) {
+        // Intermediate child: the supervisor is its child, so it is not left as a zombie
+        // of the reader and survives the reader exit.
+        pid_t supervisor = fork();
+        if (supervisor == 0)
+            superviseScanner(scanner);
+        _exit(supervisor < 0 ? 1 : 0);
+    }
+    int status;
+    while (waitpid(pid, &status, 0) < 0 && errno == EINTR) {}
+    CRLog::info("OPDS: library scan started with %s", scanner);
 }
 
 // Rejects error pages the server may return instead of a book.
@@ -541,19 +789,112 @@ void OpdsBrowser::showBook(CRGUIWindowManager * wm, int index)
     activate(wm, menu);
 }
 
-void OpdsBrowser::showInfo()
+namespace {
+
+// Wraps a paragraph into lines; the first line carries the label and the indent.
+void addParagraph(std::vector<InfoLine> & lines, LVFontRef font, LVFontRef labelFont,
+                  const lString16 & label, const lString16 & text, int width, int indent)
+{
+    int firstWidth = width - indent - (label.empty() ? 0 : textWidth(labelFont, label));
+    std::vector<lString16> parts = wrapText(font, text, firstWidth, width);
+    if (parts.empty() && !label.empty())
+        parts.push_back(lString16::empty_str);
+    for (size_t i = 0; i < parts.size(); i++) {
+        InfoLine line;
+        line.font = font;
+        line.text = parts[i];
+        if (i == 0) {
+            line.label = label;
+            line.indent = indent;
+        }
+        lines.push_back(line);
+    }
+}
+
+void addGap(std::vector<InfoLine> & lines, LVFontRef font)
+{
+    if (lines.empty() || lines.back().text.empty())
+        return;
+    InfoLine gap;
+    gap.font = font;
+    lines.push_back(gap);
+}
+
+} // namespace
+
+// Book description as a catalog screen, two lines per row: title and author in bold, then the
+// book data ("Genre: ...", and the "Year: ..." lines Flibusta appends to the description) with
+// bold labels, then the description paragraphs. A tap anywhere returns to the book screen.
+// A firmware dialog is not used here: the reader page repaints over it as soon as the catalog
+// menu closes.
+void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
 {
     const opds::Entry * e = currentBook();
-    if (!e) return;
-    std::string text = e->summary;
-    if (text.size() > 2000) {
-        size_t cut = 2000;
-        while (cut > 0 && (((unsigned char)text[cut]) & 0xC0) == 0x80) cut--;
-        text = text.substr(0, cut) + "...";
+    if (!e) { showList(wm); return; }
+
+    lvRect rc = wm->getScreen()->getRect();
+    OpdsMenu * menu = new OpdsMenu(wm, u16(e->title), rc, false);
+    int rows = menu->setupRows(true);
+    menu->add(OPDS_CMD_SHOW_BOOK, lString16(MARK_PREV) + lString16(_("Back to the book")));
+
+    int width = menu->rowTextWidth();
+    std::vector<InfoLine> lines;
+    addParagraph(lines, menu->titleFont, menu->labelFont, lString16::empty_str, u16(e->title), width, 0);
+    addParagraph(lines, menu->labelFont, menu->labelFont, lString16::empty_str, u16(e->authorsText()), width, 0);
+    addGap(lines, menu->subFont);
+
+    if (!e->categories.empty()) {
+        lString16 genres;
+        for (size_t i = 0; i < e->categories.size(); i++) {
+            if (i > 0) genres << L", ";
+            genres << u16(e->categories[i]);
+        }
+        addParagraph(lines, menu->subFont, menu->labelFont, lString16(_("Genre")) + L": ", genres, width, 0);
     }
-    std::string title = e->title;
-    if (!e->authors.empty()) title += " \xE2\x80\x94 " + e->authorsText();
-    Dialog(ICON_INFORMATION, title.c_str(), text.c_str(), "OK", NULL, infoDialogHandler);
+    lString16 summary = u16(e->summary);
+    std::vector<lString16> paragraphs;
+    for (int start = 0; start <= summary.length(); ) {
+        int end = start;
+        while (end < summary.length() && summary[end] != L'\n')
+            end++;
+        lString16 p = summary.substr(start, end - start);
+        p.trim();
+        if (!p.empty())
+            paragraphs.push_back(p);
+        start = end + 1;
+    }
+    for (size_t i = 0; i < paragraphs.size(); i++) {
+        int colon;
+        if (isFieldLine(paragraphs[i], colon))
+            addParagraph(lines, menu->subFont, menu->labelFont, paragraphs[i].substr(0, colon + 2),
+                         paragraphs[i].substr(colon + 2), width, 0);
+    }
+    addGap(lines, menu->subFont);
+    for (size_t i = 0; i < paragraphs.size(); i++) {
+        int colon;
+        if (!isFieldLine(paragraphs[i], colon))
+            addParagraph(lines, menu->bodyFont, menu->labelFont, lString16::empty_str, paragraphs[i],
+                         width, menu->bodyFont->getHeight());
+    }
+    while (!lines.empty() && lines.back().text.empty() && lines.back().label.empty())
+        lines.pop_back();
+
+    size_t maxLines = (size_t)(rows - 1) * 2;
+    if (lines.size() > maxLines) {
+        lines.resize(maxLines);
+        InfoLine & last = lines.back();
+        last.text << ELLIPSIS;
+        last.text = fitText(last.font, last.text, width - last.indent);
+    }
+    for (size_t i = 0; i < lines.size(); i += 2) {
+        OpdsItem * item = new OpdsItem(menu, OPDS_CMD_SHOW_BOOK, lString16::empty_str, lString16::empty_str,
+                                       OpdsItem::TEXT);
+        item->first = lines[i];
+        if (i + 1 < lines.size())
+            item->second = lines[i + 1];
+        menu->addItem(item);
+    }
+    activate(wm, menu);
 }
 
 void OpdsBrowser::download(CRGUIWindowManager * wm, int formatIndex)
@@ -597,6 +938,7 @@ void OpdsBrowser::download(CRGUIWindowManager * wm, int formatIndex)
             showBook(wm, _bookIndex);
             return;
         }
+        requestLibraryScan();
     } else {
         CRLog::info("OPDS: already downloaded %s", path.c_str());
     }
@@ -692,7 +1034,7 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         }
         return true;
     case OPDS_CMD_INFO:
-        showInfo();
+        showInfo(wm);
         return true;
     case OPDS_CMD_FIRST + 9999: // empty filler row
         showList(wm);

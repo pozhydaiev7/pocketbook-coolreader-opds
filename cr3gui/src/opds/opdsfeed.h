@@ -30,6 +30,7 @@ struct Entry {
     std::string title;
     std::vector<std::string> authors;
     std::string summary;               // plain text, HTML stripped
+    std::vector<std::string> categories; // genres (category label, or term without a label)
     std::string navigationHref;        // absolute URL of a sub-catalog, empty for books
     std::vector<Link> related;         // "all books of the author/series" links
     std::vector<Acquisition> formats;  // sorted by priority, only formats CoolReader can open

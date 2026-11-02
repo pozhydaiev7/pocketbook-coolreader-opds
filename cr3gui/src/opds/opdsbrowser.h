@@ -68,7 +68,7 @@ private:
     void showList(CRGUIWindowManager * wm);
     void showService(CRGUIWindowManager * wm);
     void showBook(CRGUIWindowManager * wm, int index);
-    void showInfo();
+    void showInfo(CRGUIWindowManager * wm);
     void download(CRGUIWindowManager * wm, int formatIndex);
     const opds::Entry * currentBook();
     bool hasSearchRow() const;

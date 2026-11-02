@@ -1982,6 +1982,14 @@ msgid "Back to the list"
 msgstr "Назад к списку"
 
 #: ../src/opds/opdsbrowser.cpp
+msgid "Back to the book"
+msgstr "Назад к книге"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Genre"
+msgstr "Жанр"
+
+#: ../src/opds/opdsbrowser.cpp
 msgid "About the book"
 msgstr "О книге"
 
