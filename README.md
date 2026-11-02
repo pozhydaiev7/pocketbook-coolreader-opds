@@ -27,13 +27,15 @@ Browse an online library, search it, download a book and open it in the reader, 
   - *Back* on the left, *Next* on the right; the next catalog page is loaded on demand;
   - the page number in the centre opens the catalog menu: back, search, catalog start page, catalog address, close.
 - **Book screen.** It shows:
-  - the full title and author; tap it to read the description;
+  - the full title and author; tap it to open the description screen (title, author, genres, year, format, language, size, series and the description);
   - *Download and open* for every format the catalog offers, best first: FB2.ZIP, EPUB, MOBI, RTF, TXT, HTML, DOC, CHM;
   - links to other books by the author and in the series.
 - **Downloads.**
   - Books are saved to `/mnt/ext1/Books/Flibusta` and opened right away.
   - The current book's position is saved first.
   - A download that turns out to be an HTML error page is rejected.
+  - The book appears in the PocketBook library at once: the reader starts the firmware library scanner in the background. Firmware without the scanner lists it after the next USB connection or reboot.
+- **Any skin.** The catalog works with every interface skin, including `default` and `pb62x`.
 - **Network.** If Wi-Fi is off, the reader asks the system to connect. Requests time out instead of hanging.
 - **Settings in `cr3.ini`:**
   - `cr3.pocketbook.opds.url` — the catalog address; change it in *Settings → OPDS catalog address* or in the catalog menu;
@@ -81,7 +83,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Install
 
-1. Download `cr3-v0.0.6-17-63-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
+1. Download `cr3-v0.0.6-17-64-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
 2. Connect the reader by USB. Back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
 3. Copy the `system` folder from the archive to the root of the reader's storage, replacing the existing files.
 

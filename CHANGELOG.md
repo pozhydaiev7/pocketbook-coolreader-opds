@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.0.6-17-64-opds — 2026-11-02
+
+### Fixed
+
+- **Crash on opening the catalog with skins without a touch TOC** (`default`, `pb62x`). The catalog used the `touch-toc` menu skin, which only the FW5 touch skins have. It now takes the first of `touch-toc`, `settings` and `main` that the current skin defines.
+- **Book description flashed and disappeared.** It was a firmware dialog that the reader page repainted over as soon as the catalog closed. The description is now a catalog screen.
+
+### Added
+
+- **Book description screen:**
+  - title and author in bold;
+  - the book data with bold labels: genres from the catalog, and the *Year*, *Format*, *Language*, *Size*, *Series* lines that Flibusta appends;
+  - the description in paragraphs.
+
+  A tap returns to the book screen.
+- **Downloaded books appear in the PocketBook library at once.** After a download the reader starts the firmware scanner (`/ebrmain/bin/scanner.app`) the way [inkshelf](https://github.com/N-Combinator/inkshelf) does it:
+  - from a detached supervisor process that outlives the reader;
+  - the scanner is stopped when it reports *Scan finished*, or after two minutes.
+
+  Firmware without the scanner lists the book after its next scan, as before. `BookPreparing`/`BookReady` did not add the file on InkPad 4 with firmware 6.11.1683.
+- **Genres** (`category`) in the OPDS parser.
+
 ## 0.0.6-17-63-opds — 2026-10-26
 
 Based on blchinezu/pocketbook-coolreader 0.0.6-17-62.1.
