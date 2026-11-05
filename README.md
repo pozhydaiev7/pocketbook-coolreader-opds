@@ -50,6 +50,20 @@ On firmware 6.11 the earlier CoolReader builds do not start: the firmware no lon
 
 The binary still needs only `libinkview`, `libcurl`, `libz` and the C/C++ runtime from the firmware, so it also runs on the earlier 6.x firmware.
 
+### StarDict dictionaries
+
+Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader reads StarDict dictionaries itself. Both kinds are in one list, marked **DIC** and **STAR**.
+
+- **Where:** `system/dictionaries` on the reader (or on the SD card), the same folder as the `.dic` files. Unpack each StarDict archive into a folder of its own there, or put its files straight into `system/dictionaries`.
+- **Files:** `*.ifo`, `*.idx` or `*.idx.gz`, `*.dict` or `*.dict.dz`, and optionally `*.syn` (word forms: *домами* finds *дом*).
+- **Articles:** plain text, HTML, Pango and XDXF markup; bold, italic and colors are kept.
+- **Limits:**
+  - at most 200 StarDict dictionaries are looked for;
+  - the first lookup in a dictionary loads its index (and `.syn`) into memory, which stays there until CoolReader exits.
+- **Selected dictionaries:** the first row of the dictionary list. With it, both a tap on a word and the search look the word up in the dictionaries checked under *Check dictionaries…*, up to 5, of any kind; with none checked, in the first 5 of the list. Each article has a subtitle with the dictionary; a word found through a word form also names the dictionary word.
+
+Free StarDict dictionaries: [FreeDict](https://freedict.org/downloads/) (choose the StarDict format), [Wiktionary dictionaries by Vuizur](https://github.com/Vuizur/Wiktionary-Dictionaries).
+
 ### Changes from the 0.0.6-17-62.2 community build
 
 That build was published as a binary only. Its changes are re-implemented here from the description:
@@ -104,7 +118,7 @@ The toolchain is [blchinezu/pocketbook-sdk](https://github.com/blchinezu/pocketb
 
 ```bash
 sudo apt-get update
-sudo apt-get install cmake git zip rsync
+sudo apt-get install cmake git zip rsync gettext build-essential
 
 git clone https://github.com/blchinezu/pocketbook-sdk ~/PBDEV
 mkdir -p ~/PBDEV/sources ~/PBDEV/releases/coolreader3/dev

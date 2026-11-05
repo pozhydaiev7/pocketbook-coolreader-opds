@@ -1776,6 +1776,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         createSettingsMenuItem(displaySettingsMenu, mm_useNewTouchTOC, _("Use new TOC menu"),
                                "cr3_option_use_new_touch_toc", valueFont, PROP_USE_NEW_TOUCH_TOC,
                                on_off_option);
+        createSettingsMenuItem(displaySettingsMenu, mm_tocPageNumbers, _("Page numbers in TOC"),
+                               "cr3_option_toc_page_numbers", valueFont, PROP_TOC_PAGE_NUMBERS,
+                               on_off_option);
     }
 #endif
     CRSkinList &skins = wm->getSkinList();

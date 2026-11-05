@@ -1385,6 +1385,27 @@ msgstr "Своя системная тема (нужен перезапуск)"
 msgid "Use new TOC menu"
 msgstr "Использовать новый навигатор по главам"
 
+msgid "Page numbers in TOC"
+msgstr "Номера страниц в оглавлении"
+
+msgid "Selected dictionaries"
+msgstr "Выбранные словари"
+
+msgid "Dictionaries"
+msgstr "Словари"
+
+msgid "Check dictionaries..."
+msgstr "Отметить словари…"
+
+msgid "No more than 5 dictionaries"
+msgstr "Не больше 5 словарей"
+
+msgid "all"
+msgstr "все"
+
+msgid "first 5"
+msgstr "первые 5"
+
 #: ../src/settings.cpp:1786
 msgid "Skin"
 msgstr "Стиль интерфейса"

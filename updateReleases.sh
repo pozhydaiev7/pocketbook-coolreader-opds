@@ -79,6 +79,10 @@ function doUpdate {
 			cp -rf "$sdk/data/device-specific/$2/"* "$package/"
 		fi
 
+		# Do not ship system/config: it would overwrite the user's file associations
+		echo " - drop system/config"
+		rm -rf "$package/system/config"
+
 		echo " - binary > package"
 		rm -rf "$package/system/share/cr3/bin/"*
 		mkdir -p "$package/system/share/cr3/bin"

@@ -99,5 +99,6 @@
 
 #define PROP_CUSTOM_SYSTEM_THEME "pocketbook.system.custom_theme"
 #define PROP_USE_NEW_TOUCH_TOC "pocketbook.toc.use_new_touch_toc"
+#define PROP_TOC_PAGE_NUMBERS "pocketbook.toc.page_numbers"
 
 #endif // LVDOCVIEWPROPS_H

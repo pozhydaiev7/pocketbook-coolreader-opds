@@ -133,7 +133,7 @@
   <window id="links-dialog-rotated" base="#links-dialog"/>
   <window id="dict" size="100%, 44%">
     <title>
-      <size minvalue="0,60" maxvalue="100%,60"/>
+      <size minvalue="0,92" maxvalue="100%,92"/>
       <text color="#000000" face="Liberation Sans, DejaVu Sans" size="28" bold="true" italic="false" valign="center" halign="left"/>
       <background color="#FFFFFF"/>
       <background color="#000000" pos="0, 0" size="100%,1"/>
@@ -157,8 +157,9 @@
   </window>
   <window id="dict-rotated" base="#dict"/>
   <menu id="dict-list" min-item-count="10" max-item-count="10" show-shortcuts="false" fullscreen="false" >
+    <!-- the list draws the title of the dict window: the same height, or the rows cover the buttons -->
     <title>
-      <size minvalue="0,60" maxvalue="100%,60"/>
+      <size minvalue="0,92" maxvalue="100%,92"/>
       <text color="#000000" face="Liberation Sans, DejaVu Sans Condensed" size="28" bold="true" italic="false" valign="center" halign="left"/>
       <background color="#FFFFFF"/>
       <background color="#000000" pos="0, 0" size="100%,1"/>
@@ -428,6 +429,14 @@
       <border widths="20,0,20,0"/>
     </item>
     <selitem base="#touch-toc-item"/>
+  </menu>
+  <!-- touch TOC with page numbers and dotted leaders: no separator lines between rows -->
+  <menu id="touch-toc-dots" base="#touch-toc" min-item-count="16" max-item-count="16" fullscreen="true" >
+    <separator>
+      <size minvalue="0,0" maxvalue="0,0"/>
+    </separator>
+  </menu>
+  <menu id="touch-toc-dots-rotated" base="#touch-toc-dots" min-item-count="10" max-item-count="10" fullscreen="true" >
   </menu>
   <menu id="touch-toc-rotated" base="#touch-toc" min-item-count="10" max-item-count="10" fullscreen="true" >
 

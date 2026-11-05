@@ -10,6 +10,56 @@
 #include "cr3pocketbook.h"
 #include "pb_toc.h"
 
+// defined in tocdlg.cpp
+lString16 limitTextWidth( lString16 s, int width, LVFontRef font );
+
+CRTocMenuItem::CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page )
+: CRMenuItem( menu, id, label, LVImageSourceRef(), LVFontRef() ),
+  _pageText( lString16::itoa(page) )
+{
+}
+
+void CRTocMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
+    CRRectSkinRef valueSkin, bool selected )
+{
+    _itemDirty = false;
+    skin->draw( buf, rc );
+    lUInt32 textColor = skin->getTextColor();
+    lUInt32 bgColor = skin->getBackgroundColor();
+    buf.SetTextColor( textColor );
+    buf.SetBackgroundColor( bgColor );
+
+    // the drawText overload with flags does not apply the skin borders itself
+    lvRect inner = skin->getClientRect( rc );
+    LVFontRef font = skin->getFont();
+    int pageWidth = font->getTextWidth( _pageText.c_str(), _pageText.length() );
+    int gap = font->getHeight() / 2;
+
+    // page number at the right edge
+    skin->drawText( buf, inner, _pageText, font, textColor, bgColor,
+        SKIN_HALIGN_RIGHT | SKIN_VALIGN_CENTER );
+
+    // title, shortened with "..." when it does not fit before the page number
+    lvRect titleRc = inner;
+    titleRc.right = inner.right - pageWidth - gap;
+    if ( titleRc.width() <= 0 )
+        return;
+    lString16 title = limitTextWidth( _label, titleRc.width(), font );
+    skin->drawText( buf, titleRc, title, font, textColor, bgColor,
+        SKIN_HALIGN_LEFT | SKIN_VALIGN_CENTER );
+
+    // dotted leader on the text baseline between the title and the page number
+    int titleWidth = font->getTextWidth( title.c_str(), title.length() );
+    int dot = font->getHeight() / 16;
+    if ( dot < 1 )
+        dot = 1;
+    int y = inner.top + (inner.height() - font->getHeight()) / 2 + font->getBaseline() - dot;
+    int x0 = inner.left + titleWidth + gap;
+    int x1 = inner.right - pageWidth - gap;
+    for ( int x = x0; x + dot <= x1; x += dot * 3 )
+        buf.FillRect( x, y, x + dot, y + dot, textColor );
+}
+
 bool CRTocMenu::onCommand( int command, int params )
 {
     CRLog::trace("CRTocMenu::onCommand(%d, %d)", command, params);
@@ -46,6 +96,11 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
 
     _selectedItem = 0;
 
+    bool showPages = props->getIntDef( PROP_TOC_PAGE_NUMBERS, 1 ) == 1;
+    // rows with dotted leaders look like a printed contents page: no separator lines
+    if ( showPages && !_wm->getSkin()->getMenuSkin( L"#touch-toc-dots" ).isNull() )
+        setSkinName( L"#touch-toc-dots" );
+
     if ( length ) {
 
         for (int i = 0; i < length; i++) {
@@ -69,6 +124,16 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
             // Indent level
             for( int level = tocItems[i].level; level > 1; level-- ) {
                 text = L"     " + text;
+            }
+
+            if( showPages ) {
+                mainMenu->addItem(new CRTocMenuItem(
+                    mainMenu,
+                    PB_TOC_SAFE_CMD_RANGE + tocItems[i].page,
+                    lString16(UnicodeToUtf8(text).c_str()),
+                    tocItems[i].position
+                    ));
+                continue;
             }
 
             mainMenu->addItem(new CRMenuItem(

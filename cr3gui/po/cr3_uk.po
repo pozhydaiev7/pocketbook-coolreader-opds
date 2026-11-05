@@ -1,25 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # This file is put in the public domain.
-#
+# 
 # Translators:
 # Beowulf Shaeffer <beow.shaeffer@gmail.com>, 2015
 # Boris Iefimenko <boris.iefimenko@gmail.com>, 2009
 # Misha <misha_t@ua.fm>, 2017
+# vitalis <stopchan@gmail.com>, 2019,2024,2026
 msgid ""
 msgstr ""
 "Project-Id-Version: coolreader-pocketbook\n"
 "Report-Msgid-Bugs-To: foo@bar.com\n"
 "POT-Creation-Date: 2016-10-31 12:09+0200\n"
-"PO-Revision-Date: 2017-08-03 13:45+0000\n"
-"Last-Translator: Misha <misha_t@ua.fm>\n"
-"Language-Team: Ukrainian (http://www.transifex.com/coolreader-pocketbook/"
-"coolreader-pocketbook/language/uk/)\n"
-"Language: uk\n"
+"PO-Revision-Date: 2015-04-20 07:50+0000\n"
+"Last-Translator: vitalis <stopchan@gmail.com>, 2019,2024,2026\n"
+"Language-Team: Ukrainian (http://app.transifex.com/coolreader-pocketbook/coolreader-pocketbook/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: ../src/citedlg.cpp:194
 msgid "Select next/prev paragraph"
@@ -31,7 +30,7 @@ msgstr "Вибрати ще один абзац"
 
 #: ../src/citedlg.cpp:200
 msgid "Deselect paragraph"
-msgstr "Зняти виділення абзацу"
+msgstr "Зняти вибір з абзацу"
 
 #: ../src/citedlg.cpp:203
 msgid "Select one more phrase"
@@ -39,7 +38,7 @@ msgstr "Вибрати ще одну фразу"
 
 #: ../src/citedlg.cpp:206
 msgid "Deselect phrase"
-msgstr "Зняти виділення з фрази"
+msgstr "Зняти вибір з фрази"
 
 #: ../src/citedlg.cpp:220
 msgid "Select text"
@@ -55,7 +54,7 @@ msgstr "1..8"
 
 #: ../src/mainwnd.cpp:810
 msgid "No manual currently available for this language, sorry!"
-msgstr "Вибачте, інструкції на обраній Вами мові не існує!"
+msgstr "Вибачте, посібник користувача CoolReader для PocketBook вашою мовою відсутній.\nСпробуйте знайти його у е-бібліотеці «Читвó»:\nhttps://chytvo.to"
 
 #: ../src/mainwnd.cpp:821 ../src/mainwnd.cpp:931
 msgid "Help"
@@ -63,7 +62,7 @@ msgstr "Довідка"
 
 #: ../src/mainwnd.cpp:848
 msgid "Main Menu"
-msgstr "Головне меню"
+msgstr "Головне меню CoolReader"
 
 #: ../src/mainwnd.cpp:882 ../src/viewdlg.cpp:573
 msgid "About"
@@ -71,11 +70,11 @@ msgstr "Інформація про книгу"
 
 #: ../src/mainwnd.cpp:892 ../src/viewdlg.cpp:537
 msgid "Go to page"
-msgstr "Перейти на сторінку"
+msgstr "Перейти до сторінки"
 
 #: ../src/mainwnd.cpp:903 ../src/recentdlg.cpp:115
 msgid "Open recent book"
-msgstr "Відкрити останню книгу"
+msgstr "Останні відкриті книги"
 
 #: ../src/mainwnd.cpp:909 ../src/viewdlg.cpp:164
 msgid "Dictionary"
@@ -105,9 +104,7 @@ msgstr "Функції клавіш"
 msgid ""
 "$1 - choose command\n"
 "$2, $3 - close"
-msgstr ""
-"$1 — оберіть команду\n"
-"$2, $3 — закрити"
+msgstr "$1 — оберіть команду\n$2, $3 — закрити"
 
 #: ../src/mainwnd.cpp:1054
 msgid "Current page"
@@ -131,7 +128,7 @@ msgstr "Поточний час"
 
 #: ../src/mainwnd.cpp:1062
 msgid "Current chapter"
-msgstr "Поточна глава"
+msgstr "Поточний розділ"
 
 #: ../src/mainwnd.cpp:1065
 msgid "Status"
@@ -212,7 +209,7 @@ msgstr "Відомості про книгу"
 
 #: ../src/mainwnd.cpp:1090
 msgid "Document author"
-msgstr "Автор документу"
+msgstr "Автор файлу"
 
 #: ../src/mainwnd.cpp:1091
 msgid "Document date"
@@ -224,7 +221,7 @@ msgstr "URL книги-джерела"
 
 #: ../src/mainwnd.cpp:1093
 msgid "OCR by"
-msgstr "Оцифровано"
+msgstr "Оцифрував"
 
 #: ../src/mainwnd.cpp:1094
 msgid "Document version"
@@ -280,11 +277,11 @@ msgstr "CoolReader для PocketBook"
 
 #: ../src/mainwnd.cpp:1113
 msgid "Build date"
-msgstr "Дата компіляції"
+msgstr "Дата збірки"
 
 #: ../src/mainwnd.cpp:1114
 msgid "Build type"
-msgstr "Тип сборки"
+msgstr "Тип збірки"
 
 #: ../src/mainwnd.cpp:1115
 msgid "About program"
@@ -312,7 +309,7 @@ msgstr "Файл налаштувань"
 
 #: ../src/mainwnd.cpp:1123
 msgid "Keymap file"
-msgstr "Файл раскладки"
+msgstr "Файл розкладки"
 
 #: ../src/mainwnd.cpp:1124
 msgid "Skin file"
@@ -320,11 +317,11 @@ msgstr "Файл стилю"
 
 #: ../src/mainwnd.cpp:1125
 msgid "Debug information"
-msgstr "Інформація для відладки"
+msgstr "Інформація для відлагодження"
 
 #: ../src/mainwnd.cpp:1276
 msgid "Loading: please wait..."
-msgstr "Завантажується: зачекайте..."
+msgstr "Завантажується. Зачекайте..."
 
 #: ../src/recentdlg.cpp:97
 msgid "Open book"
@@ -338,9 +335,7 @@ msgstr "Видалити запис"
 msgid ""
 "$1 - open book\n"
 "$2, $3 - close"
-msgstr ""
-"$1 — відкрити книгу\n"
-"$2, $3 — закрити"
+msgstr "$1 — відкрити книгу\n$2, $3 — закрити"
 
 #: ../src/tocdlg.cpp:150
 msgid "Current page: $1 of $2\n"
@@ -366,17 +361,13 @@ msgstr "Перейти до закладки"
 msgid ""
 "Short press $1 - go to bookmark,\n"
 "$2 - switch to SET mode"
-msgstr ""
-"$1 — відкрити поточну закладку,\n"
-"$2 — режим додавання закладок"
+msgstr "Коротке натискання $1 — відкрити поточну закладку,\n$2 — режим додавання закладок"
 
 #: ../src/bmkdlg.cpp:73
 msgid ""
 "Short press $1 - go to bookmark,\n"
 "long press - set bookmark"
-msgstr ""
-"Коротке натискання $1 — відкрити поточну закладку,\n"
-"довге натискання — додати закладку"
+msgstr "Коротке натискання $1 — відкрити поточну закладку,\nдовге натискання — додати закладку"
 
 #: ../src/bmkdlg.cpp:76 ../src/bmkdlg.cpp:160 ../src/viewdlg.cpp:590
 msgid "Set bookmark"
@@ -386,17 +377,13 @@ msgstr "Додати закладку"
 msgid ""
 "$1 - set bookmark,\n"
 "$2 - switch to GO mode"
-msgstr ""
-"$1 — додати закладку,\n"
-"$2 — режим відкривання закладок"
+msgstr "$1 — додати закладку,\n$2 — режим відкривання закладок"
 
 #: ../src/bmkdlg.cpp:81
 msgid ""
 "Short press $1 - set bookmark,\n"
 "long press - go to bookmark"
-msgstr ""
-"Коротке натискання $1 — додати закладку,\n"
-"довге натискання — відкрити закладку"
+msgstr "Коротке натискання $1 — додати закладку,\nдовге натискання — відкрити закладку"
 
 #: ../src/bmkdlg.cpp:162 ../src/viewdlg.cpp:591
 msgid "Delete bookmark"
@@ -416,7 +403,7 @@ msgstr "Цитати"
 
 #: ../src/bmkdlg.cpp:448 ../src/viewdlg.cpp:574
 msgid "Cite selection dialog"
-msgstr "Нова цитата"
+msgstr "Створити цитату"
 
 #: ../src/dictdlg.cpp:80
 msgid "From dictionary "
@@ -424,7 +411,7 @@ msgstr "Знайти у словнику "
 
 #: ../src/dictdlg.cpp:89
 msgid "[cannot read article]"
-msgstr "[неможливо відкрити файл]"
+msgstr "[неможливо відкрити статтю]"
 
 #: ../src/settings.cpp:204
 msgid "choose command"
@@ -436,7 +423,7 @@ msgstr "Керування"
 
 #: ../src/settings.cpp:388
 msgid "(No action)"
-msgstr "(Нема дії)"
+msgstr "(Немає дії)"
 
 #: ../src/settings.cpp:541
 msgid "[Command is not assigned]"
@@ -510,15 +497,15 @@ msgstr "Великий виступ"
 
 #: ../src/settings.cpp:851
 msgid "[Default sans-serif font]"
-msgstr "[sans-serif шрифт за замовчанням]"
+msgstr "[Типовий шрифт без засічок]"
 
 #: ../src/settings.cpp:852
 msgid "[Default serif font]"
-msgstr "[serif шрифт за замовчанням]"
+msgstr "[Типовий шрифт з засічками]"
 
 #: ../src/settings.cpp:853
 msgid "[Default monospace font]"
-msgstr "[Моноширинний шрифт за замовчанням]"
+msgstr "[Типовий моноширинний шрифт]"
 
 #: ../src/settings.cpp:859
 msgid "Bigger (105%)"
@@ -575,11 +562,11 @@ msgstr "Жирний"
 
 #: ../src/settings.cpp:877
 msgid "Bolder"
-msgstr "Жирніше"
+msgstr "Дуже жирний"
 
 #: ../src/settings.cpp:878
 msgid "Lighter"
-msgstr "Тонше"
+msgstr "Тонкий"
 
 #: ../src/settings.cpp:885
 msgid "Italic"
@@ -587,7 +574,7 @@ msgstr "Курсив"
 
 #: ../src/settings.cpp:920 ../src/settings.cpp:1099
 msgid "None"
-msgstr "Ні"
+msgstr "Немає"
 
 #: ../src/settings.cpp:921 ../src/settings.cpp:1101
 msgid "Underline"
@@ -627,54 +614,54 @@ msgstr "Білий"
 
 #: ../src/settings.cpp:954 ../src/settings.cpp:965
 msgid "0.2 of line height"
-msgstr "0.2 висоти строки"
+msgstr "20% висоти рядка"
 
 #: ../src/settings.cpp:955 ../src/settings.cpp:966
 msgid "0.3 of line height"
-msgstr "0.3 висоти строки"
+msgstr "30% висоти рядка"
 
 #: ../src/settings.cpp:956 ../src/settings.cpp:967 ../src/settings.cpp:976
 #: ../src/settings.cpp:992
 msgid "0.5 of line height"
-msgstr "0.5 висоти строки"
+msgstr "50% висоти рядка"
 
 #: ../src/settings.cpp:957 ../src/settings.cpp:968 ../src/settings.cpp:977
 #: ../src/settings.cpp:993
 msgid "1 line height"
-msgstr "1 висота строки"
+msgstr "100% висоти рядка"
 
 #: ../src/settings.cpp:958 ../src/settings.cpp:969 ../src/settings.cpp:979
 #: ../src/settings.cpp:995
 msgid "2 of line height"
-msgstr "2 висоти строки"
+msgstr "200% висоти рядка"
 
 #: ../src/settings.cpp:978 ../src/settings.cpp:994
 msgid "1.5 of line height"
-msgstr "1.5 висоти строки"
+msgstr "150% висоти рядка"
 
 #: ../src/settings.cpp:980 ../src/settings.cpp:996
 msgid "4 of line height"
-msgstr "4 висоти строки"
+msgstr "400% висоти рядка"
 
 #: ../src/settings.cpp:981 ../src/settings.cpp:997
 msgid "5% of line width"
-msgstr "5% ширини строки"
+msgstr "5% ширини рядка"
 
 #: ../src/settings.cpp:982 ../src/settings.cpp:998
 msgid "10% of line width"
-msgstr "10% ширини строки"
+msgstr "10% ширини рядка"
 
 #: ../src/settings.cpp:983 ../src/settings.cpp:999
 msgid "15% of line width"
-msgstr "15% ширини строки"
+msgstr "15% ширини рядка"
 
 #: ../src/settings.cpp:984 ../src/settings.cpp:1000
 msgid "20% of line width"
-msgstr "20% ширини строки"
+msgstr "20% ширини рядка"
 
 #: ../src/settings.cpp:985 ../src/settings.cpp:1001
 msgid "30% of line width"
-msgstr "30% ширини строки"
+msgstr "30% ширини рядка"
 
 #: ../src/settings.cpp:1004
 msgid "Text alignment"
@@ -722,23 +709,23 @@ msgstr "Колір тексту"
 
 #: ../src/settings.cpp:1039
 msgid "Background color"
-msgstr "Колір фону"
+msgstr "Колір тла"
 
 #: ../src/settings.cpp:1041
 msgid "Margin before"
-msgstr "Поля перед"
+msgstr "Поле перед"
 
 #: ../src/settings.cpp:1043
 msgid "Margin after"
-msgstr "Поля після"
+msgstr "Поле після"
 
 #: ../src/settings.cpp:1045
 msgid "Margin left"
-msgstr "Поля зліва"
+msgstr "Поле ліворуч"
 
 #: ../src/settings.cpp:1047
 msgid "Margin right"
-msgstr "Поля справа"
+msgstr "Поле праворуч"
 
 #: ../src/settings.cpp:1080
 msgid "On for all fonts"
@@ -759,11 +746,11 @@ msgstr "Увімк."
 
 #: ../src/settings.cpp:1093
 msgid "AM/PM"
-msgstr "ДП/ПП"
+msgstr "12 годин"
 
 #: ../src/settings.cpp:1094
 msgid "24h"
-msgstr "24г."
+msgstr "24 години"
 
 #: ../src/settings.cpp:1100
 msgid "Solid"
@@ -771,15 +758,15 @@ msgstr "Суцільний колір"
 
 #: ../src/settings.cpp:1173
 msgid "Inverse"
-msgstr "Інвертоване"
+msgstr "Інвертований"
 
 #: ../src/settings.cpp:1184
 msgid "One"
-msgstr "Одна"
+msgstr "Один"
 
 #: ../src/settings.cpp:1185
 msgid "Two"
-msgstr "Дві"
+msgstr "Два"
 
 #: ../src/settings.cpp:1190
 msgid "Top"
@@ -875,23 +862,23 @@ msgstr "Завжди"
 
 #: ../src/settings.cpp:1299
 msgid "Full updates every 2 pages"
-msgstr "кожні 2 сторінки"
+msgstr "Кожні 2 сторінки"
 
 #: ../src/settings.cpp:1300
 msgid "Full updates every 3 pages"
-msgstr "кожні 3 сторінки"
+msgstr "Кожні 3 сторінки"
 
 #: ../src/settings.cpp:1301
 msgid "Full updates every 4 pages"
-msgstr "кожні 4 сторінки"
+msgstr "Кожні 4 сторінки"
 
 #: ../src/settings.cpp:1302
 msgid "Full updates every 5 pages"
-msgstr "кожні 5 сторінок"
+msgstr "Кожні 5 сторінок"
 
 #: ../src/settings.cpp:1303
 msgid "Full updates every 6 pages"
-msgstr "кожні 6 сторінок"
+msgstr "Кожні 6 сторінок"
 
 #: ../src/settings.cpp:1304
 msgid "Full updates every 7 pages"
@@ -899,7 +886,7 @@ msgstr "Кожні 7 сторінок"
 
 #: ../src/settings.cpp:1305
 msgid "Full updates every 8 pages"
-msgstr "кожні 8 сторінок"
+msgstr "Кожні 8 сторінок"
 
 #: ../src/settings.cpp:1306
 msgid "Full updates every 9 pages"
@@ -907,11 +894,11 @@ msgstr "Кожні 9 сторінок"
 
 #: ../src/settings.cpp:1307
 msgid "Full updates every 10 pages"
-msgstr "кожні 10 сторінок"
+msgstr "Кожні 10 сторінок"
 
 #: ../src/settings.cpp:1308
 msgid "Full updates every 14 pages"
-msgstr "кожні 14 сторінок"
+msgstr "Кожні 14 сторінок"
 
 #: ../src/settings.cpp:1309
 msgid "Full updates every 20 pages"
@@ -943,11 +930,11 @@ msgstr "Кожні 50 сторінок"
 
 #: ../src/settings.cpp:1320
 msgid "Turbo mode disabled"
-msgstr "Турбо режим вимкнений"
+msgstr "Турборежим вимкнено"
 
 #: ../src/settings.cpp:1321
 msgid "Turbo mode enabled"
-msgstr "Турбо режим увімкнений"
+msgstr "Турборежим увімкнено"
 
 #: ../src/settings.cpp:1326
 msgid "1 minute"
@@ -1043,23 +1030,23 @@ msgstr "Плавно"
 
 #: ../src/settings.cpp:1361
 msgid "180+slow next page"
-msgstr "180°+вперед повільно"
+msgstr "180°+повільно вперед"
 
 #: ../src/settings.cpp:1362
 msgid "180+slow prev/next page"
-msgstr "180°+вперед/назад повільно"
+msgstr "180°+повільно назад/вперед"
 
 #: ../src/settings.cpp:1363
 msgid "180+FAST next page"
-msgstr "180°+вперед швидко"
+msgstr "180°+швидко вперед"
 
 #: ../src/settings.cpp:1364
 msgid "180+FAST prev/next page"
-msgstr "180°+вперед/назад швидко"
+msgstr "180°+швидко назад/вперед"
 
 #: ../src/settings.cpp:1365
 msgid "180+FAST next/prev page"
-msgstr "180°+назад/вперед швидко"
+msgstr "180°+швидко вперед/назад"
 
 #: ../src/settings.cpp:1383 ../src/settings.cpp:1400
 msgid "Auto"
@@ -1095,19 +1082,19 @@ msgstr "Довільне масштабування"
 
 #: ../src/settings.cpp:1401
 msgid "*1"
-msgstr "*1"
+msgstr "×1"
 
 #: ../src/settings.cpp:1402
 msgid "*2"
-msgstr "*2"
+msgstr "×2"
 
 #: ../src/settings.cpp:1403
 msgid "*3"
-msgstr "*3"
+msgstr "×3"
 
 #: ../src/settings.cpp:1487
 msgid "No hinting"
-msgstr "Вимкнуто"
+msgstr "Без хінтінґу"
 
 #: ../src/settings.cpp:1488
 msgid "Use bytecode"
@@ -1115,7 +1102,7 @@ msgstr "Використовувати байт-код"
 
 #: ../src/settings.cpp:1489
 msgid "Autohinting"
-msgstr "Автохінтінг"
+msgstr "Автохінтінґ"
 
 #: ../src/settings.cpp:1490
 msgid "Light"
@@ -1123,7 +1110,7 @@ msgstr "Легкий"
 
 #: ../src/settings.cpp:1495
 msgid "Default paragraph formatting"
-msgstr "Параграф по замовчанню"
+msgstr "Абзац"
 
 #: ../src/settings.cpp:1496
 msgctxt "CSS"
@@ -1136,7 +1123,7 @@ msgstr "Підзаголовок"
 
 #: ../src/settings.cpp:1498
 msgid "Preformatted text / code"
-msgstr "Преформатований текст / код"
+msgstr "Код (наперед форматований текст)"
 
 #: ../src/settings.cpp:1499
 msgid "Link"
@@ -1152,27 +1139,27 @@ msgstr "Вірш"
 
 #: ../src/settings.cpp:1503
 msgid "Text / Cite / Epigraph author"
-msgstr "Автор тексту / цитати / эпіграфу"
+msgstr "Автор тексту / цитати / епіграфу"
 
 #: ../src/settings.cpp:1504
 msgid "Footnote"
-msgstr "Зноска"
+msgstr "Примітка"
 
 #: ../src/settings.cpp:1505
 msgid "Footnote link"
-msgstr "Посилання зноски"
+msgstr "Посилання примітки"
 
 #: ../src/settings.cpp:1506
 msgid "Footnote title"
-msgstr "Заголовок зноски"
+msgstr "Заголовок примітки"
 
 #: ../src/settings.cpp:1507
 msgid "Annotation"
-msgstr "Тлумачення"
+msgstr "Анотація"
 
 #: ../src/settings.cpp:1547
 msgid "Default font face"
-msgstr "Шрифт за замовчуванням"
+msgstr "Типовий шрифт тексту"
 
 #: ../src/settings.cpp:1552
 msgid "Font settings"
@@ -1184,15 +1171,15 @@ msgstr "Згладжування літер"
 
 #: ../src/settings.cpp:1562
 msgid "Font hinting"
-msgstr "Хінтінг шрифту"
+msgstr "Хінтінґ шрифту"
 
 #: ../src/settings.cpp:1564
 msgid "Font kerning"
-msgstr "Кернінг шрифту"
+msgstr "Кернінґ шрифту"
 
 #: ../src/settings.cpp:1566
 msgid "Font embolding"
-msgstr "Витовщення шрифту"
+msgstr "Потовщення шрифту"
 
 #: ../src/settings.cpp:1568
 msgid "Tracking"
@@ -1200,7 +1187,7 @@ msgstr "Міжбуквений інтервал"
 
 #: ../src/settings.cpp:1570
 msgid "Font Gamma"
-msgstr "амма-корекція шрифта"
+msgstr "Гамма-корекція шрифту"
 
 #: ../src/settings.cpp:1572
 msgid "Document embedded fonts"
@@ -1228,7 +1215,7 @@ msgstr "Переноси"
 
 #: ../src/settings.cpp:1610
 msgid "Preformatted text"
-msgstr "Попередньо форматований текст"
+msgstr "Наперед форматований текст"
 
 #: ../src/settings.cpp:1613
 msgid "Space condensing percent"
@@ -1256,11 +1243,11 @@ msgstr "Макс. збільшення для звичайних зображе�
 
 #: ../src/settings.cpp:1636
 msgid "Inline image scaling mode"
-msgstr "Режим для inline зображень"
+msgstr "Режим для зображень в тексті"
 
 #: ../src/settings.cpp:1639
 msgid "Inline image max zoom"
-msgstr "Макс. збільшення для inline зображень"
+msgstr "Макс. збільшення для зображень в тексті"
 
 #: ../src/settings.cpp:1648
 msgid "Page settings"
@@ -1280,11 +1267,11 @@ msgstr "Налаштування часу"
 
 #: ../src/settings.cpp:1677
 msgid "Show time"
-msgstr "Відображення часу у колонтитулі"
+msgstr "Показувати час у колонтитулі"
 
 #: ../src/settings.cpp:1679
 msgid "Show title"
-msgstr "Показати заголовок"
+msgstr "Показувати заголовок"
 
 #: ../src/settings.cpp:1681
 msgid "Show battery"
@@ -1292,11 +1279,11 @@ msgstr "Показувати батарею"
 
 #: ../src/settings.cpp:1683
 msgid "Show battery percent"
-msgstr "Рівень заряду в процентах"
+msgstr "Рівень заряду у відсотках"
 
 #: ../src/settings.cpp:1686
 msgid "Show position percent"
-msgstr "Позиція читання в процентах"
+msgstr "Позиція читання у відсотках"
 
 #: ../src/settings.cpp:1688
 msgid "Show page count"
@@ -1304,15 +1291,15 @@ msgstr "Показувати кількість сторінок"
 
 #: ../src/settings.cpp:1690
 msgid "Show page count till chapter end"
-msgstr "Кількість сторінок до кінця глави"
+msgstr "Кількість сторінок до кінця розділу"
 
 #: ../src/settings.cpp:1693
 msgid "Show page number"
-msgstr "Номер поточної сторінки"
+msgstr "Показувати номер поточної сторінки"
 
 #: ../src/settings.cpp:1695
 msgid "Show chapter marks"
-msgstr "Мітки глав"
+msgstr "Мітки розділів"
 
 #: ../src/settings.cpp:1704
 msgid "Page margins"
@@ -1340,15 +1327,15 @@ msgstr "Примітки внизу сторінки"
 
 #: ../src/settings.cpp:1726
 msgid "Display settings"
-msgstr "Настройки відображення"
+msgstr "Налаштування відображення"
 
 #: ../src/settings.cpp:1735
 msgid "Landscape pages"
-msgstr "Колонок в альбомній орієнтації"
+msgstr "Стовпчиків у альбомній орієнтації"
 
 #: ../src/settings.cpp:1737
 msgid "Inverse display"
-msgstr "Інвертування кольорів"
+msgstr "Порядок відображення кольорів"
 
 #: ../src/settings.cpp:1740
 msgid "Show bookmark icons"
@@ -1356,31 +1343,52 @@ msgstr "Показати значки закладок"
 
 #: ../src/settings.cpp:1743
 msgid "Highlight bookmarks"
-msgstr "Підсвічування закладок"
+msgstr "Виокремлення закладок"
 
 #: ../src/settings.cpp:1747
 msgid "Display update mode"
-msgstr "Повне оновлення"
+msgstr "Повне оновлення екрану"
 
 #: ../src/settings.cpp:1755
 msgid "Standby"
-msgstr "Режим очікування"
+msgstr "Режим очікування через..."
 
 #: ../src/settings.cpp:1762
 msgid "Turbo update mode"
-msgstr "Турбо режим оновлення"
+msgstr "Турборежим оновлення"
 
 #: ../src/settings.cpp:1767
 msgid "Gray buffer depth (needs restart)"
-msgstr "Глубина буферу сірого кольору (потрібен перезапуск)"
+msgstr "Глибина буферу сірого (треба перезапуск)"
 
 #: ../src/settings.cpp:1772
 msgid "Custom system theme (needs restart)"
-msgstr "Своя системна тема (потрібен перезапуск)"
+msgstr "Власна системна тема (треба перезапуск)"
 
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
-msgstr "Використовувати новий навігатор по главах"
+msgstr "Новий вигляд змісту книги"
+
+msgid "Page numbers in TOC"
+msgstr "Номери сторінок у змісті"
+
+msgid "Selected dictionaries"
+msgstr "Вибрані словники"
+
+msgid "Dictionaries"
+msgstr "Словники"
+
+msgid "Check dictionaries..."
+msgstr "Позначити словники…"
+
+msgid "No more than 5 dictionaries"
+msgstr "Не більше 5 словників"
+
+msgid "all"
+msgstr "усі"
+
+msgid "first 5"
+msgstr "перші 5"
 
 #: ../src/settings.cpp:1786
 msgid "Skin"
@@ -1388,39 +1396,39 @@ msgstr "Стиль інтерфейсу"
 
 #: ../src/settings.cpp:1802
 msgid "Control settings"
-msgstr "Настройки керування"
+msgstr "Налаштування керування"
 
 #: ../src/settings.cpp:1809
 msgid "Rotate"
-msgstr "Управління G-сенсором"
+msgstr "Керування G-сенсором"
 
 #: ../src/settings.cpp:1812
 msgid "Page turn angle"
-msgstr "Нахил для перегортання"
+msgstr "Кут нахилу для перегортання сторінки"
 
 #: ../src/settings.cpp:1828
 msgid "Tap action"
-msgstr "Короткий тап"
+msgstr "Короткий дотик"
 
 #: ../src/settings.cpp:1830
 msgid "Long tap action"
-msgstr "Довгий тап"
+msgstr "Довгий дотик"
 
 #: ../src/settings.cpp:1834
 msgid "Height of the upper tap zone"
-msgstr "Висота верхньої тап-зони"
+msgstr "Висота верхньої ділянки дотику"
 
 #: ../src/settings.cpp:1837
 msgid "Height of the middle tap zone"
-msgstr "Высота центральної тап-зоны"
+msgstr "Висота центральної ділянки дотику"
 
 #: ../src/settings.cpp:1840
 msgid "Width of the left tap zone"
-msgstr "Ширина лівої тап-зоны"
+msgstr "Ширина лівої ділянки дотику"
 
 #: ../src/settings.cpp:1843
 msgid "Width of the middle tap zone"
-msgstr "Ширина центральної тап-зоны"
+msgstr "Ширина центральної ділянки дотику"
 
 #: ../src/settings.cpp:1847
 msgid "Page Turn Swipes"
@@ -1428,7 +1436,7 @@ msgstr "Гортання сторінок жестом"
 
 #: ../src/settings.cpp:1850
 msgid "Front Light Swipes"
-msgstr "Регулювання підсвітки жестом"
+msgstr "Регулювання підсвічування жестом"
 
 #: ../src/settings.cpp:1854
 msgid "Pinch zoom"
@@ -1440,7 +1448,7 @@ msgstr "Налаштування стилів"
 
 #: ../src/settings.cpp:1877
 msgid "Document embedded styles"
-msgstr "Використовувати стилі документу"
+msgstr "Використовувати вбудовані стилі"
 
 #: ../src/settings.cpp:1896 ../src/viewdlg.cpp:601
 msgid "Clear cache"
@@ -1448,19 +1456,17 @@ msgstr "Очистити кеш"
 
 #: ../src/settings.cpp:1904 ../src/viewdlg.cpp:599 ../src/ota_update.cpp:277
 msgid "OTA Update"
-msgstr "Оновлення програми по мережі"
+msgstr "Оновлення програми через мережу"
 
 #: ../src/settings.cpp:1911 ../src/viewdlg.cpp:600
 msgid "OTA Update Dev"
-msgstr "Оновлення по мережі до тестової версії"
+msgstr "Оновлення через мережу до бета-версії"
 
 #: ../src/settings.cpp:1934
 msgid ""
 "Press $1 to change option\n"
 "$2 to apply, $3 to cancel"
-msgstr ""
-"$1 — щоб змінити, $2 — застосувати\n"
-"$3 — скасувати"
+msgstr "$1 — змінити, $2 — застосувати\n$3 — скасувати"
 
 #: ../src/viewdlg.cpp:159
 msgid "No dictionaries found"
@@ -1476,11 +1482,9 @@ msgstr "Підтримуються словники у форматі .dict (с�
 
 #: ../src/viewdlg.cpp:162
 msgid ""
-"For each dictionary, pair of files should be provided: data file (with .dict "
-"or .dict.dz extension, and index file with .index extension"
-msgstr ""
-"Кожен словник складається з файлу даних (.dict або .dict.dz) та файлу "
-"індексу слів (.index)"
+"For each dictionary, pair of files should be provided: data file (with .dict"
+" or .dict.dz extension, and index file with .index extension"
+msgstr "Кожен словник складається з файлу даних (.dict або .dict.dz) та файлу індексу слів (.index)"
 
 #: ../src/viewdlg.cpp:176
 msgid "Table of contents"
@@ -1492,7 +1496,7 @@ msgstr "Вкажіть номер сторінки"
 
 #: ../src/viewdlg.cpp:194
 msgid "Enter position percent"
-msgstr "Введіть позицію (%)"
+msgstr "Вкажіть позицію (%)"
 
 #: ../src/viewdlg.cpp:355
 msgid "Find in dictionary"
@@ -1590,7 +1594,7 @@ msgstr "До останньої сторінки"
 
 #: ../src/viewdlg.cpp:536
 msgid "Go to position"
-msgstr "Перейти на позицію"
+msgstr "Перейти до позиції"
 
 #: ../src/viewdlg.cpp:538
 msgid "Zoom in"
@@ -1634,11 +1638,11 @@ msgstr "Встановити кут повороту"
 
 #: ../src/viewdlg.cpp:548
 msgid "Save history and bookmarks"
-msgstr "Зберегти історію/закладки"
+msgstr "Зберегти історію та закладки"
 
 #: ../src/viewdlg.cpp:549
 msgid "Save document to cache"
-msgstr "Зберегти книгу в кеш"
+msgstr "Зберегти книгу до кешу"
 
 #: ../src/viewdlg.cpp:550
 msgid "Close dialog"
@@ -1658,11 +1662,11 @@ msgstr "Закрити книгу"
 
 #: ../src/viewdlg.cpp:556
 msgid "Main menu"
-msgstr "Головне меню"
+msgstr "Головне меню CoolReader"
 
 #: ../src/viewdlg.cpp:557
 msgid "Go to page dialog"
-msgstr "Перейти на сторінку"
+msgstr "Перейти до сторінки"
 
 #: ../src/viewdlg.cpp:558
 msgid "Settings menu"
@@ -1670,7 +1674,7 @@ msgstr "Меню налаштувань"
 
 #: ../src/viewdlg.cpp:559
 msgid "Font size settings"
-msgstr "Налаштування розмір шрифту"
+msgstr "Налаштування розміру шрифту"
 
 #: ../src/viewdlg.cpp:560
 msgid "Page orientation settings"
@@ -1694,7 +1698,7 @@ msgstr "До закладок..."
 
 #: ../src/viewdlg.cpp:570
 msgid "Recent books list"
-msgstr "Останні відкриті"
+msgstr "Останні відкриті книги"
 
 #: ../src/viewdlg.cpp:571
 msgid "Open recent book by number"
@@ -1722,7 +1726,7 @@ msgstr "Попереднє призначення кнопок"
 
 #: ../src/viewdlg.cpp:579
 msgid "Show manual"
-msgstr "Посібник з використання"
+msgstr "Посібник користувача CoolReader"
 
 #: ../src/viewdlg.cpp:580
 msgid "Show key mapping"
@@ -1730,15 +1734,15 @@ msgstr "Функції клавіш"
 
 #: ../src/viewdlg.cpp:581
 msgid "Go to percent..."
-msgstr "Перейти на позицію (%)..."
+msgstr "Перейти до позиції (%)..."
 
 #: ../src/viewdlg.cpp:586
 msgid "Front light"
-msgstr "Керування підсвіткою"
+msgstr "Керування підсвічуванням"
 
 #: ../src/viewdlg.cpp:587
 msgid "Invert display"
-msgstr "Інвертувати зміст екрану"
+msgstr "Інвертувати кольори"
 
 #: ../src/viewdlg.cpp:588
 msgid "Full screen update"
@@ -1746,7 +1750,7 @@ msgstr "Повне оновлення екрану"
 
 #: ../src/viewdlg.cpp:589
 msgid "Toggle status bar"
-msgstr "Показати / сховати рядо стану"
+msgstr "Показати / сховати колонтитул"
 
 #: ../src/viewdlg.cpp:592
 msgid "Enter standby mode"
@@ -1758,23 +1762,23 @@ msgstr "Запущені програми"
 
 #: ../src/viewdlg.cpp:596
 msgid "Toggle system panel"
-msgstr "Показати системну панель"
+msgstr "Показати / сховати панель PocketBook"
 
 #: ../src/viewdlg.cpp:598
 msgid "Lock device"
-msgstr "Режим блокування"
+msgstr "Заблокувати пристрій"
 
 #: ../src/viewdlg.cpp:603
 msgid "Open system panel"
-msgstr "Відкрити системну панель"
+msgstr "Відкрити панель PocketBook"
 
 #: ../src/viewdlg.cpp:604
 msgid "Toggle front light"
-msgstr "Підсвітка вкл/викл"
+msgstr "Увімк./вимк. підсвічування"
 
 #: ../src/viewdlg.cpp:607
 msgid "PocketBook Main menu"
-msgstr "Головне меню пристрою"
+msgstr "Головний екран PocketBook"
 
 #: ../src/viewdlg.cpp:609
 msgid "Unknown command"
@@ -1790,19 +1794,19 @@ msgstr "Наступна сторінка"
 
 #: ../src/viewdlg.cpp:620
 msgid "Back by 10 Pages"
-msgstr "На 10 сторінок назад"
+msgstr "Вперед на 10 сторінок"
 
 #: ../src/viewdlg.cpp:622
 msgid "Forward by 10 Pages"
-msgstr "На 10 сторінок вперед"
+msgstr "Назад на 10 сторінок"
 
 #: ../src/viewdlg.cpp:624
 msgid "Next Chapter"
-msgstr "Наступна глава"
+msgstr "Наступний розділ"
 
 #: ../src/viewdlg.cpp:626
 msgid "Previous Chapter"
-msgstr "Попередня глава"
+msgstr "Попередній розділ"
 
 #: ../src/viewdlg.cpp:628
 msgid "Add Bookmark"
@@ -1826,7 +1830,7 @@ msgstr "Альбомна"
 
 #: ../src/viewdlg.cpp:660
 msgid "Key"
-msgstr "Кнопка"
+msgstr "Клавіша"
 
 #: ../src/viewdlg.cpp:660
 msgid "Assigned function"
@@ -1836,9 +1840,7 @@ msgstr "Дія"
 msgid ""
 "Download successful!\n"
 "CoolReader will restart itself."
-msgstr ""
-"Завантаження закінчено!\n"
-"CoolReader буде перезапущено."
+msgstr "Завантаження завершено!\nCoolReader буде перезапущено."
 
 #: ../src/ota_update.cpp:152
 msgid "OK"
@@ -1846,7 +1848,7 @@ msgstr "OK"
 
 #: ../src/ota_update.cpp:161
 msgid "Downloading... (2nd Method)"
-msgstr "Завантаження...(другий метод)"
+msgstr "Завантаження... (другий метод)"
 
 #: ../src/ota_update.cpp:172
 msgid "Couldn't download the update package!"
@@ -1859,7 +1861,7 @@ msgstr "Завантаження..."
 
 #: ../src/ota_update.cpp:235
 msgid "Couldn't remove existing package!"
-msgstr "Не вдалося видалити існуючий пакет!"
+msgstr "Не вдалося вилучити наявний пакет!"
 
 #: ../src/ota_update.cpp:272
 msgid "Couldn't connect to the network!"
@@ -1872,15 +1874,13 @@ msgstr "Пошук..."
 
 #: ../src/ota_update.cpp:285
 msgid "You have the latest version."
-msgstr "У Вас встановлена найновіша версія."
+msgstr "У вас встановлена найновіша версія."
 
 #: ../src/ota_update.cpp:317
 msgid ""
 "Update is not available for your device!\n"
 "Device model: "
-msgstr ""
-"Для Вашого пристою немає оновлень!\n"
-"Модель пристрою:"
+msgstr "Для вашого пристою немає оновлень!\nМодель пристрою:"
 
 #: ../src/ota_update.cpp:339
 msgid "Failed updating!"
@@ -1896,7 +1896,7 @@ msgstr "Кеш очищено."
 
 #: ../src/cr3pocketbook.cpp:2537
 msgid "Unable to list the directory contents!"
-msgstr "Неможливо показати зміст папки!"
+msgstr "Неможливо показати вміст теки!"
 
 #: ../src/cr3pocketbook.cpp:2543
 msgid "Unable to clear cache!"
@@ -1912,15 +1912,15 @@ msgstr "Розділ"
 
 #: ../src/cr3pocketbook.cpp:2728
 msgid "End"
-msgstr "Закінчення"
+msgstr "Кінець"
 
 #: ../src/cr3pocketbook.cpp:4181
 msgid "Press $1 to translate"
-msgstr "Коротке натискання $1 для перекладу"
+msgstr "Натисніть $1, щоб перекласти"
 
 #: ../src/cr3pocketbook.cpp:5291
 msgid "Updated to v"
-msgstr "Оновлено до версії"
+msgstr "Оновлено до версії "
 
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
@@ -1928,8 +1928,112 @@ msgstr "Без назви"
 
 #: ../src/cr3pocketbook.cpp:5785
 msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Встановлено системна тема користувача. CR3 буде перезавантажено."
+msgstr "Застосовано власну системну тему користувача. CoolReader 3 зараз перезапуститься."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."
-msgstr "Встановлено звичайна системна тема. CR3 буде перезавантажено."
+msgstr "Застосовано типову системну тему. CoolReader 3 зараз перезапуститься."
+
+#: ../src/settings.cpp
+msgid "OPDS catalog"
+msgstr "Каталог книг (OPDS)"
+
+#: ../src/settings.cpp
+msgid "OPDS catalog address"
+msgstr "Адреса OPDS-каталога"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Cannot load the catalog. Check Wi-Fi and the catalog address."
+msgstr "Не вдалося завантажити каталог. Перевірте Wi-Fi та адресу каталога."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The server did not return an OPDS catalog."
+msgstr "Сервер повернув не OPDS-каталог."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Back"
+msgstr "Назад"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Search..."
+msgstr "Пошук..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Next page"
+msgstr "Наступна сторінка"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog start page"
+msgstr "До початку каталога"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog address..."
+msgstr "Адреса каталога..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Close catalog"
+msgstr "Закрити каталог"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Back to the list"
+msgstr "Назад до списку"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Back to the book"
+msgstr "Назад до книги"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Genre"
+msgstr "Жанр"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "About the book"
+msgstr "Відомості про книгу"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Download and open"
+msgstr "Завантажити і відкрити"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "CoolReader cannot open this format"
+msgstr "CoolReader не може відкрити цей формат"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Download failed."
+msgstr "Не вдалося завантажити книгу."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Cannot save the book file."
+msgstr "Не вдалося зберегти файл книги."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The book file was not written."
+msgstr "Файл книги не записано."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The downloaded file is empty."
+msgstr "Завантажений файл порожній."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The server returned a web page instead of the book."
+msgstr "Сервер замість книги повернув вебсторінку."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "No network connection. Turn on Wi-Fi and try again."
+msgstr "Немає підключення до мережі. Увімкніть Wi-Fi і спробуйте знову."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Search: author or title"
+msgstr "Пошук: автор або назва"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Next"
+msgstr "Далі"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Page"
+msgstr "Стор."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog menu"
+msgstr "Меню"

@@ -27,6 +27,7 @@
     #include "readingStats.h"
 #endif
 #include "opdsbrowser.h"
+#include "pb_dict.h"
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
@@ -42,6 +43,11 @@
 #define PB_DICT_ARTICLE_LIST 4
 #define PB_DICT_DEACTIVATE 5
 #define PB_DICT_SEARCH 6
+// buttons in the skin image cr3_dict_tools.png
+#define PB_DICT_IMAGE_BUTTONS 6
+// toolbar buttons are drawn this much larger than the image, in percent; the title height of
+// the skin's dict window limits it (pb740fw5: 90 px image, 144 px title, 135 px buttons)
+#define PB_DICT_TOOLBAR_SCALE 150
 
 #define PB_LINE_HEIGHT 30
 
@@ -1678,23 +1684,37 @@ class CRPbDictionaryView : public CRViewDialog
 private:
     CRPbDictionaryDialog *_parent;
     CRPbDictionaryMenu *_dictMenu;
-    LVHashTable<lString16, int> _dictsTable;
-    char ** _dictNames;
-    int _dictIndex;
-    int _dictCount;
+    // the dictionary of the window: a .dic or a StarDict one, NULL when none opens;
+    // with "Selected dictionaries" it is the one whose word list the list button shows
+    PbDictSource *_dict;
+    // "Selected dictionaries" is chosen: every lookup goes through the checked dictionaries
+    bool _selectedDicts;
+    // settings of the open list of dictionaries: the choice is read from here when it closes
+    // (getNewProps() makes a new copy on every call, so a choice written there can get lost)
+    CRPropRef _dictMenuProps;
     lString16 _word;
     lString16 _searchPattern;
     bool _active;
-    bool _dictsLoaded;
     int _selectedIndex;
     int _itemsCount;
     LVImageSourceRef _toolBarImg;
+    // the last action came from the touch screen: no key cursor on the toolbar
+    bool _touchUsed;
+    // toolbar button under the finger, drawn inverted until the finger is lifted; 0 when none
+    int _pressedIndex;
+    // where the finger went down in the window: a vertical swipe turns the article or list page
+    int _swipeX;
+    int _swipeY;
     int _translateResult;
-    char *_newWord;
-    char *_newTranslation;
+    // the word that starts the word list when the list button is pressed
+    bool _haveNewWord;
+    lString8 _newWord;
+    lString8 _newTranslation;
 private:
     void searchDictionary();
-    void loadDictionaries();
+    bool openDictionary(const lString16 & id);
+    bool translateMulti(const lString16 &w);
+    bool getToolbarRect(lvRect & rc, int & slotWidth, int & imageHeight);
 protected:
     virtual void selectDictionary();
     virtual void launchDictBrowser(const char *urlBase);
@@ -1706,6 +1726,7 @@ public:
     virtual void draw();
     virtual void translate(const lString16 &w);
     virtual lString8 createArticle(const char *word, const char *translation);
+    lString8 createArticleBody(const char *translation);
     virtual bool onCommand( int command, int params );
 
     virtual bool onTouchEvent( int x, int y, CRGUITouchEventType evType );
@@ -1718,6 +1739,7 @@ public:
 
     void doActivate();
     void doDeactivate();
+    void setTouchMode(bool touch) { _touchUsed = touch; }
     int getCurItem() { return _selectedIndex; }
     void setTranslation(lString8 translation);
     void setCurItem(int index);
@@ -1726,13 +1748,15 @@ public:
     bool isArticleListActive();
     void closeDictionary();
     virtual void setRect( const lvRect & rc );
-    void scheduleDictListUpdate(const char *word, const char *translation)
+    void scheduleDictListUpdate(const lString8 & word, const lString8 & translation)
     {
-        if (_newWord == NULL) {
-            _newWord = const_cast<char *>(word);
-            _newTranslation = const_cast<char *>(translation);
+        if (!_haveNewWord) {
+            _haveNewWord = true;
+            _newWord = word;
+            _newTranslation = translation;
         }
     }
+    PbDictSource * getDictionary() { return _dict; }
     virtual void reconfigure( int flags );
     int getDesiredHeight();
     virtual bool isDirty();
@@ -1743,17 +1767,18 @@ public:
 class CRPbDictionaryMenuItem : public CRMenuItem
 {
 private:
-    const char *_word;
-    const char *_translation;
+    // copies: the next lookup may reuse the memory the dictionary returned
+    lString8 _word;
+    lString8 _translation;
     lString16 _word16;
     lString16 _translation16;
 protected:
     lString16 createItemValue(const char *_translation);
 public:
-    CRPbDictionaryMenuItem(CRMenu * menu, int id, const char *word, const char *translation);
+    CRPbDictionaryMenuItem(CRMenu * menu, int id, const lString8 & word, const lString8 & translation);
     virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected );
-    const char * getWord() { return _word; }
-    const char * getTranslation() { return _translation; }
+    const lString8 & getWord() { return _word; }
+    const lString8 & getTranslation() { return _translation; }
 };
 
 class CRPbDictionaryMenu : public CRMenu
@@ -1767,12 +1792,12 @@ public:
     virtual const lvRect & getRect() { return _rect; }
     virtual bool onCommand( int command, int params = 0 );
     virtual void setCurItem(int nItem);
-    bool newPage(const char *word, const char *translation);
+    bool newPage(const lString8 & word, const lString8 & translation);
     bool nextPage();
     bool prevPage();
     int getTopItem() { return _topItem; }
     int getSelectedItem() { return _selectedItem; }
-    const char * getCurItemWord();
+    lString8 getCurItemWord();
     // Index of the list item drawn at screen row y, or -1 (uses the same geometry as CRMenu::drawClient).
     int itemIndexAt(int y);
     // How many list rows fit into the dictionary window, at least the skin's min-item-count.
@@ -1828,12 +1853,18 @@ protected:
     void endWordSelection();
     bool isWordSelection() { return _wordSelector!=NULL; }
     void onWordSelection(bool translate=true);
+    void selectWordOnCurrentPage(bool translate);
+    bool turnBookPage(int command, int params);
     bool _docDirty;
     int _curPage;
     int _lastWordX;
     int _lastWordY;
+    // where the finger went down over the book text, to tell a swipe from a tap
+    int _touchDownX;
+    int _touchDownY;
 public:
-    CRPbDictionaryDialog(CRGUIWindowManager * wm) : CRGUIWindowBase(wm), _dictView(NULL)
+    CRPbDictionaryDialog(CRGUIWindowManager * wm) : CRGUIWindowBase(wm), _dictView(NULL),
+        _touchDownX(-1), _touchDownY(-1)
     {
         _wordSelector = NULL;
         _fullscreen = true;
@@ -1891,6 +1922,8 @@ public:
 
         if (_dictView->getRect().isPointInside(pt))
         {
+            _touchDownX = _touchDownY = -1;
+            _dictView->setTouchMode(true);
             if (!_dictViewActive)
             {
                 activateDictView(true);
@@ -1904,6 +1937,27 @@ public:
         if (CRTOUCH_DOWN == evType && _dictViewActive)
         {
             _dictView->doDeactivate();
+        }
+
+        // A horizontal swipe over the book text turns the page, the dictionary window stays open
+        if (CRTOUCH_DOWN == evType) {
+            _touchDownX = x;
+            _touchDownY = y;
+        } else if (_touchDownX >= 0) {
+            int dx = x - _touchDownX;
+            int dy = y - _touchDownY;
+            int swipeWidth = _wm->getScreen()->getWidth() / 5;
+            if (abs(dx) > abs(dy) && abs(dx) > swipeWidth / 2) {
+                if (CRTOUCH_UP == evType) {
+                    _touchDownX = _touchDownY = -1;
+                    if (abs(dx) > swipeWidth)
+                        return turnBookPage(dx < 0 ? DCMD_PAGEDOWN : DCMD_PAGEUP, 1);
+                }
+                // no word selection while the finger is swiping
+                return true;
+            }
+            if (CRTOUCH_UP == evType)
+                _touchDownX = _touchDownY = -1;
         }
 
         ldomXPointer p = _docview->getNodeByPoint( pt );
@@ -3216,10 +3270,9 @@ static void paused_rotate_timer()
 
 CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDialog *parent)
     : CRViewDialog(wm, lString16::empty_str, lString8::empty_str, lvRect(), false, true), _parent(parent),
-    _dictsTable(16), _active(false), _dictsLoaded(false), _itemsCount(7), _translateResult(0),
-    _newWord(NULL), _newTranslation(NULL)
+    _dict(NULL), _selectedDicts(false), _active(false), _itemsCount(7), _touchUsed(true), _pressedIndex(0), _swipeX(-1), _swipeY(-1), _translateResult(0),
+    _haveNewWord(false)
 {
-    bool default_dict = false;
     setSkinName(lString16("#dict"));
     lvRect rect = _wm->getScreen()->getRect();
     CRWindowSkinRef skin = getSkin();
@@ -3240,49 +3293,62 @@ CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDi
     _dictMenu->reconfigure(0);
     CRPropRef props = CRPocketBookDocView::instance->getProps();
     getDocView()->setVisiblePageCount(props->getIntDef(PROP_POCKETBOOK_DICT_PAGES, 1));
+    PbDictManager & dicts = PbDictManager::instance();
     lString16 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT, pbGlobals->getDictionary());
-    if ((default_dict = lastDict.empty())) {
-        CRLog::trace("last dictionary is empty");
-        loadDictionaries();
-        if (_dictCount > 0)
-            lastDict = Utf8ToUnicode(lString8(_dictNames[0]));
-        CRLog::trace("_dictCount = %d", _dictCount);
-    }
-    if (!lastDict.empty()) {
-        _dictIndex = 0;
-        int rc = OpenDictionary((char *)UnicodeToUtf8(lastDict).c_str());
-        CRLog::trace("OpenDictionary() returned = %d", rc);
-        if (rc == 1) {
-            _caption = lastDict;
-            getDocView()->createDefaultDocument(lString16(), Utf8ToUnicode(TR("@Word_not_found")));
-            if (default_dict) {
-                props->setString(PROP_POCKETBOOK_DICT, lastDict);
-                CRPocketBookDocView::instance->saveSettings(lString16());
-            }
-            getDocView()->createDefaultDocument(lString16::empty_str, Utf8ToUnicode(TR("@Word_not_found")));
-            return;
+    bool opened = !lastDict.empty() && openDictionary(lastDict);
+    if (!opened && dicts.count() > 0 && dicts.find(lastDict) == NULL) {
+        // nothing chosen yet, or the chosen dictionary was deleted: take the first one
+        CRLog::trace("dictionary %s not found, the first one is used", UnicodeToUtf8(lastDict).c_str());
+        if ((opened = openDictionary(dicts.get(0)->id()))) {
+            props->setString(PROP_POCKETBOOK_DICT, _dict->id());
+            CRPocketBookDocView::instance->saveSettings(lString16());
         }
-        lString8 dName =  UnicodeToUtf8(lastDict);
-        CRLog::error("OpenDictionary(%s) returned %d", dName.c_str(), rc);
     }
-    _dictIndex = -1;
+    if (opened) {
+        getDocView()->createDefaultDocument(lString16::empty_str, Utf8ToUnicode(TR("@Word_not_found")));
+        return;
+    }
+    // a tap on the caption opens the list of dictionaries, so do not leave it empty
+    _caption = Utf8ToUnicode(TR("@Dictionary"));
     getDocView()->createDefaultDocument(lString16::empty_str, Utf8ToUnicode(TR("@Dic_error")));
 }
 
-void CRPbDictionaryView::loadDictionaries()
+static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found);
+static lString16 pbSelectedDictsLabel(const char * name);
+
+// Makes the dictionary with the id (or a plain .dic name saved by older versions) the window's one.
+// "Selected dictionaries": lookups go through the checked dictionaries (none checked: the first 5);
+// the first of them that opens gives the word list until a lookup picks another one.
+bool CRPbDictionaryView::openDictionary(const lString16 & id)
 {
-    _dictNames = EnumDictionaries();
-    for (_dictCount = 0; _dictNames[_dictCount]; _dictCount++) {
-        _dictsTable.set(Utf8ToUnicode( lString8(_dictNames[_dictCount]) ), _dictCount);
+    PbDictManager & dicts = PbDictManager::instance();
+    _selectedDicts = id == lString16(PB_DICT_ID_SELECTED);
+    if (_selectedDicts) {
+        LVPtrVector<PbDictSource, false> found;
+        pbSearchDicts(found);
+        _dict = NULL;
+        for (int i = 0; i < found.length() && _dict == NULL; i++)
+            if (found[i]->open())
+                _dict = found[i];
+        // "Dictionaries (3)", "Dictionaries (all)": the window searches several dictionaries
+        _caption = pbSelectedDictsLabel(_("Dictionaries"));
+        return found.length() > 0;
     }
-    CRLog::trace("_dictCount = %d", _dictCount);
-    _dictsLoaded = true;
+    PbDictSource * dict = dicts.find(id);
+    if (dict == NULL || !dict->open()) {
+        CRLog::error("cannot open dictionary %s", UnicodeToUtf8(id).c_str());
+        _dict = NULL;
+        return false;
+    }
+    _dict = dict;
+    _caption = dict->title();
+    return true;
 }
 
 CRPbDictionaryView::~CRPbDictionaryView()
 {
-    if (_dictIndex >= 0)
-        CloseDictionary();
+    // the firmware keeps one .dic open for the whole system; StarDict indexes stay loaded
+    PbDictManager::instance().closeInkview();
     delete _dictMenu;
     _dictMenu = NULL;
 }
@@ -3310,6 +3376,28 @@ bool CRPbDictionaryView::isDirty()
     return CRViewDialog::isDirty();
 }
 
+// Toolbar at the right of the title bar: the skin image (PB_DICT_IMAGE_BUTTONS buttons, drawn
+// PB_DICT_TOOLBAR_SCALE percent large). Drawing and touch handling both use this geometry.
+bool CRPbDictionaryView::getToolbarRect(lvRect & rc, int & slotWidth, int & imageHeight)
+{
+    lvRect titleRc;
+    if (_toolBarImg.isNull() || _toolBarImg->GetHeight() <= 0 || !getTitleRect(titleRc))
+        return false;
+    CRWindowSkinRef skin(_wm->getSkin()->getWindowSkin(_skinName.c_str()));
+    lvRect borders = skin->getTitleSkin()->getBorderWidths();
+    int innerHeight = titleRc.height() - borders.top - borders.bottom;
+    imageHeight = _toolBarImg->GetHeight() * PB_DICT_TOOLBAR_SCALE / 100;
+    if (imageHeight > innerHeight)
+        imageHeight = innerHeight;
+    slotWidth = _toolBarImg->GetWidth() * imageHeight / _toolBarImg->GetHeight() / PB_DICT_IMAGE_BUTTONS;
+    if (slotWidth <= 0)
+        return false;
+    rc = titleRc;
+    rc.right = titleRc.right - borders.right;
+    rc.left = rc.right - slotWidth * PB_DICT_IMAGE_BUTTONS;
+    return true;
+}
+
 void CRPbDictionaryView::drawTitleBar()
 {
     CRLog::trace("CRPbDictionaryView::drawTitleBar()");
@@ -3335,27 +3423,41 @@ void CRPbDictionaryView::drawTitleBar()
         imgWidth = w + 8;
        // CRLog::trace("CRPbDictionaryView::drawTitleBar() _icon ( %d, %d, %d, %d )", titleRc.left + hh/2-w/2, titleRc.top + hh/2 - h/2, w, h );
     }
-    int tbWidth = 0;
-    if (!_toolBarImg.isNull())
+    lvRect tbRc;
+    int slotWidth = 0, imageHeight = 0;
+    if (getToolbarRect(tbRc, slotWidth, imageHeight))
     {
-        tbWidth = _toolBarImg->GetWidth();
-        int h = _toolBarImg->GetHeight();
-        titleRc.right -= (tbWidth + titleSkin->getBorderWidths().right);
-        buf.Draw(_toolBarImg, titleRc.right, titleRc.top + hh/2 - h/2, tbWidth, h );
-       // CRLog::trace("CRPbDictionaryView::drawTitleBar() _toolBarImg tbWidth=%d, h=%d ( %d, %d, %d, %d )", tbWidth, h, titleRc.right, titleRc.top + hh/2 - h/2, tbWidth, h );
+        int y = tbRc.top + (tbRc.height() - imageHeight) / 2;
+        buf.Draw(_toolBarImg, tbRc.left, y, slotWidth * PB_DICT_IMAGE_BUTTONS, imageHeight);
+        titleRc.right = tbRc.left;
     }
     lvRect textRect = titleRc;
     textRect.left += imgWidth;
-    titleSkin->drawText( buf, textRect, _caption );
-    if (_active)
+    lString16 caption = _caption;
+    // "1/4": the article is longer than the window, a swipe or a tap turns its pages
+    if (!isArticleListActive() && getDocView()->getPageCount() > 1)
+        caption << "  " << lString16::itoa(getDocView()->getCurPage() + 1) << "/"
+                << lString16::itoa(getDocView()->getPageCount());
+    titleSkin->drawText( buf, textRect, caption );
+    if (_pressedIndex > 0 && slotWidth > 0)
+    {
+        // the button under the finger, until the finger is lifted
+        lvRect pressedRc = tbRc;
+        pressedRc.left = tbRc.left + slotWidth * (_pressedIndex - 1);
+        pressedRc.right = pressedRc.left + slotWidth;
+        pressedRc.top += borders.top;
+        pressedRc.bottom -= borders.bottom;
+        buf.InvertRect(pressedRc.left, pressedRc.top, pressedRc.right, pressedRc.bottom);
+    }
+    // the key cursor; on touch it would jump to buttons that were not pressed
+    else if (_active && !_touchUsed)
     {
         lvRect selRc;
 
-        if (_selectedIndex != 0 && tbWidth > 0) {
-            int itemWidth = tbWidth/(_itemsCount -1);
-            selRc = titleRc;
-            selRc.left = titleRc.right + itemWidth * (_selectedIndex -1);
-            selRc.right = selRc.left + itemWidth;
+        if (_selectedIndex != 0 && slotWidth > 0) {
+            selRc = tbRc;
+            selRc.left = tbRc.left + slotWidth * (_selectedIndex -1);
+            selRc.right = selRc.left + slotWidth;
             CRLog::trace("CRPbDictionaryView::drawTitleBar() _selectedIndex=%d, ( %d, %d, %d, %d )", _selectedIndex, selRc.left, selRc.top, selRc.right, selRc.bottom );
         } else {
             selRc = textRect;
@@ -3369,12 +3471,29 @@ void CRPbDictionaryView::drawTitleBar()
     }
 }
 
+// Night mode as the reader sees it: the page background is darker than the text.
+// The "Invert display" command swaps the page colors itself, so PROP_DISPLAY_INVERSE
+// does not always say what is on the screen.
+static bool pbNightMode()
+{
+    if (main_win == NULL)
+        return false;
+    lUInt32 back = main_win->getDocView()->getBackgroundColor();
+    lUInt32 text = main_win->getDocView()->getTextColor();
+    int backLevel = ((back >> 16) & 0xFF) + ((back >> 8) & 0xFF) + (back & 0xFF);
+    int textLevel = ((text >> 16) & 0xFF) + ((text >> 8) & 0xFF) + (text & 0xFF);
+    return backLevel < textLevel;
+}
+
 void CRPbDictionaryView::draw()
 {
     int antialiasingMode = fontMan->GetAntialiasMode();
     if (antialiasingMode == 1)
         fontMan->SetAntialiasMode(0);
     if (isArticleListActive()) {
+        // In night mode the whole window is inverted after drawing, so redraw all list rows
+        if (pbNightMode())
+            _dictMenu->invalidateMenu();
         _dictMenu->draw();
     } else {
         CRViewDialog::draw();
@@ -3384,25 +3503,197 @@ void CRPbDictionaryView::draw()
         fontMan->SetAntialiasMode(1);
 }
 
+// Ids of the dictionaries chosen for the search in several dictionaries
+// (plain .dic names saved by the previous beta become "dic:" ids)
+static void pbGetMultiDicts(lString16Collection & names)
+{
+    names.clear();
+    lString16 value = CRPocketBookDocView::instance->getProps()->getStringDef(PROP_POCKETBOOK_DICT_MULTI, "");
+    if (!value.empty())
+        names.split(value, lString16("|"));
+    for (int i = 0; i < names.length(); i++)
+        names[i] = PbDictManager::normalizeId(names[i]);
+}
+
+// Checked dictionaries that are still on the device
+static int pbCountMultiDicts(const lString16Collection & names)
+{
+    int count = 0;
+    for (int i = 0; i < names.length(); i++)
+        if (PbDictManager::instance().find(names[i]) != NULL)
+            count++;
+    return count;
+}
+
+// Dictionaries "Selected dictionaries" looks the word up in: the checked ones, or, when none is
+// checked, the first PB_DICT_SELECTED_MAX of the list
+static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found)
+{
+    PbDictManager & dicts = PbDictManager::instance();
+    lString16Collection names;
+    pbGetMultiDicts(names);
+    found.clear();
+    for (int i = 0; i < names.length(); i++) {
+        PbDictSource * dict = dicts.find(names[i]);
+        if (dict != NULL)
+            found.add(dict);
+    }
+    if (found.length() > 0)
+        return;
+    for (int i = 0; i < dicts.count() && i < PB_DICT_SELECTED_MAX; i++)
+        found.add(dicts.get(i));
+}
+
+// "Selected dictionaries (3)"; with nothing checked "(all)" or "(first 5)"
+static lString16 pbSelectedDictsLabel(const char * name)
+{
+    lString16Collection names;
+    pbGetMultiDicts(names);
+    lString16 label = lString16(name);
+    int checked = pbCountMultiDicts(names);
+    if (checked > 0)
+        label << " (" << lString16::itoa(checked) << ")";
+    else if (PbDictManager::instance().count() <= PB_DICT_SELECTED_MAX)
+        label << " (" << lString16(_("all")) << ")";
+    else
+        label << " (" << lString16(_("first 5")) << ")";
+    return label;
+}
+
+// Row of the "several dictionaries" list: a tap adds the dictionary to the search or removes it
+class CRPbMultiDictItem : public CRMenuItem
+{
+private:
+    lString16 _dictName; // dictionary id
+    lString16 _dictLabel;
+    bool _checked;
+    void updateLabel()
+    {
+        setLabel((_checked ? lString16("[x]  ") : lString16("[  ]  ")) + _dictLabel);
+    }
+public:
+    CRPbMultiDictItem(CRMenu * menu, int id, PbDictSource * dict, bool checked)
+        : CRMenuItem(menu, id, lString16::empty_str, LVImageSourceRef(), LVFontRef()),
+          _dictName(dict->id()), _dictLabel(dict->label()), _checked(checked),
+          _selectedRow(NULL), _selectedMenu(NULL)
+    {
+        updateLabel();
+    }
+    virtual int onSelect()
+    {
+        lString16Collection names;
+        pbGetMultiDicts(names);
+        if (!_checked && pbCountMultiDicts(names) >= PB_DICT_SELECTED_MAX) {
+            // each dictionary adds to the lookup time (the text names PB_DICT_SELECTED_MAX)
+            Message(ICON_INFORMATION, const_cast<char*>("CoolReader"),
+                    const_cast<char*>(_("No more than 5 dictionaries")), 2000);
+            return 1;
+        }
+        _checked = !_checked;
+        updateLabel();
+        lString16 value;
+        bool added = false;
+        for (int i = 0; i < names.length(); i++) {
+            if (names[i] == _dictName) {
+                if (!_checked)
+                    continue;
+                added = true;
+            }
+            if (!value.empty())
+                value << "|";
+            value << names[i];
+        }
+        if (_checked && !added) {
+            if (!value.empty())
+                value << "|";
+            value << _dictName;
+        }
+        // straight into the settings: getNewProps() would replace the copy the dictionary list uses
+        CRPocketBookDocView::instance->getProps()->setString(PROP_POCKETBOOK_DICT_MULTI, value);
+        CRPocketBookDocView::instance->saveSettings(lString16());
+        _menu->setDirty();
+        // the count in "Selected dictionaries (N)" of the list under this one
+        if (_selectedRow != NULL && _selectedMenu != NULL) {
+            pbGetMultiDicts(names);
+            _selectedRow->setLabel(pbSelectedDictsLabel(_("Selected dictionaries")));
+            _selectedRow->setItemDirty();
+            _selectedMenu->setDirty();
+        }
+        return 1;
+    }
+    CRMenuItem * _selectedRow;
+    CRMenu * _selectedMenu;
+};
+
+// Second row of the dictionary menu: the dictionaries checked for "Selected dictionaries"
+class CRPbMultiDictOpenItem : public CRMenuItem
+{
+private:
+    CRGUIWindowManager * _wm;
+    CRMenuItem * _selectedRow; // "Selected dictionaries (N)" of the same list
+public:
+    CRPbMultiDictOpenItem(CRMenu * menu, CRGUIWindowManager * wm, CRMenuItem * selectedRow)
+        : CRMenuItem(menu, -1, lString16(_("Check dictionaries...")), LVImageSourceRef(), LVFontRef()),
+          _wm(wm), _selectedRow(selectedRow)
+    {
+    }
+    virtual int onSelect()
+    {
+        LVFontRef valueFont(fontMan->GetFont( VALUE_FONT_SIZE, 400, true, css_ff_sans_serif, lString8("Liberation Sans")));
+        CRMenu * multiMenu = new CRMenu(_wm, NULL, PB_CMD_SELECT_DICT,
+                                        lString16(_("Check dictionaries...")),
+                                        LVImageSourceRef(), LVFontRef(), valueFont);
+        multiMenu->setAccelerators(_wm->getAccTables().get("menu"));
+        multiMenu->setSkinName(lString16("#settings"));
+        lString16Collection names;
+        pbGetMultiDicts(names);
+        PbDictManager & dicts = PbDictManager::instance();
+        for (int i = 0; i < dicts.count(); i++) {
+            PbDictSource * dict = dicts.get(i);
+            bool checked = false;
+            for (int j = 0; j < names.length() && !checked; j++)
+                checked = names[j] == dict->id();
+            CRPbMultiDictItem * item = new CRPbMultiDictItem(multiMenu, i, dict, checked);
+            item->_selectedRow = _selectedRow;
+            item->_selectedMenu = _menu;
+            multiMenu->addItem(item);
+        }
+        multiMenu->reconfigure(0);
+        _wm->activateWindow(multiMenu);
+        return 1;
+    }
+};
+
 void CRPbDictionaryView::selectDictionary()
 {
     CRLog::trace("selectDictionary()");
     LVFontRef valueFont(fontMan->GetFont( VALUE_FONT_SIZE, 400, true, css_ff_sans_serif, lString8("Liberation Sans")));
+    // the list writes the choice into a copy of its own, read back in onDictionarySelect();
+    // the current dictionary is marked by its id, also for a plain name saved by older versions
+    _dictMenuProps = LVClonePropsContainer(CRPocketBookDocView::instance->getProps());
+    _dictMenuProps->setString(PROP_POCKETBOOK_DICT,
+                              PbDictManager::normalizeId(_dictMenuProps->getStringDef(PROP_POCKETBOOK_DICT, "")));
     CRMenu * dictsMenu = new CRMenu(_wm, NULL, PB_CMD_SELECT_DICT,
                                     lString16(""), LVImageSourceRef(), LVFontRef(), valueFont,
-                                    CRPocketBookDocView::instance->getNewProps(), PROP_POCKETBOOK_DICT);
+                                    _dictMenuProps, PROP_POCKETBOOK_DICT);
     dictsMenu->setAccelerators(_wm->getAccTables().get("menu"));
     dictsMenu->setSkinName(lString16("#settings"));
-    if (!_dictsLoaded) {
-        loadDictionaries();
+    PbDictManager & dicts = PbDictManager::instance();
+    if (dicts.count() > 1) {
+        // "Selected dictionaries (3)": lookups in the checked dictionaries together
+        lString16 selected = pbSelectedDictsLabel(_("Selected dictionaries"));
+        CRMenuItem * selectedRow = new CRMenuItem(dictsMenu, dicts.count(), selected, LVImageSourceRef(), LVFontRef(),
+                                                  lString16(PB_DICT_ID_SELECTED).c_str());
+        dictsMenu->addItem(selectedRow);
+        dictsMenu->addItem(new CRPbMultiDictOpenItem(dictsMenu, _wm, selectedRow));
     }
-    for (int i = 0; i < _dictCount; i++) {
-        lString16 dictName = Utf8ToUnicode(_dictNames[i]);
+    for (int i = 0; i < dicts.count(); i++) {
+        PbDictSource * dict = dicts.get(i);
         dictsMenu->addItem( new CRMenuItem(dictsMenu, i,
-                                           dictName,
+                                           dict->label(),
                                            LVImageSourceRef(),
                                            LVFontRef(),
-                                           dictName.c_str()));
+                                           dict->id().c_str()));
     }
     dictsMenu->reconfigure( 0 );
     _wm->activateWindow(dictsMenu);
@@ -3416,28 +3707,19 @@ bool CRPbDictionaryView::isArticleListActive()
 
 void CRPbDictionaryView::onDictionarySelect()
 {
-    CRPocketBookDocView::instance->applySettings();
     CRPropRef props = CRPocketBookDocView::instance->getProps();
+    // the choice made in the list of dictionaries (the checkbox list closes with the same command)
+    if (!_dictMenuProps.isNull())
+        props->setString(PROP_POCKETBOOK_DICT, _dictMenuProps->getStringDef(PROP_POCKETBOOK_DICT, ""));
     lString16 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT);
-    int index = _dictsTable.get(lastDict);
-    CRLog::trace("CRPbDictionaryView::onDictionarySelect(%d)", index);
-    while (index >= 0 && index <= _dictCount) {
-        if (_dictIndex >= 0) {
-            if (index == _dictIndex) {
-                break; /* The same dictionary selected */
-            }
-            CloseDictionary();
-        }
-        int rc = OpenDictionary(_dictNames[index]);
-        CRLog::trace("OpenDictionary(%s) returned %d", _dictNames[index], rc);
-        if (rc == 1) {
-            _dictIndex = index;
+    CRLog::trace("CRPbDictionaryView::onDictionarySelect(%s)", UnicodeToUtf8(lastDict).c_str());
+    // "Selected dictionaries" is opened again: the checked dictionaries may have changed
+    if (_selectedDicts || lastDict == lString16(PB_DICT_ID_SELECTED) || _dict == NULL ||
+        _dict->id() != PbDictManager::normalizeId(lastDict) || !_dict->isOpen()) {
+        if (openDictionary(lastDict))
             CRPocketBookDocView::instance->saveSettings(lString16());
-        } else {
-            _dictIndex = -1;
-        }
-        _caption = lastDict;
-        index = -1; // to break from the loop
+        else
+            _caption = Utf8ToUnicode(TR("@Dictionary"));
     }
     lString16 word = _word;
     _word.clear();
@@ -3449,7 +3731,7 @@ void CRPbDictionaryView::onDictionarySelect()
 void CRPbDictionaryView::noTranslation()
 {
     setTranslation(CRViewDialog::makeFb2Xml(lString8::empty_str));
-    _newWord = _newTranslation = NULL;
+    _haveNewWord = false;
     setCurItem(PB_DICT_EXIT);
 }
 
@@ -3462,9 +3744,9 @@ void CRPbDictionaryView::setCurItem(int index)
         index = 0;
     _selectedIndex = index;
     if (index == PB_DICT_ARTICLE_LIST) {
-        if (_newWord != NULL) {
+        if (_haveNewWord) {
+            _haveNewWord = false;
             _dictMenu->newPage(_newWord, _newTranslation);
-            _newWord = _newTranslation = NULL;
         } else
             _dictMenu->invalidateMenu();
     }
@@ -3544,11 +3826,14 @@ bool CRPbDictionaryView::onCommand( int command, int params )
       closeDictionary();
         return true;
     case MCMD_OK:
+        _touchUsed = false;
         return onItemSelect();
     case PB_CMD_RIGHT:
+        _touchUsed = false;
       setCurItem(getCurItem() + 1);
         return true;
     case PB_CMD_LEFT:
+        _touchUsed = false;
         setCurItem(getCurItem() - 1);
         return true;
     case PB_CMD_SELECT_DICT:
@@ -3581,10 +3866,48 @@ bool CRPbDictionaryView::onCommand( int command, int params )
 bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType )
 {
  // CRLog::trace("CRPbDictionaryView::onTouchEvent( %d, %d, %d )", x, y, int( evType ) );
+  _touchUsed = true;
 
   if (_active)
   {
    // CRLog::trace("CRPbDictionaryView::onTouchEvent _active %d ( %d, %d, %d )",  _active, x, y, int( evType ) );
+    lvRect titleArea;
+    bool inTitle = getTitleRect( titleArea ) && titleArea.isPointInside( lvPoint( x, y ) );
+    if ( evType == CRTOUCH_DOWN )
+    {
+      _swipeX = inTitle ? -1 : x;
+      _swipeY = inTitle ? -1 : y;
+      // the toolbar button under the finger turns inverted at once
+      lvRect tbRc;
+      int slotWidth = 0, imageHeight = 0;
+      if ( inTitle && getToolbarRect( tbRc, slotWidth, imageHeight ) && x >= tbRc.left )
+      {
+        int index = ( x - tbRc.left ) / slotWidth + 1;
+        _pressedIndex = index > PB_DICT_IMAGE_BUTTONS ? PB_DICT_IMAGE_BUTTONS : index;
+        setDirty();
+        Update();
+      }
+      return true;
+    }
+    if ( evType == CRTOUCH_UP )
+    {
+      if ( _pressedIndex > 0 )
+      {
+        _pressedIndex = 0;
+        setDirty();
+      }
+      // a vertical swipe in the window turns the page of the article or of the word list
+      int dx = _swipeX >= 0 ? x - _swipeX : 0;
+      int dy = _swipeY >= 0 ? y - _swipeY : 0;
+      _swipeX = _swipeY = -1;
+      if ( abs(dy) > abs(dx) && abs(dy) > _wm->getScreen()->getHeight() / 20 )
+      {
+        int command = dy < 0 ? PB_CMD_DOWN : PB_CMD_UP;
+        if ( isArticleListActive() )
+          return _dictMenu->onCommand( command, 1 );
+        return onCommand( command, 1 );
+      }
+    }
     switch ( evType )
     {
     case CRTOUCH_UP:
@@ -3620,11 +3943,10 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
         {
           CRLog::trace("onTouchEvent() point inside title" );
 
-          int tbWidth = _toolBarImg->GetWidth();
-          tmpRc= titleRc;
-          tmpRc.right -= ( tbWidth + titleSkin->getBorderWidths().right );
-          CRLog::trace("CRDV::onTouchEvent() PB_DICT_SELECT tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-          if ( tmpRc.isPointInside( pn ) )
+          // the same toolbar geometry as drawTitleBar()
+          lvRect tbRc;
+          int slotWidth = 0, imageHeight = 0;
+          if ( !getToolbarRect( tbRc, slotWidth, imageHeight ) || pn.x < tbRc.left )
           {
             _selectedIndex= PB_DICT_SELECT;
             selectDictionary();
@@ -3632,84 +3954,26 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
             return true;
           }
 
-          tmpRc= titleRc;
-          tmpRc.left += tmpRc.right - ( tbWidth + titleSkin->getBorderWidths().right );
-          CRLog::trace("CRDV::onTouchEvent() toolBar tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-          if ( tmpRc.isPointInside( pn ) )// in toolBar
+          int index = ( pn.x - tbRc.left ) / slotWidth + 1;
+          if ( index > _itemsCount - 1 )
+            index = _itemsCount - 1;
+          CRLog::trace("onTouchEvent() toolbar button %d", index );
+          switch ( index )
           {
-            CRLog::trace("onTouchEvent() point inside toolbar" );
-
-            int itemWidth = tbWidth/(_itemsCount-1);
-
-            tmpRc.right = tmpRc.left + itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_EXIT tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_EXIT %d", PB_DICT_EXIT );
-                closeDictionary();
-                return true;
-            }
-
-            tmpRc.left  += itemWidth;
-            tmpRc.right += itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_GOOGLE tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_GOOGLE %d", PB_DICT_GOOGLE );
-                setCurItem( PB_DICT_GOOGLE );
-                onItemSelect();
-                Update();
-                return true;
-            }
-
-            tmpRc.left  += itemWidth;
-            tmpRc.right += itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_WIKIPEDIA tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_WIKIPEDIA %d", PB_DICT_WIKIPEDIA );
-                setCurItem( PB_DICT_WIKIPEDIA );
-                onItemSelect();
-                Update();
-                return true;
-            }
-
-            tmpRc.left  += itemWidth;
-            tmpRc.right += itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_ARTICLE_LIST tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_ARTICLE_LIST %d", PB_DICT_ARTICLE_LIST );
-                setCurItem( PB_DICT_ARTICLE_LIST );
-                onItemSelect();
-                Update();
-                return true;
-            }
-
-            tmpRc.left  += itemWidth;
-            tmpRc.right += itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_DEACTIVATE tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_DEACTIVATE %d", PB_DICT_DEACTIVATE );
-                setCurItem( PB_DICT_DEACTIVATE );
-                onItemSelect();
-                Update();
-                return true;
-            }
-
-            tmpRc.left  += itemWidth;
-            tmpRc.right += itemWidth;
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_SEARCH tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-            if ( tmpRc.isPointInside( pn ) )
-            {
-                CRLog::trace("onTouchEvent() PB_DICT_SEARCH %d", PB_DICT_SEARCH );
-                setCurItem( PB_DICT_SEARCH );
-                searchDictionary();
-                Update();
-                return true;
-            }
-            }
+          case PB_DICT_EXIT:
+            closeDictionary();
+            return true;
+          case PB_DICT_SEARCH:
+            setCurItem( PB_DICT_SEARCH );
+            searchDictionary();
+            Update();
+            return true;
+          default:
+            setCurItem( index );
+            onItemSelect();
+            Update();
+            return true;
+          }
 
         }//if ( titleRc.isPointInside
 
@@ -3765,7 +4029,7 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
 
                     if ( nselect != _dictMenu->getSelectedItem() )
                         _dictMenu->setCurItem( nselect );
-                    translate( lString16(_dictMenu->getCurItemWord()) );
+                    translate( Utf8ToUnicode(_dictMenu->getCurItemWord()) );
                     Update();
                     _wm->postCommand( PB_DICT_DEACTIVATE, 0 );
                 }
@@ -3812,13 +4076,72 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
   //return CRViewDialog::onTouchEvent( x, y, evType );
 }
 
+// Makes HTML from a dictionary article loadable as FB2 XML: <br> becomes <br/>,
+// <font color=x> becomes <span style="color:x">. Other tags are kept as they are.
+static lString16 pbDictNormalizeHtml(const lString16 & src)
+{
+    if (src.pos("<") < 0)
+        return src;
+    lString16 dst;
+    int i = 0;
+    while (i < src.length()) {
+        lChar16 ch = src[i];
+        int end = (ch == '<') ? src.pos(">", i) : -1;
+        if (end < 0) {
+            dst << ch;
+            i++;
+            continue;
+        }
+        lString16 tag = src.substr(i + 1, end - i - 1);
+        lString16 lower = tag;
+        lower.lowercase();
+        lower.trim();
+        if (lower == "br" || lower == "br/" || lower == "br /") {
+            dst << "<br/>";
+        } else if (lower == "/font") {
+            dst << "</span>";
+        } else if (lower.startsWith("font")) {
+            lString16 color;
+            int p = lower.pos("color");
+            if (p >= 0) {
+                p = lower.pos("=", p);
+                if (p >= 0) {
+                    p++;
+                    while (p < lower.length() && (lower[p] == ' ' || lower[p] == '"' || lower[p] == '\''))
+                        p++;
+                    int q = p;
+                    while (q < lower.length() && lower[q] != ' ' && lower[q] != '"' && lower[q] != '\'')
+                        q++;
+                    color = lower.substr(p, q - p);
+                }
+            }
+            if (color.empty())
+                dst << "<span>";
+            else
+                dst << "<span style=\"color:" << color << "\">";
+        } else {
+            dst << "<" << tag << ">";
+        }
+        i = end + 1;
+    }
+    return dst;
+}
+
 lString8 CRPbDictionaryView::createArticle(const char *word, const char *translation)
 {
     lString8 article;
 
     article << "<title><p>" << word << "</p></title>";
+    article << createArticleBody(translation);
+    return article;
+}
+
+lString8 CRPbDictionaryView::createArticleBody(const char *translation)
+{
+    lString8 article;
+
     if (translation != NULL) {
-        lString16 src = Utf8ToUnicode(translation), dst;
+        lString16 src = pbDictNormalizeHtml(Utf8ToUnicode(translation)), dst;
         //article << "<section style=\"text-align: left; text-indent: 0; font-size: 70%\">";
         article << "<section>";
         article << "<p>";
@@ -3864,7 +4187,7 @@ lString8 CRPbDictionaryView::createArticle(const char *word, const char *transla
             dst << "</p>";
             article << UnicodeToUtf8(dst);
         } else
-            article << translation;
+            article << UnicodeToUtf8(src);
         article << "</section>";
     }
     return article;
@@ -3873,7 +4196,7 @@ lString8 CRPbDictionaryView::createArticle(const char *word, const char *transla
 #define CR_PB_DICT_REDIRECT_PREFIXES "to|of|see|from"
 lString16 CRPbDictionaryView::detectDictionaryRedirectFor(const char* translation) {
 
-    if( CRPocketBookDocView::instance->getProps()->getStringDef(PROP_POCKETBOOK_DICT) != lString16("Webster's 1913 Dictionary") ) {
+    if( _dict == NULL || _dict->id() != PbDictManager::normalizeId(lString16("Webster's 1913 Dictionary")) ) {
         return lString16("");
     }
 
@@ -3903,6 +4226,110 @@ lString16 CRPbDictionaryView::detectDictionaryRedirectFor(const char* translatio
     return lString16("");
 }
 
+static lString8 pbXmlText(const lString16 & text)
+{
+    lString16 s;
+    for (int i = 0; i < text.length(); i++) {
+        lChar16 ch = text[i];
+        if (ch == '&')
+            s << "&amp;";
+        else if (ch == '<')
+            s << "&lt;";
+        else if (ch == '>')
+            s << "&gt;";
+        else
+            s << ch;
+    }
+    return UnicodeToUtf8(s);
+}
+
+// Length of the common beginning of two words
+static int pbCommonPrefix(const lString16 & a, const lString16 & b)
+{
+    int n = 0;
+    while (n < a.length() && n < b.length() && a[n] == b[n])
+        n++;
+    return n;
+}
+
+// "Selected dictionaries": the checked dictionaries (none checked: the first 5) in turn, of any
+// type. Each one that has the
+// word (or, in StarDict, its form) adds its article under a subtitle that names the dictionary
+// with its type mark and, for a word form, the dictionary word found. When none has the word,
+// the word list of the dictionary whose nearest word shares the longest beginning with the word
+// is shown: for a Russian word that is a dictionary from Russian, without guessing directions.
+// Returns false when "Selected dictionaries" is not chosen.
+bool CRPbDictionaryView::translateMulti(const lString16 &w)
+{
+    if (!_selectedDicts)
+        return false;
+    LVPtrVector<PbDictSource, false> found;
+    pbSearchDicts(found);
+    lString8 body;
+    _haveNewWord = false;
+    _translateResult = 0;
+    _selectedIndex = PB_DICT_DEACTIVATE;
+
+    lString16 wanted = w;
+    wanted.lowercase();
+    lString8 parts;
+    PbDictSource * first = NULL;
+    PbDictSource * nearest = NULL;
+    int nearestLength = -1;
+    for (int i = 0; i < found.length(); i++) {
+        PbDictSource * dict = found[i];
+        // an inkview dictionary closes the other inkview one: the firmware keeps one open
+        lString8 word, translation;
+        int rc = dict->lookup(w, word, translation);
+        if (rc == 0)
+            continue;
+        lString16 got = Utf8ToUnicode(word);
+        lString16 gotLower = got;
+        gotLower.lowercase();
+        // StarDict reports a word form found through its synonyms as the word itself
+        bool exact = gotLower == wanted || (rc == 2 && dict->type() == PB_DICT_TYPE_STARDICT);
+        if (!exact) {
+            int length = pbCommonPrefix(gotLower, wanted);
+            if (length > nearestLength) {
+                nearestLength = length;
+                nearest = dict;
+            }
+            continue;
+        }
+        lString16 subtitle = dict->label();
+        if (gotLower != wanted)
+            subtitle << Utf8ToUnicode(lString8(" \xE2\x80\x94 ")) << got; // " - dictionary word"
+        parts << "<subtitle>" << pbXmlText(subtitle) << "</subtitle>";
+        parts << createArticleBody(translation.c_str());
+        if (first == NULL)
+            first = dict;
+    }
+
+    lString8 word, translation;
+    if (first != NULL) {
+        // the list button shows the words around it in the first dictionary that has it
+        _dict = first;
+        int rc = _dict->lookup(w, word, translation);
+        _translateResult = rc != 0 ? 2 : 0;
+        _haveNewWord = rc != 0;
+        _newWord = word;
+        _newTranslation = translation;
+        body << "<title><p>" << pbXmlText(w) << "</p></title>" << parts;
+    } else if (nearest != NULL && (_translateResult = nearest->lookup(w, word, translation)) != 0) {
+        _dict = nearest;
+        _selectedIndex = PB_DICT_ARTICLE_LIST;
+        _dictMenu->newPage(word, translation);
+        setDirty();
+        return true;
+    } else {
+        _translateResult = 0;
+        body << TR("@Word_not_found");
+    }
+    setTranslation(CRViewDialog::makeFb2Xml(body));
+    setDirty();
+    return true;
+}
+
 void CRPbDictionaryView::translate(const lString16 &w)
 {
     getDocView()->setFontSize( pbCrFontSize );
@@ -3916,39 +4343,23 @@ void CRPbDictionaryView::translate(const lString16 &w)
     }
     _word = s16;
 
-    CRLog::trace("CRPbDictionaryView::translate() start, _dictIndex = %d", _dictIndex);
-    if (_dictIndex >= 0) {
-        lString8 what = UnicodeToUtf8( s16 );
-        char *word = NULL, *translation = NULL;
+    CRLog::trace("CRPbDictionaryView::translate() start, dictionary %s",
+                 _dict != NULL ? UnicodeToUtf8(_dict->id()).c_str() : "none");
+    if (translateMulti(s16))
+        return;
+    if (_dict != NULL && _dict->open()) {
+        lString8 word, translation;
 
-        // Exact-match lookup is disabled (as in the 4pda 0.0.6-17-62.2 build): LookupWord also
+        // Exact-match lookup is disabled (as in the 4pda 0.0.6-17-62.2 build): the lookup also
         // returns the nearest words, so word forms that are not in the dictionary still get a list.
-        _translateResult = 0;
-
-        if( _translateResult == 0 ) {
-            word = NULL;
-            translation = NULL;
-
-            CRLog::trace("CRPbDictionaryView::translate() LookupWord");
-            _translateResult = LookupWord((char *)what.c_str(), &word, &translation);
-            CRLog::trace("LookupWord(%s) returned %d", what.c_str(), _translateResult);
-        }
-
-        if( _translateResult == 0 ) {
-            s16.lowercase();
-            what = UnicodeToUtf8( s16 );
-            word = NULL;
-            translation = NULL;
-
-            CRLog::trace("CRPbDictionaryView::translate() LookupWord - lowercase");
-            _translateResult = LookupWord((char *)what.c_str(), &word, &translation);
-            CRLog::trace("LookupWord(%s) returned %d", what.c_str(), _translateResult);
-        }
+        // The word as written, then in lower case (StarDict also capitalized and word forms).
+        _translateResult = _dict->lookup(s16, word, translation);
+        CRLog::trace("lookup(%s) returned %d", UnicodeToUtf8(s16).c_str(), _translateResult);
 
         if (_translateResult != 0) {
 
             // Check if it's a translation redirection
-            lString16 redirect = detectDictionaryRedirectFor(translation);
+            lString16 redirect = detectDictionaryRedirectFor(translation.c_str());
             if( !redirect.empty() ) {
                 lString16 tmp = redirect;
                 tmp.lowercase();
@@ -3964,18 +4375,19 @@ void CRPbDictionaryView::translate(const lString16 &w)
             if (_translateResult == 1) {
                 _selectedIndex = PB_DICT_ARTICLE_LIST;
                 _dictMenu->newPage(word, translation);
-                _newWord = _newTranslation = NULL;
+                _haveNewWord = false;
                 setDirty();
                 return;
             }
-            body = createArticle(word, translation);
+            body = createArticle(word.c_str(), translation.c_str());
+            _haveNewWord = true;
             _newWord = word;
             _newTranslation = translation;
         } else {
-            _newWord = _newTranslation = NULL;
+            _haveNewWord = false;
             body << TR("@Word_not_found");
         }
-    } else if (_dictCount <= 0) {
+    } else if (PbDictManager::instance().count() <= 0) {
         body << TR("@Dic_not_installed");
     } else {
         body << TR("@Dic_error");
@@ -4028,29 +4440,47 @@ int CRPbDictionaryView::getDesiredHeight()
     return skinRect.height();
 }
 
-lString16 CRPbDictionaryMenuItem::createItemValue(const char * translation)
+// Plain one-line text of a dictionary translation for the word list:
+// drops the inkview style marks (1, 2, 3) and HTML tags, decodes character entities.
+static lString16 pbDictPlainText(const lString16 & src)
 {
-    lString16 src = Utf8ToUnicode(translation);
     lString16 dst;
-    int count = src.length();
-    if (count > 256)
-        count = 256;
-    for (int i = 0; i < count; i++) {
+    bool inTag = false;
+    for (int i = 0; i < src.length(); i++) {
         lChar16 currentChar = src[i];
-        if ((currentChar == 1 || currentChar == 2 || currentChar == 3))
+        if (inTag) {
+            if (currentChar == '>')
+                inTag = false;
             continue;
-        if (currentChar == '\n')
-            currentChar = ' ';
+        }
+        if (currentChar == '<') {
+            inTag = true;
+            dst << ' ';
+            continue;
+        }
+        if (currentChar == 1 || currentChar == 2 || currentChar == 3)
+            continue;
         dst << currentChar;
     }
+    // decodes &#39; &amp; &nbsp; ... and folds line breaks and repeated spaces
+    PreProcessXmlString(dst, 0);
+    dst.trim();
     return dst;
 }
 
-CRPbDictionaryMenuItem::CRPbDictionaryMenuItem(CRMenu * menu, int id, const char *word, const char *translation)
+lString16 CRPbDictionaryMenuItem::createItemValue(const char * translation)
+{
+    lString16 dst = pbDictPlainText(Utf8ToUnicode(translation));
+    if (dst.length() > 256)
+        dst = dst.substr(0, 256);
+    return dst;
+}
+
+CRPbDictionaryMenuItem::CRPbDictionaryMenuItem(CRMenu * menu, int id, const lString8 & word, const lString8 & translation)
     : CRMenuItem(menu, id, lString16::empty_str, LVImageSourceRef(), LVFontRef() ), _word( word ), _translation(translation)
 {
-    _word16 = Utf8ToUnicode(word);
-    _translation16 = createItemValue(_translation);
+    _word16 = pbDictPlainText(Utf8ToUnicode(_word));
+    _translation16 = createItemValue(_translation.c_str());
 }
 
 void CRPbDictionaryMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected)
@@ -4133,15 +4563,16 @@ int CRPbDictionaryMenu::fittingPageItems()
     return fit;
 }
 
-bool CRPbDictionaryMenu::newPage(const char *firstWord, const char *firstTranslation)
+// The page starts with the word given; the dictionary position is right after the lookup of it
+bool CRPbDictionaryMenu::newPage(const lString8 & firstWord, const lString8 & firstTranslation)
 {
-    char *word = NULL, *translation = NULL;
+    PbDictSource *dict = _parent->getDictionary();
+    lString8 word, translation;
     _pageItems = fittingPageItems();
     _items.clear();
     addItem(new CRPbDictionaryMenuItem(this, 0, firstWord, firstTranslation));
-    for (int i = 1; i < _pageItems; i++) {
-        int result = LookupNext(&word, &translation);
-        if (result == 0)
+    for (int i = 1; i < _pageItems && dict != NULL; i++) {
+        if (!dict->next(word, translation))
             break;
         addItem(new CRPbDictionaryMenuItem(this, i, word, translation));
     }
@@ -4152,32 +4583,28 @@ bool CRPbDictionaryMenu::newPage(const char *firstWord, const char *firstTransla
 
 bool CRPbDictionaryMenu::nextPage()
 {
-    char *word = NULL, *translation = NULL;
-    if (_items.length() == 0)
+    PbDictSource *dict = _parent->getDictionary();
+    lString8 word, translation;
+    if (_items.length() == 0 || dict == NULL)
         return false;
     CRPbDictionaryMenuItem *last = static_cast<CRPbDictionaryMenuItem *>(_items[_items.length() - 1]);
 
-    int result = LookupWord(const_cast<char *>(last->getWord()), &word, &translation);
-    if (result != 0) {
-        result = LookupNext(&word, &translation);
-        if (result != 0)
-            return newPage(word, translation);
-    }
+    if (dict->seek(last->getWord()) && dict->next(word, translation))
+        return newPage(word, translation);
     return false;
 }
 
 bool CRPbDictionaryMenu::prevPage()
 {
-    char *word = NULL, *translation = NULL;
-    if (_items.length() == 0)
+    PbDictSource *dict = _parent->getDictionary();
+    lString8 word, translation;
+    if (_items.length() == 0 || dict == NULL)
         return false;
     CRPbDictionaryMenuItem *first = static_cast<CRPbDictionaryMenuItem *>(_items[_topItem]);
 
-    int result = LookupWord(const_cast<char *>(first->getWord()), &word, &translation);
-    if (result != 0) {
+    if (dict->seek(first->getWord())) {
         for (int i = 0; i < _pageItems; i++) {
-            int result = LookupPrevious(&word, &translation);
-            if (result == 0)
+            if (!dict->prev(word, translation))
                 break;
             _items.insert(0, new CRPbDictionaryMenuItem(this, i, word, translation));
         }
@@ -4205,7 +4632,7 @@ void CRPbDictionaryMenu::setCurItem(int nItem)
     _parent->Update();
 }
 
-const char * CRPbDictionaryMenu::getCurItemWord()
+lString8 CRPbDictionaryMenu::getCurItemWord()
 {
     CRPbDictionaryMenuItem *item = static_cast<CRPbDictionaryMenuItem *>(_items[_selectedItem]);
     return item->getWord();
@@ -4250,7 +4677,7 @@ bool CRPbDictionaryMenu::onCommand( int command, int params )
         CRPbDictionaryMenuItem *item = static_cast<CRPbDictionaryMenuItem *>(_items[_selectedItem]);
 
         _parent->setTranslation(CRViewDialog::makeFb2Xml(
-                _parent->createArticle(item->getWord(), item->getTranslation())));
+                _parent->createArticle(item->getWord().c_str(), item->getTranslation().c_str())));
     }
     return true;
 }
@@ -4274,7 +4701,7 @@ void CRPbDictionaryMenu::reconfigure( int flags )
 
 CRPbDictionaryDialog::CRPbDictionaryDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, lString8 css )
     : CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView()), _docDirty(true), _curPage(0),
-    _lastWordX(0), _lastWordY(0)
+    _lastWordX(0), _lastWordY(0), _touchDownX(-1), _touchDownY(-1)
 {
     _wordSelector = NULL;
     _fullscreen = true;
@@ -4319,6 +4746,12 @@ CRPbDictionaryDialog::CRPbDictionaryDialog( CRGUIWindowManager * wm, CRViewDialo
 
 void CRPbDictionaryDialog::startWordSelection()
 {
+    selectWordOnCurrentPage(true);
+}
+
+// Selects the remembered word (or the first one after a page change) on the current page
+void CRPbDictionaryDialog::selectWordOnCurrentPage(bool translate)
+{
     if (isWordSelection())
         endWordSelection();
     _wordSelector = new LVPageWordSelector(_docview);
@@ -4332,7 +4765,29 @@ void CRPbDictionaryDialog::startWordSelection()
         _selText.clear();
     }
     _wordSelector->selectWord(_lastWordX, _lastWordY);
-    onWordSelection();
+    if (!translate && !_wordSelector->getSelectedWord()) {
+        // a page without words: keep the current article
+        setDocDirty();
+        return;
+    }
+    onWordSelection(translate);
+}
+
+// Turns the book page from the dictionary; the dictionary window and its article stay as they are
+bool CRPbDictionaryDialog::turnBookPage(int command, int params)
+{
+    if (params == 0)
+        params = 1;
+    int curPage = _docview->getCurPage();
+    bool ret = _docview->doCommand((LVDocCmd)command, params);
+    if (curPage != _docview->getCurPage()) {
+        selectWordOnCurrentPage(false);
+        if (_dictViewActive)
+            _docview->clearSelection();
+        setDocDirty();
+        Update();
+    }
+    return ret;
 }
 
 void CRPbDictionaryDialog::startWordSelection(lvPoint &pt)
@@ -4424,10 +4879,13 @@ void CRPbDictionaryDialog::onWordSelection(bool translate)
 bool CRPbDictionaryDialog::onCommand( int command, int params )
 {
     MoveDirection dir = DIR_ANY;
-    int curPage;
-    bool ret;
 
     CRLog::trace("CRPbDictionaryDialog::onCommand(%d,%d) _dictActive=%d", command, params, _dictViewActive);
+    // Page keys turn the book page even when the dictionary window has the focus,
+    // like the firmware reader; the article is scrolled inside the dictionary window
+    if (command == DCMD_PAGEUP || command == DCMD_PAGEDOWN)
+        return turnBookPage(command, params);
+
     if (_dictViewActive)
         return _dictView->onCommand(command, params);
 
@@ -4435,15 +4893,6 @@ bool CRPbDictionaryDialog::onCommand( int command, int params )
         params = 1;
 
     switch ( command ) {
-    case DCMD_PAGEUP:
-    case DCMD_PAGEDOWN:
-        curPage = _docview->getCurPage();
-        ret = _docview->doCommand((LVDocCmd)command, params);
-        if (curPage != _docview->getCurPage()) {
-            setDocDirty();
-            startWordSelection();
-        }
-        return ret;
     case MCMD_OK:
         if (!_autoTranslate && !_wordTranslated) {
             _wm->postCommand(PB_CMD_TRANSLATE, 0);
@@ -4452,6 +4901,7 @@ bool CRPbDictionaryDialog::onCommand( int command, int params )
         _dictViewActive = true;
         _docview->clearSelection();
         setDocDirty();
+        _dictView->setTouchMode(false);
         _dictView->doActivate();
         return true;
     case MCMD_CANCEL:
@@ -4504,8 +4954,14 @@ void CRPbDictionaryDialog::draw()
         canvas.SetClipRect(&saveClip);
         _docDirty = false;
     }
-    if (_dictView->isDirty())
+    if (_dictView->isDirty()) {
         _dictView->draw();
+        // Night mode: the dictionary window is drawn with the skin colors, invert it like the page
+        if (pbNightMode()) {
+            lvRect dictRc = _dictView->getRect();
+            _wm->getScreen()->getCanvas()->InvertRect(dictRc.left, dictRc.top, dictRc.right, dictRc.bottom);
+        }
+    }
 }
 
 void CRPbDictionaryDialog::Update()

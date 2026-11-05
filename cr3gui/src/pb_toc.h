@@ -16,6 +16,19 @@ class V3DocViewWin;
 extern lString16 pbSkinFileName;
 extern V3DocViewWin * main_win;
 
+// TOC row drawn like a printed contents line: "Chapter 5 .......... 98"
+class CRTocMenuItem : public CRMenuItem
+{
+    private:
+        lString16 _pageText;
+
+    public:
+        CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page );
+
+        virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
+            CRRectSkinRef valueSkin, bool selected );
+};
+
 class CRTocMenu : public CRFullScreenMenu
 {
     protected:

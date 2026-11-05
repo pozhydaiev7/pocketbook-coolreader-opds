@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.0.6-17-65-opds — unreleased
+
+Beta builds `0.0.6-17-65-opds-beta1` and `-beta2`, tested on InkPad 4 (743G) with firmware 6.11.1683.
+
+### Added
+
+- **StarDict dictionaries,** read by CoolReader itself (`cr3gui/src/pb_stardict.cpp`):
+  - files: `.ifo`, `.idx` or `.idx.gz`, `.dict` or `.dict.dz` (dictzip with random access), `.syn`;
+  - word forms from `.syn`: *домами* finds *дом*;
+  - articles in plain text, HTML, Pango and XDXF markup, with bold, italic and colors kept;
+  - a word that is not in the dictionary opens the list of the nearest words, as with `.dic`;
+  - dictionaries are looked for in `system/dictionaries` (internal storage and SD card) and in its subfolders, at most 200;
+  - an index is loaded on the first lookup and stays in memory until exit.
+- **One list of dictionaries** for both kinds, marked *DIC* (PocketBook `.dic`, read by the firmware) and *STAR* (`cr3gui/src/pb_dict.cpp`). The chosen dictionary is saved as `dic:<name>` or `sd:<path>`; a plain name saved by older versions still works.
+- **Selected dictionaries:** the first row of the list of dictionaries.
+  - A tap on a word and the search look the word up in several dictionaries of any kind.
+  - The dictionaries are checked under *Check dictionaries…*, up to 5; with none checked, the first 5 of the list are used.
+  - Every article has a subtitle with the dictionary. A word found through a word form also names the dictionary word.
+  - When no dictionary has the word, the list of the nearest words comes from the dictionary whose nearest word shares the longest beginning with it.
+- **Page numbers in the touch TOC:** *Display settings → Page numbers in TOC*. The classic *Chapter ……… 98* look, without separator lines between the rows.
+- **Article pages in the dictionary window:**
+  - a vertical swipe turns the page of the article or of the word list;
+  - the title shows the page, for example *1/4*, when the article is longer than the window.
+- **Ukrainian translation** of the interface and of the manual.
+
+### Changed
+
+- **Dictionary window:**
+  - it follows the night mode (inverted display);
+  - page keys and a horizontal swipe over the text turn the book page, the dictionary stays open;
+  - the toolbar buttons are 1.5 times the image size, with taller titles in the pb740fw5, pb631fw5 and pb626fw5 skins;
+  - a pressed button is drawn inverted until the finger is lifted, and the key cursor is not shown after a touch;
+  - the word list shows no HTML tags or character entities;
+  - `<br>` and `<font color>` in `.dic` articles are kept as line breaks and colors.
+- **Package:** no `system/config` folder, so file associations on the device are kept.
+- **Build:** `CMAKE_POLICY_DEFAULT_CMP0065=NEW` in `make.sh`. With CMake 3.4 and later the old policy linked the binary with `-rdynamic`; its exported symbols replaced those of `libinkview`, and the reader crashed at start. `gettext` is listed in the build dependencies.
+
+### Fixed
+
+- A dictionary chosen in the list of dictionaries was not applied when more than one dictionary was installed.
+- Word list rows kept pointers into the firmware dictionary memory; they now keep copies.
+
+### Known limits
+
+- Firmware 6.11 keeps its own dictionaries in `/mnt/secure`, out of reach of other applications, and no longer has `OpenDictionaryView`. CoolReader reads `.dic` files from `system/dictionaries` and StarDict dictionaries.
+
 ## 0.0.6-17-64-opds — 2026-11-02
 
 ### Fixed

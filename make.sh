@@ -191,6 +191,7 @@ if [ "$1" = "" -o "$1" = "pro5" ]; then
         -D WITH_PNG=OFF \
         -D WITH_HarfBuzz=OFF \
         -D CMAKE_EXE_LINKER_FLAGS="-Wl,--exclude-libs,ALL" \
+        -D CMAKE_POLICY_DEFAULT_CMP0065=NEW \
         ..
     make
 

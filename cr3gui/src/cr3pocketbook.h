@@ -75,13 +75,15 @@ enum CRPbCommands {
 #define PROP_POCKETBOOK_DICT "cr3.pocketbook.dictionary"
 #define PROP_POCKETBOOK_DICT_PAGES "cr3.pocketbook.dict.pages"
 #define PROP_POCKETBOOK_DICT_AUTO_TRANSLATE "cr3.pocketbook.dict.auto"
+// dictionaries searched together, names separated by '|'; fewer than two means one dictionary
+#define PROP_POCKETBOOK_DICT_MULTI "cr3.pocketbook.dict.multi"
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
 #define PROP_POCKETBOOK_ROTATE_ANGLE "cr3.pocketbook.rotate_angle"
 #define PROP_POCKETBOOK_GRAYBUFFER_BPP "cr3.pocketbook.buffer.bpp"
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-64-opds"
+#define CR_PB_VERSION "0.0.6-17-65-opds-beta2"
 #define CR_PB_BUILD_DATE "2026-11-02"
 
 #define PB_ROTATE_MODE_360 0
