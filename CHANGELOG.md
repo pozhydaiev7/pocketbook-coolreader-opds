@@ -2,7 +2,7 @@
 
 ## 0.0.6-17-65-opds — unreleased
 
-Beta builds `0.0.6-17-65-opds-beta1` and `-beta2`, tested on InkPad 4 (743G) with firmware 6.11.1683.
+Beta builds `0.0.6-17-65-opds-beta1` to `-beta4`, tested on InkPad 4 (743G) with firmware 6.11.1683.
 
 ### Added
 
@@ -19,6 +19,11 @@ Beta builds `0.0.6-17-65-opds-beta1` and `-beta2`, tested on InkPad 4 (743G) wit
   - The dictionaries are checked under *Check dictionaries…*, up to 5; with none checked, the first 5 of the list are used.
   - Every article has a subtitle with the dictionary. A word found through a word form also names the dictionary word.
   - When no dictionary has the word, the list of the nearest words comes from the dictionary whose nearest word shares the longest beginning with it.
+- **Reading statistics** (`cr3gui/src/pb_stats.cpp`, `pb_statsview.cpp`), opened from the new chart icon of the touch quick menu (pb740fw5, pb631fw5, pb626fw5) or from *Settings → Reading statistics*:
+  - every page shown for 5 seconds or longer is written to `system/state/cr3/cr3stats.txt`, at most 2 minutes per page; standby and exit stop the clock;
+  - book report: reading started and finished, reading days, pages read of the total, total time, estimated time to finish, average time per page and per day, time of each reading day;
+  - period reports for today, this week, this month, this year, all time or dates typed in: pages and words with averages, books read and read to the end, total time, time by days and by books;
+  - all books with their reading time.
 - **Page numbers in the touch TOC:** *Display settings → Page numbers in TOC*. The classic *Chapter ……… 98* look, without separator lines between the rows.
 - **Article pages in the dictionary window:**
   - a vertical swipe turns the page of the article or of the word list;
@@ -33,7 +38,9 @@ Beta builds `0.0.6-17-65-opds-beta1` and `-beta2`, tested on InkPad 4 (743G) wit
   - the toolbar buttons are 1.5 times the image size, with taller titles in the pb740fw5, pb631fw5 and pb626fw5 skins;
   - a pressed button is drawn inverted until the finger is lifted, and the key cursor is not shown after a touch;
   - the word list shows no HTML tags or character entities;
-  - `<br>` and `<font color>` in `.dic` articles are kept as line breaks and colors.
+  - `<br>` and `<font color>` in `.dic` articles are kept as line breaks and colors;
+  - Lingvo DSL stress marks left in converted `.dic` articles (`прибл[']и[/']зно`, also with the apostrophe written as `&#x27;`) are removed from the article and the word list.
+- **OPDS catalog:** its full-screen touch lists moved to `cr3gui/src/opds/opdsmenu.cpp` to be shared with the statistics screens. The unused `readingStats` stub is removed.
 - **Package:** no `system/config` folder, so file associations on the device are kept.
 - **Build:** `CMAKE_POLICY_DEFAULT_CMP0065=NEW` in `make.sh`. With CMake 3.4 and later the old policy linked the binary with `-rdynamic`; its exported symbols replaced those of `libinkview`, and the reader crashed at start. `gettext` is listed in the build dependencies.
 

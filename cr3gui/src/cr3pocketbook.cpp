@@ -24,10 +24,10 @@
     #include "web.h"
     #include "ota_update.h"
     #include "pb_toc.h"
-    #include "readingStats.h"
 #endif
 #include "opdsbrowser.h"
 #include "pb_dict.h"
+#include "pb_statsview.h"
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
@@ -107,10 +107,6 @@ int fw_major;
 int fw_minor;
 int touchPointing;
 std::clock_t last_drawTemporaryZoom;
-
-#ifdef POCKETBOOK_PRO
-ReadingStats *readingStats = NULL;
-#endif
 
 void setCustomSystemTheme();
 void removeCustomSystemTheme();
@@ -958,7 +954,7 @@ public:
     }
 };
 
-#define TM_NB_ICONS 8
+#define TM_NB_ICONS 9
 
 const char *touchMenuIcons[TM_NB_ICONS] = {
     "home",
@@ -969,6 +965,7 @@ const char *touchMenuIcons[TM_NB_ICONS] = {
     "dictionary",
     "search",
     "opds",
+    "stats",
     "rotate",
     "settings"
 };
@@ -1228,6 +1225,9 @@ public:
             // Posted, not executed: the catalog loads over the network and opens a window,
             // which must happen after this touch event has been fully processed.
             CRPocketBookWindowManager::instance->postCommand(PB_CMD_OPDS_BROWSER, 0);
+        }
+        else if( strcmp(touchMenuIcons[iconKey], "stats") == 0 ) {
+            CRPocketBookWindowManager::instance->postCommand(PB_CMD_READING_STATS, 0);
         }
         else if( strcmp(touchMenuIcons[iconKey], "rotate") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 5);
@@ -1626,7 +1626,7 @@ public:
     }
     virtual bool onCommand( int command, int params = 0 )
     {
-        if (OpdsBrowser::isOpdsCommand(command)) {
+        if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)) {
             // The keyboard handler executes this command: hand it to the reader window.
             _pending = NULL;
             _wm->postCommand(command, params);
@@ -2246,8 +2246,12 @@ protected:
             rc.shrink(1);
             buf->Rect(rc, _docview->getTextColor());
             skin->drawText(*buf, rc, text);
-        } else
+        } else {
             V3DocViewWin::draw();
+            // times the page for the reading statistics
+            if (!isStandByMode)
+                PbStatsView::pageShown(_docview);
+        }
     }
 
     bool incrementPage(int delta)
@@ -2552,6 +2556,7 @@ public:
     virtual void closing()
     {
         CRLog::trace("V3DocViewWin::closing();");
+        PbStatsView::flush();
         readingOff();
         if (_restore_globOrientation) {
             SetGlobalOrientation(-1);
@@ -2595,6 +2600,13 @@ public:
         }
         if (command == PB_CMD_OPDS_SET_URL) {
             OpdsBrowser::instance().editUrl(_wm);
+            return true;
+        }
+        // Reading statistics
+        if (PbStatsView::isStatsCommand(command))
+            return PbStatsView::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_READING_STATS) {
+            PbStatsView::instance().open(_wm);
             return true;
         }
 
@@ -4127,6 +4139,45 @@ static lString16 pbDictNormalizeHtml(const lString16 & src)
     return dst;
 }
 
+// Length of an apostrophe at position i: ' or &#x27; &#39; &apos;, 0 when there is none
+static int pbDictApostropheAt(const lString16 & s, int i)
+{
+    static const char * forms[] = { "'", "&#x27;", "&#39;", "&apos;", NULL };
+    for (int f = 0; forms[f]; f++) {
+        int n = 0;
+        while (forms[f][n] && i + n < s.length() && s[i + n] == (lChar16)forms[f][n])
+            n++;
+        if (!forms[f][n])
+            return n;
+    }
+    return 0;
+}
+
+// Drops the Lingvo DSL stress marks [']и[/'] that some converted .dic files keep
+// in the article text (the apostrophe may be written as a character entity).
+static lString16 pbDictStripStressMarks(const lString16 & src)
+{
+    if (src.pos("[") < 0)
+        return src;
+    lString16 dst;
+    int i = 0;
+    while (i < src.length()) {
+        if (src[i] == '[') {
+            int p = i + 1;
+            if (p < src.length() && src[p] == '/')
+                p++;
+            int n = pbDictApostropheAt(src, p);
+            if (n > 0 && p + n < src.length() && src[p + n] == ']') {
+                i = p + n + 1;
+                continue;
+            }
+        }
+        dst << src[i];
+        i++;
+    }
+    return dst;
+}
+
 lString8 CRPbDictionaryView::createArticle(const char *word, const char *translation)
 {
     lString8 article;
@@ -4141,7 +4192,7 @@ lString8 CRPbDictionaryView::createArticleBody(const char *translation)
     lString8 article;
 
     if (translation != NULL) {
-        lString16 src = pbDictNormalizeHtml(Utf8ToUnicode(translation)), dst;
+        lString16 src = pbDictNormalizeHtml(pbDictStripStressMarks(Utf8ToUnicode(translation))), dst;
         //article << "<section style=\"text-align: left; text-indent: 0; font-size: 70%\">";
         article << "<section>";
         article << "<p>";
@@ -4441,9 +4492,10 @@ int CRPbDictionaryView::getDesiredHeight()
 }
 
 // Plain one-line text of a dictionary translation for the word list:
-// drops the inkview style marks (1, 2, 3) and HTML tags, decodes character entities.
-static lString16 pbDictPlainText(const lString16 & src)
+// drops the inkview style marks (1, 2, 3), DSL stress marks and HTML tags, decodes character entities.
+static lString16 pbDictPlainText(const lString16 & text)
 {
+    lString16 src = pbDictStripStressMarks(text);
     lString16 dst;
     bool inTag = false;
     for (int i = 0; i < src.length(); i++) {
@@ -5614,6 +5666,7 @@ int InitDoc(const char *exename, char *fileName)
                                                      pocketbook_orientations[GetOrientation()]);
             SetOrientation(cr_oriantations[orient]);
         }
+        PbStatsView::init(lString16(STATEPATH"/cr3"));
         if ( !main_win->loadHistory(lString16(STATEPATH"/cr3/.cr3hist")) )
             CRLog::error("Cannot read history file");
         LVDocView * _docview = main_win->getDocView();
@@ -5626,12 +5679,6 @@ int InitDoc(const char *exename, char *fileName)
             return 0;
         }
 
-        CRLog::trace("init stats...");
-        #ifdef POCKETBOOK_PRO
-        if (ldomDocCache::enabled()) {
-            readingStats = new ReadingStats(currentCacheDir+lString16("_stats"), openedCacheFile);
-        }
-        #endif
 
     }
     return 1;
@@ -5870,6 +5917,9 @@ void enterStandByMode() {
 
     if( isStandByMode )
         return;
+
+    // the page is not read while the device is in standby
+    PbStatsView::flush();
 
     #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
 

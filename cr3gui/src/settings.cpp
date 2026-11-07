@@ -1909,6 +1909,12 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                 LVImageSourceRef(),
                 LVFontRef() ) );
 
+    // READING STATISTICS
+    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_READING_STATS,
+                _("Reading statistics"),
+                LVImageSourceRef(),
+                LVFontRef() ) );
+
     // OTA UPDATE: hidden in this build, it would replace it with the original upstream build.
     #ifdef POCKETBOOK_PRO
 

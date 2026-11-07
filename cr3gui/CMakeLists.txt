@@ -42,9 +42,9 @@ if (DEFINED POCKETBOOK_PRO)
     src/viewdlg.cpp
     src/web.cpp
     src/ota_update.cpp
-    src/readingStats.cpp
     src/pb_toc.cpp
     src/opds/opdsfeed.cpp
+    src/opds/opdsmenu.cpp
     src/opds/opdsbrowser.cpp
   )
   include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/src/opds )
@@ -73,7 +73,7 @@ if (${GUI} STREQUAL CRGUI_PB)
     SET (CR3_STYLES
          data/epub.css  data/fb2.css  data/htm.css  data/rtf.css  data/txt.css data/chm.css data/doc.css data/dict.css
         )
-    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp)
+    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp src/pb_stats.cpp src/pb_statsview.cpp)
     SET (CR3_BIN_DESTINATION system/bin)
 else ()
     SET (CR3_STYLES

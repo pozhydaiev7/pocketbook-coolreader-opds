@@ -64,6 +64,20 @@ Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader re
 
 Free StarDict dictionaries: [FreeDict](https://freedict.org/downloads/) (choose the StarDict format), [Wiktionary dictionaries by Vuizur](https://github.com/Vuizur/Wiktionary-Dictionaries).
 
+### Reading statistics
+
+CoolReader records how long every page stays on the screen and shows reports, as the statistics module of KOReader does.
+
+- **How to open it:** the chart icon in the touch quick menu, or *Settings → Reading statistics*.
+- **What counts as reading:**
+  - a page shown for less than 5 seconds was only turned over and is not counted;
+  - more than 2 minutes on one page counts as 2 minutes (the reader went away or the device slept);
+  - standby and exit stop the clock.
+- **This book:** reading started and finished, reading days, pages read of the total (a font size change is taken into account), total time, estimated time to finish, average time per page and per reading day, reading time of each day.
+- **Today, this week (from Monday), this month, this year, all time, or any period** (`dd.mm.yyyy-dd.mm.yyyy`): pages and words read with the averages per reading day and per day of the period, books read, books read to the end, total time, reading time by days and by books.
+- **All books:** every book with its total reading time; a tap opens the book report.
+- **The log:** `system/state/cr3/cr3stats.txt`, a text file with one line per page. It is kept by updates; delete it to start over.
+
 ### Changes from the 0.0.6-17-62.2 community build
 
 That build was published as a binary only. Its changes are re-implemented here from the description:

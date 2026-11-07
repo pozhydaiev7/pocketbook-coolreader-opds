@@ -2037,3 +2037,152 @@ msgstr "Стор."
 #: ../src/opds/opdsbrowser.cpp
 msgid "Catalog menu"
 msgstr "Меню"
+
+#: ../src/settings.cpp ../src/pb_statsview.cpp
+msgid "Reading statistics"
+msgstr "Статистика читання"
+
+#: ../src/pb_statsview.cpp
+msgid "This book"
+msgstr "Ця книга"
+
+#: ../src/pb_statsview.cpp
+msgid "Today"
+msgstr "Сьогодні"
+
+#: ../src/pb_statsview.cpp
+msgid "This week"
+msgstr "Цей тиждень"
+
+#: ../src/pb_statsview.cpp
+msgid "This month"
+msgstr "Цей місяць"
+
+#: ../src/pb_statsview.cpp
+msgid "This year"
+msgstr "Цей рік"
+
+#: ../src/pb_statsview.cpp
+msgid "All time"
+msgstr "Весь час"
+
+#: ../src/pb_statsview.cpp
+msgid "Choose a period..."
+msgstr "Задати період…"
+
+#: ../src/pb_statsview.cpp
+msgid "dd.mm.yyyy-dd.mm.yyyy"
+msgstr "дд.мм.рррр-дд.мм.рррр"
+
+#: ../src/pb_statsview.cpp
+msgid "Period: dd.mm.yyyy-dd.mm.yyyy"
+msgstr "Період: дд.мм.рррр-дд.мм.рррр"
+
+#: ../src/pb_statsview.cpp
+msgid "Enter the period as dd.mm.yyyy-dd.mm.yyyy"
+msgstr "Введіть період у вигляді дд.мм.рррр-дд.мм.рррр"
+
+#: ../src/pb_statsview.cpp
+msgid "Period"
+msgstr "Період"
+
+#: ../src/pb_statsview.cpp
+msgid "All books"
+msgstr "Усі книги"
+
+#: ../src/pb_statsview.cpp
+msgid "Reading time of every book"
+msgstr "Час читання кожної книги"
+
+#: ../src/pb_statsview.cpp
+msgid "No statistics for this book yet"
+msgstr "Для цієї книги статистики ще немає"
+
+#: ../src/pb_statsview.cpp
+msgid "d."
+msgstr "дн."
+
+#: ../src/pb_statsview.cpp
+msgid "Book statistics"
+msgstr "Статистика книги"
+
+#: ../src/pb_statsview.cpp
+msgid "Reading started: "
+msgstr "Читання почато: "
+
+#: ../src/pb_statsview.cpp
+msgid "Reading finished: "
+msgstr "Читання завершено: "
+
+#: ../src/pb_statsview.cpp
+msgid "Reading days: "
+msgstr "Днів читання: "
+
+#: ../src/pb_statsview.cpp
+msgid "Read: "
+msgstr "Прочитано: "
+
+#: ../src/pb_statsview.cpp
+#, c-format
+msgid "%d of %d pages (%d%%)"
+msgstr "%d з %d стор. (%d%%)"
+
+#: ../src/pb_statsview.cpp
+msgid "Total reading time: "
+msgstr "Загальний час читання: "
+
+#: ../src/pb_statsview.cpp
+msgid "Time to finish (estimate): "
+msgstr "До кінця (орієнтовно): "
+
+#: ../src/pb_statsview.cpp
+msgid "Average time per page: "
+msgstr "Середній час сторінки: "
+
+#: ../src/pb_statsview.cpp
+msgid "Average reading time per day: "
+msgstr "Середній час на день: "
+
+#: ../src/pb_statsview.cpp
+msgid "Reading days"
+msgstr "Дні читання"
+
+#: ../src/pb_statsview.cpp
+msgid "Pages read: "
+msgstr "Прочитано сторінок: "
+
+#: ../src/pb_statsview.cpp
+msgid "Pages per reading day: "
+msgstr "Сторінок на день читання: "
+
+#: ../src/pb_statsview.cpp
+msgid "Pages per day of the period: "
+msgstr "Сторінок на день періоду: "
+
+#: ../src/pb_statsview.cpp
+msgid "Words read: "
+msgstr "Прочитано слів: "
+
+#: ../src/pb_statsview.cpp
+msgid "Words per reading day: "
+msgstr "Слів на день читання: "
+
+#: ../src/pb_statsview.cpp
+msgid "Words per day of the period: "
+msgstr "Слів на день періоду: "
+
+#: ../src/pb_statsview.cpp
+msgid "Books read: "
+msgstr "Читалося книг: "
+
+#: ../src/pb_statsview.cpp
+msgid "Books read to the end: "
+msgstr "Дочитано книг: "
+
+#: ../src/pb_statsview.cpp
+msgid "Reading time by days"
+msgstr "Час читання по днях"
+
+#: ../src/pb_statsview.cpp
+msgid "Books"
+msgstr "Книги"

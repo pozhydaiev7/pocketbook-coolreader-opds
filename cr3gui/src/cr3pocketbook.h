@@ -58,6 +58,7 @@ enum CRPbCommands {
 
     PB_CMD_OPDS_BROWSER,
     PB_CMD_OPDS_SET_URL,
+    PB_CMD_READING_STATS,
 
     PB_CMD_NONE
 };
@@ -83,7 +84,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-65-opds-beta2"
+#define CR_PB_VERSION "0.0.6-17-65-opds-beta4"
 #define CR_PB_BUILD_DATE "2026-11-02"
 
 #define PB_ROTATE_MODE_360 0
