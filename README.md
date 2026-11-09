@@ -88,6 +88,10 @@ CoolReader records how long every page stays on the screen and shows reports, as
 - **Old contents mode** (*Display settings → Use new TOC menu* off): a plain touch list of chapters with indents and page numbers, for every skin. The firmware contents window used before crashes on firmware 6.11.
 - **Auto rotation:** with *Control settings → Rotate → 360°* (the default), CoolReader reads the G-sensor while the book is on the screen and turns the page by 90 degrees when the reader stands on a side edge, for example when reading lying on one's side. Firmware 6.11 does not send rotation events to CoolReader, so it asks for the orientation itself, twice a second; only CoolReader is rotated.
 
+### Skins
+
+The package has the FW5 touch skins pb618fw5 (758×1024), pb626fw5 (758×1024), pb631fw5 (1072×1448), pb700fw5 (1264×1680), pb740fw5 and pbXfw5 (1404×1872; pbXfw5 has smaller fonts), plus the older `default` and `pb62x`. Every FW5 skin has the catalog and statistics icons in its own style, the TOC with page numbers and the larger dictionary toolbar. Without a chosen skin, CoolReader takes one by the screen size.
+
 ### Changes from the 0.0.6-17-62.2 community build
 
 That build was published as a binary only. Its changes are re-implemented here from the description:

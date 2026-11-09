@@ -2,7 +2,7 @@
 
 ## 0.0.6-17-65-opds — unreleased
 
-Beta builds `0.0.6-17-65-opds-beta1` to `-beta5`, tested on InkPad 4 (743G) with firmware 6.11.1683.
+Beta builds `0.0.6-17-65-opds-beta1` to `-beta6`, tested on InkPad 4 (743G) with firmware 6.11.1683.
 
 ### Added
 
@@ -48,6 +48,11 @@ Beta builds `0.0.6-17-65-opds-beta1` to `-beta5`, tested on InkPad 4 (743G) with
   - a vertical swipe turns the page of the article or of the word list;
   - the title shows the page, for example *1/4*, when the article is longer than the window.
 - **Ukrainian translation** of the interface and of the manual.
+- **More FW5 touch skins** in the package: pb618fw5 (758×1024), pb700fw5 (1264×1680) and pbXfw5 (1404×1872, smaller fonts than pb740fw5). The pb626fw5 and pb631fw5 skins are replaced with their newer versions (pb631fw5 is now drawn for 1072×1448, with the nine-button cite toolbar). All of them have what pb740fw5 got in this version:
+  - the catalog and statistics icons of the touch menu, drawn in the style of the skin (gray circle, plain, or black circle or square when pressed);
+  - the `touch-toc-dots` menu for the TOC with page numbers and the plain lists;
+  - dictionary window and word list titles tall enough for the larger toolbar buttons.
+- **Default skin by screen size** when none is chosen: pb740fw5 from 1872 px, pb700fw5 from 1680 px, pb631fw5 above 1024 px, pb626fw5 above 800 px. pb618fw5 also uses the touch quick menu and the touch TOC.
 
 ### Changed
 
@@ -61,7 +66,7 @@ Beta builds `0.0.6-17-65-opds-beta1` to `-beta5`, tested on InkPad 4 (743G) with
   - a vertical swipe no longer selects a word under the finger, so the window does not jump to the other half of the screen;
   - it follows the night mode (inverted display);
   - page keys and a horizontal swipe over the text turn the book page, the dictionary stays open;
-  - the toolbar buttons are 1.5 times the image size, with taller titles in the pb740fw5, pb631fw5 and pb626fw5 skins;
+  - the toolbar buttons are 1.5 times the image size, with taller titles in the FW5 touch skins;
   - a pressed button is drawn inverted until the finger is lifted, and the key cursor is not shown after a touch;
   - the word list shows no HTML tags or character entities;
   - `<br>` and `<font color>` in `.dic` articles are kept as line breaks and colors;

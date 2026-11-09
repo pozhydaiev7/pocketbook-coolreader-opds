@@ -89,8 +89,8 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-65-opds-beta5"
-#define CR_PB_BUILD_DATE "2026-11-02"
+#define CR_PB_VERSION "0.0.6-17-65-opds-beta6"
+#define CR_PB_BUILD_DATE "2026-11-09"
 
 #define PB_ROTATE_MODE_360 0
 #define PB_ROTATE_MODE_180 1
@@ -182,7 +182,7 @@ bool fontAntiAliasingActivated();
 lString16 getPbModelNumber();
 
 // True for the FW5+ touch skins that use the touch quick menu and the touch TOC
-// (pb626fw5, pb631fw5, and the 4pda skins pb740fw5, pb700fw5, pbXfw5, pb617fw5).
+// (pb626fw5, pb631fw5, and the 4pda skins pb740fw5, pb700fw5, pbXfw5, pb617fw5, pb618fw5).
 bool isTouchFw5Skin();
 
 // Saves the position of the current book and opens a downloaded file in the reader.

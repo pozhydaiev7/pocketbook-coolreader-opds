@@ -5844,8 +5844,13 @@ int InitDoc(const char *exename, char *fileName)
                 lString16 defaultSkin;
 
                 #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
+                    // the pb631fw5 skin is drawn for 1072x1448, pb700fw5 for 1264x1680, pb740fw5 for 1404x1872
                     int maxPx = max(ScreenWidth(),ScreenHeight());
-                    if( maxPx > 1024 )
+                    if( maxPx >= 1872 )
+                        defaultSkin = L"pb740fw5";
+                    else if( maxPx >= 1680 )
+                        defaultSkin = L"pb700fw5";
+                    else if( maxPx > 1024 )
                         defaultSkin = L"pb631fw5";
                     else if( maxPx > 800 )
                         defaultSkin = L"pb626fw5";
@@ -6894,7 +6899,8 @@ bool isTouchFw5Skin() {
         pbSkinFileName == lString16("pb740fw5.cr3skin") ||
         pbSkinFileName == lString16("pb700fw5.cr3skin") ||
         pbSkinFileName == lString16("pbXfw5.cr3skin") ||
-        pbSkinFileName == lString16("pb617fw5.cr3skin");
+        pbSkinFileName == lString16("pb617fw5.cr3skin") ||
+        pbSkinFileName == lString16("pb618fw5.cr3skin");
 }
 
 void pbOpenDownloadedBook(const lString16 & path) {
