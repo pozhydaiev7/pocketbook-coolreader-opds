@@ -31,15 +31,20 @@ int textWidth(LVFontRef font, const lString16 & text);
 // A word longer than the line stays whole and is cut with an ellipsis when drawn.
 std::vector<lString16> wrapText(LVFontRef font, const lString16 & text, int firstWidth, int width);
 
-// One line of a text screen: an optional bold label, then the text.
-// A line without text is a gap between blocks.
+// One line of a text screen: an optional label (gray), then the text (black), in one font
+// and on one baseline. A line without text is a gap between blocks.
 struct InfoLine {
     lString16 label;
     lString16 text;
     LVFontRef font;
     int indent;
-    InfoLine() : indent(0) {}
+    // a thin line above it: the line starts a section of the screen
+    bool rule;
+    InfoLine() : indent(0), rule(false) {}
 };
+
+// color of the labels of text lines
+#define OPDSUI_LABEL_COLOR 0x555555
 
 // Menu skin for the list screens. The touch-TOC skin exists only in the FW5 touch skins;
 // with any other skin a missing menu skin has no item or title parts, and drawing it crashes.
@@ -64,9 +69,13 @@ public:
     int leftCommand, rightCommand, centerCommand;
     // Text row lines.
     InfoLine first, second;
+    // Regular row: left indent of the title in pixels and a short text at the right edge
+    // (a page number), in the font of the second line.
+    int indent;
+    lString16 aside;
 
 private:
-    void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y);
+    void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline);
 
     OpdsMenu * _owner;
     lString16 _title;
@@ -82,6 +91,7 @@ class OpdsMenu : public CRFullScreenMenu
     bool _paged;
     int _prevCommand;
     int _nextCommand;
+    int _closeCommand;
 public:
     LVFontRef titleFont;
     LVFontRef subFont;
@@ -93,6 +103,11 @@ public:
     virtual ~OpdsMenu();
     // Page keys post these commands; 0 leaves the key on that side to the menu.
     void setPageCommands(int prevCommand, int nextCommand);
+    // The arrow at the caption and the Back key post this command (one level up);
+    // by default they post the menu id (OPDS_CMD_CLOSE: back to the book).
+    void setCloseCommand(int command) { _closeCommand = command; }
+    // Rows without separator lines between them (text screens), when the skin has such a menu.
+    void setPlainRows();
 
     // Shortens the caption so it does not run under the close button and the page counter.
     void fitCaption();

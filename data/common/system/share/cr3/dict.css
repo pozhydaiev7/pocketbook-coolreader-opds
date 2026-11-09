@@ -19,3 +19,21 @@ title {
 emphasis, i { font-style: italic }
 
 strong, b { font-weight: bold }
+
+subtitle {
+   text-align: left;
+   text-indent: 0px;
+   font-size: 75%;
+   font-weight: bold;
+   font-style: normal;
+   hyphenate: none;
+   margin-top: 0.2em;
+   margin-bottom: 0.3em
+   }
+
+hr {
+   height: 2px;
+   background-color: #000000;
+   margin-top: 0.8em;
+   margin-bottom: 0.4em
+   }

@@ -2210,3 +2210,95 @@ msgstr "Время чтения по дням"
 #: ../src/pb_statsview.cpp
 msgid "Books"
 msgstr "Книги"
+
+#: ../src/pb_dict / cr3pocketbook.cpp
+msgid "none"
+msgstr "нет"
+
+#: ../src/cr3pocketbook.cpp
+msgid "No dictionaries are selected for the search."
+msgstr "Словари для поиска не выбраны."
+
+#: ../src/cr3pocketbook.cpp
+msgid "Tap the dictionary name above and check them under \"Check dictionaries...\"."
+msgstr "Нажмите на название словаря вверху и отметьте словари в пункте \"Отметить словари…\"."
+
+#: ../src/settings.cpp, opds/opdsbrowser.cpp
+msgid "OPDS catalogs"
+msgstr "OPDS-каталоги"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Edit catalogs"
+msgstr "Изменить каталоги"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Edit catalogs..."
+msgstr "Изменить каталоги..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Default catalog"
+msgstr "Каталог по умолчанию"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Add catalog..."
+msgstr "Добавить каталог..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Name, address, default catalog"
+msgstr "Название, адрес, каталог по умолчанию"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Open catalog"
+msgstr "Открыть каталог"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Built-in catalog: it cannot be renamed or deleted"
+msgstr "Встроенный каталог: его нельзя переименовать или удалить"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Name..."
+msgstr "Название..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Address..."
+msgstr "Адрес..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The catalog icon of the touch menu opens it"
+msgstr "Его открывает значок каталога в сенсорном меню"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Delete catalog"
+msgstr "Удалить каталог"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Other catalog..."
+msgstr "Другой каталог..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The list is full. Delete a catalog first."
+msgstr "Список заполнен. Сначала удалите какой-нибудь каталог."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Catalog name"
+msgstr "Название каталога"
+
+#: ../src/settings.cpp
+msgid "Dictionary window"
+msgstr "Окно словаря"
+
+#: ../src/settings.cpp
+msgid "Away from the word"
+msgstr "Напротив слова"
+
+#: ../src/settings.cpp
+msgid "At the top"
+msgstr "Вверху"
+
+#: ../src/settings.cpp
+msgid "At the bottom"
+msgstr "Внизу"
+
+#: ../src/pb_keyboard.cpp
+msgid "Cancel"
+msgstr "Отмена"

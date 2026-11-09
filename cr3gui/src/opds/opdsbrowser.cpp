@@ -54,6 +54,58 @@ void searchKeyboardHandler(char * s)
     executeCommand((s && *s) ? OPDS_CMD_SEARCH_APPLY : OPDS_CMD_SHOW_LIST, 0);
 }
 
+void addUrlKeyboardHandler(char * s)
+{
+    executeCommand((s && *s) ? OPDS_CMD_CATALOG_ADD_URL_APPLY : OPDS_CMD_CATALOGS_SHOW, 0);
+}
+
+void addNameKeyboardHandler(char * s)
+{
+    (void)s; // an empty name: the host of the address
+    executeCommand(OPDS_CMD_CATALOG_ADD_NAME_APPLY, 0);
+}
+
+void cardNameKeyboardHandler(char * s)
+{
+    executeCommand((s && *s) ? OPDS_CMD_CATALOG_NAME_APPLY : OPDS_CMD_CATALOG_CARD, 0);
+}
+
+void cardUrlKeyboardHandler(char * s)
+{
+    executeCommand((s && *s) ? OPDS_CMD_CATALOG_URL_APPLY : OPDS_CMD_CATALOG_CARD, 0);
+}
+
+// "flibusta.is/opds" -> "https://flibusta.is/opds"
+lString16 normalizeUrl(const lString16 & value)
+{
+    lString16 url = value;
+    url.trim();
+    if (!url.empty() && url.pos("://") < 0)
+        url = lString16("https://") + url;
+    return url;
+}
+
+// host of the address without "www.", the name of a catalog added without one
+lString16 hostName(const lString16 & url)
+{
+    lString16 host = url;
+    int scheme = host.pos("://");
+    if (scheme >= 0)
+        host = host.substr(scheme + 3);
+    int slash = host.pos("/");
+    if (slash >= 0)
+        host = host.substr(0, slash);
+    if (host.startsWith(lString16("www.")))
+        host = host.substr(4);
+    return host;
+}
+
+// first row of a screen: "< Back: <the screen it returns to>"
+lString16 backTo(const lString16 & where)
+{
+    return lString16(MARK_PREV) + lString16(_("Back")) + L": " + where;
+}
+
 // Connects Wi-Fi through the firmware when it is not connected (system dialog / last network).
 bool ensureNetwork()
 {
@@ -236,23 +288,218 @@ OpdsBrowser & OpdsBrowser::instance()
 
 std::string OpdsBrowser::rootUrl()
 {
-    lString16 url = main_win->getProps()->getStringDef(PROP_OPDS_URL, OPDS_DEFAULT_URL);
+    lString16 url;
+    if (_catalog >= 0 && _catalog < (int)_catalogs.size())
+        url = _catalogs[_catalog].url;
     url.trim();
     if (url.empty())
         url = lString16(OPDS_DEFAULT_URL);
     return std::string(UnicodeToUtf8(url).c_str());
 }
 
+void OpdsBrowser::loadCatalogs()
+{
+    CRPropRef props = main_win->getProps();
+    _catalogs.clear();
+    char key[96];
+    OpdsCatalog flibusta;
+    flibusta.name = lString16(OPDS_DEFAULT_NAME);
+    snprintf(key, sizeof(key), "%s0.url", PROP_OPDS_CATALOG);
+    flibusta.url = normalizeUrl(props->getStringDef(key, ""));
+    if (flibusta.url.empty())
+        flibusta.url = lString16(OPDS_DEFAULT_URL);
+    _catalogs.push_back(flibusta);
+    for (int n = 1; n <= OPDS_MAX_CATALOGS; n++) {
+        snprintf(key, sizeof(key), "%s%d.url", PROP_OPDS_CATALOG, n);
+        OpdsCatalog c;
+        c.url = props->getStringDef(key, "");
+        c.url.trim();
+        if (c.url.empty())
+            break;
+        snprintf(key, sizeof(key), "%s%d.name", PROP_OPDS_CATALOG, n);
+        c.name = props->getStringDef(key, "");
+        c.name.trim();
+        if (c.name.empty())
+            c.name = hostName(c.url);
+        _catalogs.push_back(c);
+    }
+    if (!props->hasProperty(PROP_OPDS_DEFAULT)) {
+        // first start of this version: the address of the single catalog of the earlier versions
+        // is the address of Flibusta when it is a Flibusta mirror, otherwise a catalog of the
+        // list and the default one
+        int def = 1;
+        lString16 old = normalizeUrl(props->getStringDef(PROP_OPDS_URL, ""));
+        if (!old.empty() && hostName(old).pos("flibusta") >= 0) {
+            _catalogs[0].url = old;
+        } else if (!old.empty() && _catalogs.size() == 1) {
+            OpdsCatalog c;
+            c.url = old;
+            c.name = hostName(old);
+            _catalogs.push_back(c);
+            def = 2;
+        }
+        props->setInt(PROP_OPDS_DEFAULT, def);
+        saveCatalogs();
+    }
+}
+
+void OpdsBrowser::saveCatalogs()
+{
+    CRPropRef props = main_win->getProps();
+    char key[96];
+    if (!_catalogs.empty()) {
+        snprintf(key, sizeof(key), "%s0.url", PROP_OPDS_CATALOG);
+        props->setString(key, _catalogs[0].url);
+    }
+    for (int n = 1; n <= OPDS_MAX_CATALOGS; n++) {
+        bool used = n < (int)_catalogs.size();
+        snprintf(key, sizeof(key), "%s%d.url", PROP_OPDS_CATALOG, n);
+        if (!used && !props->hasProperty(key))
+            break;
+        props->setString(key, used ? _catalogs[n].url : lString16::empty_str);
+        snprintf(key, sizeof(key), "%s%d.name", PROP_OPDS_CATALOG, n);
+        props->setString(key, used ? _catalogs[n].name : lString16::empty_str);
+    }
+    main_win->saveSettings(lString16::empty_str);
+}
+
+int OpdsBrowser::defaultCatalog()
+{
+    int n = main_win->getProps()->getIntDef(PROP_OPDS_DEFAULT, 1);
+    return n >= 1 && n <= (int)_catalogs.size() ? n - 1 : -1;
+}
+
+void OpdsBrowser::setDefaultCatalog(int index)
+{
+    main_win->getProps()->setInt(PROP_OPDS_DEFAULT, index + 1);
+    main_win->saveSettings(lString16::empty_str);
+}
+
+int OpdsBrowser::maxCatalogs()
+{
+    // rows of the list: back, the catalogs, "Add catalog...", "Edit catalogs..."
+    int n = _catalogRows - 3;
+    if (n > OPDS_MAX_CATALOGS + 1)
+        n = OPDS_MAX_CATALOGS + 1;
+    return n < 1 ? 1 : n;
+}
+
 void OpdsBrowser::open(CRGUIWindowManager * wm)
 {
+    loadCatalogs();
+    int def = defaultCatalog();
+    if (def < 0) {
+        showCatalogs(wm, false);
+        return;
+    }
+    openCatalog(wm, def, false);
+}
+
+void OpdsBrowser::openCatalogs(CRGUIWindowManager * wm)
+{
+    loadCatalogs();
+    showCatalogs(wm, false);
+}
+
+void OpdsBrowser::openCatalog(CRGUIWindowManager * wm, int index, bool fromList)
+{
+    if (index < 0 || index >= (int)_catalogs.size()) {
+        showCatalogs(wm, false);
+        return;
+    }
+    _catalog = index;
     if (_history.empty() || _history[0].baseUrl != rootUrl()) {
         _history.clear();
         _screens.clear();
-        if (!load(rootUrl(), true))
+        if (!load(rootUrl(), true)) {
+            if (fromList)
+                showCatalogs(wm, _catalogsEdit);
             return;
+        }
     }
     _bookIndex = -1;
     showList(wm);
+}
+
+void OpdsBrowser::showCatalogs(CRGUIWindowManager * wm, bool edit)
+{
+    _catalogsEdit = edit;
+    lvRect rc = wm->getScreen()->getRect();
+    OpdsMenu * menu = new OpdsMenu(wm, lString16(edit ? _("Edit catalogs") : _("OPDS catalogs")), rc, false);
+    _catalogRows = menu->setupRows(true);
+    if (edit) {
+        menu->setCloseCommand(OPDS_CMD_CATALOGS);
+        menu->add(OPDS_CMD_CATALOGS, backTo(lString16(_("OPDS catalogs"))));
+    } else {
+        menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+    }
+    int def = defaultCatalog();
+    for (int i = 0; i < (int)_catalogs.size(); i++) {
+        lString16 sub = _catalogs[i].url;
+        if (i == def)
+            sub = lString16(_("Default catalog")) + lString16(DOT) + sub;
+        if (edit)
+            menu->add(OPDS_CMD_CATALOG_EDIT + i, _catalogs[i].name, sub);
+        else
+            menu->add(OPDS_CMD_CATALOG_OPEN + i, lString16(MARK_OPEN) + _catalogs[i].name, sub);
+    }
+    menu->add(OPDS_CMD_CATALOG_ADD, lString16(_("Add catalog...")));
+    if (!edit)
+        menu->add(OPDS_CMD_CATALOGS_EDIT, lString16(_("Edit catalogs...")),
+                  lString16(_("Name, address, default catalog")));
+    activate(wm, menu);
+}
+
+void OpdsBrowser::showCard(CRGUIWindowManager * wm)
+{
+    if (_editCatalog < 0 || _editCatalog >= (int)_catalogs.size()) {
+        showCatalogs(wm, true);
+        return;
+    }
+    const OpdsCatalog & c = _catalogs[_editCatalog];
+    bool builtIn = _editCatalog == 0; // Flibusta
+    lvRect rc = wm->getScreen()->getRect();
+    OpdsMenu * menu = new OpdsMenu(wm, c.name, rc, false);
+    menu->setupRows(true);
+    menu->setCloseCommand(OPDS_CMD_CATALOGS_EDIT);
+    menu->add(OPDS_CMD_CATALOGS_EDIT, backTo(lString16(_("Edit catalogs"))));
+    menu->add(OPDS_CMD_CATALOG_OPEN + _editCatalog, lString16(MARK_OPEN) + lString16(_("Open catalog")));
+    if (builtIn)
+        menu->add(OPDS_CMD_CATALOG_CARD, c.name, lString16(_("Built-in catalog: it cannot be renamed or deleted")));
+    else
+        menu->add(OPDS_CMD_CATALOG_NAME, lString16(_("Name...")), c.name);
+    menu->add(OPDS_CMD_CATALOG_URL, lString16(_("Address...")), c.url);
+    bool isDefault = defaultCatalog() == _editCatalog;
+    menu->add(OPDS_CMD_CATALOG_DEFAULT,
+              lString16(isDefault ? "[x]  " : "[  ]  ") + lString16(_("Default catalog")),
+              lString16(_("The catalog icon of the touch menu opens it")));
+    if (!builtIn)
+        menu->add(OPDS_CMD_CATALOG_DELETE, lString16(_("Delete catalog")));
+    activate(wm, menu);
+}
+
+void OpdsBrowser::showDeleteQuestion(CRGUIWindowManager * wm)
+{
+    if (_editCatalog <= 0 || _editCatalog >= (int)_catalogs.size()) {
+        showCatalogs(wm, true);
+        return;
+    }
+    const OpdsCatalog & c = _catalogs[_editCatalog];
+    lvRect rc = wm->getScreen()->getRect();
+    OpdsMenu * menu = new OpdsMenu(wm, lString16(_("Delete catalog")), rc, false);
+    menu->setupRows(true);
+    menu->setCloseCommand(OPDS_CMD_CATALOG_CARD);
+    menu->add(OPDS_CMD_CATALOG_CARD, backTo(c.name));
+    menu->add(OPDS_CMD_CATALOG_DELETE_APPLY, lString16(_("Delete catalog")) + L" \"" + c.name + L"\"", c.url);
+    activate(wm, menu);
+}
+
+void OpdsBrowser::editText(const char * title, const lString16 & value, void (*handler)(char *))
+{
+    lString8 text = UnicodeToUtf8(value);
+    strncpy(keyBuffer, text.c_str(), sizeof(keyBuffer) - 1);
+    keyBuffer[sizeof(keyBuffer) - 1] = 0;
+    pbOpenKeyboard(title, keyBuffer, sizeof(keyBuffer) - 1, handler);
 }
 
 bool OpdsBrowser::fetch(const std::string & url, opds::Feed & feed)
@@ -322,10 +569,11 @@ bool OpdsBrowser::hasSearchRow() const
     return _history.size() == 1 && !_history.back().searchTemplate.empty();
 }
 
-// Screen 0 holds the optional search row; every screen ends with the paging row.
+// Every screen starts with the back row and ends with the paging row; screen 0 also holds the
+// optional search row.
 int OpdsBrowser::entriesOnScreen(int screen) const
 {
-    int n = _rows - 1 - ((screen == 0 && hasSearchRow()) ? 1 : 0);
+    int n = _rows - 2 - ((screen == 0 && hasSearchRow()) ? 1 : 0);
     return n < 1 ? 1 : n;
 }
 
@@ -357,6 +605,16 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
     if (last > total)
         last = total;
 
+    // the arrow at the caption and the first row: one catalog level up, from the start page
+    // back to the book
+    if (_history.size() > 1) {
+        const opds::Feed & up = _history[_history.size() - 2];
+        menu->setCloseCommand(OPDS_CMD_BACK);
+        menu->add(OPDS_CMD_BACK, backTo(u16(up.title.empty() ? std::string("OPDS") : up.title)));
+    } else {
+        menu->setCloseCommand(OPDS_CMD_CLOSE);
+        menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+    }
     if (screen == 0 && hasSearchRow())
         menu->add(OPDS_CMD_SEARCH, lString16(_("Search...")));
 
@@ -374,7 +632,7 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
         }
     }
     // Empty rows keep the paging row at the bottom of the screen.
-    for (int i = last - first + ((screen == 0 && hasSearchRow()) ? 1 : 0); i < _rows - 1; i++)
+    for (int i = 1 + last - first + ((screen == 0 && hasSearchRow()) ? 1 : 0); i < _rows - 1; i++)
         menu->addItem(new OpdsItem(menu, OPDS_CMD_FIRST + 9999, lString16::empty_str, lString16::empty_str));
 
     OpdsItem * pager = new OpdsItem(menu, OPDS_CMD_SERVICE, lString16::empty_str, lString16::empty_str, OpdsItem::PAGER);
@@ -401,6 +659,7 @@ void OpdsBrowser::showService(CRGUIWindowManager * wm)
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, lString16(_("Catalog menu")), rc, false);
     menu->setupRows(true);
+    menu->setCloseCommand(OPDS_CMD_SHOW_LIST);
     menu->add(OPDS_CMD_SHOW_LIST, lString16(MARK_PREV) + lString16(_("Back to the list")));
     if (_history.size() > 1)
         menu->add(OPDS_CMD_BACK, lString16(MARK_UP) + lString16(_("Back")));
@@ -408,8 +667,10 @@ void OpdsBrowser::showService(CRGUIWindowManager * wm)
         menu->add(OPDS_CMD_SEARCH, lString16(_("Search...")));
     if (_history.size() > 1)
         menu->add(OPDS_CMD_HOME, lString16(_("Catalog start page")));
-    menu->add(OPDS_CMD_SET_URL, lString16(_("Catalog address...")), u16(rootUrl()));
-    menu->add(OPDS_CMD_CLOSE, lString16(_("Close catalog")));
+    menu->add(OPDS_CMD_CATALOGS, lString16(_("Other catalog...")));
+    if (_catalog >= 0)
+        menu->add(OPDS_CMD_SET_URL, lString16(_("Catalog address...")), u16(rootUrl()));
+    menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
     activate(wm, menu);
 }
 
@@ -429,6 +690,7 @@ void OpdsBrowser::showBook(CRGUIWindowManager * wm, int index)
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, u16(e->title), rc, false);
     int rows = menu->setupRows(true);
+    menu->setCloseCommand(OPDS_CMD_SHOW_LIST);
 
     menu->add(OPDS_CMD_SHOW_LIST, lString16(MARK_PREV) + lString16(_("Back to the list")));
     // Full title and author; a tap shows the description.
@@ -490,8 +752,11 @@ void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
 
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, u16(e->title), rc, false);
+    // a row holds two lines of the text: separator lines of the skin would cut it every two lines
+    menu->setPlainRows();
     int rows = menu->setupRows(true);
-    menu->add(OPDS_CMD_SHOW_BOOK, lString16(MARK_PREV) + lString16(_("Back to the book")));
+    menu->setCloseCommand(OPDS_CMD_SHOW_BOOK);
+    menu->add(OPDS_CMD_SHOW_BOOK, backTo(u16(e->title)));
 
     int width = menu->rowTextWidth();
     std::vector<InfoLine> lines;
@@ -604,10 +869,7 @@ void OpdsBrowser::download(CRGUIWindowManager * wm, int formatIndex)
 void OpdsBrowser::editUrl(CRGUIWindowManager * wm)
 {
     (void)wm;
-    lString8 url(rootUrl().c_str());
-    strncpy(keyBuffer, url.c_str(), sizeof(keyBuffer) - 1);
-    keyBuffer[sizeof(keyBuffer) - 1] = 0;
-    pbOpenKeyboard(_("OPDS catalog address"), keyBuffer, sizeof(keyBuffer) - 1, urlKeyboardHandler);
+    editText(_("OPDS catalog address"), u16(rootUrl()), urlKeyboardHandler);
 }
 
 bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
@@ -675,19 +937,122 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_SET_URL_APPLY:
         {
-            lString16 url = Utf8ToUnicode(lString8(keyBuffer));
-            url.trim();
-            if (!url.empty()) {
-                if (url.pos("://") < 0)
-                    url = lString16("https://") + url;
-                main_win->getProps()->setString(PROP_OPDS_URL, url);
-                main_win->saveSettings(lString16::empty_str);
+            lString16 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
+            if (!url.empty() && _catalog >= 0 && _catalog < (int)_catalogs.size()) {
+                _catalogs[_catalog].url = url;
+                saveCatalogs();
                 _history.clear();
                 _screens.clear();
                 if (load(rootUrl(), true))
                     showList(wm);
+            } else {
+                showList(wm);
             }
         }
+        return true;
+    case OPDS_CMD_CATALOGS:
+        openCatalogs(wm);
+        return true;
+    case OPDS_CMD_CATALOGS_EDIT:
+        showCatalogs(wm, true);
+        return true;
+    case OPDS_CMD_CATALOGS_SHOW:
+        showCatalogs(wm, _catalogsEdit);
+        return true;
+    case OPDS_CMD_CATALOG_ADD:
+        if ((int)_catalogs.size() >= maxCatalogs()) {
+            Message(ICON_INFORMATION, "OPDS", _("The list is full. Delete a catalog first."), 3000);
+            showCatalogs(wm, _catalogsEdit);
+            return true;
+        }
+        editText(_("OPDS catalog address"), lString16("https://"), addUrlKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_ADD_URL_APPLY:
+        _newUrl = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
+        if (_newUrl.empty() || _newUrl == lString16("https://")) {
+            showCatalogs(wm, _catalogsEdit);
+            return true;
+        }
+        editText(_("Catalog name"), hostName(_newUrl), addNameKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_ADD_NAME_APPLY:
+        {
+            OpdsCatalog c;
+            c.url = _newUrl;
+            c.name = Utf8ToUnicode(lString8(keyBuffer));
+            c.name.trim();
+            if (c.name.empty())
+                c.name = hostName(c.url);
+            if (!c.url.empty())
+                _catalogs.push_back(c);
+            _newUrl.clear();
+            saveCatalogs();
+            showCatalogs(wm, _catalogsEdit);
+        }
+        return true;
+    case OPDS_CMD_CATALOG_CARD:
+        showCard(wm);
+        return true;
+    case OPDS_CMD_CATALOG_NAME:
+        if (_editCatalog > 0 && _editCatalog < (int)_catalogs.size())
+            editText(_("Catalog name"), _catalogs[_editCatalog].name, cardNameKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_NAME_APPLY:
+        if (_editCatalog > 0 && _editCatalog < (int)_catalogs.size()) {
+            lString16 name = Utf8ToUnicode(lString8(keyBuffer));
+            name.trim();
+            if (!name.empty()) {
+                _catalogs[_editCatalog].name = name;
+                saveCatalogs();
+            }
+        }
+        showCard(wm);
+        return true;
+    case OPDS_CMD_CATALOG_URL:
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size())
+            editText(_("OPDS catalog address"), _catalogs[_editCatalog].url, cardUrlKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_URL_APPLY:
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size()) {
+            lString16 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
+            if (!url.empty()) {
+                _catalogs[_editCatalog].url = url;
+                saveCatalogs();
+                if (_editCatalog == _catalog) {
+                    _history.clear();
+                    _screens.clear();
+                }
+            }
+        }
+        showCard(wm);
+        return true;
+    case OPDS_CMD_CATALOG_DEFAULT:
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size())
+            setDefaultCatalog(defaultCatalog() == _editCatalog ? -1 : _editCatalog);
+        showCard(wm);
+        return true;
+    case OPDS_CMD_CATALOG_DELETE:
+        showDeleteQuestion(wm);
+        return true;
+    case OPDS_CMD_CATALOG_DELETE_APPLY:
+        if (_editCatalog > 0 && _editCatalog < (int)_catalogs.size()) {
+            int def = defaultCatalog();
+            _catalogs.erase(_catalogs.begin() + _editCatalog);
+            saveCatalogs();
+            if (def == _editCatalog)
+                setDefaultCatalog(-1);
+            else if (def > _editCatalog)
+                setDefaultCatalog(def - 1);
+            if (_catalog == _editCatalog) {
+                _catalog = -1;
+                _history.clear();
+                _screens.clear();
+            } else if (_catalog > _editCatalog) {
+                _catalog--;
+            }
+            _editCatalog = -1;
+        }
+        showCatalogs(wm, true);
         return true;
     case OPDS_CMD_INFO:
         showInfo(wm);
@@ -717,7 +1082,16 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         download(wm, command - OPDS_CMD_FORMAT);
         return true;
     }
-    if (command >= OPDS_CMD_RELATED && command <= OPDS_CMD_LAST) {
+    if (command >= OPDS_CMD_CATALOG_OPEN && command < OPDS_CMD_CATALOG_EDIT) {
+        openCatalog(wm, command - OPDS_CMD_CATALOG_OPEN, true);
+        return true;
+    }
+    if (command >= OPDS_CMD_CATALOG_EDIT && command <= OPDS_CMD_LAST) {
+        _editCatalog = command - OPDS_CMD_CATALOG_EDIT;
+        showCard(wm);
+        return true;
+    }
+    if (command >= OPDS_CMD_RELATED && command < OPDS_CMD_CATALOG_OPEN) {
         const opds::Entry * e = currentBook();
         int k = command - OPDS_CMD_RELATED;
         if (e && k < (int)e->related.size()) {

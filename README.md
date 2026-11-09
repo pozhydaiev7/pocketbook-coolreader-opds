@@ -18,10 +18,12 @@ Tested on **PocketBook 743G (InkPad 4)** with firmware **U743g 6.8.4143** and **
 
 Browse an online library, search it, download a book and open it in the reader, without leaving CoolReader.
 
-- **Default catalog:** [Flibusta](https://flibusta.is/opds). Any other OPDS catalog works too; the address is a setting.
+- **Catalogs:** [Flibusta](https://flibusta.is/opds) is always in the list (its address can be changed to a mirror, it cannot be deleted); any other OPDS catalog can be added with its address and name.
 - **How to open it:**
-  - the catalog icon in the touch quick menu (tap the centre of the page);
-  - or *Settings → OPDS catalog*.
+  - the catalog icon in the touch quick menu (tap the centre of the page) opens the default catalog, or the list of catalogs when none is the default;
+  - *Settings → OPDS catalogs* shows the list: open a catalog, add one, or edit them (name, address, default catalog, delete);
+  - *Other catalog…* in the catalog menu switches catalogs.
+- **Navigation:** the arrow at the caption and the first row of every screen go one level up; from the catalog start page, back to the book.
 - **Catalog sections and search.** Search is two-step, as the catalog serves it: first choose authors or books, then the result list.
 - **Book lists.** Each book takes two lines, title and author, in a compact font. The bottom row is the pager:
   - *Back* on the left, *Next* on the right; the next catalog page is loaded on demand;
@@ -38,7 +40,7 @@ Browse an online library, search it, download a book and open it in the reader, 
 - **Any skin.** The catalog works with every interface skin, including `default` and `pb62x`.
 - **Network.** If Wi-Fi is off, the reader asks the system to connect. Requests time out instead of hanging.
 - **Settings in `cr3.ini`:**
-  - `cr3.pocketbook.opds.url` — the catalog address; change it in *Settings → OPDS catalog address* or in the catalog menu;
+  - `cr3.pocketbook.opds.catalog.<N>.name` and `.url` — the catalogs by number, 0 is Flibusta; `cr3.pocketbook.opds.default` — the number of the default catalog plus one, 0 for none;
   - `cr3.pocketbook.opds.dir` — the download folder.
 
 ### Firmware 6.11 support
@@ -50,17 +52,20 @@ On firmware 6.11 the earlier CoolReader builds do not start: the firmware no lon
 
 The binary still needs only `libinkview`, `libcurl`, `libz` and the C/C++ runtime from the firmware, so it also runs on the earlier 6.x firmware.
 
-### StarDict dictionaries
+### StarDict and XDXF dictionaries
 
-Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader reads StarDict dictionaries itself. Both kinds are in one list, marked **DIC** and **STAR**.
+Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader reads StarDict and XDXF dictionaries itself. All of them are in one list; StarDict and XDXF dictionaries have their type after the name, because the firmware reader cannot use them.
 
-- **Where:** `system/dictionaries` on the reader (or on the SD card), the same folder as the `.dic` files. Unpack each StarDict archive into a folder of its own there, or put its files straight into `system/dictionaries`.
-- **Files:** `*.ifo`, `*.idx` or `*.idx.gz`, `*.dict` or `*.dict.dz`, and optionally `*.syn` (word forms: *домами* finds *дом*).
+- **Where:** `system/dictionaries` on the reader (or on the SD card), the same folder as the `.dic` files. Unpack each dictionary into a folder of its own there, or put its files straight into `system/dictionaries`.
+- **StarDict files:** `*.ifo`, `*.idx` or `*.idx.gz`, `*.dict` or `*.dict.dz`, and optionally `*.syn` (word forms: *домами* finds *дом*).
+- **XDXF files:** a plain `*.xdxf` file (XDXF 1 or 2), easy to edit in a text editor. Every `<k>` of an article is a key; the name comes from `<full_name>` or `<full_title>`, otherwise from the file or folder name.
 - **Articles:** plain text, HTML, Pango and XDXF markup; bold, italic and colors are kept.
 - **Limits:**
-  - at most 200 StarDict dictionaries are looked for;
-  - the first lookup in a dictionary loads its index (and `.syn`) into memory, which stays there until CoolReader exits.
-- **Selected dictionaries:** the first row of the dictionary list. With it, both a tap on a word and the search look the word up in the dictionaries checked under *Check dictionaries…*, up to 5, of any kind; with none checked, in the first 5 of the list. Each article has a subtitle with the dictionary; a word found through a word form also names the dictionary word.
+  - at most 200 StarDict and XDXF dictionaries are looked for;
+  - the first lookup in a dictionary loads its index into memory, which stays there until CoolReader exits.
+- **Search keyboard:** on touch devices the dictionary search opens the keyboard of CoolReader (English, Russian and Ukrainian layouts, digits and signs), which follows the night mode; without a touch screen, the firmware keyboard.
+- **Window place:** *Display settings → Dictionary window*: away from the selected word, at the top or at the bottom of the screen.
+- **Selected dictionaries:** the first row of the dictionary list. With it, both a tap on a word and the search look the word up in the dictionaries checked under *Check dictionaries…*, up to 5, of any kind; with none checked, nothing is looked up. The articles of different dictionaries are separated by a line, each with a small subtitle naming the dictionary; a word found through a word form also names the dictionary word.
 
 Free StarDict dictionaries: [FreeDict](https://freedict.org/downloads/) (choose the StarDict format), [Wiktionary dictionaries by Vuizur](https://github.com/Vuizur/Wiktionary-Dictionaries).
 
@@ -77,6 +82,11 @@ CoolReader records how long every page stays on the screen and shows reports, as
 - **Today, this week (from Monday), this month, this year, all time, or any period** (`dd.mm.yyyy-dd.mm.yyyy`): pages and words read with the averages per reading day and per day of the period, books read, books read to the end, total time, reading time by days and by books.
 - **All books:** every book with its total reading time; a tap opens the book report.
 - **The log:** `system/state/cr3/cr3stats.txt`, a text file with one line per page. It is kept by updates; delete it to start over.
+
+### Contents and rotation
+
+- **Old contents mode** (*Display settings → Use new TOC menu* off): a plain touch list of chapters with indents and page numbers, for every skin. The firmware contents window used before crashes on firmware 6.11.
+- **Auto rotation:** with *Control settings → Rotate → 360°* (the default), CoolReader reads the G-sensor while the book is on the screen and turns the page by 90 degrees when the reader stands on a side edge, for example when reading lying on one's side. Firmware 6.11 does not send rotation events to CoolReader, so it asks for the orientation itself, twice a second; only CoolReader is rotated.
 
 ### Changes from the 0.0.6-17-62.2 community build
 
@@ -163,7 +173,7 @@ g++ -std=c++11 -Wall -I.. opdsfeed_test.cpp ../opdsfeed.cpp -o opdsfeed_test && 
 
 ## Source layout
 
-    cr3gui/src/opds   - OPDS feed parser (opdsfeed.*) and catalog browser UI (opdsbrowser.*)
+    cr3gui/src/opds   - OPDS feed parser (opdsfeed.*), catalog browser UI (opdsbrowser.*), touch lists (opdsmenu.*)
     cr3gui/src        - CR3 GUI for e-ink devices, PocketBook frontend in cr3pocketbook.*
     crengine          - CREngine, the DOM/XML/CSS e-book rendering library
     thirdparty        - third-party libraries (libpng, libjpeg, freetype, ... are built from here)

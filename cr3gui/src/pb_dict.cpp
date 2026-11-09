@@ -3,6 +3,7 @@
  */
 #include "pb_dict.h"
 #include "pb_stardict.h"
+#include "pb_xdxf.h"
 
 #include <inkview.h>
 #include <dirent.h>
@@ -13,12 +14,15 @@
 
 #define PB_DICT_ID_INKVIEW "dic:"
 #define PB_DICT_ID_STARDICT "sd:"
+#define PB_DICT_ID_XDXF "xd:"
 
 lString16 PbDictSource::label() const
 {
-    // the type mark tells the dictionaries of both kinds apart in the lists
-    lString16 mark(type() == PB_DICT_TYPE_STARDICT ? "STAR" : "DIC");
-    return mark + Utf8ToUnicode(lString8(" \xC2\xB7 ")) + _title;
+    // only the dictionaries that the firmware reader cannot use are marked
+    if (type() == PB_DICT_TYPE_INKVIEW)
+        return _title;
+    lString16 mark(type() == PB_DICT_TYPE_STARDICT ? "StarDict" : "XDXF");
+    return _title + Utf8ToUnicode(lString8(" \xC2\xB7 ")) + mark;
 }
 
 // lower case and capitalized forms of the word, without repeats
@@ -137,12 +141,13 @@ public:
 };
 
 // ---------------------------------------------------------------------------------------------
-// StarDict: read by CoolReader, any number open at once
+// StarDict (D = StarDict) and XDXF (D = XdxfDict): read by CoolReader, any number open at once
 
-class PbStarDictSource : public PbDictSource
+template <class D> class PbIndexedDictSource : public PbDictSource
 {
 private:
-    StarDict _dict;
+    D _dict;
+    PbDictType _type;
     int _pos;
     bool _failed;
 
@@ -179,18 +184,18 @@ private:
         return -1;
     }
 public:
-    PbStarDictSource() : _pos(-1), _failed(false) {}
-    bool init(const lString8 & ifoPath)
+    PbIndexedDictSource(PbDictType type) : _type(type), _pos(-1), _failed(false) {}
+    bool init(const lString8 & path)
     {
-        if (!_dict.readInfo(ifoPath.c_str())) {
-            CRLog::error("StarDict %s: %s", ifoPath.c_str(), _dict.lastError().c_str());
+        if (!_dict.readInfo(path.c_str())) {
+            CRLog::error("dictionary %s: %s", path.c_str(), _dict.lastError().c_str());
             return false;
         }
         _title = Utf8ToUnicode(lString8(_dict.bookName().c_str()));
-        _id = lString16(PB_DICT_ID_STARDICT) + Utf8ToUnicode(ifoPath);
+        _id = lString16(_type == PB_DICT_TYPE_XDXF ? PB_DICT_ID_XDXF : PB_DICT_ID_STARDICT) + Utf8ToUnicode(path);
         return true;
     }
-    virtual PbDictType type() const { return PB_DICT_TYPE_STARDICT; }
+    virtual PbDictType type() const { return _type; }
     virtual bool isOpen() const { return _dict.isLoaded(); }
     virtual bool open()
     {
@@ -202,11 +207,11 @@ public:
         gettimeofday(&start, NULL);
         if (!_dict.load()) {
             _failed = true;
-            CRLog::error("StarDict %s: %s", _dict.ifoPath().c_str(), _dict.lastError().c_str());
+            CRLog::error("dictionary %s: %s", _dict.ifoPath().c_str(), _dict.lastError().c_str());
             return false;
         }
         gettimeofday(&end, NULL);
-        CRLog::info("StarDict %s: %d words loaded in %d ms", _dict.ifoPath().c_str(), _dict.wordCount(),
+        CRLog::info("dictionary %s: %d words loaded in %d ms", _dict.ifoPath().c_str(), _dict.wordCount(),
                     (int)((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec) / 1000));
         return true;
     }
@@ -286,10 +291,11 @@ PbDictManager & PbDictManager::instance()
     return manager;
 }
 
-static bool pbEndsWithIfo(const char * name)
+static bool pbEndsWith(const char * name, const char * ext)
 {
     size_t len = strlen(name);
-    return len > 4 && strcasecmp(name + len - 4, ".ifo") == 0;
+    size_t extLen = strlen(ext);
+    return len > extLen && strcasecmp(name + len - extLen, ext) == 0;
 }
 
 void PbDictManager::scanStarDictFolder(const lString8 & folder, int depth, LVPtrVector<PbDictSource, false> & found)
@@ -313,11 +319,19 @@ void PbDictManager::scanStarDictFolder(const lString8 & folder, int depth, LVPtr
             // StarDict archives are usually unpacked into a folder of their own
             if (depth > 0)
                 scanStarDictFolder(path, depth - 1, found);
-        } else if (pbEndsWithIfo(entry->d_name)) {
-            PbStarDictSource * source = new PbStarDictSource();
+        } else if (pbEndsWith(entry->d_name, ".ifo")) {
+            PbIndexedDictSource<StarDict> * source = new PbIndexedDictSource<StarDict>(PB_DICT_TYPE_STARDICT);
             if (source->init(path)) {
                 found.add(source);
                 CRLog::info("StarDict found: %s", path.c_str());
+            } else {
+                delete source;
+            }
+        } else if (pbEndsWith(entry->d_name, ".xdxf")) {
+            PbIndexedDictSource<XdxfDict> * source = new PbIndexedDictSource<XdxfDict>(PB_DICT_TYPE_XDXF);
+            if (source->init(path)) {
+                found.add(source);
+                CRLog::info("XDXF found: %s", path.c_str());
             } else {
                 delete source;
             }
@@ -340,7 +354,7 @@ void PbDictManager::scan()
 #ifdef USERDICTPATH2
     scanStarDictFolder(lString8(USERDICTPATH2), 1, found);
 #endif
-    // StarDict dictionaries after the .dic ones, by name
+    // StarDict and XDXF dictionaries after the .dic ones, by name
     for (int i = 0; i < found.length(); i++)
         for (int j = i + 1; j < found.length(); j++)
             if (found[j]->title().compare(found[i]->title()) < 0) {
@@ -350,13 +364,14 @@ void PbDictManager::scan()
             }
     for (int i = 0; i < found.length(); i++)
         _sources.add(found[i]);
-    CRLog::info("dictionaries: %d .dic, %d StarDict", dicCount, found.length());
+    CRLog::info("dictionaries: %d .dic, %d StarDict and XDXF", dicCount, found.length());
 }
 
 lString16 PbDictManager::normalizeId(const lString16 & value)
 {
     if (value.empty() || value.startsWith(lString16(PB_DICT_ID_INKVIEW)) ||
-        value.startsWith(lString16(PB_DICT_ID_STARDICT)) || value == lString16(PB_DICT_ID_SELECTED))
+        value.startsWith(lString16(PB_DICT_ID_STARDICT)) || value.startsWith(lString16(PB_DICT_ID_XDXF)) ||
+        value == lString16(PB_DICT_ID_SELECTED))
         return value;
     return lString16(PB_DICT_ID_INKVIEW) + value;
 }

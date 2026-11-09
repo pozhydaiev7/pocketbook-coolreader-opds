@@ -95,7 +95,7 @@ lString16 menuSkinName(CRGUIWindowManager * wm)
 
 OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString16 & caption, lvRect & rc, bool paged)
     : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _lastTouchX(-1), _paged(paged),
-      _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT)
+      _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE)
 {
     if (!fontAntiAliasingActivated())
         forcePartialBwUpdates = true;
@@ -118,6 +118,14 @@ void OpdsMenu::setPageCommands(int prevCommand, int nextCommand)
     _paged = true;
     _prevCommand = prevCommand;
     _nextCommand = nextCommand;
+}
+
+void OpdsMenu::setPlainRows()
+{
+    // the touch TOC with page numbers has the same rows without separator lines
+    CRSkinRef skin = _wm->getSkin();
+    if (!skin.isNull() && !skin->pathById(L"touch-toc-dots").empty())
+        setSkinName(lString16(L"#touch-toc-dots"));
 }
 
 void OpdsMenu::fitCaption()
@@ -166,6 +174,15 @@ bool OpdsMenu::onTouchEvent(int x, int y, CRGUITouchEventType evType)
 
 bool OpdsMenu::onCommand(int command, int params)
 {
+    // the arrow at the caption and the Back key: one level up
+    if ((command == DCMD_BUTTON_PRESSED || command == DCMD_BUTTON_PRESSED_LONG) && params == BTN_CLOSE) {
+        closeMenu(_closeCommand);
+        return true;
+    }
+    if (command == MCMD_CANCEL && _closeCommand != getId()) {
+        closeMenu(_closeCommand);
+        return true;
+    }
     if (_paged) {
         // Page keys of the reader flip the screens of the list.
         if ((command == MCMD_SCROLL_FORWARD || command == MCMD_NEXT_PAGE) && _nextCommand != 0) {
@@ -202,7 +219,7 @@ void OpdsMenu::add(int command, const lString16 & title, const lString16 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString16 & title, const lString16 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      leftCommand(0), rightCommand(0), centerCommand(OPDS_CMD_SERVICE),
+      leftCommand(0), rightCommand(0), centerCommand(OPDS_CMD_SERVICE), indent(0),
       _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
 }
@@ -250,11 +267,28 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
         int h2 = second.font.isNull() ? 0 : second.font->getHeight();
         int total = h1 + (h2 > 0 ? gap + h2 : 0);
         int y = r.top + (r.height() - total) / 2;
-        drawLine(buf, first, r, y);
-        drawLine(buf, second, r, y + h1 + gap);
+        if (first.rule) {
+            // section line at the top of the row
+            int t = sf->getHeight() / 16;
+            if (t < 1)
+                t = 1;
+            buf.FillRect(r.left, rc.top + t, r.right, rc.top + 2 * t, skin->getTextColor());
+        }
+        drawLine(buf, first, r, y, first.font.isNull() ? 0 : first.font->getBaseline());
+        drawLine(buf, second, r, y + h1 + gap, second.font.isNull() ? 0 : second.font->getBaseline());
     } else if (_subtitle.empty()) {
-        lString16 t = fitText(tf, _title, r.width());
-        tf->DrawTextString(&buf, r.left, r.top + (r.height() - tf->getHeight()) / 2,
+        lvRect tr = r;
+        tr.left += indent;
+        if (!aside.empty()) {
+            // page number at the right edge, on the baseline of the title
+            int aw = textWidth(sf, aside);
+            int base = r.top + (r.height() - tf->getHeight()) / 2 + tf->getBaseline();
+            sf->DrawTextString(&buf, r.right - aw, base - sf->getBaseline(),
+                               aside.c_str(), aside.length(), L'?', NULL, false, 0);
+            tr.right -= aw + sf->getHeight();
+        }
+        lString16 t = fitText(tf, _title, tr.width());
+        tf->DrawTextString(&buf, tr.left, r.top + (r.height() - tf->getHeight()) / 2,
                            t.c_str(), t.length(), L'?', NULL, false, 0);
     } else {
         int gap = sf->getHeight() / 8;
@@ -268,19 +302,23 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
     buf.SetClipRect(&oldClip);
 }
 
-void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y)
+void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline)
 {
     if (line.font.isNull() || (line.text.empty() && line.label.empty()))
         return;
+    // the label and the text share the font and the baseline; the label is gray
+    int top = y + baseline - line.font->getBaseline();
     int x = r.left + line.indent;
     if (!line.label.empty()) {
-        LVFontRef lf = _owner->labelFont;
-        lString16 l = fitText(lf, line.label, r.right - x);
-        lf->DrawTextString(&buf, x, y, l.c_str(), l.length(), L'?', NULL, false, 0);
-        x += textWidth(lf, l);
+        lUInt32 color = buf.GetTextColor();
+        buf.SetTextColor(OPDSUI_LABEL_COLOR);
+        lString16 l = fitText(line.font, line.label, r.right - x);
+        line.font->DrawTextString(&buf, x, top, l.c_str(), l.length(), L'?', NULL, false, 0);
+        buf.SetTextColor(color);
+        x += textWidth(line.font, l);
     }
     lString16 t = fitText(line.font, line.text, r.right - x);
-    line.font->DrawTextString(&buf, x, y, t.c_str(), t.length(), L'?', NULL, false, 0);
+    line.font->DrawTextString(&buf, x, top, t.c_str(), t.length(), L'?', NULL, false, 0);
 }
 
 int OpdsItem::onSelect()

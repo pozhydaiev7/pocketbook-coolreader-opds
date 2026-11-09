@@ -28,6 +28,8 @@
 #include "opdsbrowser.h"
 #include "pb_dict.h"
 #include "pb_statsview.h"
+#include "pb_toclist.h"
+#include "pb_keyboard.h"
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
@@ -139,6 +141,21 @@ static const int angles_measured[] = { 19, 24, 29, 33, 38, 43, 47, 50, 52, 55, 5
 static void translate_timer();
 static void rotate_timer();
 static void paused_rotate_timer();
+static void gsensor_timer();
+
+// Auto rotation by the G-sensor ("Rotate" = 360): firmware 6.11 sends no EVT_ORIENTATION to
+// CoolReader, so the sensor is read on a timer while the book is on the screen.
+#define PB_GSENSOR_POLL_MS 1000
+// the orientation of the firmware is already settled: asked more often, one reading is enough
+#define PB_GSENSOR_FIRMWARE_POLL_MS 500
+#define PB_GSENSOR_IDLE_MS 3000
+// sensor value of the axis that points down: about 60 at 90 degrees (see angles_measured)
+#define PB_GSENSOR_MIN 35
+// Firmware 6.x: ReadGSensor fails (-1, zeros); the orientation the firmware sees comes from
+// GetGSensorOrientation. These functions are not in the SDK headers: looked up at start.
+static int (*pbGetGSensorOrientation)() = NULL;
+static int (*pbIsGSensorEnabled)() = NULL;
+static void (*pbSetGSensorEnabled)(int) = NULL;
 #ifdef BACKGROUND_CACHE_FILE_CREATION
 static void cache_timer();
 #endif
@@ -709,11 +726,6 @@ void goToPageKeyboardHandler(char *s)
     else {
         executeCommand(GCMD_PASS_TO_PARENT, 0);
     }
-}
-
-void tocHandler(long long position)
-{
-    executeCommand(MCMD_GO_PAGE_APPLY, position);
 }
 
 #if 0 && defined(POCKETBOOK_PRO)
@@ -1661,21 +1673,6 @@ void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handle
         new CRPocketBookKeyboardWindow(CRPocketBookWindowManager::instance, title, buffer, maxlen, handler));
 }
 
-class CRPocketBookContentsWindow : public CRPocketBookInkViewWindow
-{
-private:
-    int _curPage;
-    tocentry *_toc;
-    int _tocLength;
-public:
-    CRPocketBookContentsWindow( CRGUIWindowManager * wm, tocentry *toc, int toc_length, int cur_page)
-        : CRPocketBookInkViewWindow( wm ), _curPage(cur_page), _toc(toc), _tocLength(toc_length) {}
-    virtual void showWindow()
-    {
-        OpenContents(_toc, _tocLength, _curPage, tocHandler);
-    }
-};
-
 class CRPbDictionaryDialog;
 class CRPbDictionaryMenu;
 
@@ -1862,9 +1859,12 @@ protected:
     // where the finger went down over the book text, to tell a swipe from a tap
     int _touchDownX;
     int _touchDownY;
+    // the finger went down in the dictionary window: the window gets the touch until it is lifted,
+    // also where the finger leaves the window
+    bool _touchInDictView;
 public:
     CRPbDictionaryDialog(CRGUIWindowManager * wm) : CRGUIWindowBase(wm), _dictView(NULL),
-        _touchDownX(-1), _touchDownY(-1)
+        _touchDownX(-1), _touchDownY(-1), _touchInDictView(false)
     {
         _wordSelector = NULL;
         _fullscreen = true;
@@ -1920,9 +1920,20 @@ public:
 
         lvPoint pt (x, y);
 
+        if (CRTOUCH_DOWN == evType)
+            _touchInDictView = _dictView->getRect().isPointInside(pt);
+        if (_touchInDictView && !_dictView->getRect().isPointInside(pt))
+        {
+            // a swipe that started in the window and ends over the book: no word is selected
+            if (CRTOUCH_UP == evType)
+                _touchInDictView = false;
+            return _dictView->onTouchEvent(x, y, evType);
+        }
         if (_dictView->getRect().isPointInside(pt))
         {
             _touchDownX = _touchDownY = -1;
+            if (CRTOUCH_UP == evType)
+                _touchInDictView = false;
             _dictView->setTouchMode(true);
             if (!_dictViewActive)
             {
@@ -1956,6 +1967,13 @@ public:
                 // no word selection while the finger is swiping
                 return true;
             }
+            // a vertical swipe over the book selects no word either, so the window does not jump
+            // to the other half of the screen (its place is a display setting)
+            if (abs(dy) > abs(dx) && abs(dy) > swipeWidth / 2) {
+                if (CRTOUCH_UP == evType)
+                    _touchDownX = _touchDownY = -1;
+                return true;
+            }
             if (CRTOUCH_UP == evType)
                 _touchDownX = _touchDownY = -1;
         }
@@ -1974,6 +1992,9 @@ public:
     }
 };
 
+// PB_DICT_POSITION_* of the display settings
+static int pbDictWindowPosition();
+
 class CRPbDictionaryProxyWindow : public CRPbDictionaryDialog
 {
 private:
@@ -1990,7 +2011,10 @@ public:
         CRPocketBookScreen::instance->setForceSoftUpdate(true);
         lvRect rect = _wm->getScreen()->getRect();
         _dictDlg->setRect(rect);
-        rect.top = rect.bottom - _dictDlg->_dictView->getDesiredHeight();
+        if (pbDictWindowPosition() == PB_DICT_POSITION_TOP)
+            rect.bottom = rect.top + _dictDlg->_dictView->getDesiredHeight();
+        else
+            rect.top = rect.bottom - _dictDlg->_dictView->getDesiredHeight();
         _dictDlg->_dictView->setRect(rect);
         _dictDlg->_dictView->reconfigure(0);
     }
@@ -2087,6 +2111,15 @@ private:
     CRPbDictionaryDialog * _dictDlg;
     bool _rotatetimerset;
     bool _lastturn;
+    int _gsUpright;       // sign of y in the upright portrait position, 0 while unknown
+    int _gsCandidate;     // orientation the device is turned to, -1 when none
+    int _gsCount;         // sensor readings in a row that showed it
+    bool _gsEvents;       // the firmware sends EVT_ORIENTATION: no polling
+    int _gsTicks;         // sensor readings so far, for the log
+    int _gsLastX, _gsLastY, _gsLastZ, _gsLastReason;
+    int _gsLastSensor;    // last GetGSensorOrientation value, for the log
+    bool _gsEnabledByUs;  // the sensor was off and CoolReader turned it on: off again at exit
+    bool _gsFromFirmware; // the last orientation came from the firmware, not from the raw values
     int _pausedRotation;
     bool _pauseRotationTimer;
     int  m_goToPage;
@@ -2530,7 +2563,8 @@ public:
     static CRPocketBookDocView * instance;
     CRPocketBookDocView( CRGUIWindowManager * wm, lString16 dataDir )
         : V3DocViewWin( wm, dataDir ), _bm3x3(NULL), _toc(NULL), _tocLength(0), _dictDlg(NULL), _rotatetimerset(false),
-        _lastturn(true), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
+        _lastturn(true), _gsUpright(0), _gsCandidate(-1), _gsCount(0), _gsEvents(false),
+        _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
         m_bmFromSkin(false)
     {
         instance = this;
@@ -2557,6 +2591,7 @@ public:
     {
         CRLog::trace("V3DocViewWin::closing();");
         PbStatsView::flush();
+        stopGSensor();
         readingOff();
         if (_restore_globOrientation) {
             SetGlobalOrientation(-1);
@@ -2598,10 +2633,13 @@ public:
             OpdsBrowser::instance().open(_wm);
             return true;
         }
-        if (command == PB_CMD_OPDS_SET_URL) {
-            OpdsBrowser::instance().editUrl(_wm);
+        if (command == PB_CMD_OPDS_CATALOGS) {
+            OpdsBrowser::instance().openCatalogs(_wm);
             return true;
         }
+        // Contents in the plain list mode
+        if (PbTocList::isTocListCommand(command))
+            return PbTocList::instance().onCommand(_wm, command, params);
         // Reading statistics
         if (PbStatsView::isStatsCommand(command))
             return PbStatsView::instance().onCommand(_wm, command, params);
@@ -2995,9 +3033,8 @@ public:
 
         #endif
 
-        CRPocketBookContentsWindow *wnd = new CRPocketBookContentsWindow(_wm, _toc,
-                                                                         _tocLength, _docview->getCurPage() + 1);
-        _wm->activateWindow( wnd );
+        // The firmware contents window (OpenContents) crashes on firmware 6.11: a plain list instead.
+        PbTocList::instance().open(_wm, _toc, _tocLength, _docview->getCurPage() + 1);
     }
 
     void showFrontLight() {
@@ -3035,7 +3072,7 @@ public:
     {
         CRLog::trace("readingOn()");
         CRPropRef props = CRPocketBookDocView::instance->getProps();
-        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_180);
+        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         if (rotate_mode > PB_ROTATE_MODE_180_SLOW_PREV_NEXT && !_rotatetimerset) {
             SetWeakTimer("RotatePage", rotate_timer, 200);
             _rotatetimerset = true;
@@ -3081,7 +3118,7 @@ public:
     void onRotateTimer()
     {
         CRPropRef props = CRPocketBookDocView::instance->getProps();
-        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_180);
+        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         int rotate_angle = props->getIntDef(PROP_POCKETBOOK_ROTATE_ANGLE, 2);
         _rotatetimerset = false;
         int cn = GetOrientation();
@@ -3141,6 +3178,177 @@ public:
         }
     }
 
+    // the firmware rotates by itself: the sensor is no longer read by CoolReader
+    void onOrientationEvent(int par1)
+    {
+        CRLog::info("EVT_ORIENTATION %d: the firmware reports rotations, G-sensor polling stops", par1);
+        _gsEvents = true;
+        ClearTimer(gsensor_timer);
+    }
+
+    void startGSensorPolling()
+    {
+        CRLog::info("G-sensor: supported %d, QueryGSensor %d, orientation %d, global orientation %d, "
+                    "keeporient %d, rotate mode %d", isGSensorSupported() ? 1 : 0, QueryGSensor(),
+                    GetOrientation(), GetGlobalOrientation(), pbGlobals->getKeepOrientation(),
+                    getProps()->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360));
+        // G-sensor functions of the firmware library, for the log
+        static const char * const names[] = {
+            "ReadGSensor", "QueryGSensor", "SetGSensor", "CalibrateGSensor", "GetGSensorOrientation",
+            "SetGSensorEnabled", "IsGSensorEnabled", "GetGSensorEnabled", "SetAutoOrientation",
+            "GetAutoOrientation", "iv_check_gsensor", "iv_setup_gsensor", "iv_update_orientation",
+            "hw_read_gsensor", "hw_read_gsensor7", "hw_read_gsensor8", "hw_last_orientation",
+            "hw_gsensor_ready", "GetSensorOrientation", "SetGSensorMode", NULL };
+        void * lib = dlopen("libinkview.so", RTLD_LAZY);
+        lString8 found;
+        for (int i = 0; lib != NULL && names[i] != NULL; i++)
+            if (dlsym(lib, names[i]) != NULL)
+                found << " " << names[i];
+        CRLog::info("G-sensor functions in libinkview:%s", found.c_str());
+        if (lib != NULL) {
+            *(void **)(&pbGetGSensorOrientation) = dlsym(lib, "GetGSensorOrientation");
+            *(void **)(&pbIsGSensorEnabled) = dlsym(lib, "IsGSensorEnabled");
+            *(void **)(&pbSetGSensorEnabled) = dlsym(lib, "SetGSensorEnabled");
+        }
+        if (pbGetGSensorOrientation != NULL)
+            CRLog::info("G-sensor: enabled %d, firmware orientation %d",
+                        pbIsGSensorEnabled != NULL ? pbIsGSensorEnabled() : -1, pbGetGSensorOrientation());
+        if (isGSensorSupported() || pbGetGSensorOrientation != NULL)
+            SetWeakTimer("GSensorPoll", gsensor_timer, PB_GSENSOR_POLL_MS);
+    }
+
+    // the sensor turned on for CoolReader is turned off again when it exits
+    void stopGSensor()
+    {
+        ClearTimer(gsensor_timer);
+        if (_gsEnabledByUs && pbSetGSensorEnabled != NULL) {
+            pbSetGSensorEnabled(0);
+            _gsEnabledByUs = false;
+            CRLog::info("G-sensor turned off again");
+        }
+    }
+
+    // Orientation (ROTATE0..ROTATE180) the device is turned to, -1 when unknown. Two ways, for
+    // every firmware: the orientation of the firmware (6.x, GetGSensorOrientation), and when that
+    // is missing or gives nothing, the raw sensor values (ReadGSensor, earlier firmware).
+    int sensorOrientation()
+    {
+        int cur = GetOrientation();
+        int fromFirmware = -1;
+        _gsFromFirmware = false;
+        if (pbGetGSensorOrientation != NULL) {
+            int sensor = pbGetGSensorOrientation();
+            if (sensor != _gsLastSensor) {
+                CRLog::info("G-sensor read %d: firmware orientation %d, screen orientation %d, enabled %d",
+                            _gsTicks, sensor, cur, pbIsGSensorEnabled != NULL ? pbIsGSensorEnabled() : -1);
+                _gsLastSensor = sensor;
+            }
+            _gsTicks++;
+            if (sensor < 0 && !_gsEnabledByUs && pbIsGSensorEnabled != NULL && pbSetGSensorEnabled != NULL &&
+                !pbIsGSensorEnabled()) {
+                // the firmware does not watch the sensor now: turned on while CoolReader runs
+                pbSetGSensorEnabled(1);
+                _gsEnabledByUs = true;
+                CRLog::info("G-sensor was off: turned on, enabled now %d", pbIsGSensorEnabled());
+            }
+            if (sensor >= ROTATE0 && sensor <= ROTATE180) {
+                _gsFromFirmware = true;
+                return sensor;
+            }
+        }
+        int x = 0, y = 0, z = 0;
+        int rc = ReadGSensor(&x, &y, &z);
+        if (rc < 0 && pbGetGSensorOrientation != NULL)
+            return fromFirmware; // firmware 6.x: the raw values are not available
+        // the first readings and every noticeable change go to the log
+        if (_gsTicks < 5 || abs(x - _gsLastX) > 8 || abs(y - _gsLastY) > 8 || abs(z - _gsLastZ) > 8) {
+            CRLog::info("G-sensor read %d: rc %d, x %d, y %d, z %d, orientation %d", _gsTicks, rc, x, y, z, cur);
+            _gsLastX = x;
+            _gsLastY = y;
+            _gsLastZ = z;
+        }
+        _gsTicks++;
+        int ax = abs(x), ay = abs(y);
+        int want = -1;
+        if (ax > PB_GSENSOR_MIN && ax * 2 > ay * 3) {
+            // a side edge is down: x < 0 is the right edge, as for the page turn by tilt
+            want = x < 0 ? ROTATE270 : ROTATE90;
+        } else if (ay > PB_GSENSOR_MIN && ay * 2 > ax * 3) {
+            int sign = y < 0 ? -1 : 1;
+            // the sign of the upright position is learned while the book is read in it
+            if (_gsUpright == 0 && cur == ROTATE0)
+                _gsUpright = sign;
+            else if (_gsUpright == 0 && cur == ROTATE180)
+                _gsUpright = -sign;
+            if (_gsUpright != 0)
+                want = sign == _gsUpright ? ROTATE0 : ROTATE180;
+            else if (cur == ROTATE90 || cur == ROTATE270)
+                want = ROTATE0;
+        }
+        return want;
+    }
+
+    // turns the screen to the pocketbook orientation (ROTATE0..ROTATE180) for this application
+    // only: the system orientation stays as it is
+    void applySensorRotation(int orient)
+    {
+        cr_rotate_angle_t oldOrientation = CRPocketBookWindowManager::instance->getScreenOrientation();
+        cr_rotate_angle_t newOrientation = pocketbook_orientations[orient];
+        if (oldOrientation == newOrientation)
+            return;
+        SetOrientation(orient);
+        int dx = _wm->getScreen()->getWidth();
+        int dy = _wm->getScreen()->getHeight();
+        if ((oldOrientation & 1) == (newOrientation & 1))
+            _wm->reconfigure(dx, dy, newOrientation);
+        else
+            _wm->reconfigure(dy, dx, newOrientation);
+        // the screen is drawn at once: without it the hourglass of the new layout stays on the
+        // screen until something else repaints it
+        _wm->update(true);
+    }
+
+    void onGSensorTimer()
+    {
+        if (_gsEvents)
+            return;
+        int mode = getProps()->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
+        // why the sensor is not read now, for the log: 1 mode, 2 standby, 3 another window
+        int reason = mode != PB_ROTATE_MODE_360 ? 1 : isStandByMode ? 2 : _wm->getTopVisibleWindow() != this ? 3 : 0;
+        if (reason != _gsLastReason) {
+            CRLog::info("G-sensor polling: %s", reason == 0 ? "reading" : reason == 1 ? "off, Rotate is not 360"
+                        : reason == 2 ? "paused, standby" : "paused, another window is on top");
+            _gsLastReason = reason;
+        }
+        if (reason != 0) {
+            _gsCount = 0;
+            SetWeakTimer("GSensorPoll", gsensor_timer, PB_GSENSOR_IDLE_MS);
+            return;
+        }
+        int cur = GetOrientation();
+        int want = sensorOrientation();
+        if (want >= 0 && want != cur) {
+            if (want == _gsCandidate) {
+                _gsCount++;
+            } else {
+                _gsCandidate = want;
+                _gsCount = 1;
+            }
+            // raw values: two readings in a row, not a passing tilt; the firmware orientation is settled
+            if (_gsCount >= (_gsFromFirmware ? 1 : 2)) {
+                CRLog::info("G-sensor: orientation %d -> %d", cur, want);
+                _gsCount = 0;
+                _gsCandidate = -1;
+                applySensorRotation(want);
+            }
+        } else {
+            _gsCount = 0;
+            _gsCandidate = -1;
+        }
+        SetWeakTimer("GSensorPoll", gsensor_timer,
+                     pbGetGSensorOrientation != NULL ? PB_GSENSOR_FIRMWARE_POLL_MS : PB_GSENSOR_POLL_MS);
+    }
+
     void onPausedRotation()
     {
         _pauseRotationTimer = false;
@@ -3179,7 +3387,7 @@ public:
         if (oldOrientation == newOrientation)
             return;
         CRPropRef props = CRPocketBookDocView::instance->getProps();
-        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_180);
+        int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         if (rotate_mode && (oldOrientation & 1) != (newOrientation & 1)) {
             CRLog::trace("rotate_mode && (oldOrientation & 1) != (newOrientation & 1)");
             if (rotate_mode == PB_ROTATE_MODE_180 || rotate_mode > PB_ROTATE_MODE_180_SLOW_PREV_NEXT)
@@ -3228,7 +3436,7 @@ public:
 #endif
         if (!_restore_globOrientation) {
             CRPropRef props = CRPocketBookDocView::instance->getProps();
-            int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_180);
+            int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
             if (PB_ROTATE_MODE_360 == rotate_mode && -1 == GetGlobalOrientation()) {
                 SetGlobalOrientation(GetOrientation());
                 _restore_globOrientation = true;
@@ -3270,6 +3478,13 @@ public:
 
 CRPocketBookDocView * CRPocketBookDocView::instance = NULL;
 
+static int pbDictWindowPosition()
+{
+    if (CRPocketBookDocView::instance == NULL)
+        return PB_DICT_POSITION_AUTO;
+    return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
+}
+
 static void rotate_timer()
 {
     CRPocketBookDocView::instance->onRotateTimer();
@@ -3278,6 +3493,12 @@ static void rotate_timer()
 static void paused_rotate_timer()
 {
     CRPocketBookDocView::instance->onPausedRotation();
+}
+
+static void gsensor_timer()
+{
+    if (CRPocketBookDocView::instance != NULL)
+        CRPocketBookDocView::instance->onGSensorTimer();
 }
 
 CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDialog *parent)
@@ -3329,8 +3550,8 @@ static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found);
 static lString16 pbSelectedDictsLabel(const char * name);
 
 // Makes the dictionary with the id (or a plain .dic name saved by older versions) the window's one.
-// "Selected dictionaries": lookups go through the checked dictionaries (none checked: the first 5);
-// the first of them that opens gives the word list until a lookup picks another one.
+// "Selected dictionaries": lookups go through the checked dictionaries (none checked: no lookups,
+// the window says so); the first of them that opens gives the word list until a lookup picks another one.
 bool CRPbDictionaryView::openDictionary(const lString16 & id)
 {
     PbDictManager & dicts = PbDictManager::instance();
@@ -3342,9 +3563,9 @@ bool CRPbDictionaryView::openDictionary(const lString16 & id)
         for (int i = 0; i < found.length() && _dict == NULL; i++)
             if (found[i]->open())
                 _dict = found[i];
-        // "Dictionaries (3)", "Dictionaries (all)": the window searches several dictionaries
+        // "Dictionaries (3)", "Dictionaries (none)": the window searches several dictionaries
         _caption = pbSelectedDictsLabel(_("Dictionaries"));
-        return found.length() > 0;
+        return true;
     }
     PbDictSource * dict = dicts.find(id);
     if (dict == NULL || !dict->open()) {
@@ -3537,8 +3758,8 @@ static int pbCountMultiDicts(const lString16Collection & names)
     return count;
 }
 
-// Dictionaries "Selected dictionaries" looks the word up in: the checked ones, or, when none is
-// checked, the first PB_DICT_SELECTED_MAX of the list
+// Dictionaries "Selected dictionaries" looks the word up in: the checked ones that are still on the
+// device; none checked, none searched
 static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found)
 {
     PbDictManager & dicts = PbDictManager::instance();
@@ -3550,13 +3771,9 @@ static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found)
         if (dict != NULL)
             found.add(dict);
     }
-    if (found.length() > 0)
-        return;
-    for (int i = 0; i < dicts.count() && i < PB_DICT_SELECTED_MAX; i++)
-        found.add(dicts.get(i));
 }
 
-// "Selected dictionaries (3)"; with nothing checked "(all)" or "(first 5)"
+// "Selected dictionaries (3)"; with nothing checked "(none)"
 static lString16 pbSelectedDictsLabel(const char * name)
 {
     lString16Collection names;
@@ -3565,10 +3782,8 @@ static lString16 pbSelectedDictsLabel(const char * name)
     int checked = pbCountMultiDicts(names);
     if (checked > 0)
         label << " (" << lString16::itoa(checked) << ")";
-    else if (PbDictManager::instance().count() <= PB_DICT_SELECTED_MAX)
-        label << " (" << lString16(_("all")) << ")";
     else
-        label << " (" << lString16(_("first 5")) << ")";
+        label << " (" << lString16(_("none")) << ")";
     return label;
 }
 
@@ -3770,6 +3985,12 @@ void CRPbDictionaryView::searchDictionary()
     _searchPattern.clear();
 
     strcpy(key_buffer, UnicodeToUtf8(lString16(_word)).c_str());
+    // The keyboard of CoolReader: it follows the night mode. Without a touch screen it cannot be
+    // used, the firmware keyboard is opened as before.
+    if (pbKeyboardUsable()) {
+        pbOpenCrKeyboard(_wm, _("Find in dictionary"), key_buffer, KEY_BUFFER_LEN, searchHandler, pbNightMode());
+        return;
+    }
     // OpenKeyboard(const_cast<char *>("@Search"), key_buffer, KEY_BUFFER_LEN, 0, searchHandler);
     OpenCustomKeyboard(DICKEYBOARD, const_cast<char *>("@Search"), key_buffer, KEY_BUFFER_LEN, 0, searchHandler);
 }
@@ -4303,10 +4524,10 @@ static int pbCommonPrefix(const lString16 & a, const lString16 & b)
     return n;
 }
 
-// "Selected dictionaries": the checked dictionaries (none checked: the first 5) in turn, of any
-// type. Each one that has the
-// word (or, in StarDict, its form) adds its article under a subtitle that names the dictionary
-// with its type mark and, for a word form, the dictionary word found. When none has the word,
+// "Selected dictionaries": the checked dictionaries in turn, of any type (none checked: the window
+// says that no dictionary is selected). Each one that has the word (or, in StarDict and XDXF, its
+// form) adds its article under a line and a subtitle that names the dictionary and, for a word
+// form, the dictionary word found. When none has the word,
 // the word list of the dictionary whose nearest word shares the longest beginning with the word
 // is shown: for a Russian word that is a dictionary from Russian, without guessing directions.
 // Returns false when "Selected dictionaries" is not chosen.
@@ -4320,6 +4541,13 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
     _haveNewWord = false;
     _translateResult = 0;
     _selectedIndex = PB_DICT_DEACTIVATE;
+    if (found.length() == 0) {
+        body << "<p>" << pbXmlText(lString16(_("No dictionaries are selected for the search."))) << "</p>";
+        body << "<p>" << pbXmlText(lString16(_("Tap the dictionary name above and check them under \"Check dictionaries...\"."))) << "</p>";
+        setTranslation(CRViewDialog::makeFb2Xml(body));
+        setDirty();
+        return true;
+    }
 
     lString16 wanted = w;
     wanted.lowercase();
@@ -4338,7 +4566,7 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
         lString16 gotLower = got;
         gotLower.lowercase();
         // StarDict reports a word form found through its synonyms as the word itself
-        bool exact = gotLower == wanted || (rc == 2 && dict->type() == PB_DICT_TYPE_STARDICT);
+        bool exact = gotLower == wanted || (rc == 2 && dict->type() != PB_DICT_TYPE_INKVIEW);
         if (!exact) {
             int length = pbCommonPrefix(gotLower, wanted);
             if (length > nearestLength) {
@@ -4347,9 +4575,11 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
             }
             continue;
         }
-        lString16 subtitle = dict->label();
+        lString16 subtitle = dict->title();
         if (gotLower != wanted)
             subtitle << Utf8ToUnicode(lString8(" \xE2\x80\x94 ")) << got; // " - dictionary word"
+        if (first != NULL)
+            parts << "<hr/>"; // line between the articles of two dictionaries (dict.css)
         parts << "<subtitle>" << pbXmlText(subtitle) << "</subtitle>";
         parts << createArticleBody(translation.c_str());
         if (first == NULL)
@@ -4753,7 +4983,7 @@ void CRPbDictionaryMenu::reconfigure( int flags )
 
 CRPbDictionaryDialog::CRPbDictionaryDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, lString8 css )
     : CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView()), _docDirty(true), _curPage(0),
-    _lastWordX(0), _lastWordY(0), _touchDownX(-1), _touchDownY(-1)
+    _lastWordX(0), _lastWordY(0), _touchDownX(-1), _touchDownY(-1), _touchInDictView(false)
 {
     _wordSelector = NULL;
     _fullscreen = true;
@@ -4881,11 +5111,17 @@ void CRPbDictionaryDialog::onWordSelection(bool translate)
     _docview->getCursorRect(wRc);
     lvRect docRect;
     _docwin->getClientRect(docRect);
-    if (wRc.bottom > docRect.height() / 2) {
+    // the window stays where the display settings put it, or goes to the half away from the word
+    int position = pbDictWindowPosition();
+    bool top = position == PB_DICT_POSITION_TOP ||
+               (position == PB_DICT_POSITION_AUTO && wRc.bottom > docRect.height() / 2);
+    bool bottom = position == PB_DICT_POSITION_BOTTOM ||
+                  (position == PB_DICT_POSITION_AUTO && wRc.bottom < docRect.height() / 2);
+    if (top) {
         rc.top = 0;
         rc.bottom = _dictView->getDesiredHeight();
         _dictView->setRect(rc);
-    } else if (wRc.bottom < docRect.height() / 2) {
+    } else if (bottom) {
         rc.bottom = _wm->getScreen()->getHeight();
         rc.top = rc.bottom - _dictView->getDesiredHeight();
         _dictView->setRect(rc);
@@ -5678,6 +5914,7 @@ int InitDoc(const char *exename, char *fileName)
             delete wm;
             return 0;
         }
+        CRPocketBookDocView::instance->startGSensorPolling();
 
 
     }
@@ -6287,6 +6524,7 @@ int main_handler(int type, int par1, int par2)
         restartStandByTimer();
         break;
     case EVT_ORIENTATION:
+        CRPocketBookDocView::instance->onOrientationEvent(par1);
         CRPocketBookDocView::instance->onAutoRotation(par1);
         restartStandByTimer();
         break;

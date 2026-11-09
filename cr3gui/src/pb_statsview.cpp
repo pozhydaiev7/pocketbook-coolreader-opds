@@ -140,7 +140,8 @@ PbStatsView::Line line(const lString16 & label, const lString16 & text)
 PbStatsView::Line heading(const lString16 & label)
 {
     PbStatsView::Line l;
-    l.label = label;
+    l.text = label;
+    l.section = true;
     l.newRow = true;
     return l;
 }
@@ -256,6 +257,7 @@ void PbStatsView::showMenu(CRGUIWindowManager * wm)
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, tr("Reading statistics"), rc, false);
     menu->setupRows(true);
+    menu->setCloseCommand(PB_STATS_CMD_CLOSE);
     menu->add(PB_STATS_CMD_CLOSE, lString16(MARK_PREV) + tr("Back to the book"));
     if (!_thisBookKey.empty())
         menu->add(PB_STATS_CMD_THIS_BOOK, tr("This book"), u16(_thisBookTitle));
@@ -287,6 +289,7 @@ void PbStatsView::showBooks(CRGUIWindowManager * wm)
     if (_booksScreen < 0)
         _booksScreen = 0;
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
+    menu->setCloseCommand(PB_STATS_CMD_MENU);
 
     menu->add(PB_STATS_CMD_MENU, lString16(MARK_PREV) + tr("Reading statistics"));
     int first = _booksScreen * perScreen;
@@ -311,6 +314,8 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
     _mode = MODE_REPORT;
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, _reportCaption, rc, false);
+    // a row holds two lines: separator lines of the skin would cut the report every two lines
+    menu->setPlainRows();
     int rows = menu->setupRows(true);
 
     // two lines in a row; a heading or a book starts a new row
@@ -333,6 +338,7 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
     if (_screen < 0)
         _screen = 0;
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
+    menu->setCloseCommand(PB_STATS_CMD_BACK);
 
     menu->add(PB_STATS_CMD_BACK, lString16(MARK_PREV) +
               (_reportBack == PB_STATS_CMD_BOOKS ? tr("All books") : tr("Reading statistics")));
@@ -350,8 +356,9 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
             InfoLine & info = k == 0 ? item->first : item->second;
             info.label = l.label;
             info.text = l.text;
-            info.font = l.title ? menu->titleFont : menu->subFont;
+            info.font = l.title ? menu->titleFont : (l.section ? menu->labelFont : menu->subFont);
             info.indent = l.indent * indent;
+            info.rule = l.section;
         }
         menu->addItem(item);
     }

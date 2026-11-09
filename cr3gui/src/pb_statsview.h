@@ -57,14 +57,16 @@ public:
     /// the period keyboard writes here before posting PB_STATS_CMD_PERIOD_APPLY
     char keyBuffer[64];
 
-    /// one line of a report: optional bold label and text; title lines are bigger
+    /// one line of a report: optional gray label and text in one font; title lines are bigger,
+    /// section headings are bold with a line above them
     struct Line {
         lString16 label;
         lString16 text;
         bool title;
+        bool section;
         bool newRow;  // starts a new row of the screen
         int indent;   // in line heights
-        Line() : title(false), newRow(false), indent(0) {}
+        Line() : title(false), section(false), newRow(false), indent(0) {}
     };
 
 private:

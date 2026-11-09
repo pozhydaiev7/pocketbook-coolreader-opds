@@ -1,6 +1,6 @@
 /*
  * Dictionaries of the CoolReader dictionary window on PocketBook: the firmware (inkview) .dic
- * dictionaries and StarDict dictionaries behind one interface, in one list.
+ * dictionaries, StarDict and XDXF dictionaries behind one interface, in one list.
  */
 #ifndef PB_DICT_H_INCLUDED
 #define PB_DICT_H_INCLUDED
@@ -11,14 +11,15 @@ class StarDict;
 
 enum PbDictType {
     PB_DICT_TYPE_INKVIEW,  // PocketBook .dic, read by the firmware library
-    PB_DICT_TYPE_STARDICT  // StarDict, read by CoolReader
+    PB_DICT_TYPE_STARDICT, // StarDict, read by CoolReader
+    PB_DICT_TYPE_XDXF      // XDXF (.xdxf), read by CoolReader
 };
 
 /// id of the "Selected dictionaries" choice in the settings: the checked dictionaries together
 #define PB_DICT_ID_SELECTED "all:"
 /// how many dictionaries can be checked for the search in several dictionaries
 #define PB_DICT_SELECTED_MAX 5
-/// StarDict dictionaries looked for at most, so that a folder with thousands does not stall the list
+/// StarDict and XDXF dictionaries looked for at most, so that a folder with thousands does not stall the list
 #define PB_DICT_STARDICT_MAX 200
 
 /// One dictionary of any type
@@ -27,11 +28,12 @@ class PbDictSource
 public:
     virtual ~PbDictSource() {}
     virtual PbDictType type() const = 0;
-    /// stored in the settings: "dic:<name>" or "sd:<.ifo path in the dictionaries folder>"
+    /// stored in the settings: "dic:<name>", "sd:<.ifo path>" or "xd:<.xdxf path>"
     const lString16 & id() const { return _id; }
     /// dictionary name
     const lString16 & title() const { return _title; }
-    /// name with the type mark, for the lists of dictionaries
+    /// name for the lists of dictionaries; the dictionaries the firmware reader cannot use
+    /// (StarDict, XDXF) have their type after the name
     lString16 label() const;
     /// makes lookups possible; an inkview dictionary closes the other inkview dictionary
     virtual bool open() = 0;

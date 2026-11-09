@@ -1363,6 +1363,12 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("180+FAST next/prev page"), "6"},
         {NULL, NULL}
     };
+    item_def_t dict_position_options[] = {
+        {_("Away from the word"), "0"},
+        {_("At the top"), "1"},
+        {_("At the bottom"), "2"},
+        {NULL, NULL}
+    };
     item_def_t rotate_angle_options[] = {
         {"20°", "0"},
         {"25°", "1"},
@@ -1780,6 +1786,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                "cr3_option_toc_page_numbers", valueFont, PROP_TOC_PAGE_NUMBERS,
                                on_off_option);
     }
+    createSettingsMenuItem(displaySettingsMenu, mm_dictPosition, _("Dictionary window"),
+                           "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
+                           dict_position_options);
 #endif
     CRSkinList &skins = wm->getSkinList();
     if (skins.length() > 1) {
@@ -1899,13 +1908,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                 LVFontRef() ) );
     }
 
-    // OPDS CATALOG
-    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_BROWSER,
-                _("OPDS catalog"),
-                LVImageSourceRef(),
-                LVFontRef() ) );
-    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_SET_URL,
-                _("OPDS catalog address"),
+    // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
+    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_CATALOGS,
+                _("OPDS catalogs"),
                 LVImageSourceRef(),
                 LVFontRef() ) );
 

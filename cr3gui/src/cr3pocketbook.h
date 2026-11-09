@@ -57,7 +57,7 @@ enum CRPbCommands {
     #endif
 
     PB_CMD_OPDS_BROWSER,
-    PB_CMD_OPDS_SET_URL,
+    PB_CMD_OPDS_CATALOGS,
     PB_CMD_READING_STATS,
 
     PB_CMD_NONE
@@ -76,6 +76,11 @@ enum CRPbCommands {
 #define PROP_POCKETBOOK_DICT "cr3.pocketbook.dictionary"
 #define PROP_POCKETBOOK_DICT_PAGES "cr3.pocketbook.dict.pages"
 #define PROP_POCKETBOOK_DICT_AUTO_TRANSLATE "cr3.pocketbook.dict.auto"
+// place of the dictionary window: away from the selected word, at the top or at the bottom
+#define PROP_POCKETBOOK_DICT_POSITION "cr3.pocketbook.dict.position"
+#define PB_DICT_POSITION_AUTO 0
+#define PB_DICT_POSITION_TOP 1
+#define PB_DICT_POSITION_BOTTOM 2
 // dictionaries searched together, names separated by '|'; fewer than two means one dictionary
 #define PROP_POCKETBOOK_DICT_MULTI "cr3.pocketbook.dict.multi"
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
@@ -84,7 +89,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-65-opds-beta4"
+#define CR_PB_VERSION "0.0.6-17-65-opds-beta5"
 #define CR_PB_BUILD_DATE "2026-11-02"
 
 #define PB_ROTATE_MODE_360 0

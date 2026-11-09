@@ -111,6 +111,7 @@ enum MainMenuItems_t {
 #ifdef POCKETBOOK_PRO
     mm_useNewTouchTOC,
     mm_tocPageNumbers,
+    mm_dictPosition,
 #endif
     mm_TouchTOC,
     mm_Last
