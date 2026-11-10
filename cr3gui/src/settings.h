@@ -112,6 +112,8 @@ enum MainMenuItems_t {
     mm_useNewTouchTOC,
     mm_tocPageNumbers,
     mm_dictPosition,
+    mm_dictKeyboard,
+    mm_dictExact,
 #endif
     mm_TouchTOC,
     mm_Last

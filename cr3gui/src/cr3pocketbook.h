@@ -81,6 +81,14 @@ enum CRPbCommands {
 #define PB_DICT_POSITION_AUTO 0
 #define PB_DICT_POSITION_TOP 1
 #define PB_DICT_POSITION_BOTTOM 2
+// keyboard of the dictionary search on touch devices: 0 the CoolReader keyboard (follows the night
+// mode), 1 the firmware keyboard; devices without a touch screen always use the firmware keyboard
+#define PROP_POCKETBOOK_DICT_KEYBOARD "cr3.pocketbook.dict.keyboard"
+#define PB_DICT_KEYBOARD_CR 0
+#define PB_DICT_KEYBOARD_FIRMWARE 1
+// word lookup: 0 the article of the word or the list of the nearest words, 1 exact: only the article
+// of the word (any letter case, word forms of StarDict), otherwise "word not found"
+#define PROP_POCKETBOOK_DICT_EXACT "cr3.pocketbook.dict.exact"
 // dictionaries searched together, names separated by '|'; fewer than two means one dictionary
 #define PROP_POCKETBOOK_DICT_MULTI "cr3.pocketbook.dict.multi"
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
@@ -89,8 +97,8 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-65-opds-beta6"
-#define CR_PB_BUILD_DATE "2026-11-09"
+#define CR_PB_VERSION "0.0.6-17-65-opds"
+#define CR_PB_BUILD_DATE "2026-11-10"
 
 #define PB_ROTATE_MODE_360 0
 #define PB_ROTATE_MODE_180 1

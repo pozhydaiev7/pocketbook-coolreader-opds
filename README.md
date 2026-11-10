@@ -63,8 +63,10 @@ Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader re
 - **Limits:**
   - at most 200 StarDict and XDXF dictionaries are looked for;
   - the first lookup in a dictionary loads its index into memory, which stays there until CoolReader exits.
-- **Search keyboard:** on touch devices the dictionary search opens the keyboard of CoolReader (English, Russian and Ukrainian layouts, digits and signs), which follows the night mode; without a touch screen, the firmware keyboard.
-- **Window place:** *Display settings → Dictionary window*: away from the selected word, at the top or at the bottom of the screen.
+- **Dictionary settings** (*Settings → Dictionary settings*):
+  - *Dictionary window*: away from the selected word, at the top or at the bottom of the screen;
+  - *Word search*: *With nearest words* (a word that is not in the dictionary opens the list of the nearest words) or *Exact* (only the article of the word itself, otherwise "word not found");
+  - *Search keyboard* (touch devices only): the keyboard of CoolReader (English, Russian and Ukrainian layouts, digits and signs), which follows the night mode, or the firmware keyboard. Without a touch screen the firmware keyboard is always used.
 - **Selected dictionaries:** the first row of the dictionary list. With it, both a tap on a word and the search look the word up in the dictionaries checked under *Check dictionaries…*, up to 5, of any kind; with none checked, nothing is looked up. The articles of different dictionaries are separated by a line, each with a small subtitle naming the dictionary; a word found through a word form also names the dictionary word.
 
 Free StarDict dictionaries: [FreeDict](https://freedict.org/downloads/) (choose the StarDict format), [Wiktionary dictionaries by Vuizur](https://github.com/Vuizur/Wiktionary-Dictionaries).
@@ -125,7 +127,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Install
 
-1. Download `cr3-v0.0.6-17-64-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
+1. Download `cr3-v0.0.6-17-65-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
 2. Connect the reader by USB. Back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
 3. Copy the `system` folder from the archive to the root of the reader's storage, replacing the existing files.
 

@@ -22,6 +22,7 @@
 #ifdef POCKETBOOK_PRO
 #include <inkplatform.h>
 #include "ota_update.h"
+#include "pb_keyboard.h"
 #endif
 
 #include <cri18n.h>
@@ -1369,6 +1370,16 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("At the bottom"), "2"},
         {NULL, NULL}
     };
+    item_def_t dict_keyboard_options[] = {
+        {_("CoolReader, with night mode"), "0"},
+        {_("Firmware"), "1"},
+        {NULL, NULL}
+    };
+    item_def_t dict_exact_options[] = {
+        {_("With nearest words"), "0"},
+        {_("Exact"), "1"},
+        {NULL, NULL}
+    };
     item_def_t rotate_angle_options[] = {
         {"20°", "0"},
         {"25°", "1"},
@@ -1786,9 +1797,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                "cr3_option_toc_page_numbers", valueFont, PROP_TOC_PAGE_NUMBERS,
                                on_off_option);
     }
-    createSettingsMenuItem(displaySettingsMenu, mm_dictPosition, _("Dictionary window"),
-                           "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
-                           dict_position_options);
 #endif
     CRSkinList &skins = wm->getSkinList();
     if (skins.length() > 1) {
@@ -1808,6 +1816,28 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
     displaySettingsMenu->reconfigure( 0 );
     mainMenu->addItem( displaySettingsMenu );
+
+#ifdef POCKETBOOK_PRO
+    //====== Dictionary settings ========
+    // CRStyleMenu: a plain CRMenu with three items or fewer is toggled by a tap instead of opened
+    CRMenu * dictSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
+                                                "cr3_option_dict_settings", valueFont, CRPropRef());
+    dictSettingsMenu->setSkinName(lString16("#settings"));
+    dictSettingsMenu->setAccelerators( _menuAccelerators );
+    createSettingsMenuItem(dictSettingsMenu, mm_dictPosition, _("Dictionary window"),
+                           "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
+                           dict_position_options);
+    createSettingsMenuItem(dictSettingsMenu, mm_dictExact, _("Word search"),
+                           "cr3_option_dict_exact", valueFont, PROP_POCKETBOOK_DICT_EXACT,
+                           dict_exact_options);
+    // without a touch screen only the firmware keyboard can be used: no choice is offered
+    if (pbKeyboardUsable())
+        createSettingsMenuItem(dictSettingsMenu, mm_dictKeyboard, _("Search keyboard"),
+                               "cr3_option_dict_keyboard", valueFont, PROP_POCKETBOOK_DICT_KEYBOARD,
+                               dict_keyboard_options);
+    dictSettingsMenu->reconfigure( 0 );
+    mainMenu->addItem( dictSettingsMenu );
+#endif
 
     CRMenu * controlSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Control settings"),
                                                    "cr3_option_controls", valueFont, CRPropRef());

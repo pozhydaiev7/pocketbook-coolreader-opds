@@ -3485,6 +3485,26 @@ static int pbDictWindowPosition()
     return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
 }
 
+// true when a word that is not in the dictionary gives "word not found" instead of the nearest words
+static bool pbDictExactSearch()
+{
+    if (CRPocketBookDocView::instance == NULL)
+        return false;
+    return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_EXACT, 0) != 0;
+}
+
+// the keyboard of CoolReader for the dictionary search: only with a touch screen, unless the
+// firmware keyboard is chosen in the dictionary settings
+static bool pbDictCrKeyboard()
+{
+    if (!pbKeyboardUsable())
+        return false;
+    if (CRPocketBookDocView::instance == NULL)
+        return true;
+    return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_KEYBOARD,
+                                                                 PB_DICT_KEYBOARD_CR) != PB_DICT_KEYBOARD_FIRMWARE;
+}
+
 static void rotate_timer()
 {
     CRPocketBookDocView::instance->onRotateTimer();
@@ -3986,8 +4006,8 @@ void CRPbDictionaryView::searchDictionary()
 
     strcpy(key_buffer, UnicodeToUtf8(lString16(_word)).c_str());
     // The keyboard of CoolReader: it follows the night mode. Without a touch screen it cannot be
-    // used, the firmware keyboard is opened as before.
-    if (pbKeyboardUsable()) {
+    // used, the firmware keyboard is opened as before; it can also be chosen in the settings.
+    if (pbDictCrKeyboard()) {
         pbOpenCrKeyboard(_wm, _("Find in dictionary"), key_buffer, KEY_BUFFER_LEN, searchHandler, pbNightMode());
         return;
     }
@@ -4596,7 +4616,8 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
         _newWord = word;
         _newTranslation = translation;
         body << "<title><p>" << pbXmlText(w) << "</p></title>" << parts;
-    } else if (nearest != NULL && (_translateResult = nearest->lookup(w, word, translation)) != 0) {
+    } else if (nearest != NULL && !pbDictExactSearch()
+               && (_translateResult = nearest->lookup(w, word, translation)) != 0) {
         _dict = nearest;
         _selectedIndex = PB_DICT_ARTICLE_LIST;
         _dictMenu->newPage(word, translation);
@@ -4636,6 +4657,18 @@ void CRPbDictionaryView::translate(const lString16 &w)
         // The word as written, then in lower case (StarDict also capitalized and word forms).
         _translateResult = _dict->lookup(s16, word, translation);
         CRLog::trace("lookup(%s) returned %d", UnicodeToUtf8(s16).c_str(), _translateResult);
+        if (_translateResult != 0 && pbDictExactSearch()) {
+            // exact search: the word itself in any letter case; StarDict and XDXF report a word
+            // form found through the synonyms as found (2), the firmware .dic may return the
+            // article of the nearest word, so its word is compared
+            lString16 got = Utf8ToUnicode(word);
+            lString16 wanted = s16;
+            got.lowercase();
+            wanted.lowercase();
+            bool exact = got == wanted || (_translateResult == 2 && _dict->type() != PB_DICT_TYPE_INKVIEW);
+            if (!exact)
+                _translateResult = 0;
+        }
 
         if (_translateResult != 0) {
 
@@ -5898,6 +5931,12 @@ int InitDoc(const char *exename, char *fileName)
         main_win->setBookmarkDir(lString16(FLASHDIR"/cr3_notes/"));
         CRLog::debug("Loading settings...");
         main_win->loadSettings( ini );
+        // PocketBook settings that are not in cr3.ini yet get the value the code uses for them,
+        // so that the settings menu shows which choice is in effect
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_EXACT, 0);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
 
         int orient;
         if (GetGlobalOrientation() == -1 || pbGlobals->getKeepOrientation() == 0 || pbGlobals->getKeepOrientation() == 2) {

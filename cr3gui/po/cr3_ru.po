@@ -2302,3 +2302,31 @@ msgstr "Внизу"
 #: ../src/pb_keyboard.cpp
 msgid "Cancel"
 msgstr "Отмена"
+
+#: ../src/settings.cpp
+msgid "Dictionary settings"
+msgstr "Словарь"
+
+#: ../src/settings.cpp
+msgid "Word search"
+msgstr "Поиск слова"
+
+#: ../src/settings.cpp
+msgid "With nearest words"
+msgstr "С ближайшими словами"
+
+#: ../src/settings.cpp
+msgid "Exact"
+msgstr "Точный"
+
+#: ../src/settings.cpp
+msgid "Search keyboard"
+msgstr "Клавиатура поиска"
+
+#: ../src/settings.cpp
+msgid "CoolReader, with night mode"
+msgstr "CoolReader, с ночным режимом"
+
+#: ../src/settings.cpp
+msgid "Firmware"
+msgstr "Системная"

@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.6-17-65-opds — unreleased
+## 0.0.6-17-65-opds — 2026-11-10
 
-Beta builds `0.0.6-17-65-opds-beta1` to `-beta6`, tested on InkPad 4 (743G) with firmware 6.11.1683.
+Tested on InkPad 4 (743G) with firmware 6.11.1683, as the beta builds `0.0.6-17-65-opds-beta1` to `-beta7`.
 
 ### Added
 
@@ -32,7 +32,11 @@ Beta builds `0.0.6-17-65-opds-beta1` to `-beta6`, tested on InkPad 4 (743G) with
   - English, Russian and Ukrainian layouts (the layout key switches them, the last one is remembered) and a page of digits and signs;
   - Shift, space, backspace, Cancel and OK; the word of the dictionary window is selected in the field and the first letter replaces it;
   - it follows the night mode of CoolReader; the firmware keyboard keeps its colors;
-  - devices without a touch screen keep the firmware keyboard.
+  - devices without a touch screen keep the firmware keyboard, whatever the setting says.
+- **Dictionary settings** (*Settings → Dictionary settings*):
+  - *Dictionary window*: away from the selected word, at the top or at the bottom (moved here from the display settings);
+  - *Word search*: *With nearest words* (as before: a word that is not in the dictionary opens the list of the nearest words) or *Exact* (only the article of the word itself, in any letter case or through a StarDict word form; otherwise "word not found");
+  - *Search keyboard*: the keyboard of CoolReader with the night mode or the firmware keyboard; shown on touch devices only.
 - **Several OPDS catalogs** (*Settings → OPDS catalogs*):
   - Flibusta is always the first catalog: it cannot be renamed or deleted, its address can be changed (a mirror);
   - other catalogs are added with an address and a name, then renamed, readdressed or deleted on their card;
@@ -62,7 +66,7 @@ Beta builds `0.0.6-17-65-opds-beta1` to `-beta6`, tested on InkPad 4 (743G) with
 - **Statistics screens:** the labels and the values are drawn in one font on one baseline (labels in gray); the report has no separator lines between rows, sections start with a line; the chart icon has the gray circle of the other icons of the row (pb740fw5, pb631fw5).
 - **Navigation of the catalog and statistics screens:** the arrow at the caption and the Back key go one level up (from the catalog start page and the statistics menu, back to the book); the first row of every screen names where it goes back to; *Close catalog* is now *Back to the book*.
 - **Dictionary window:**
-  - its place is a display setting, *Display settings → Dictionary window*: away from the selected word (as before), at the top or at the bottom;
+  - its place is a setting, *Dictionary settings → Dictionary window*: away from the selected word (as before), at the top or at the bottom;
   - a vertical swipe no longer selects a word under the finger, so the window does not jump to the other half of the screen;
   - it follows the night mode (inverted display);
   - page keys and a horizontal swipe over the text turn the book page, the dictionary stays open;
