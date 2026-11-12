@@ -942,32 +942,6 @@ void CRGUIWindowBase::draw()
     CRLog::trace("exit CRGUIWindowBase::draw()");
 }
 
-class CRSettingsBackButtonSkin : public CRButtonSkin
-{
-    CRRectSkinRef _title;
-public:
-    CRSettingsBackButtonSkin(CRRectSkinRef title) : _title(title) {}
-    virtual void drawButton(LVDrawBuf &buf, const lvRect &rc, int flags = ENABLED)
-    {
-        _title->draw(buf, rc);
-        lUInt32 color = _title->getTextColor();
-        if (flags & PRESSED) {
-            buf.FillRect(rc, color);
-            color ^= 0x00FFFFFF;
-        }
-        // A bold, symmetric chevron scales with header height, never target width.
-        int halfHeight = rc.height() / 4;
-        int stroke = rc.height() / 12;
-        if (stroke < 2) stroke = 2;
-        int left = rc.left + (rc.width() - halfHeight - stroke) / 2;
-        int centerY = rc.top + rc.height() / 2;
-        for (int y = -halfHeight; y <= halfHeight; ++y) {
-            int x = left + abs(y);
-            buf.FillRect(x, centerY + y, x + stroke, centerY + y + 1, color);
-        }
-    }
-};
-
 /// draw title bar using current skin, with optional scroll/tab/page indicator
 void CRGUIWindowBase::drawClient()
 {
@@ -1208,25 +1182,11 @@ void CRGUIWindowBase::drawTitleBar()
             closeBtnRc.top += dy/2; //FIXME: no boundaries checks
             closeBtnRc.bottom = closeBtnRc.top + closeBtnSkin->getMinSize().y;
 
-            lvRect touchRc = closeBtnRc;
-            if (getSkinName() == U"#settings") {
-                // Keep the chevron centred in a wide, full-height target.
-                // Reserve space for the settings caption.
-                touchRc.top = titleRc.top;
-                touchRc.bottom = titleRc.bottom;
-                int buttonWidth = titleRc.height() * 3;
-                if (buttonWidth > titleRc.width() / 2)
-                    buttonWidth = titleRc.width() / 2;
-                if (touchRc.width() < buttonWidth)
-                    touchRc.right = touchRc.left + buttonWidth;
-                closeBtnSkin = CRButtonSkinRef(new CRSettingsBackButtonSkin(titleSkin));
-                closeBtnRc = touchRc;
-            }
             closeBtnSkin->drawButton(buf, closeBtnRc);
             if (!_controlsCreated)
-                addControl(new CRButtonControl(this, touchRc, closeBtnSkin, BTN_CLOSE,
+                addControl(new CRButtonControl(this, closeBtnRc, closeBtnSkin, BTN_CLOSE,
                                                DCMD_BUTTON_PRESSED ));
-            imgWidth += (touchRc.width() + ITEM_MARGIN);
+            imgWidth += (closeBtnRc.width() + ITEM_MARGIN);
         }
     }
     lvRect textRect = titleRc;
@@ -1552,26 +1512,6 @@ lvPoint CRMenu::getItemSize()
     if ( maxw>0 )
         sz.x = sz.x + itemBorders.left + itemBorders.right + maxw;
     return sz;
-}
-
-bool CRMenu::getTitleRect(lvRect &rc)
-{
-    if (!CRGUIWindowBase::getTitleRect(rc))
-        return false;
-    if (!_fullscreen || _pageItems <= 0 || getSkinName() != U"#settings")
-        return true;
-    CRMenuSkinRef skin = getSkin();
-    CRRectSkinRef separator = skin->getSeparatorSkin();
-    int separatorHeight = separator.isNull() ? 0 : separator->getMinSize().y;
-    lvRect status;
-    getStatusRect(status);
-    // Share the available height between the header and the visible rows.
-    // Avoid getItemHeight(): its client rectangle depends on this title.
-    int rowHeight = (status.top - rc.top - separatorHeight * (_pageItems - 1))
-                    / (_pageItems + 1);
-    if (rowHeight > rc.height())
-        rc.bottom = rc.top + rowHeight;
-    return true;
 }
 
 int CRMenu::getItemHeight()

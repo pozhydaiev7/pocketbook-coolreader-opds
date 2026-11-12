@@ -1637,8 +1637,9 @@ lUInt16 LVFreeTypeFace::measureText(const lChar32 *text,
     if (fallbackFont != NULL && (fallbackPassMask & _fallback_mask)) {
         return fallbackFont->measureText(text, len, widths, flags, max_width, def_char, lang_cfg, letter_spacing, allow_hyphenation, hints, fallbackPassMask);
     }
-    if (letter_spacing < 0)
-        letter_spacing = 0;
+    // negative: the PocketBook "Tracking" setting, down to 1/8 of the font size
+    if (letter_spacing < -(_size / 8))
+        letter_spacing = -(_size / 8);
     else if ( letter_spacing > MAX_LETTER_SPACING ) {
         letter_spacing = MAX_LETTER_SPACING;
     }
@@ -2114,6 +2115,9 @@ lUInt16 LVFreeTypeFace::measureText(const lChar32 *text,
             // Assume zero advance means it's a diacritic, and we should not apply
             // any letter spacing on this char (now, and when justifying)
             flags[i] |= LCHAR_IS_CLUSTER_TAIL;
+        } else if ( letter_spacing_w < 0 && w + letter_spacing_w < 1 ) {
+            // negative tracking: a character keeps an advance of 1 px at least
+            cur_width += 1 - w;
         } else {
             cur_width += letter_spacing_w;
         }
@@ -2769,8 +2773,9 @@ int LVFreeTypeFace::DrawTextString(LVDrawBuf *buf, int x, int y, const lChar32 *
     // delegate this function to next fallback font (if exist)
     if (fallbackFont != NULL && (fallbackPassMask & _fallback_mask))
         return fallbackFont->DrawTextString(buf, x, y, text, len, def_char, palette, addHyphen, lang_cfg, flags, letter_spacing, width, text_decoration_back_gap, fallbackPassMask);
-    if ( letter_spacing < 0 ) {
-        letter_spacing = 0;
+    // negative: the PocketBook "Tracking" setting, down to 1/8 of the font size
+    if ( letter_spacing < -(_size / 8) ) {
+        letter_spacing = -(_size / 8);
     }
     else if ( letter_spacing > MAX_LETTER_SPACING ) {
         letter_spacing = MAX_LETTER_SPACING;
@@ -3218,6 +3223,9 @@ int LVFreeTypeFace::DrawTextString(LVDrawBuf *buf, int x, int y, const lChar32 *
                 if ( w == 0 ) {
                     // Assume zero advance means it's a diacritic, and we should not apply
                     // any letter spacing on this char (now, and when justifying)
+                } else if ( letter_spacing_w < 0 && item->advance + letter_spacing_w < 1 ) {
+                    // negative tracking: a character keeps an advance of 1 px at least, as in measureText()
+                    x  += w + 1 - item->advance;
                 } else {
                     x  += w + letter_spacing_w;
                 }

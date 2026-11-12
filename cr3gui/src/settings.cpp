@@ -1120,15 +1120,20 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {NULL, NULL}
     };
 
-    item_def_t space_expanding_percent[] = {
-        {"100%", "100"},
-        {"150%", "150"},
-        {"200%", "200"},
-        {"250%", "250"},
-        {"300%", "300"},
-        {"400%", "400"},
-        {"600%", "600"},
-        {"800%", "800"},
+    // In a justified line the engine may add space between the letters instead of making the
+    // spaces between the words too wide: the most it may add, in percent of the font size.
+    // (The old engine had a limit for the width of a space instead, "Space expanding percent".)
+    item_def_t added_letter_spacing_percent[] = {
+        {"0%", "0"},
+        {"1%", "1"},
+        {"2%", "2"},
+        {"3%", "3"},
+        {"4%", "4"},
+        {"5%", "5"},
+        {"7%", "7"},
+        {"10%", "10"},
+        {"15%", "15"},
+        {"20%", "20"},
         {NULL, NULL}
     };
 
@@ -1488,7 +1493,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("No hinting"), "0"},
         {_("Use bytecode"), "1"},
         {_("Autohinting"), "2"},
-        {_("Light"), "3"},
         {NULL, NULL}
     };
 
@@ -1614,9 +1618,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     createSettingsMenuItem(formatSettingsMenu, mm_SpaceCondensing, _("Space condensing percent"),
                            "cr3_option_format_space_condens", valueFont,
                            PROP_FORMAT_MIN_SPACE_CONDENSING_PERCENT, space_condensing_percent);
-    createSettingsMenuItem(formatSettingsMenu, mm_SpaceExpanding, _("Space expanding percent"),
+    createSettingsMenuItem(formatSettingsMenu, mm_SpaceExpanding, _("Letter spacing in justified lines"),
                            "cr3_option_format_space_expand", valueFont,
-                           PROP_FORMAT_MAX_SPACE_EXPANDING_PERCENT, space_expanding_percent);
+                           PROP_FORMAT_MAX_ADDED_LETTER_SPACING_PERCENT, added_letter_spacing_percent);
     createSettingsMenuItem(formatSettingsMenu, mm_FloatingPunctuation, _("Floating punctuation"),
                            "cr3_option_format_floating_punct",
                            valueFont, PROP_FLOATING_PUNCTUATION, on_off_option);

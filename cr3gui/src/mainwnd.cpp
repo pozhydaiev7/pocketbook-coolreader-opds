@@ -440,10 +440,13 @@ void V3DocViewWin::OnLoadFileProgress( int percent )
 }
 
 /// document formatting started
+// CREngine 3.2 reports every layout, not only the one of a book being loaded. _loadFileStart is
+// set while a book is loaded and is 0 after its first layout, so the layout of a rotation or of
+// a settings change shows no loading progress.
 void V3DocViewWin::OnFormatStart()
 {
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
         showProgress(PROGRESS_ICON_FILE, 60);
 }
 
@@ -451,8 +454,9 @@ void V3DocViewWin::OnFormatStart()
 void V3DocViewWin::OnFormatEnd()
 {
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
         showProgress(PROGRESS_ICON_FILE, 100);
+    _loadFileStart = 0;
     // Background cache file saving is disabled when _docview->updateCache(infinite) is called here.
     // To implement background cache file saving, schedule on Idle state following task:
     // in each idle cycle call _docview->updateCache(timeOut) while it returns CR_TIMEOUT
@@ -466,7 +470,7 @@ void V3DocViewWin::OnFormatProgress( int percent )
 {
     CRLog::trace("OnFormatProgress(%d)", percent);
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR ) {
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR ) {
         showProgress(PROGRESS_ICON_FILE, 60+percent*4/10);
 #ifdef TRACE_DOC_MEM_STATS
         _docview->getDocument()->dumpStatistics();

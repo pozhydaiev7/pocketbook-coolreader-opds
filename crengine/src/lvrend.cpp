@@ -2332,6 +2332,32 @@ int LVRendGetBaseFontWeight()
     return rend_font_base_weight;
 }
 
+// PocketBook "Tracking" setting, see lvrend.h. It is added to the letter spacing of the style
+// of every text, so the text formatter measures, breaks, justifies and draws with it.
+static int rend_font_tracking = 0;
+
+void LVRendSetFontTracking( int tracking )
+{
+    rend_font_tracking = tracking;
+}
+
+int LVRendGetFontTracking()
+{
+    return rend_font_tracking;
+}
+
+static inline int addFontTracking( int letter_spacing, LVFont * font )
+{
+    if ( rend_font_tracking != 0 && font ) {
+        // a negative letter spacing of a style is 0 for the engine; only the tracking may
+        // set the characters closer
+        if ( letter_spacing < 0 )
+            letter_spacing = 0;
+        letter_spacing += font->getHeight() * rend_font_tracking / 1000;
+    }
+    return letter_spacing;
+}
+
 LVFontRef getFont(ldomNode * node, css_style_rec_t * style, int documentId)
 {
     int sz;
@@ -3821,7 +3847,7 @@ void renderFinalBlock( ldomNode * enode, LFormattedText * txform, RenderRectAcce
                     lString32 content = get_applied_content_property(enode);
                     if ( !content.empty() ) {
                         int em = font->getSize();
-                        int letter_spacing = lengthToPx(enode, style->letter_spacing, em);
+                        int letter_spacing = addFontTracking(lengthToPx(enode, style->letter_spacing, em), font.get());
                         txform->AddSourceLine( content.c_str(), content.length(), cl, bgcl, font.get(), lang_cfg, flags|LTEXT_FLAG_OWNTEXT, line_h, valign_dy, indent, enode, 0, letter_spacing);
                         flags &= ~LTEXT_FLAG_NEWLINE & ~LTEXT_SRC_IS_CLEAR_BOTH; // clear newline flag
                     }
@@ -4042,7 +4068,7 @@ void renderFinalBlock( ldomNode * enode, LFormattedText * txform, RenderRectAcce
             // in place of width
             // lengthToPx() will correctly return 0 with css_generic_normal
             int em = font->getSize();
-            letter_spacing = lengthToPx(parent, style->letter_spacing, em);
+            letter_spacing = addFontTracking(lengthToPx(parent, style->letter_spacing, em), font.get());
             /*
             if ( baseflags & LTEXT_FLAG_PREFORMATTED ) {
                 int flags = baseflags | tflags;
@@ -11082,7 +11108,7 @@ void getRenderedWidths(ldomNode * node, int &maxWidth, int &minWidth, int direct
         LVFontRef font = parent->getFont();
         int em = font->getSize();
         css_style_ref_t parent_style = parent->getStyle();
-        int letter_spacing = lengthToPx(parent, parent_style->letter_spacing, em);
+        int letter_spacing = addFontTracking(lengthToPx(parent, parent_style->letter_spacing, em), font.get());
         // text-transform
         switch (parent_style->text_transform) {
             case css_tt_uppercase:

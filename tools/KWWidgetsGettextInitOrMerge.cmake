@@ -82,12 +82,17 @@ else(NOT EXISTS "${po_build_file}")
 
     # Merge the strings, store the result in a variable instead of a PO file
 
-    exec_program(${GETTEXT_MSGMERGE_EXECUTABLE} 
-      RETURN_VALUE msgmerge_return
+    # The messages of msgmerge are kept apart from the merged file, and the PO file is left as
+    # it is when msgmerge fails: a PO file made of messages grows 13 times at every build.
+    execute_process(COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE}
+      --quiet --output-file=- "${po_build_file}" "${pot_build_file}"
+      RESULT_VARIABLE msgmerge_return
       OUTPUT_VARIABLE msgmerge_output
-      ARGS --quiet --output-file="-" \"${po_build_file}\" \"${pot_build_file}\")
+      ERROR_VARIABLE msgmerge_errors
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(msgmerge_return)
-      message("${msgmerge_output}")
+      string(SUBSTRING "${msgmerge_errors}" 0 2000 msgmerge_errors)
+      message("msgmerge failed for ${po_build_file}:\n${msgmerge_errors}")
       set(SUCCESS 0)
     endif(msgmerge_return)
 
@@ -96,14 +101,16 @@ else(NOT EXISTS "${po_build_file}")
     # Check if the new PO file would be different than the old one
 
     set(update_po_file 0)
-    if(EXISTS ${po_build_file})
+    if(msgmerge_return)
+      # nothing is written
+    elseif(EXISTS ${po_build_file})
       file(READ "${po_build_file}" po_old)
       if(NOT "${msgmerge_output}" STREQUAL "${po_old}")
         set(update_po_file 1)
       endif(NOT "${msgmerge_output}" STREQUAL "${po_old}")
-    else(EXISTS ${po_build_file})
+    else()
       set(update_po_file 1)
-    endif(EXISTS ${po_build_file})
+    endif()
 
     # Create the PO file if it is really needed
 

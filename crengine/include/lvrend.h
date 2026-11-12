@@ -182,6 +182,12 @@ void getRenderedWidths(ldomNode * node, int &maxWidth, int &minWidth, int direct
  */
 void LVRendSetBaseFontWeight(int weight);
 /**
+ * @brief PocketBook "Tracking" setting: a space added after every character of the text,
+ * in 1/1000 of the height of its font (negative: the characters are set closer).
+ */
+void LVRendSetFontTracking(int tracking);
+int LVRendGetFontTracking();
+/**
  * @brief Get global document base font weight
  * @return global document base font weight
  */

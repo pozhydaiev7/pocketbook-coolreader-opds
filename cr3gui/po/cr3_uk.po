@@ -2306,3 +2306,7 @@ msgstr "CoolReader, з нічним режимом"
 #: ../src/settings.cpp
 msgid "Firmware"
 msgstr "Системна"
+
+#: ../src/settings.cpp
+msgid "Letter spacing in justified lines"
+msgstr "Розрядка літер у вирівняних рядках"

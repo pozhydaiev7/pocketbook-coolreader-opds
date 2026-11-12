@@ -2,9 +2,14 @@
 
 ## 0.0.6-17-67-opds (branch `engine-3.2.59`, not released)
 
-The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test builds: `0.0.6-17-67-opds-alpha1`, `-alpha2` (the font weight setting, the footnote hint in the packaged `fb2.css`).
+The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test builds: `0.0.6-17-67-opds-alpha1`, `-alpha2` (the font weight setting, the footnote hint in the packaged `fb2.css`), `-alpha3` (the settings review, the settings menus and the loading progress after the first run on InkPad 4).
 
 The engine with its PocketBook port, the bundled libraries and the reliability changes of the frontend are taken from [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader) at `8f592d51` (commits `9d969bb7`, `01403eee`, `3ab28e48`, `7a20f240`, `ebecbb7f`, `2c1e56da`, `dc91e9cd`) and two later fixes (`98fef7e0`, `f6a54727`). Not taken: its OTA update, dictionary downloads, settings menus, device table and its private curl.
+
+### Fixed
+
+- **Settings menus** (`crengine/src/crgui.cpp`, `crengine/include/crgui.h`): the window framework that came with the engine carried dderugin's changes of the settings menus: a wide Back button drawn by the code and filled when pressed, a title as high as a row, a button that kept its pressed state. With our skins the Back button of a list was black and taps went to other rows (the checklist of the dictionaries). The menus work as in 0.0.6-17-66 again.
+- **Loading progress over the wait icon:** the new engine reports every layout, so a rotation or a font size change showed the progress bar of the book loading with the wait icon. The progress is shown only while a book is loaded (`V3DocViewWin::OnFormatStart`, `OnFormatProgress`, `OnFormatEnd`).
 
 ### Changed
 
@@ -31,6 +36,15 @@ The engine with its PocketBook port, the bundled libraries and the reliability c
   - Not needed in this engine, it has them: the cache of formatted paragraphs (256), the fix of the character flags in `measureText`, the early skip of blocks outside of the page in `DrawDocument`.
   - Tried and taken back: writing fully transparent and fully opaque glyph pixels without arithmetic in `blendBitmap_grayTo8bpp`. 2391 ms against 2137 ms on the PC, and gcc 4.8.1 makes NEON code of the original loop only.
 - **Page margins** up to 350 px are kept (`LVDocView::propsUpdateDefaults`).
+- **Settings review:** every item of the settings menus was compared with what the new engine reads. The engine did not read these PocketBook settings; they are connected again (`crengine/src/lvdocview.cpp`):
+  - **Tracking** (`crengine.font.tracking`): a space after every character, in 1/1000 of the font height, added to the letter spacing of the text style (`LVRendSetFontTracking`, `crengine/src/lvrend.cpp`), so the text formatter measures, breaks, justifies and draws with it. It is a part of the hash of the layout settings of a cache file.
+  - **Fallback font face:** it goes first in the list of the fallback fonts of the engine (`crengine.font.fallback.faces`).
+  - **Font weight of the status line**, **Time format**, **Pages to the end of the chapter** and **Battery percent**: the page header follows them at once.
+  - **Font hinting:** *Light* is removed from the menu; a saved *Light* becomes *Autohinting*, which works in the light mode in this engine.
+  - **Interline space** 70% and 75%, **full screen update** every 9 and every 20 to 50 pages: the engine reset these values of the menu to the defaults.
+  - **Space expanding percent** has no counterpart in the engine. The item is *Letter spacing in justified lines* now (`crengine.format.max.added.letter.spacing.percent`, 0 to 20%): the most the engine may add between the letters of a justified line instead of widening the spaces.
+  - The defaults the old engine set for the PocketBook settings (standby, swipes, pinch zoom, system theme, touch TOC) are set again.
+  - Checked and left as they are: font face, size, gamma, anti-aliasing, kerning, floating punctuation, space condensing, margins, pages in landscape, embedded styles and fonts, footnotes, preformatted text, image scaling, bookmark highlight, status line items, hyphenation, the style settings.
 
 ## 0.0.6-17-66-opds (not released)
 

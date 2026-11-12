@@ -1443,7 +1443,8 @@ lString32 LVDocView::getTimeString() const {
 	time_t t = (time_t) time(0);
 	tm * bt = localtime(&t);
 	char str[12];
-	if ( m_props->getBoolDef(PROP_SHOW_TIME_12HOURS, false) ) {
+	// PROP_TIME_FORMAT is the "Time format" item of the PocketBook menu
+	if ( m_props->getBoolDef(PROP_SHOW_TIME_12HOURS, false) || m_props->getBoolDef(PROP_TIME_FORMAT, false) ) {
 		sprintf(str, "%d:%02d", bt->tm_hour > 12 ? bt->tm_hour % 12 : bt->tm_hour, bt->tm_min);
 	}
 	else {
@@ -2923,7 +2924,8 @@ void LVDocView::setRenderProps(int dx, int dy) {
 	m_font_size = scaleFontSizeForDPI(m_requested_font_size);
 	m_font = fontMan->GetFont(m_font_size, LVRendGetBaseFontWeight(),
 			false, DEFAULT_FONT_FAMILY, m_defaultFontFace);
-	m_infoFont = fontMan->GetFont(m_status_font_size, 400, false,
+	m_infoFont = fontMan->GetFont(m_status_font_size,
+			m_props->getBoolDef(PROP_STATUS_FONT_EMBOLDEN, false) ? 700 : 400, false,
 			DEFAULT_FONT_FAMILY, m_statusFontFace);
 	if (!m_font || !m_infoFont)
 		return;
@@ -6541,7 +6543,9 @@ static int cr_interline_spaces[] = {
 		100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
 		110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
 		120, 125, 130, 135, 140, 145, 150, 155, 160, 165,
-		170, 175, 180, 185, 190, 195, 200
+		170, 175, 180, 185, 190, 195, 200,
+		// PocketBook: the menu offers 70% and 75% (added at the end: the default is taken by index)
+		 70,  71,  72,  73,  74,  75,  76,  77,  78,  79
 };
 
 static const char * def_style_macros[] = {
@@ -6651,7 +6655,15 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
     if (list.length() > 0 && !list.contains(props->getStringDef(PROP_FONT_FACE,
                                                                 defFontFace.c_str())))
         props->setString(PROP_FONT_FACE, list[0]);
+#if CR_POCKETBOOK == 1
+    // The PocketBook menu has one fallback font (PROP_FALLBACK_FONT_FACE), the font of the text
+    // by default. It goes first in the list of the fallback fonts of the engine.
+    props->setStringDef(PROP_FALLBACK_FONT_FACE, props->getStringDef(PROP_FONT_FACE, defFontFace.c_str()));
+    props->setString(PROP_FALLBACK_FONT_FACES,
+                     props->getStringDef(PROP_FALLBACK_FONT_FACE, "") + lString32("; ") + lString32(fallbackFonts));
+#else
     props->setStringDef(PROP_FALLBACK_FONT_FACES, fallbackFonts);
+#endif
 
 #if USE_LIMITED_FONT_SIZES_SET
     props->limitValueList(PROP_FONT_SIZE, m_font_sizes.ptr(),
@@ -6671,6 +6683,11 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
     props->setBoolDef(PROP_EMBEDDED_STYLES, true);
     props->setBoolDef(PROP_EMBEDDED_FONTS, true);
     props->setBoolDef(PROP_TXT_OPTION_PREFORMATTED, false);
+#endif
+#if CR_POCKETBOOK == 1
+    // "Light" (3) of the old engine: the autohinter of this engine works in the light mode
+    if (props->getIntDef(PROP_FONT_HINTING, 0) == 3)
+        props->setInt(PROP_FONT_HINTING, 2);
 #endif
     props->limitValueMinMax(PROP_FONT_HINTING, 0, 2, 0);
     props->limitValueMinMax(PROP_FONT_SHAPING, 0, 2, 1);
@@ -6709,6 +6726,16 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
     props->limitValueMinMax(PROP_PAGE_MARGIN_LEFT, 0, 350, 8);
     props->limitValueMinMax(PROP_PAGE_MARGIN_RIGHT, 0, 350, 8);
     props->setBoolDef(PROP_TOC_PAGE_NUMBERS, true);
+    props->setIntDef(PROP_TIME_FORMAT, 0);
+    props->setIntDef(PROP_SHOW_CHAPTER_PAGES_REMAIN, 0);
+    props->setIntDef(PROP_STATUS_FONT_EMBOLDEN, 0);
+    props->setIntDef(PROP_DISPLAY_STANDBY, 5);
+    props->setIntDef(PROP_CTRL_PAGE_TURN_SWIPES, 1);
+    props->setIntDef(PROP_CTRL_FRONT_LIGHT_SWIPES, 2);
+    props->setIntDef(PROP_CTRL_PINCH_ZOOM, 1);
+    props->setIntDef(PROP_CUSTOM_SYSTEM_THEME, 0);
+    props->setIntDef(PROP_USE_NEW_TOUCH_TOC, 1);
+    props->limitValueMinMax(PROP_FONT_TRACKING, -500, 500, 0);
 #else
     static int margin_options[] = {0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20, 25, 30, 40, 50, 60, 80, 100, 130, 150, 200, 300};
     props->limitValueList(PROP_PAGE_MARGIN_TOP, margin_options, sizeof(margin_options)/sizeof(int), 6);
@@ -6720,7 +6747,12 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
     props->limitValueList(PROP_ROUNDED_CORNERS_MARGIN, rounded_corners_margin_options, sizeof(rounded_corners_margin_options)/sizeof(int), 0);
 
     static int screen_updates_options[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 14 };
+#if CR_POCKETBOOK == 1
+    // the PocketBook menu goes up to 50 pages
+    props->limitValueMinMax(PROP_DISPLAY_FULL_UPDATE_INTERVAL, 0, 50, 1);
+#else
     props->limitValueList(PROP_DISPLAY_FULL_UPDATE_INTERVAL, screen_updates_options, sizeof(screen_updates_options)/sizeof(int), 1);
+#endif
     props->setBoolDef(PROP_DISPLAY_TURBO_UPDATE_MODE, false);
     props->limitValueMinMax(PROP_STATUS_FONT_SIZE, MIN_STATUS_FONT_SIZE, MAX_STATUS_FONT_SIZE, INFO_FONT_SIZE);
 
@@ -6820,6 +6852,39 @@ CRPropRef LVDocView::propsApply(CRPropRef props) {
             REQUEST_RENDER("propsApply - font antialiasing")
         } else if (name.startsWith(cs8("styles."))) {
             REQUEST_RENDER("propsApply - styles.*")
+        } else if (name == PROP_FONT_TRACKING) {
+            // PocketBook "Tracking": space after every character, in 1/1000 of the font height
+            int tracking = props->getIntDef(PROP_FONT_TRACKING, 0);
+            if (tracking >= -500 && tracking <= 500 && LVRendGetFontTracking() != tracking) {
+                LVRendSetFontTracking(tracking);
+                REQUEST_RENDER("propsApply - font tracking")
+            }
+        } else if (name == PROP_STATUS_FONT_EMBOLDEN) {
+            // PocketBook "Font weight" of the status line: the status font is made again
+            if (m_props->getStringDef(PROP_STATUS_FONT_EMBOLDEN, "0") != value) {
+                m_props->setString(name.c_str(), value);
+                REQUEST_RENDER("propsApply - status font weight")
+            }
+        } else if (name == PROP_TIME_FORMAT) {
+            // PocketBook "Time format": read by getTimeString()
+            m_props->setString(name.c_str(), value);
+            clearImageCache();
+        } else if (name == PROP_FALLBACK_FONT_FACE) {
+            // PocketBook "Fallback font face": first in the list of the fallback fonts
+            lString32 oldFace = m_props->getStringDef(PROP_FALLBACK_FONT_FACE, "");
+            lString32 faces = m_props->getStringDef(PROP_FALLBACK_FONT_FACES, "");
+            if (!oldFace.empty() && faces.startsWith(oldFace + U"; "))
+                faces = faces.substr(oldFace.length() + 2);
+            if (!value.empty())
+                faces = value + U"; " + faces;
+            lString8 oldFaces = fontMan->GetFallbackFontFaces();
+            if (UnicodeToUtf8(faces) != oldFaces) {
+                fontMan->SetFallbackFontFaces(UnicodeToUtf8(faces));
+                if (fontMan->GetFallbackFontFaces() != oldFaces) {
+                    REQUEST_RENDER("propsApply  fallback font face")
+                }
+            }
+            m_props->setString(PROP_FALLBACK_FONT_FACES, faces);
         } else if (name == PROP_FONT_GAMMA) {
             double gamma = 1.0;
             lString32 s = props->getStringDef(PROP_FONT_GAMMA, "1.0");
@@ -6930,8 +6995,11 @@ CRPropRef LVDocView::propsApply(CRPropRef props) {
         } else if (name == PROP_STATUS_LINE || name == PROP_SHOW_TIME
                    || name	== PROP_SHOW_TITLE || name == PROP_SHOW_BATTERY
                    || name == PROP_STATUS_CHAPTER_MARKS || name == PROP_SHOW_POS_PERCENT
-                   || name == PROP_SHOW_PAGE_COUNT || name == PROP_SHOW_PAGE_NUMBER) {
+                   || name == PROP_SHOW_PAGE_COUNT || name == PROP_SHOW_PAGE_NUMBER
+                   || name == PROP_SHOW_CHAPTER_PAGES_REMAIN || name == PROP_SHOW_BATTERY_PERCENT) {
             m_props->setString(name.c_str(), value);
+            // the battery percent and the pages to the end of the chapter are not in the mode below
+            clearImageCache();
             setStatusMode(m_props->getIntDef(PROP_STATUS_LINE, 1),
                           m_props->getBoolDef(PROP_SHOW_TIME, false),
                           m_props->getBoolDef(PROP_SHOW_TITLE, true),
