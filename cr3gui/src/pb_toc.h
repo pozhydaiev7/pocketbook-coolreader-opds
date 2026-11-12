@@ -16,14 +16,18 @@ class V3DocViewWin;
 extern lString16 pbSkinFileName;
 extern V3DocViewWin * main_win;
 
-// TOC row drawn like a printed contents line: "Chapter 5 .......... 98"
+// TOC row drawn like a printed contents line: "Chapter 5 .......... 98"; without the page numbers
+// a plain row. The chapter of the open page has a triangle mark before its title.
 class CRTocMenuItem : public CRMenuItem
 {
     private:
         lString16 _pageText;
+        bool _withPage;
+        bool _current;
 
     public:
-        CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page );
+        CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page, bool withPage = true,
+            bool current = false );
 
         virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
             CRRectSkinRef valueSkin, bool selected );

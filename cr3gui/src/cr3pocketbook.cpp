@@ -538,7 +538,7 @@ private:
     void checkDirect(icanvas * cv, int x, int y, int w, int h);
 public:
     static CRPocketBookScreen * instance;
-    bool shiftCanvasUp(int dy);
+    bool shiftCanvasUp(int dy, int coveredFrom = -1);
 protected:
     virtual void update( const lvRect & rc2, bool full );
 public:
@@ -1012,12 +1012,16 @@ bool CRPocketBookScreen::directUsable(icanvas * & cv)
 // touch menu: those two take 90 ms on 1404 x 1872. Done on the canvas directly once the direct
 // copy of the page is in use and the firmware calls have given the same bytes on this canvas.
 // Returns false when the caller has to use the firmware calls.
-bool CRPocketBookScreen::shiftCanvasUp(int dy)
+// coveredFrom: the moved rows from this one on are drawn over by the caller at once (the bottom
+// part of the touch menu); they are not compared with the result of the firmware calls.
+bool CRPocketBookScreen::shiftCanvasUp(int dy, int coveredFrom)
 {
     icanvas * cv = NULL;
     if (!directUsable(cv) || _directState != 1 || _shiftState < 0 || dy <= 0 || dy >= cv->height)
         return false;
     int rows = cv->height - dy;
+    if (coveredFrom < 0 || coveredFrom > rows)
+        coveredFrom = rows;
     if (_shiftState == 1) {
         for (int yy = 0; yy < rows; yy++)
             memcpy(cv->addr + yy * cv->scanline, cv->addr + (yy + dy) * cv->scanline, cv->width);
@@ -1039,18 +1043,61 @@ bool CRPocketBookScreen::shiftCanvasUp(int dy)
     DrawBitmap(0, 0, bkg);
     free(bkg);
     bool same = true;
-    for (int yy = 0; yy < cv->height && same; yy++) {
+    // where the firmware calls gave other bytes, for the log: the first place and how many
+    int diffRow = -1, diffCol = -1, diffWant = 0, diffGot = 0, diffBytes = 0, diffRows = 0, coveredRows = 0;
+    int levelBytes = 0;
+    for (int yy = 0; yy < cv->height; yy++) {
         // the rows moved up, the last dy rows stay as they were
         const unsigned char * expected = before + (yy < rows ? yy + dy : yy) * cv->width;
-        same = memcmp(cv->addr + yy * cv->scanline, expected, cv->width) == 0;
+        const unsigned char * got = cv->addr + yy * cv->scanline;
+        if (memcmp(got, expected, cv->width) == 0)
+            continue;
+        // The firmware calls go through a bitmap of the 16 grey levels of the screen and give
+        // every byte with its high half repeated (bb for b2, ff for f6: InkPad 4, 2026-11-12).
+        // The place of the pixel is what is checked here; a byte of the same level is the same
+        // pixel on the screen, and the rows copied on the canvas keep their own bytes.
+        bool rowDiffers = false;
+        for (int i = 0; i < cv->width; i++) {
+            if (got[i] == expected[i])
+                continue;
+            if (got[i] == ((expected[i] & 0xF0) | (expected[i] >> 4))) {
+                levelBytes++;
+                continue;
+            }
+            rowDiffers = true;
+            break;
+        }
+        if (!rowDiffers)
+            continue;
+        if (yy >= coveredFrom && yy < rows) {
+            coveredRows++;
+            continue;
+        }
+        same = false;
+        diffRows++;
+        for (int i = 0; i < cv->width; i++) {
+            if (got[i] == expected[i] || got[i] == ((expected[i] & 0xF0) | (expected[i] >> 4)))
+                continue;
+            if (diffBytes++ == 0) {
+                diffRow = yy;
+                diffCol = i;
+                diffWant = expected[i];
+                diffGot = got[i];
+            }
+        }
     }
     free(before);
     if (!same) {
         _shiftState = -1;
-        CRLog::info("canvas shift off: the firmware calls give other bytes");
+        CRLog::info("canvas shift off: the firmware calls give other bytes: %d bytes in %d rows of %d x %d, shift %d, "
+                    "the first at row %d column %d: %02x for %02x; %d more rows differ from row %d on, drawn over",
+                    diffBytes, diffRows, cv->width, cv->height, dy, diffRow, diffCol, diffGot, diffWant,
+                    coveredRows, coveredFrom);
     } else if (detail >= PB_DIRECT_MIN_DETAIL) {
         _shiftState = 1;
-        CRLog::info("canvas shift on: checked on canvas %d x %d", cv->width, cv->height);
+        CRLog::info("canvas shift on: checked on canvas %d x %d (%d bytes differ by the grey level of the screen "
+                    "only; %d rows from row %d on differ, they are drawn over)", cv->width, cv->height, levelBytes,
+                    coveredRows, coveredFrom);
     }
     return true;
 }
@@ -1849,7 +1896,9 @@ public:
 
         // Offset the background
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): Offset the background");
-        if (!CRPocketBookScreen::instance->shiftCanvasUp(PanelHeight())) {
+        // DrawBottom() fills the rows from bottomY - 1 to the system panel right after the shift
+        int menuBottomFrom = ScreenHeight() - PanelHeight() - (PanelHeight() * 2 + 1) - 1;
+        if (!CRPocketBookScreen::instance->shiftCanvasUp(PanelHeight(), menuBottomFrom)) {
             ibitmap * bkg = BitmapFromScreen(0, PanelHeight(), ScreenWidth(), ScreenHeight()-PanelHeight());
             DrawBitmap(0, 0, bkg);
             free(bkg);
@@ -2486,6 +2535,8 @@ private:
     bool _gsFromFirmware; // the last orientation came from the firmware, not from the raw values
     int _gsReported;      // orientation of the device the screen followed last, -1 before the first one
     bool _gsRawOk;        // ReadGSensor gives the raw values (it does not on firmware 6.x)
+    bool _gsPolling;      // the polling timer was started
+    long long _gsLastTick; // moment of pbPerfNow() the polling timer came last
     int _pausedRotation;
     bool _pauseRotationTimer;
     int  m_goToPage;
@@ -2605,10 +2656,15 @@ protected:
         return true;
     }
 
-    // The firmware changed the canvas without telling CoolReader: the windows follow it.
+    // The firmware changed the canvas without telling CoolReader: the windows follow it. Its
+    // size, or its orientation alone: with the sensor on the firmware turns the screen over
+    // (0 <-> 180) itself and sends nothing, the page stayed upside down until something drew it.
     void syncCanvas()
     {
-        if (ScreenWidth() == _wm->getScreen()->getWidth() && ScreenHeight() == _wm->getScreen()->getHeight())
+        int orientation = GetOrientation();
+        if (ScreenWidth() == _wm->getScreen()->getWidth() && ScreenHeight() == _wm->getScreen()->getHeight() &&
+                (orientation < 0 || orientation > 3 ||
+                 pocketbook_orientations[orientation] == CRPocketBookWindowManager::instance->getScreenOrientation()))
             return;
         if (reconfigureToCanvas())
             _wm->update(true);
@@ -2962,7 +3018,7 @@ public:
     CRPocketBookDocView( CRGUIWindowManager * wm, lString16 dataDir )
         : V3DocViewWin( wm, dataDir ), _bm3x3(NULL), _toc(NULL), _tocLength(0), _dictDlg(NULL), _rotatetimerset(false),
         _lastturn(true), _gsUpright(0), _gsCandidate(-1), _gsCount(0), _gsEvents(false),
-        _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _gsReported(-1), _gsRawOk(true), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
+        _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _gsReported(-1), _gsRawOk(true), _gsPolling(false), _gsLastTick(0),_pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
         m_bmFromSkin(false)
     {
         instance = this;
@@ -3594,6 +3650,38 @@ public:
         syncCanvas();
     }
 
+    // An event of the user, or CoolReader is on the screen again: the windows follow the screen
+    // of the firmware, and the G-sensor polling goes on. Its weak timer sets itself again each
+    // time it comes; after CoolReader was in the background it did not come any more, and the
+    // screen stopped following the device until the end of the session.
+    // cameBack: CoolReader is in the foreground again (after another program or the panel of the
+    // firmware). The firmware then gives the orientation of the system, not the one the book was read in:
+    // a book turned to landscape came back as its left part on a portrait screen, with noise
+    // below it and the taps of a square. The orientation of the book is set again; when the
+    // firmware does not take it, the windows are laid out for what it gives.
+    void onUserEvent(bool cameBack)
+    {
+        if (cameBack) {
+            int have = GetOrientation();
+            int want = cr_oriantations[CRPocketBookWindowManager::instance->getScreenOrientation() & 3];
+            if (have != want) {
+                SetOrientation(want);
+                CRLog::info("screen: CoolReader is shown again with orientation %d, the book was read in %d: "
+                            "set again, now %d", have, want, GetOrientation());
+            }
+        }
+        syncCanvas();
+        if (!_gsPolling || _gsEvents)
+            return;
+        long long idle = pbPerfNow() - _gsLastTick;
+        if (idle < (long long)PB_GSENSOR_IDLE_MS * 2000)
+            return;
+        CRLog::info("G-sensor polling: no timer for %.1f s, started again", idle / 1000000.0);
+        _gsLastTick = pbPerfNow();
+        _gsLastReason = -1;
+        SetWeakTimer("GSensorPoll", gsensor_timer, PB_GSENSOR_FIRMWARE_POLL_MS);
+    }
+
     // A layout with the wait icon, or a long one, is over: what was tapped meanwhile is dropped
     virtual void onLayoutWaitEnd()
     {
@@ -3644,8 +3732,11 @@ public:
         if (pbGetGSensorOrientation != NULL)
             CRLog::info("G-sensor: enabled %d, firmware orientation %d",
                         pbIsGSensorEnabled != NULL ? pbIsGSensorEnabled() : -1, pbGetGSensorOrientation());
-        if (isGSensorSupported() || pbGetGSensorOrientation != NULL)
+        if (isGSensorSupported() || pbGetGSensorOrientation != NULL) {
+            _gsPolling = true;
+            _gsLastTick = pbPerfNow();
             SetWeakTimer("GSensorPoll", gsensor_timer, PB_GSENSOR_POLL_MS);
+        }
     }
 
     // the sensor turned on for CoolReader is turned off again when it exits
@@ -3739,6 +3830,7 @@ public:
 
     void onGSensorTimer()
     {
+        _gsLastTick = pbPerfNow();
         if (_gsEvents)
             return;
         int mode = getProps()->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
@@ -3770,10 +3862,19 @@ public:
             if (_gsCount >= (_gsFromFirmware ? 1 : 2)) {
                 CRLog::info("G-sensor: the device is turned %d -> %d, screen orientation %d, rotate mode %d",
                             _gsReported, want, cur, mode);
+                // The first reading after the start is not a turn of the device. With the sensor
+                // off the firmware gives the orientation it saw last, maybe in another session:
+                // the book was shown upside down until the first tap. And a page is never turned
+                // by the position the device is started in.
+                bool first = _gsReported < 0;
+                bool sensorOff = _gsFromFirmware && pbIsGSensorEnabled != NULL && !pbIsGSensorEnabled();
                 _gsCount = 0;
                 _gsCandidate = -1;
                 _gsReported = want;
-                if (mode == PB_ROTATE_MODE_360)
+                if (first && (sensorOff || mode > PB_ROTATE_MODE_180))
+                    CRLog::info("G-sensor: the first reading is taken as the position of the device, the screen "
+                                "stays (sensor %s)", sensorOff ? "off" : "on");
+                else if (mode == PB_ROTATE_MODE_360)
                     applySensorRotation(want);
                 else
                     onAutoRotation(want); // 180: the screen is turned over; tilt modes: a page is turned
@@ -6828,6 +6929,29 @@ int main_handler(int type, int par1, int par2)
 
     if (pbStaleInput(type, par1))
         return 0;
+
+    // the layout follows the screen of the firmware and the G-sensor polling is alive: checked
+    // at the events of the user and when CoolReader comes to the screen
+    switch (type) {
+    case EVT_SHOW:
+    case EVT_POINTERDOWN:
+    case EVT_POINTERUP:
+    case EVT_KEYPRESS:
+    case EVT_KEYRELEASE:
+#ifdef POCKETBOOK_PRO
+    case EVT_FOREGROUND:
+    case EVT_ACTIVATE:
+#endif
+        if (CRPocketBookDocView::instance != NULL && CRPocketBookWindowManager::instance != NULL)
+#ifdef POCKETBOOK_PRO
+            CRPocketBookDocView::instance->onUserEvent(type == EVT_FOREGROUND || type == EVT_ACTIVATE);
+#else
+            CRPocketBookDocView::instance->onUserEvent(false);
+#endif
+        break;
+    default:
+        break;
+    }
 
     bool process_events = false;
     int ret = 0;

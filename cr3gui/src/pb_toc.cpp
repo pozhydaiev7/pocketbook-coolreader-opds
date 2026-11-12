@@ -9,19 +9,49 @@
 #include "mainwnd.h"
 #include "cr3pocketbook.h"
 #include "pb_toc.h"
+#include "opds/opdsmenu.h"
 
 // defined in tocdlg.cpp
 lString16 limitTextWidth( lString16 s, int width, LVFontRef font );
 
-CRTocMenuItem::CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page )
+// spaces left in the label of the current chapter for its triangle mark
+#define TOC_MARK_ROOM L"   "
+#define TOC_MARK_ROOM_LEN 3
+
+CRTocMenuItem::CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page, bool withPage,
+    bool current )
 : CRMenuItem( menu, id, label, LVImageSourceRef(), LVFontRef() ),
-  _pageText( lString16::itoa(page) )
+  _pageText( lString16::itoa(page) ), _withPage( withPage ), _current( current )
 {
+}
+
+// The triangle mark of the current chapter: after the indent of its level, in the room left for
+// it in the label.
+static void drawTocMark( LVDrawBuf & buf, const lvRect & inner, const lString16 & label, LVFontRef font,
+    lUInt32 color )
+{
+    int spaces = 0;
+    while ( spaces < (int)label.length() && label[spaces] == ' ' )
+        spaces++;
+    spaces -= TOC_MARK_ROOM_LEN;
+    int x = inner.left + ( spaces > 0 ? font->getTextWidth( label.c_str(), spaces ) : 0 );
+    opdsui::drawRowMark( buf, x, inner.top, inner.height(), font->getHeight(), color );
 }
 
 void CRTocMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
     CRRectSkinRef valueSkin, bool selected )
 {
+    if ( !_withPage ) {
+        // a plain row, as the menu draws it
+        CRMenuItem::Draw( buf, rc, skin, valueSkin, selected );
+        if ( _current ) {
+            LVFontRef font = getFont();
+            if ( font.isNull() )
+                font = skin->getFont();
+            drawTocMark( buf, skin->getClientRect( rc ), _label, font, skin->getTextColor() );
+        }
+        return;
+    }
     _itemDirty = false;
     skin->draw( buf, rc );
     lUInt32 textColor = skin->getTextColor();
@@ -32,6 +62,8 @@ void CRTocMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
     // the drawText overload with flags does not apply the skin borders itself
     lvRect inner = skin->getClientRect( rc );
     LVFontRef font = skin->getFont();
+    if ( _current )
+        drawTocMark( buf, inner, _label, font, textColor );
     int pageWidth = font->getTextWidth( _pageText.c_str(), _pageText.length() );
     int gap = font->getHeight() / 2;
 
@@ -116,9 +148,9 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
             // Prepend page number
             // text = L"[" + lString16::itoa(tocItems[i].position) + L"] " + text;
 
-            // Mark current chapter
+            // Current chapter: room for its triangle mark, drawn by the item
             if( _selectedItem == i ) {
-                text = L">  " + text;
+                text = TOC_MARK_ROOM + text;
             }
 
             // Indent level
@@ -126,23 +158,13 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
                 text = L"     " + text;
             }
 
-            if( showPages ) {
-                mainMenu->addItem(new CRTocMenuItem(
-                    mainMenu,
-                    PB_TOC_SAFE_CMD_RANGE + tocItems[i].page,
-                    lString16(UnicodeToUtf8(text).c_str()),
-                    tocItems[i].position
-                    ));
-                continue;
-            }
-
-            mainMenu->addItem(new CRMenuItem(
+            mainMenu->addItem(new CRTocMenuItem(
                 mainMenu,
                 PB_TOC_SAFE_CMD_RANGE + tocItems[i].page,
-                UnicodeToUtf8(text).c_str(),
-                LVImageSourceRef(),
-                LVFontRef()/*,
-                lString16::itoa(tocItems[i].position).c_str()*/
+                lString16(UnicodeToUtf8(text).c_str()),
+                tocItems[i].position,
+                showPages,
+                _selectedItem == i
                 ));
         }
     }

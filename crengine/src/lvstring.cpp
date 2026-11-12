@@ -2833,7 +2833,10 @@ int Utf8CharCount( const lChar8 * str, int len )
     int count = 0;
     lUInt8 ch;
     const lChar8 * endp = str + len;
-    while ((ch=*str++)) {
+    // "str < endp": the byte after the text is not read. The text of a node in the document
+    // storage has no zero at its end; that byte ended the loop or was skipped below, the count
+    // is the same.
+    while (str < endp && (ch=*str++)) {
         if ( (ch & 0x80) == 0 ) {
         } else if ( (ch & 0xE0) == 0xC0 ) {
             str++;

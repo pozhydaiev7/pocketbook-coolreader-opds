@@ -2242,6 +2242,12 @@ lString8 ldomDataStorageManager::getText( lUInt32 address )
     return chunk->getText(address&0xFFFF);
 }
 
+lString16 ldomDataStorageManager::getText32( lUInt32 address )
+{
+    ldomTextStorageChunk * chunk = getChunk(address);
+    return chunk->getText32(address&0xFFFF);
+}
+
 /// get pointer to element data
 ElementDataStorageItem * ldomDataStorageManager::getElem( lUInt32 addr )
 {
@@ -2567,6 +2573,18 @@ lString8 ldomTextStorageChunk::getText( int offset )
         return item->getText8();
     }
     return lString8::empty_str;
+}
+
+/// The text of a node for the layout: every text node of the book is asked for at every layout,
+/// and the way through getText() made a copy of the stored UTF-8 first.
+lString16 ldomTextStorageChunk::getText32( int offset )
+{
+    offset <<= 4;
+    if ( offset>=0 && offset<(int)_bufpos ) {
+        TextDataStorageItem * item = (TextDataStorageItem *)(_buf+offset);
+        return item->getText();
+    }
+    return lString16::empty_str;
 }
 #endif
 
@@ -3072,6 +3090,28 @@ ldomDocument::~ldomDocument()
 
 #if BUILD_LITE!=1
 
+bool ldomDocument::getStyleSheetFileText( const lString16 & cssFile, lString8 & css8 )
+{
+    for (int i = 0; i < _cssFileNames.length(); i++) {
+        if (_cssFileNames[i] == cssFile) {
+            css8 = _cssFileTexts[i];
+            return true;
+        }
+    }
+    LVContainerRef container = getContainer();
+    if (container.isNull())
+        return false;
+    LVStreamRef cssStream = container->OpenStream(cssFile.c_str(), LVOM_READ);
+    if (cssStream.isNull())
+        return false;
+    lString16 css;
+    css << LVReadTextFile(cssStream);
+    css8 = UnicodeToUtf8(css);
+    _cssFileNames.add(cssFile);
+    _cssFileTexts.add(css8);
+    return true;
+}
+
 class LVImportStylesheetParser
 {
 public:
@@ -3093,12 +3133,12 @@ public:
 
         lString16 codeBase = cssFile;
         LVExtractLastPathElement(codeBase);
-        LVStreamRef cssStream = _document->getContainer()->OpenStream(cssFile.c_str(), LVOM_READ);
-        if ( !cssStream.isNull() ) {
-            lString16 css;
-            css << LVReadTextFile( cssStream );
+        // the text of the file is kept by the document: it is not read from the archive and
+        // converted again for every fragment of the book that links it, and at every layout
+        lString8 css8;
+        if ( _document->getStyleSheetFileText(cssFile, css8) ) {
             int offset = _inProgress.add(cssFile);
-            ret = Parse(codeBase, css) || ret;
+            ret = ParseUtf8(codeBase, css8) || ret;
             _inProgress.erase(offset, 1);
         }
         return ret;
@@ -3106,10 +3146,16 @@ public:
 
     bool Parse(lString16 codeBase, lString16 css)
     {
-        bool ret = false;
         if ( css.empty() )
+            return false;
+        return ParseUtf8(codeBase, UnicodeToUtf8(css));
+    }
+
+    bool ParseUtf8(lString16 codeBase, const lString8 & css8)
+    {
+        bool ret = false;
+        if ( css8.empty() )
             return ret;
-        lString8 css8 = UnicodeToUtf8(css);
         const char * s = css8.c_str();
 
         _nestingLevel += 1;
@@ -10359,7 +10405,7 @@ lString16 ldomNode::getText( lChar16 blockDelimiter, int maxSize ) const
         break;
 #if BUILD_LITE!=1
     case NT_PTEXT:
-        return Utf8ToUnicode(getDocument()->_textStorage.getText( _data._ptext_addr ));
+        return getDocument()->_textStorage.getText32( _data._ptext_addr );
 #endif
     case NT_TEXT:
         return _data._text_ptr->getText16();

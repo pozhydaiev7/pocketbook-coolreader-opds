@@ -245,8 +245,24 @@ void OpdsMenu::add(int command, const lString16 & title, const lString16 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString16 & title, const lString16 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      indent(0), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
+      indent(0), mark(false), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
+}
+
+int drawRowMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color)
+{
+    int half = size * 5 / 24;          // the triangle is about 0.4 of the font height
+    if (half < 3)
+        half = 3;
+    int width = half * 3 / 2;
+    // the middle of the lower-case letters of a text centred in the row
+    int cy = top + height / 2 + size / 16;
+    for (int dy = -half; dy <= half; dy++) {
+        int len = width * (half + 1 - (dy < 0 ? -dy : dy)) / (half + 1);
+        if (len > 0)
+            buf.FillRect(x, cy + dy, x + len, cy + dy + 1, color);
+    }
+    return width + size / 4;
 }
 
 void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected)
@@ -300,6 +316,8 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
                                aside.c_str(), aside.length(), L'?', NULL, false, 0);
             tr.right -= aw + sf->getHeight();
         }
+        if (mark)
+            tr.left += drawRowMark(buf, tr.left, r.top, r.height(), tf->getHeight(), skin->getTextColor());
         lString16 t = fitText(tf, _title, tr.width());
         tf->DrawTextString(&buf, tr.left, r.top + (r.height() - tf->getHeight()) / 2,
                            t.c_str(), t.length(), L'?', NULL, false, 0);

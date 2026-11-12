@@ -529,6 +529,13 @@ public:
                     if ( chars_measured<len ) {
                         // too long line
                         int newlen = chars_measured; // TODO: find best wrap position
+                        if ( newlen<1 ) {
+                            // The font measured nothing. One character is taken with no width:
+                            // with 0 the loop came back to the same character without end.
+                            newlen = 1;
+                            widths[0] = 0;
+                            flags[0] = 0;
+                        }
                         i = start + newlen;
                         len = newlen;
                     }

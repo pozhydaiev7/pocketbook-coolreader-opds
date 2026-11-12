@@ -1199,6 +1199,13 @@ public:
                     _wcache.put(ch, w);
                 } else {
                     widths[nchars] = prev_width;
+                    // A character without a glyph takes no width, so it fits where the text
+                    // before it fits. It was left out of the count of the characters that fit:
+                    // a text of such characters (a font built into an EPUB without the letters
+                    // of the text, and no fallback font) gave 0, and the text formatter measured
+                    // the same characters again without end.
+                    if ( prev_width <= max_width )
+                        lastFitChar = nchars + 1;
                     continue;  /* ignore errors */
                 }
                 if ( ch_glyph_index==(FT_UInt)-1 )
