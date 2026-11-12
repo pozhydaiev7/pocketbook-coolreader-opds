@@ -42,11 +42,9 @@ void PbTocList::show(CRGUIWindowManager * wm)
     menu->setCloseCommand(PB_TOC_LIST_CMD_CLOSE);
     menu->setPageCommands(PB_TOC_LIST_CMD_PREV, PB_TOC_LIST_CMD_NEXT);
 
-    // the first row goes back to the book, the last one pages the list when it is long
+    // the first row goes back to the book; a long list is turned with the arrows of the title
     int total = (int)_entries.size();
     _perScreen = rows - 1;
-    if (total > _perScreen)
-        _perScreen = rows - 2;
     if (_perScreen < 1)
         _perScreen = 1;
     int screens = total > 0 ? (total + _perScreen - 1) / _perScreen : 1;
@@ -54,12 +52,12 @@ void PbTocList::show(CRGUIWindowManager * wm)
         _screen = _current / _perScreen;
     if (_screen >= screens)
         _screen = screens - 1;
+    menu->setScreens(_screen, screens);
 
     menu->add(PB_TOC_LIST_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
     int levelIndent = menu->subFont->getHeight();
     int first = _screen * _perScreen;
-    int shown = 0;
-    for (int i = first; i < total && i < first + _perScreen; i++, shown++) {
+    for (int i = first; i < total && i < first + _perScreen; i++) {
         const Entry & e = _entries[i];
         lString16 title = e.text;
         if (i == _current)
@@ -68,23 +66,6 @@ void PbTocList::show(CRGUIWindowManager * wm)
         item->indent = (e.level > 1 ? e.level - 1 : 0) * levelIndent;
         item->aside = lString16::itoa(e.page);
         menu->addItem(item);
-    }
-    if (screens > 1) {
-        for (int i = shown; i < _perScreen; i++)
-            menu->addItem(new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString16::empty_str, lString16::empty_str));
-        OpdsItem * pager = new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString16::empty_str, lString16::empty_str,
-                                        OpdsItem::PAGER);
-        if (_screen > 0) {
-            pager->left = lString16(MARK_PREV) + lString16(_("Back"));
-            pager->leftCommand = PB_TOC_LIST_CMD_PREV;
-        }
-        if (_screen + 1 < screens) {
-            pager->right = lString16(_("Next")) + lString16(MARK_NEXT);
-            pager->rightCommand = PB_TOC_LIST_CMD_NEXT;
-        }
-        pager->center = lString16(_("Page")) + L" " + lString16::itoa(_screen + 1) + L"/" + lString16::itoa(screens);
-        pager->centerCommand = 0;
-        menu->addItem(pager);
     }
     activate(wm, menu);
 }

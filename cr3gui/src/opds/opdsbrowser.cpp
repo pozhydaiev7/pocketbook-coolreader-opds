@@ -569,7 +569,7 @@ bool OpdsBrowser::hasSearchRow() const
     return _history.size() == 1 && !_history.back().searchTemplate.empty();
 }
 
-// Every screen starts with the back row and ends with the paging row; screen 0 also holds the
+// Every screen starts with the back row and the catalog menu row; screen 0 also holds the
 // optional search row.
 int OpdsBrowser::entriesOnScreen(int screen) const
 {
@@ -615,8 +615,18 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
         menu->setCloseCommand(OPDS_CMD_CLOSE);
         menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
     }
+    menu->add(OPDS_CMD_SERVICE, lString16(_("Catalog menu")));
     if (screen == 0 && hasSearchRow())
         menu->add(OPDS_CMD_SEARCH, lString16(_("Search...")));
+
+    // The screens are turned with the arrows of the title. The catalog gives its list in parts:
+    // while it has one more part, one more screen is counted.
+    int screens = 1;
+    while (firstEntryOfScreen(screens) < total)
+        screens++;
+    if (!feed.nextHref.empty())
+        screens++;
+    menu->setScreens(screen, screens);
 
     for (int i = first; i < last; i++) {
         const opds::Entry & e = feed.entries[i];
@@ -631,25 +641,6 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
             menu->add(OPDS_CMD_ENTRY + i, lString16(MARK_OPEN) + u16(e.title), u16(e.summary));
         }
     }
-    // Empty rows keep the paging row at the bottom of the screen.
-    for (int i = 1 + last - first + ((screen == 0 && hasSearchRow()) ? 1 : 0); i < _rows - 1; i++)
-        menu->addItem(new OpdsItem(menu, OPDS_CMD_FIRST + 9999, lString16::empty_str, lString16::empty_str));
-
-    OpdsItem * pager = new OpdsItem(menu, OPDS_CMD_SERVICE, lString16::empty_str, lString16::empty_str, OpdsItem::PAGER);
-    if (screen > 0) {
-        pager->left = lString16(MARK_PREV) + lString16(_("Back"));
-        pager->leftCommand = OPDS_CMD_PREV;
-    } else if (_history.size() > 1) {
-        pager->left = lString16(MARK_UP) + lString16(_("Back"));
-        pager->leftCommand = OPDS_CMD_BACK;
-    }
-    bool more = last < total || !feed.nextHref.empty();
-    if (more) {
-        pager->right = lString16(_("Next")) + lString16(MARK_NEXT);
-        pager->rightCommand = OPDS_CMD_NEXT;
-    }
-    pager->center = lString16(_("Page")) + L" " + lString16::itoa(screen + 1) + lString16(DOT) + lString16(_("Catalog menu"));
-    menu->addItem(pager);
     activate(wm, menu);
 }
 

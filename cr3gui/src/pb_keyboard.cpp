@@ -13,26 +13,48 @@ extern lString16 currentLang;
 
 namespace {
 
-// widths in quarters of a letter key; every layout is laid out on 13 letter keys, so the keyboard
-// keeps its size when the layout changes
-const int LETTER = 4;
-const int WIDE = 6;
-const int ROW_UNITS = 13 * LETTER;
+// The touch layouts of the firmware keyboard (language/keyboard/EN.kbd, RU.kbd, UA.kbd), in the
+// notation of those files: 5 rows of 11 cells, the keys of a row separated by spaces; cn - cancel,
+// bs - backspace, sh - shift, sp - space, lg - next layout, ok; ":N" - a key N cells wide.
+// The second page of a layout is the one shown with Shift: the capital letters are listed there,
+// lString16::uppercase() knows only the Russian alphabet without its letter io.
+const int COLUMNS = 11;
+const int ROWS = 5;
 const int MAX_TEXT = 100;
 
-const char * const LETTERS[3][3] = {
-    { "qwertyuiop", "asdfghjkl", "zxcvbnm" },
-    { "йцукенгшщзхъ", "фывапролджэ", "ячсмитьбюё" },
-    { "йцукенгшщзхї", "фівапролджє", "ячсмитьбюґ" },
+const char * const PAGES[3][2][ROWS] = {
+    { { "1 2 3 4 5 6 7 8 9 0 cn",
+        "q w e r t y u i o p bs",
+        "a s d f g h j k l ; '",
+        "z x c v b n m . , - +",
+        "sh [ ] sp:3 ? / lg ok:2" },
+      { "! @ # $ % ^ & * ( ) cn",
+        "Q W E R T Y U I O P bs",
+        "A S D F G H J K L : \"",
+        "Z X C V B N M < > _ =",
+        "sh { } sp:3 ` \\ lg ok:2" } },
+    { { "1 2 3 4 5 6 7 8 9 0 cn",
+        "й ц у к е н г ш щ з bs",
+        "ф ы в а п р о л д ж э",
+        "я ч с м и т ь б ю . ,",
+        "sh ё sp:4 х ъ lg ok:2" },
+      { "! \" № ; % : ? * ( ) cn",
+        "Й Ц У К Е Н Г Ш Щ З bs",
+        "Ф Ы В А П Р О Л Д Ж Э",
+        "Я Ч С М И Т Ь Б Ю . ,",
+        "sh Ё sp:4 Х Ъ lg ok:2" } },
+    { { "1 2 3 4 5 6 7 8 9 0 cn",
+        "й ц у к е н г ш щ з bs",
+        "ф і в а п р о л д ж є",
+        "я ч с м и т ь б ю . ,",
+        "sh ' sp:3 ґ х ї lg ok:2" },
+      { "! \" № ; % : ? * ( ) cn",
+        "Й Ц У К Е Н Г Ш Щ З bs",
+        "Ф І В А П Р О Л Д Ж Є",
+        "Я Ч С М И Т Ь Б Ю . ,",
+        "sh ' sp:3 Ґ Х Ї lg ok:2" } },
 };
-const char * const SYMBOLS[3] = { "1234567890", "-/:;()&@\".", ",?!'*+=#_%" };
-const char * const LAYOUT_NAMES[3] = { "EN", "RU", "UK" };
-const char * const LETTERS_NAMES[3] = { "ABC", "АБВ", "АБВ" };
-
-lString16 u16(const char * s)
-{
-    return Utf8ToUnicode(lString8(s));
-}
+const char * const LAYOUT_NAMES[3] = { "EN", "RU", "UA" };
 
 // the layout for a text: Ukrainian or Russian letters in it, otherwise the language of the interface
 int layoutFor(const lString16 & text)
@@ -63,7 +85,7 @@ bool pbKeyboardUsable()
 PbKeyboard::PbKeyboard(CRGUIWindowManager * wm, const char * title, char * buffer, int maxlen,
                        void (*handler)(char *), bool inverted)
     : CRGUIWindowBase(wm), _buffer(buffer), _maxlen(maxlen), _handler(handler), _inverted(inverted),
-      _textSelected(false), _layout(0), _symbols(false), _shift(false), _pressed(-1), _line(1)
+      _textSelected(false), _layout(0), _shift(false), _pressed(-1), _line(1)
 {
     _title = title != NULL ? Utf8ToUnicode(lString8(title)) : lString16::empty_str;
     _text = Utf8ToUnicode(lString8(buffer != NULL ? buffer : ""));
@@ -81,33 +103,45 @@ PbKeyboard::PbKeyboard(CRGUIWindowManager * wm, const char * title, char * buffe
     build();
 }
 
-void PbKeyboard::addRow(const lString16 & letters, int row, bool shiftRow, int rows, int keyHeight,
-                        int unitWidth, int maxUnits, const lvRect & area, std::vector<Key> & keys)
+// Adds the keys of one row written in the notation of the .kbd files (see PAGES).
+void PbKeyboard::addRow(const char * row, int left, int top, int cellWidth, int cellHeight)
 {
-    (void)rows;
-    int units = letters.length() * LETTER + (shiftRow ? 2 * WIDE : 0);
-    int x = area.left + (maxUnits - units) * unitWidth / 2;
-    int top = area.top + row * keyHeight;
-    Key k;
-    if (shiftRow) {
-        k.code = PBK_SHIFT;
-        k.units = WIDE;
-        k.rc = lvRect(x, top, x + WIDE * unitWidth, top + keyHeight);
-        keys.push_back(k);
-        x += WIDE * unitWidth;
-    }
-    for (int i = 0; i < letters.length(); i++) {
-        k.code = letters[i];
-        k.units = LETTER;
-        k.rc = lvRect(x, top, x + LETTER * unitWidth, top + keyHeight);
-        keys.push_back(k);
-        x += LETTER * unitWidth;
-    }
-    if (shiftRow) {
-        k.code = PBK_BACKSPACE;
-        k.units = WIDE;
-        k.rc = lvRect(x, top, x + WIDE * unitWidth, top + keyHeight);
-        keys.push_back(k);
+    lString16 text = Utf8ToUnicode(lString8(row));
+    int x = left;
+    int pos = 0;
+    while (pos < text.length()) {
+        if (text[pos] == ' ') {
+            pos++;
+            continue;
+        }
+        int end = pos;
+        while (end < text.length() && text[end] != ' ')
+            end++;
+        int length = end - pos;
+        Key k;
+        int span = 1;
+        if (length == 1) {
+            k.code = text[pos];
+        } else {
+            // a named key: "bs", "sp:3"
+            if (length == 4 && text[pos + 2] == ':' && text[pos + 3] >= '1' && text[pos + 3] <= '9')
+                span = text[pos + 3] - '0';
+            switch ((text[pos] << 8) | text[pos + 1]) {
+            case ('c' << 8) | 'n': k.code = PBK_CANCEL; break;
+            case ('b' << 8) | 's': k.code = PBK_BACKSPACE; break;
+            case ('s' << 8) | 'h': k.code = PBK_SHIFT; break;
+            case ('s' << 8) | 'p': k.code = PBK_SPACE; break;
+            case ('l' << 8) | 'g': k.code = PBK_LAYOUT; break;
+            case ('o' << 8) | 'k': k.code = PBK_OK; break;
+            default: k.code = 0; break;
+            }
+        }
+        pos = end;
+        if (k.code == 0)
+            continue;
+        k.rc = lvRect(x, top, x + span * cellWidth, top + cellHeight);
+        _keys.push_back(k);
+        x += span * cellWidth;
     }
 }
 
@@ -117,54 +151,36 @@ void PbKeyboard::build()
     int width = screen.width();
     int height = screen.height();
     int pad = width / 100 + 2;
-    int unitWidth = (width - 2 * pad) / ROW_UNITS;
-    int keyHeight = unitWidth * LETTER * 11 / 10;
-    if (keyHeight > height / 10)
-        keyHeight = height / 10;
-    // text row, 4 rows of keys
-    int total = pad + keyHeight + pad + 4 * keyHeight + pad;
+    // the keys are as wide as the keys of the firmware keyboard: 11 in a row
+    int cellWidth = (width - 2 * pad) / COLUMNS;
+    int cellHeight = cellWidth * 90 / 100;
+    if (cellHeight > height / 12)
+        cellHeight = height / 12; // landscape: the keyboard takes about half of the screen
+    // the text field, 5 rows of keys
+    int total = pad + cellHeight + ROWS * cellHeight + pad;
     _rect = lvRect(0, height - total, width, height);
-    lvRect area(pad, _rect.top + pad, pad + ROW_UNITS * unitWidth, _rect.bottom - pad);
+    int left = (width - COLUMNS * cellWidth) / 2;
+    int top = _rect.top + pad;
+
+    // the text field: its frame is in line with the frames of the keys
+    int gap = keyGap(cellHeight);
+    _textRc = lvRect(left + gap, top + gap, left + COLUMNS * cellWidth - gap, top + cellHeight - gap);
 
     _keys.clear();
-    // text row: Cancel and the text field
-    Key k;
-    k.code = PBK_CANCEL;
-    k.units = 2 * WIDE;
-    k.rc = lvRect(area.left, area.top, area.left + 2 * WIDE * unitWidth, area.top + keyHeight);
-    _keys.push_back(k);
-    _textRc = lvRect(k.rc.right + pad, area.top, area.right, area.top + keyHeight);
-
-    lvRect keysArea(area.left, area.top + keyHeight + pad, area.right, area.bottom);
-    if (_symbols) {
-        addRow(u16(SYMBOLS[0]), 0, false, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-        addRow(u16(SYMBOLS[1]), 1, false, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-        addRow(u16(SYMBOLS[2]), 2, true, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-    } else {
-        addRow(u16(LETTERS[_layout][0]), 0, false, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-        addRow(u16(LETTERS[_layout][1]), 1, false, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-        addRow(u16(LETTERS[_layout][2]), 2, true, 4, keyHeight, unitWidth, ROW_UNITS, keysArea, _keys);
-    }
-    // bottom row: 123 | layout | ' | space | - | OK
-    static const int codes[] = { PBK_SYMBOLS, PBK_LAYOUT, '\'', PBK_SPACE, '-', PBK_OK };
-    static const int widths[] = { WIDE, WIDE, LETTER, 4 * LETTER, LETTER, 2 * WIDE };
-    int units = 0;
-    for (int i = 0; i < 6; i++)
-        units += widths[i];
-    int x = keysArea.left + (ROW_UNITS - units) * unitWidth / 2;
-    int top = keysArea.top + 3 * keyHeight;
-    for (int i = 0; i < 6; i++) {
-        k.code = codes[i];
-        k.units = widths[i];
-        k.rc = lvRect(x, top, x + widths[i] * unitWidth, top + keyHeight);
-        _keys.push_back(k);
-        x += widths[i] * unitWidth;
-    }
-    _keyFont = fontMan->GetFont(keyHeight * 45 / 100, 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
-    _keyBoldFont = fontMan->GetFont(keyHeight * 40 / 100, 700, false, css_ff_sans_serif, lString8("Liberation Sans"));
+    _pressed = -1;
+    for (int row = 0; row < ROWS; row++)
+        addRow(PAGES[_layout][_shift ? 1 : 0][row], left, top + (row + 1) * cellHeight, cellWidth, cellHeight);
+    _keyFont = fontMan->GetFont(cellHeight * 48 / 100, 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
+    _keyBoldFont = fontMan->GetFont(cellHeight * 42 / 100, 700, false, css_ff_sans_serif, lString8("Liberation Sans"));
     _line = width / 600 + 1;
-    _textFont = fontMan->GetFont(keyHeight * 50 / 100, 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
+    _textFont = fontMan->GetFont(cellHeight * 50 / 100, 400, false, css_ff_sans_serif, lString8("Liberation Sans"));
     setDirty();
+}
+
+// space between the cell of a key and its frame
+int PbKeyboard::keyGap(int cellHeight)
+{
+    return cellHeight / 14 + 1;
 }
 
 lString16 PbKeyboard::label(const Key & key) const
@@ -173,18 +189,15 @@ lString16 PbKeyboard::label(const Key & key) const
     case PBK_SHIFT: return lString16(L"\x2191");      // up arrow
     case PBK_BACKSPACE: return lString16(L"\x2190");  // left arrow
     case PBK_SPACE: return lString16::empty_str;
-    case PBK_SYMBOLS: return _symbols ? u16(LETTERS_NAMES[_layout]) : lString16("123");
     case PBK_LAYOUT: return lString16(LAYOUT_NAMES[_layout]);
     case PBK_OK: return lString16("OK");
-    case PBK_CANCEL: return lString16(_("Cancel"));
+    case PBK_CANCEL: return lString16(L"\x00D7");     // multiplication sign
     default:
         break;
     }
+    // a letter key of the Shift page already holds the capital letter
     lChar16 c[2] = { (lChar16)key.code, 0 };
-    lString16 s(c);
-    if (_shift)
-        s.uppercase();
-    return s;
+    return lString16(c);
 }
 
 void PbKeyboard::drawTextField(LVDrawBuf & buf, bool invert)
@@ -226,7 +239,7 @@ void PbKeyboard::drawKey(LVDrawBuf & buf, int index, bool invert)
 {
     const Key & k = _keys[index];
     buf.FillRect(k.rc, 0xFFFFFF);
-    int gap = k.rc.height() / 14 + 1;
+    int gap = keyGap(k.rc.height());
     lvRect rc = k.rc;
     rc.left += gap;
     rc.right -= gap;
@@ -306,15 +319,11 @@ PbKeyboard::Changed PbKeyboard::press(const Key & key)
         return CHANGED_CLOSED;
     case PBK_SHIFT:
         _shift = !_shift;
-        return CHANGED_ALL; // the labels of the letters change
-    case PBK_SYMBOLS:
-        _symbols = !_symbols;
-        _shift = false;
-        build();
+        build(); // the other page of the layout
         return CHANGED_ALL;
     case PBK_LAYOUT:
         _layout = (_layout + 1) % LAYOUT_COUNT;
-        _symbols = false;
+        _shift = false;
         build();
         return CHANGED_ALL;
     case PBK_BACKSPACE:
@@ -332,13 +341,11 @@ PbKeyboard::Changed PbKeyboard::press(const Key & key)
     _textSelected = false;
     if (_text.length() < MAX_TEXT) {
         lChar16 c[2] = { (lChar16)(key.code == PBK_SPACE ? ' ' : key.code), 0 };
-        lString16 s(c);
-        if (_shift)
-            s.uppercase();
-        _text << s;
+        _text << lString16(c);
     }
     if (_shift) {
-        _shift = false; // one capital letter: the labels change back
+        _shift = false; // one capital letter or sign: back to the first page
+        build();
         return CHANGED_ALL;
     }
     return CHANGED_TEXT;

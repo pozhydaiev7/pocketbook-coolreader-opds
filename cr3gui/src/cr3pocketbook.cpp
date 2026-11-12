@@ -2091,8 +2091,11 @@ public:
     lString8 getCurItemWord();
     // Index of the list item drawn at screen row y, or -1 (uses the same geometry as CRMenu::drawClient).
     int itemIndexAt(int y);
-    // How many list rows fit into the dictionary window, at least the skin's min-item-count.
+    // How many whole list rows fit into the dictionary window. The min-item-count of the skin is not
+    // a lower limit: a row that does not fit is drawn over the book page under the window.
     int fittingPageItems();
+    // Row height by the font of the skin, before the rows are stretched over the client area.
+    int baseItemHeight() { return CRMenu::getMaxItemSize().y * 3 / 4; }
     int getPageInItemCount()
     {
         CRMenuSkinRef skin = getSkin();
@@ -2108,13 +2111,7 @@ public:
         setDirty();
     }
     virtual void reconfigure( int flags );
-    virtual lvPoint getMaxItemSize()
-    {
-        lvPoint pt = CRMenu::getMaxItemSize();
-
-        pt.y = pt.y * 3/4;
-        return pt;
-    }
+    virtual lvPoint getMaxItemSize();
 };
 
 static void translate_timer()
@@ -2414,6 +2411,8 @@ private:
     int _gsLastSensor;    // last GetGSensorOrientation value, for the log
     bool _gsEnabledByUs;  // the sensor was off and CoolReader turned it on: off again at exit
     bool _gsFromFirmware; // the last orientation came from the firmware, not from the raw values
+    int _gsReported;      // orientation of the device the screen followed last, -1 before the first one
+    bool _gsRawOk;        // ReadGSensor gives the raw values (it does not on firmware 6.x)
     int _pausedRotation;
     bool _pauseRotationTimer;
     int  m_goToPage;
@@ -2513,9 +2512,40 @@ protected:
         return _bm3x3;
     }
 
+    // Lays the windows out for the canvas the firmware gives now. The orientation and the size
+    // are asked from the firmware after it was told to turn the screen: when it does not turn
+    // it, or turns it back, a page laid out for one orientation is not copied to the canvas of
+    // the other one (the left part of a landscape page over noise on a portrait screen).
+    bool reconfigureToCanvas()
+    {
+        cr_rotate_angle_t oldOrientation = CRPocketBookWindowManager::instance->getScreenOrientation();
+        cr_rotate_angle_t newOrientation = pocketbook_orientations[GetOrientation()];
+        int dx = ScreenWidth();
+        int dy = ScreenHeight();
+        if (oldOrientation == newOrientation && dx == _wm->getScreen()->getWidth() &&
+                dy == _wm->getScreen()->getHeight())
+            return false;
+        CRLog::info("screen: orientation %d -> %d, canvas %d x %d (windows were laid out for %d x %d)",
+                    (int)oldOrientation, (int)newOrientation, dx, dy,
+                    _wm->getScreen()->getWidth(), _wm->getScreen()->getHeight());
+        _wm->reconfigure(dx, dy, newOrientation);
+        return true;
+    }
+
+    // The firmware changed the canvas without telling CoolReader: the windows follow it.
+    void syncCanvas()
+    {
+        if (ScreenWidth() == _wm->getScreen()->getWidth() && ScreenHeight() == _wm->getScreen()->getHeight())
+            return;
+        if (reconfigureToCanvas())
+            _wm->update(true);
+    }
+
     bool rotateApply(int params,  bool saveOrient = true)
     {
         int orient = GetOrientation();
+        CRLog::info("rotation chosen by hand: %d, screen orientation %d, global orientation %d, keeporient %d",
+                    params, orient, GetGlobalOrientation(), pbGlobals->getKeepOrientation());
         if (orient == params)
             return true;
         if (params == -1 || pbGlobals->getKeepOrientation() == 0 || pbGlobals->getKeepOrientation() == 2) {
@@ -2531,13 +2561,9 @@ protected:
             applySettings();
             saveSettings(lString16::empty_str);
         }
-        int dx = _wm->getScreen()->getWidth();
-        int dy = _wm->getScreen()->getHeight();
-        if ((oldOrientation & 1) == (newOrientation & 1)) {
-            _wm->reconfigure(dx, dy, newOrientation);
+        reconfigureToCanvas();
+        if ((oldOrientation & 1) == (newOrientation & 1))
             _wm->update(true);
-        } else
-            _wm->reconfigure(dy, dx, newOrientation);
 
         return true;
     }
@@ -2863,7 +2889,7 @@ public:
     CRPocketBookDocView( CRGUIWindowManager * wm, lString16 dataDir )
         : V3DocViewWin( wm, dataDir ), _bm3x3(NULL), _toc(NULL), _tocLength(0), _dictDlg(NULL), _rotatetimerset(false),
         _lastturn(true), _gsUpright(0), _gsCandidate(-1), _gsCount(0), _gsEvents(false),
-        _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
+        _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _gsReported(-1), _gsRawOk(true), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
         m_bmFromSkin(false)
     {
         instance = this;
@@ -3423,9 +3449,17 @@ public:
         int rotate_angle = props->getIntDef(PROP_POCKETBOOK_ROTATE_ANGLE, 2);
         _rotatetimerset = false;
         int cn = GetOrientation();
-        int x,y,z,rotatepercent;
+        int x = 0, y = 0, z = 0, rotatepercent;
         bool turn = false;
-        ReadGSensor(&x,&y,&z);
+        int rc = ReadGSensor(&x,&y,&z);
+        // firmware 6.x gives no raw values: the page is turned by the orientation of the firmware
+        // then (onAutoRotation), as in the "slow" modes
+        bool rawOk = !(rc < 0 && pbGetGSensorOrientation != NULL);
+        if (rawOk != _gsRawOk) {
+            _gsRawOk = rawOk;
+            CRLog::info("page turn by tilt: raw G-sensor values %s (ReadGSensor %d)",
+                        rawOk ? "are read" : "are not available, the orientation of the firmware is used", rc);
+        }
 
         if (rotate_angle < 0)
             rotate_angle = 0;
@@ -3465,6 +3499,8 @@ public:
                     if (rotate_mode == PB_ROTATE_MODE_180_FAST_NEXT_PREV)
                         turn = !turn;
                 }
+                CRLog::info("page turn by tilt: x %d, y %d, threshold %d, orientation %d, mode %d: %s page",
+                            x, y, rotatepercent, cn, rotate_mode, turn ? "next" : "previous");
                 if (turn)
                     SendEvent(main_handler, EVT_NEXTPAGE, 0, 0);
                 else
@@ -3479,12 +3515,27 @@ public:
         }
     }
 
-    // the firmware rotates by itself: the sensor is no longer read by CoolReader
-    void onOrientationEvent(int par1)
+    // syncCanvas() for the event handler
+    void onCanvasChanged()
     {
-        CRLog::info("EVT_ORIENTATION %d: the firmware reports rotations, G-sensor polling stops", par1);
+        syncCanvas();
+    }
+
+    // The firmware reports rotations: the sensor is no longer read by CoolReader.
+    // false: the device was not turned since the last report. With "Rotate" = 360 such an event
+    // is not followed, or it would undo an orientation chosen by hand; in the other modes every
+    // event counts (a tilt turns a page each time).
+    bool onOrientationEvent(int par1)
+    {
+        int mode = getProps()->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
+        bool turned = par1 != _gsReported || mode != PB_ROTATE_MODE_360;
+        CRLog::info("EVT_ORIENTATION %d (last %d, screen orientation %d, rotate mode %d)%s%s", par1, _gsReported,
+                    GetOrientation(), mode, _gsEvents ? "" : ": the firmware reports rotations, G-sensor polling stops",
+                    turned ? "" : ", the device was not turned: ignored");
         _gsEvents = true;
+        _gsReported = par1;
         ClearTimer(gsensor_timer);
+        return turned;
     }
 
     void startGSensorPolling()
@@ -3601,12 +3652,7 @@ public:
         if (oldOrientation == newOrientation)
             return;
         SetOrientation(orient);
-        int dx = _wm->getScreen()->getWidth();
-        int dy = _wm->getScreen()->getHeight();
-        if ((oldOrientation & 1) == (newOrientation & 1))
-            _wm->reconfigure(dx, dy, newOrientation);
-        else
-            _wm->reconfigure(dy, dx, newOrientation);
+        reconfigureToCanvas();
         // the screen is drawn at once: without it the hourglass of the new layout stays on the
         // screen until something else repaints it
         _wm->update(true);
@@ -3617,10 +3663,10 @@ public:
         if (_gsEvents)
             return;
         int mode = getProps()->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
-        // why the sensor is not read now, for the log: 1 mode, 2 standby, 3 another window
-        int reason = mode != PB_ROTATE_MODE_360 ? 1 : isStandByMode ? 2 : _wm->getTopVisibleWindow() != this ? 3 : 0;
+        // why the sensor is not read now, for the log: 2 standby, 3 another window
+        int reason = isStandByMode ? 2 : _wm->getTopVisibleWindow() != this ? 3 : 0;
         if (reason != _gsLastReason) {
-            CRLog::info("G-sensor polling: %s", reason == 0 ? "reading" : reason == 1 ? "off, Rotate is not 360"
+            CRLog::info("G-sensor polling: %s", reason == 0 ? "reading"
                         : reason == 2 ? "paused, standby" : "paused, another window is on top");
             _gsLastReason = reason;
         }
@@ -3629,9 +3675,12 @@ public:
             SetWeakTimer("GSensorPoll", gsensor_timer, PB_GSENSOR_IDLE_MS);
             return;
         }
+        syncCanvas();
         int cur = GetOrientation();
         int want = sensorOrientation();
-        if (want >= 0 && want != cur) {
+        // The screen follows the device when the device is turned, not all the time: an
+        // orientation chosen by hand stays until the device is turned to another side.
+        if (want >= 0 && want != _gsReported) {
             if (want == _gsCandidate) {
                 _gsCount++;
             } else {
@@ -3640,10 +3689,15 @@ public:
             }
             // raw values: two readings in a row, not a passing tilt; the firmware orientation is settled
             if (_gsCount >= (_gsFromFirmware ? 1 : 2)) {
-                CRLog::info("G-sensor: orientation %d -> %d", cur, want);
+                CRLog::info("G-sensor: the device is turned %d -> %d, screen orientation %d, rotate mode %d",
+                            _gsReported, want, cur, mode);
                 _gsCount = 0;
                 _gsCandidate = -1;
-                applySensorRotation(want);
+                _gsReported = want;
+                if (mode == PB_ROTATE_MODE_360)
+                    applySensorRotation(want);
+                else
+                    onAutoRotation(want); // 180: the screen is turned over; tilt modes: a page is turned
             }
         } else {
             _gsCount = 0;
@@ -3661,18 +3715,15 @@ public:
             SetOrientation(_pausedRotation);
         cr_rotate_angle_t oldOrientation = CRPocketBookWindowManager::instance->getScreenOrientation();
         cr_rotate_angle_t newOrientation = pocketbook_orientations[GetOrientation()];
-        CRLog::trace("onPausedRotation(), oldOrient = %d, newOrient = %d", oldOrientation, newOrientation);
-        int dx = _wm->getScreen()->getWidth();
-        int dy = _wm->getScreen()->getHeight();
+        CRLog::info("rotation after the pause: asked %d, screen orientation %d -> %d", _pausedRotation,
+                    (int)oldOrientation, (int)newOrientation);
         if (oldOrientation == newOrientation)
             return;
-        if ((oldOrientation & 1) == (newOrientation & 1))
-            _wm->reconfigure(dx, dy, newOrientation);
-        else {
+        if ((oldOrientation & 1) != (newOrientation & 1)) {
             SetGlobalOrientation(_pausedRotation);
             _restore_globOrientation = true;
-            _wm->reconfigure(dy, dx, newOrientation);
         }
+        reconfigureToCanvas();
         _wm->update(true);
     }
 
@@ -3687,17 +3738,19 @@ public:
         }
         cr_rotate_angle_t oldOrientation = CRPocketBookWindowManager::instance->getScreenOrientation();
         cr_rotate_angle_t newOrientation = pocketbook_orientations[par1];
-        CRLog::trace("onAutoRotation(), oldOrient = %d, newOrient = %d", oldOrientation, newOrientation);
-        if (oldOrientation == newOrientation)
-            return;
         CRPropRef props = CRPocketBookDocView::instance->getProps();
         int rotate_mode = props->getIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
+        CRLog::info("rotation of the device: %d, screen orientation %d -> %d, rotate mode %d", par1,
+                    (int)oldOrientation, (int)newOrientation, rotate_mode);
+        if (oldOrientation == newOrientation)
+            return;
         if (rotate_mode && (oldOrientation & 1) != (newOrientation & 1)) {
-            CRLog::trace("rotate_mode && (oldOrientation & 1) != (newOrientation & 1)");
-            if (rotate_mode == PB_ROTATE_MODE_180 || rotate_mode > PB_ROTATE_MODE_180_SLOW_PREV_NEXT)
+            // the "FAST" modes turn pages by the raw sensor values (onRotateTimer); without the
+            // raw values they work as the "slow" ones
+            if (rotate_mode == PB_ROTATE_MODE_180 || (rotate_mode > PB_ROTATE_MODE_180_SLOW_PREV_NEXT && _gsRawOk))
                 return;
             bool prev = false;
-            if (rotate_mode == PB_ROTATE_MODE_180_SLOW_PREV_NEXT) {    // back+forward
+            if (rotate_mode == PB_ROTATE_MODE_180_SLOW_PREV_NEXT || rotate_mode >= PB_ROTATE_MODE_180_FAST_PREV_NEXT) {    // back+forward
                 switch (oldOrientation) {
                 case CR_ROTATE_ANGLE_0:
                     prev = (newOrientation == CR_ROTATE_ANGLE_90);
@@ -3712,7 +3765,10 @@ public:
                     prev = (newOrientation == CR_ROTATE_ANGLE_270);
                     break;
                 }
+                if (rotate_mode == PB_ROTATE_MODE_180_FAST_NEXT_PREV)
+                    prev = !prev;
             }
+            CRLog::info("page turn by tilt: %s page", prev ? "previous" : "next");
             if (prev)
                 SendEvent(main_handler, EVT_PREVPAGE, 0, 0);
             else
@@ -3720,15 +3776,16 @@ public:
             SetAutoPowerOff(0);
             SetAutoPowerOff(1);  // reset auto-power-off timer!
         } else {
-            int dx = _wm->getScreen()->getWidth();
-            int dy = _wm->getScreen()->getHeight();
             if ((oldOrientation & 1) == (newOrientation & 1)) {
                 SetOrientation(par1);
-                _wm->reconfigure(dx, dy, newOrientation);
+                reconfigureToCanvas();
                 _wm->update(true);
             } else {
+                // A pause: the device may be on its way to the opposite side. A hard timer: a
+                // weak one waits for the next event when the device sleeps, and the screen was
+                // turned only after a tap.
                 _pausedRotation = par1;
-                SetWeakTimer("RotatePage", paused_rotate_timer, 400);
+                SetHardTimer("RotatePause", paused_rotate_timer, 400);
                 _pauseRotationTimer = true;
             }
         }
@@ -4065,6 +4122,12 @@ void CRPbDictionaryView::draw()
     int antialiasingMode = fontMan->GetAntialiasMode();
     if (antialiasingMode == 1)
         fontMan->SetAntialiasMode(0);
+    // nothing of the window is drawn over the book page next to it
+    LVDrawBuf & canvas = *_wm->getScreen()->getCanvas();
+    lvRect saveClip;
+    canvas.GetClipRect(&saveClip);
+    lvRect windowRc = getRect();
+    canvas.SetClipRect(&windowRc);
     if (isArticleListActive()) {
         // In night mode the whole window is inverted after drawing, so redraw all list rows
         if (pbNightMode())
@@ -4074,6 +4137,7 @@ void CRPbDictionaryView::draw()
         CRViewDialog::draw();
         _dirty = false;
     }
+    canvas.SetClipRect(&saveClip);
     if (antialiasingMode == 1)
         fontMan->SetAntialiasMode(1);
 }
@@ -5179,22 +5243,37 @@ int CRPbDictionaryMenu::itemIndexAt(int y)
     return _topItem + index;
 }
 
+// The rows of the page share the client area: nothing of one more row is left under them.
+lvPoint CRPbDictionaryMenu::getMaxItemSize()
+{
+    lvPoint pt = CRMenu::getMaxItemSize();
+    pt.y = baseItemHeight();
+    lvRect client;
+    if (_pageItems > 0 && getClientRect(client)) {
+        int stretched = (client.height() - dictMenuSeparatorHeight(getSkin()) * (_pageItems - 1)) / _pageItems;
+        if (stretched > pt.y)
+            pt.y = stretched;
+    }
+    return pt;
+}
+
 int CRPbDictionaryMenu::fittingPageItems()
 {
     CRMenuSkinRef skin = getSkin();
-    int minItems = skin.isNull() ? 0 : skin->getMinItemCount();
-    if (minItems <= 0)
-        minItems = _pageItems > 0 ? _pageItems : 7;
+    // the count of the skin: only while the window has no size yet
+    int skinItems = skin.isNull() ? 0 : skin->getMinItemCount();
+    if (skinItems <= 0)
+        skinItems = _pageItems > 0 ? _pageItems : 7;
     lvRect client;
     if (!getClientRect(client) || client.height() <= 0)
-        return minItems;
+        return skinItems;
     int sep = dictMenuSeparatorHeight(skin);
-    int step = getMaxItemSize().y + sep;
+    int step = baseItemHeight() + sep;
     if (step <= 0)
-        return minItems;
+        return skinItems;
     int fit = (client.height() + sep) / step;
-    if (fit < minItems)
-        return minItems;
+    if (fit < 1)
+        fit = 1;
     if (fit > 30)
         fit = 30;
     return fit;
@@ -6937,8 +7016,9 @@ int main_handler(int type, int par1, int par2)
         restartStandByTimer();
         break;
     case EVT_ORIENTATION:
-        CRPocketBookDocView::instance->onOrientationEvent(par1);
-        CRPocketBookDocView::instance->onAutoRotation(par1);
+        if (CRPocketBookDocView::instance->onOrientationEvent(par1))
+            CRPocketBookDocView::instance->onAutoRotation(par1);
+        CRPocketBookDocView::instance->onCanvasChanged();
         restartStandByTimer();
         break;
     case EVT_KEYPRESS:
