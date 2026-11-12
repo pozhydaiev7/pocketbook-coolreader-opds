@@ -1,15 +1,28 @@
-/** \file lvmemman.h
-    \brief Fast memory manager implementation
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007,2008,2011-2013 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2018 poire-z <poire-z@users.noreply.github.com>         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-
-*/
+/**
+ * \file lvmemman.h
+ * \brief Fast memory manager implementation
+ */
 
 #ifndef __LV_MEM_MAN_H_INCLUDED__
 #define __LV_MEM_MAN_H_INCLUDED__
@@ -38,7 +51,7 @@ inline void crFatalError() { crFatalError( -1, "Unknown fatal error" ); }
 void crSetFatalErrorHandler( lv_FatalErrorHandler_t * handler );
 
 /// typed realloc with result check (size is counted in T), fatal error if failed
-template <typename T> T * cr_realloc( T * ptr, size_t newSize ) {
+template <typename T> inline T * cr_realloc( T * ptr, size_t newSize ) {
     T * newptr = reinterpret_cast<T*>(realloc(ptr, sizeof(T)*newSize));
     if ( newptr )
         return newptr;

@@ -1,14 +1,29 @@
-/** \file lvref.h
-    \brief smart pointer with reference counting template
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2013 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2018 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2018,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-    See LICENSE file for details.
-
-*/
+/**
+ * \file lvref.h
+ * \brief smart pointer with reference counting template
+ */
 
 #ifndef __LVREF_H_INCLUDED__
 #define __LVREF_H_INCLUDED__
@@ -37,7 +52,7 @@ public:
     static ref_count_rec_t null_ref;
     static ref_count_rec_t protected_null_ref;
 
-    ref_count_rec_t( void * obj ) : _refcount(1), _obj(obj) { }
+    constexpr ref_count_rec_t( void * obj ) : _refcount(1), _obj(obj) { }
 #if (LDOM_USE_OWN_MEM_MAN==1)
     void * operator new( size_t )
     {
@@ -368,11 +383,14 @@ private:
     //========================================
     void Release()
     { 
-        if (--_ptr->_refcount == 0) 
+        if (--_ptr->_refcount == 0)
         {
-            if ( _ptr->_obj )
-                delete (reinterpret_cast<T*>(_ptr->_obj));
-            delete _ptr;
+            if (_ptr != &ref_count_rec_t::null_ref)
+            {
+                if ( _ptr->_obj )
+                    delete (reinterpret_cast<T*>(_ptr->_obj));
+                delete _ptr;
+            }
         }
     }
     //========================================
@@ -382,7 +400,7 @@ public:
 	LVRef & clone()
 	{
 		if ( isNull() )
-			return LVRef();
+			return LVRef(NULL);
 		return LVRef( new T( *_ptr ) );
 	}
 
@@ -564,11 +582,11 @@ public:
         _array[index] = item;
     }
     /// returns size of buffer
-    int size() { return _size; }
+    int size() const { return _size; }
     /// returns number of items in vector
-    int length() { return _count; }
+    int length() const { return _count; }
     /// returns true if there are no items in vector
-    bool empty() { return _count==0; }
+    bool empty() const { return _count==0; }
     /// clears all items
     void clear()
     {

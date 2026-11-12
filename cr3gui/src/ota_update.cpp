@@ -19,12 +19,12 @@ int OTA_sessionId;
 /**
  * The OTA branch to use (stable/dev)
  */
-lString16 OTA_branch;
+lString32 OTA_branch;
 
 /**
  * URL target to the update package
  */
-lString16 packageUrl;
+lString32 packageUrl;
 
 /**
  * Check if there is a new version
@@ -34,12 +34,12 @@ lString16 packageUrl;
  */
 bool OTA_isNewVersion() {
     CRLog::trace("OTA_isNewVersion()");
-    if( OTA_branch == lString16(OTA_BRANCH_DEV) ) {
+    if( OTA_branch == lString32(OTA_BRANCH_DEV) ) {
         CRLog::trace("OTA_isNewVersion(): Dev branch so return true regardless");
         return true;
     }
-    lString16 url = lString16(OTA_VERSION);
-    url.replace(lString16("[BRANCH]"), OTA_branch);
+    lString32 url = lString32(OTA_VERSION);
+    url.replace(lString32("[BRANCH]"), OTA_branch);
     const char * response = web::get(UnicodeToUtf8(url).c_str()).c_str();
     if( strlen(response) > 5 &&
         strlen(response) <= OTA_VERSION_MAX_LENGTH &&
@@ -60,7 +60,7 @@ bool OTA_isNewVersion() {
  *
  * @return  true if ok, false if not
  */
-bool OTA_downloadExists(const lString16 url) {
+bool OTA_downloadExists(const lString32 url) {
     CRLog::trace("OTA_downloadExists(%s)", UnicodeToUtf8(url).c_str());
     const char * response = web::get(UnicodeToUtf8(url).c_str()).c_str();
     if( strlen(response) == strlen(OTA_EXISTS_STR) &&
@@ -80,18 +80,18 @@ bool OTA_downloadExists(const lString16 url) {
  *
  * @return  linked device model or empty if not linked
  */
-lString16 OTA_getLinkedDevice(const lString16 deviceModel) {
+lString32 OTA_getLinkedDevice(const lString32 deviceModel) {
     CRLog::trace("OTA_getLinkedDevice(%d)", UnicodeToUtf8(deviceModel).c_str());
-    lString16 url = lString16(OTA_LINK_MASK);
-    url.replace(lString16("[DEVICE]"), deviceModel);
-    url.replace(lString16("[BRANCH]"), OTA_branch);
+    lString32 url = lString32(OTA_LINK_MASK);
+    url.replace(lString32("[DEVICE]"), deviceModel);
+    url.replace(lString32("[BRANCH]"), OTA_branch);
     const char * response = web::get(UnicodeToUtf8(url).c_str()).c_str();
     if( strlen(response) > 0 && strlen(response) <= OTA_VERSION_MAX_LENGTH ) {
         CRLog::trace("OTA_getLinkedDevice(): Got device: %s", response);
-        return lString16(response);
+        return lString32(response);
     }
     CRLog::trace("OTA_getLinkedDevice(): Got no device");
-    return lString16("");
+    return lString32("");
 }
 
 /**
@@ -102,11 +102,11 @@ lString16 OTA_getLinkedDevice(const lString16 deviceModel) {
  *
  * @return  url
  */
-lString16 OTA_genUrl(const char *mask, const lString16 deviceModel) {
+lString32 OTA_genUrl(const char *mask, const lString32 deviceModel) {
     CRLog::trace("OTA_genUrl(%s, %s)", mask, UnicodeToUtf8(deviceModel).c_str());
-    lString16 url = lString16(mask);
-    url.replace(lString16("[DEVICE]"), deviceModel);
-    url.replace(lString16("[BRANCH]"), OTA_branch);
+    lString32 url = lString32(mask);
+    url.replace(lString32("[DEVICE]"), deviceModel);
+    url.replace(lString32("[BRANCH]"), OTA_branch);
     CRLog::trace("OTA_genUrl(): %s", UnicodeToUtf8(url).c_str());
     return url;
 }
@@ -220,7 +220,7 @@ void OTA_DL_update_progress(void) {
  *
  * @return  true if updated, false if error
  */
-bool OTA_updateFrom(const lString16 url) {
+bool OTA_updateFrom(const lString32 url) {
     CRLog::trace("OTA_updateFrom(%s)", UnicodeToUtf8(url).c_str());
 
     packageUrl = url;
@@ -261,7 +261,7 @@ bool OTA_update(const char *branch) {
     CRLog::trace("OTA_update(%s)", branch);
 
     // Set used branch
-    OTA_branch = lString16(branch);
+    OTA_branch = lString32(branch);
 
     iv_dialoghandler progressbar = NULL;
 
@@ -288,7 +288,7 @@ bool OTA_update(const char *branch) {
 
     // Get device model number
     CRLog::trace("OTA_update(): Get device model number");
-    const lString16 deviceModel = getPbModelNumber();
+    const lString32 deviceModel = getPbModelNumber();
     CRLog::trace("OTA_update(): deviceModel = %s", UnicodeToUtf8(deviceModel).c_str());
 
     UpdateProgressbar(_("Searching..."), 0);
@@ -308,7 +308,7 @@ bool OTA_update(const char *branch) {
 
     // Check if the device is linked to another one
     CRLog::trace("OTA_update(): Check if the device is linked to another one");
-    const lString16 linkedDevice = OTA_getLinkedDevice(deviceModel);
+    const lString32 linkedDevice = OTA_getLinkedDevice(deviceModel);
     if( linkedDevice.empty() ) {
         CRLog::trace("OTA_update(): Didn't find linked device");
         CloseProgressbar();

@@ -22,7 +22,7 @@ class CRTinyDict : public CRDictionary
 {
 	TinyDictionaryList dicts;
 public:
-	CRTinyDict( const lString16& config );
+	CRTinyDict( const lString32& config );
 	virtual ~CRTinyDict() { }
     virtual lString8 translate(const lString8 & w);
     virtual bool empty() { return dicts.length()==0; }
@@ -32,7 +32,7 @@ public:
 class CRDocViewWindow;
 
 extern void
-showT9Keyboard(CRGUIWindowManager * wm, CRDocViewWindow * mainwin, int id, lString16 & buffer);
+showT9Keyboard(CRGUIWindowManager * wm, CRDocViewWindow * mainwin, int id, lString32 & buffer);
 
 
 #endif

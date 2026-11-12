@@ -43,7 +43,7 @@ public:
     static bool isStatsCommand(int command) { return command >= PB_STATS_CMD_FIRST && command <= PB_STATS_CMD_LAST; }
 
     /// sets the log file; called once at start
-    static void init(const lString16 & stateDir);
+    static void init(const lString32 & stateDir);
     /// the book window shows a page: times it for the log
     static void pageShown(LVDocView * doc);
     /// the book is no longer read (exit, standby): writes the timed page
@@ -60,8 +60,8 @@ public:
     /// one line of a report: optional gray label and text in one font; title lines are bigger,
     /// section headings are bold with a line above them
     struct Line {
-        lString16 label;
-        lString16 text;
+        lString32 label;
+        lString32 text;
         bool title;
         bool section;
         bool newRow;  // starts a new row of the screen
@@ -81,7 +81,7 @@ private:
     int _booksScreen;          // screen of the book list
     Mode _mode;                // the screen shown last
     int _reportBack;           // command that leaves the report
-    lString16 _reportCaption;
+    lString32 _reportCaption;
     std::vector<Line> _report;
     std::vector<int> _bookIndexes;
     std::vector<long long> _bookSeconds;
@@ -91,7 +91,7 @@ private:
     void showBooks(CRGUIWindowManager * wm);
     void showReport(CRGUIWindowManager * wm);
     void bookReport(int bookIndex, int back);
-    void periodReport(const lString16 & caption, int fromDay, int toDay);
+    void periodReport(const lString32 & caption, int fromDay, int toDay);
     void askPeriod();
 };
 

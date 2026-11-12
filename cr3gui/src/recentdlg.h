@@ -18,7 +18,7 @@
 class CRRecentBooksMenu : public CRFullScreenMenu
 {
 private:
-    lString16 _helpText;
+    lString32 _helpText;
     int _helpHeight;
     LVPtrVector<CRFileHistRecord> * _files;
     bool removeItem( int index );

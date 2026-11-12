@@ -1,23 +1,34 @@
-/*******************************************************
-
-   CoolReader Engine
-
-   lvxml.cpp:  XML parser implementation
-
-   (c) Vadim Lopatin, 2000-2006
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2011-2015 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2012 Daniel Savard <daniels@xsoli.com>                  *
+ *   Copyright (C) 2018,2020,2021 Aleksey Chernov <valexlin@gmail.com>     *
+ *   Copyright (C) 2020,2021 poire-z <poire-z@users.noreply.github.com>    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
 #include "../include/crtxtenc.h"
 #include "../include/lvstring.h"
 #include "../include/cp_stats.h"
+#include "../include/crlog.h"
 #include <string.h>
 #include <stdio.h>
 
-static const lChar16 __cp737[128] = {
+static const lChar32 __cp737[128] = {
   /* 0x80 */
   0x0391, 0x0392, 0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 0x0398,
   0x0399, 0x039a, 0x039b, 0x039c, 0x039d, 0x039e, 0x039f, 0x03a0,
@@ -44,7 +55,7 @@ static const lChar16 __cp737[128] = {
   0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2, 0x25a0, 0x00a0,
 };
 
-static const lChar16 __cp1253[128] = {
+static const lChar32 __cp1253[128] = {
   /* 0x80 */
   0x20ac, 0xfffd, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021,
   0xfffd, 0x2030, 0xfffd, 0x2039, 0xfffd, 0xfffd, 0xfffd, 0xfffd,
@@ -71,7 +82,7 @@ static const lChar16 __cp1253[128] = {
   0x03c8, 0x03c9, 0x03ca, 0x03cb, 0x03cc, 0x03cd, 0x03ce, 0xfffd,
 };
 
-static const lChar16 __cp775[128] = {
+static const lChar32 __cp775[128] = {
   /* 0x80 */
   0x0106, 0x00fc, 0x00e9, 0x0101, 0x00e4, 0x0123, 0x00e5, 0x0107,
   0x0142, 0x0113, 0x0156, 0x0157, 0x012b, 0x0179, 0x00c4, 0x00c5,
@@ -102,7 +113,7 @@ static const lChar16 __cp775[128] = {
  * CP852
  */
 
-static const lChar16 __cp852[128] = {
+static const lChar32 __cp852[128] = {
   /* 0x80 */
   0x00c7, 0x00fc, 0x00e9, 0x00e2, 0x00e4, 0x016f, 0x0107, 0x00e7,
   0x0142, 0x00eb, 0x0150, 0x0151, 0x00ee, 0x0179, 0x00c4, 0x0106,
@@ -133,7 +144,7 @@ static const lChar16 __cp852[128] = {
  * ISO-8859-2
  */
 
-static const lChar16 __iso8859_2[128] = {
+static const lChar32 __iso8859_2[128] = {
   /* 0x80*/
   0x0402, 0x0403, 0x201a, 0x0453, 0x201e, 0x2026, 0x2020, 0x2021,
   0x20ac, 0x2030, 0x0409, 0x2039, 0x040a, 0x040c, 0x040b, 0x040f,
@@ -164,7 +175,7 @@ static const lChar16 __iso8859_2[128] = {
  * ISO-8859-16
  */
 
-static const lChar16 __iso8859_16[128] = {
+static const lChar32 __iso8859_16[128] = {
     /* 0x80*/
     0x0402, 0x0403, 0x201a, 0x0453, 0x201e, 0x2026, 0x2020, 0x2021,
     0x20ac, 0x2030, 0x0409, 0x2039, 0x040a, 0x040c, 0x040b, 0x040f,
@@ -191,7 +202,7 @@ static const lChar16 __iso8859_16[128] = {
     0x0171, 0x00f9, 0x00fa, 0x00fb, 0x00fc, 0x0119, 0x021b, 0x00ff,
 };
 
-static const lChar16 __cp1257[128] = {
+static const lChar32 __cp1257[128] = {
   /* 0x80 */
   0x20ac, 0xfffd, 0x201a, 0xfffd, 0x201e, 0x2026, 0x2020, 0x2021,
   0xfffd, 0x2030, 0xfffd, 0x2039, 0xfffd, 0x00a8, 0x02c7, 0x00b8,
@@ -218,7 +229,7 @@ static const lChar16 __cp1257[128] = {
   0x0173, 0x0142, 0x015b, 0x016b, 0x00fc, 0x017c, 0x017e, 0x02d9,
 };
 
-static const lChar16 __cp1251[128] = {
+static const lChar32 __cp1251[128] = {
     /* 0x80*/
     0x0402, 0x0403, 0x201a, 0x0453,
     0x201e, 0x2026, 0x2020, 0x2021,
@@ -261,17 +272,17 @@ static const lChar16 __cp1251[128] = {
     0x044c, 0x044d, 0x044e, 0x044f,
 };
 
-static const lChar16 __cp1252[128] = {
+static const lChar32 __cp1252[128] = {
     /* 0x80*/
-    0x0402, 0x0403, 0x201a, 0x0453, 
-    0x201e, 0x2026, 0x2020, 0x2021, 
-    0x20ac, 0x2030, 0x0409, 0x2039, 
-    0x040a, 0x040c, 0x040b, 0x040f, 
+    0x0402, 0x0403, 0x201a, 0x0453,
+    0x201e, 0x2026, 0x2020, 0x2021,
+    0x20ac, 0x2030, 0x0409, 0x2039,
+    0x040a, 0x040c, 0x040b, 0x040f,
     /* 0x90*/
-    0x0452, 0x2018, 0x2019, 0x201c, 
-    0x201d, 0x2022, 0x2013, 0x2014, 
-    0x0000, 0x2122, 0x0459, 0x203a, 
-    0x045a, 0x045c, 0x045b, 0x045f, 
+    0x0452, 0x2018, 0x2019, 0x201c,
+    0x201d, 0x2022, 0x2013, 0x2014,
+    0x0000, 0x2122, 0x0459, 0x203a,
+    0x045a, 0x045c, 0x045b, 0x045f,
     /* 0xa0*/
     0x00a0, 0x00a1, 0x00a2, 0x00a3,
     0x00a4, 0x00a5, 0x00a6, 0x00a7,
@@ -304,7 +315,7 @@ static const lChar16 __cp1252[128] = {
     0x00fc, 0x00fd, 0x00fe, 0x00ff,
 };
 
-static const lChar16 __cp1254[128] = {
+static const lChar32 __cp1254[128] = {
     /* 0x80 */
     0x20ac, 0xfffd, 0x201a, 0x0192,
     0x201e, 0x2026, 0x2020, 0x2021,
@@ -347,7 +358,7 @@ static const lChar16 __cp1254[128] = {
     0x00fc, 0x0131, 0x015f, 0x00ff,
 };
 
-static const lChar16 __cp866[128] = {
+static const lChar32 __cp866[128] = {
     /* 0x80*/
     0x0410, 0x0411, 0x0412, 0x0413,
     0x0414, 0x0415, 0x0416, 0x0417,
@@ -390,7 +401,7 @@ static const lChar16 __cp866[128] = {
     0x2116, 0x00a4, 0x25a0, 0x00a0,
 };
 
-static const lChar16 __koi8r[128] = {
+static const lChar32 __koi8r[128] = {
     /* 0x80*/
     0x2500, 0x2502, 0x250c, 0x2510,
     0x2514, 0x2518, 0x251c, 0x2524,
@@ -433,7 +444,7 @@ static const lChar16 __koi8r[128] = {
     0x042d, 0x0429, 0x0427, 0x042a,
 };
 
-static const lChar16 __cp1250[128] = {
+static const lChar32 __cp1250[128] = {
     /* 0x80*/
     0x20ac, 0x0000, 0x201a, 0x0000,
     0x201e, 0x2026, 0x2020, 0x2021,
@@ -476,7 +487,7 @@ static const lChar16 __cp1250[128] = {
     0x00fc, 0x00fd, 0x0163, 0x02d9,
 };
 
-static const lChar16 __cp850[128] = {
+static const lChar32 __cp850[128] = {
     /* 0x80*/
     0x00c7, 0x00fc, 0x00e9, 0x00e2,
     0x00e4, 0x00e0, 0x00e5, 0x00e7,
@@ -538,7 +549,7 @@ static const lChar16 __cp850[128] = {
 /// add other encodings here
 static struct {
     const char * name;
-    const lChar16 * table;
+    const lChar32 * table;
     int id;
 } _enc_table[] = {
     {"windows-1250", __cp1250, CRENC_ID_CP1250},
@@ -582,11 +593,11 @@ static struct {
     {NULL, NULL, 0}
 };
 
-int CREncodingNameToId( const lChar16 * enc_name )
+int CREncodingNameToId( const lChar32 * enc_name )
 {
-    lString16 s( enc_name );
+    lString32 s( enc_name );
     s.lowercase();
-    const lChar16 * encoding_name = s.c_str();
+    const lChar32 * encoding_name = s.c_str();
     if ( !lStr_cmp(encoding_name, "utf-8") )
         return CRENC_ID_UTF8;
     else if ( !lStr_cmp(encoding_name, "utf-16") )
@@ -635,11 +646,11 @@ const char * CREncodingIdToName( int id )
     return NULL; // not found
 }
 
-const lChar16 * GetCharsetByte2UnicodeTable( const lChar16 * enc_name )
+const lChar32 * GetCharsetByte2UnicodeTable( const lChar32 * enc_name )
 {
-    lString16 s( enc_name );
+    lString32 s( enc_name );
     s.lowercase();
-    const lChar16 * encoding_name = s.c_str();
+    const lChar32 * encoding_name = s.c_str();
     for (int i=0; _enc_table[i].name!=NULL; i++)
     {
         if ( !lStr_cmp(encoding_name, _enc_table[i].name) )
@@ -650,7 +661,7 @@ const lChar16 * GetCharsetByte2UnicodeTable( const lChar16 * enc_name )
     return NULL; // not found
 }
 
-const lChar16 * GetCharsetByte2UnicodeTableById( int id )
+const lChar32 * GetCharsetByte2UnicodeTableById( int id )
 {
     for (int i=0; _enc_table[i].name!=NULL; i++)
     {
@@ -1224,7 +1235,7 @@ const char* langToLanguage( int lang )
     }
 }
 
-const lChar16 * GetCharsetByte2UnicodeTable( int codepage )
+const lChar32 * GetCharsetByte2UnicodeTable( int codepage )
 {
     switch ( codepage )
     {
@@ -1249,26 +1260,26 @@ const lChar16 * GetCharsetByte2UnicodeTable( int codepage )
     }
 }
 
-const lChar16 * GetCharsetName( int codepage )
+const lChar32 * GetCharsetName( int codepage )
 {
     switch ( codepage )
     {
     case 1251:
-        return L"cp1251";
+        return U"cp1251";
     case 1257:
-        return L"cp1257";
+        return U"cp1257";
     case 204:
-        return L"cp1251";
+        return U"cp1251";
     case 1252:
-        return L"cp1252";
+        return U"cp1252";
     case 1253:
-        return L"cp1253";
+        return U"cp1253";
     case 737:
-        return L"cp737";
-    case 1250: return L"cp1250";
-    case 866:  return L"cp866";
-    case 850:  return L"cp850";
-    default:   return L"cp1252";
+        return U"cp737";
+    case 1250: return U"cp1250";
+    case 866:  return U"cp866";
+    case 850:  return U"cp850";
+    default:   return U"cp1252";
     }
 }
 
@@ -1410,11 +1421,11 @@ static struct {
     {NULL, NULL}
 };
 
-const lChar8 ** GetCharsetUnicode2ByteTable( const lChar16 * enc_name )
+const lChar8 ** GetCharsetUnicode2ByteTable( const lChar32 * enc_name )
 {
-    lString16 s( enc_name );
+    lString32 s( enc_name );
     s.lowercase();
-    const lChar16 * encoding_name = s.c_str();
+    const lChar32 * encoding_name = s.c_str();
     for (int i=0; _uni2byte_enc_table[i].name!=NULL; i++)
     {
         if ( !lStr_cmp(encoding_name, _uni2byte_enc_table[i].name) )
@@ -1431,8 +1442,8 @@ const lChar8 ** GetCharsetUnicode2ByteTable( const lChar16 * enc_name )
 #define DBL_CHAR_STAT_SIZE 256
 
 class CDoubleCharStat
-{ 
-   
+{
+
    struct CDblCharNode
    {
       unsigned char ch1;
@@ -1637,7 +1648,7 @@ int sort_dblstats_by_ch( const void * p1, const void * p2 )
 }
 
 class CDoubleCharStat2
-{ 
+{
 private:
     lUInt16 * * stats;
     int total;
@@ -1649,15 +1660,14 @@ public:
     void Add( unsigned char c1, unsigned char c2 )
     {
         if ( !stats ) {
-            stats = new lUInt16* [256];
-            memset( stats, 0, sizeof(lUInt16*)*256);
+            stats = new lUInt16* [256]();
+            memset(stats, 0, sizeof(lUInt16*)*256);
         }
         if (c1==' ' && c2==' ')
             return;
         total++;
         if ( stats[c1]==NULL ) {
-            stats[c1] = new lUInt16[256];
-            memset( stats[c1], 0, sizeof(lUInt16)*256 );
+            stats[c1] = new lUInt16[256]();
         }
         if ( stats[c1][c2]++ == 0)
             items++;
@@ -1723,18 +1733,18 @@ public:
 
 bool isValidUtf8Data( const unsigned char * buf, int buf_size )
 {
-    const unsigned char * start = buf;
+    //const unsigned char * start = buf;
     const unsigned char * end_buf = buf + buf_size - 5;
     while ( buf < end_buf ) {
         lUInt8 ch = *buf++;
         if ( (ch & 0x80) == 0 ) {
         } else if ( (ch & 0xC0) == 0x80 ) {
-            CRLog::trace("unexpected char %02x at position %x, str=%s", ch, (buf-1-start), lString8((const char *)(buf-1), 32).c_str());
+            //CRLog::trace("unexpected char %02x at position %x, str=%s", ch, (buf-1-start), lString8((const char *)(buf-1), 32).c_str());
             return false;
         } else if ( (ch & 0xE0) == 0xC0 ) {
             ch = *buf++;
             if ( (ch & 0xC0) != 0x80 ) {
-                CRLog::trace("unexpected char %02x at position %x, str=%s", ch, (buf-1-start), lString8((const char *)(buf-1), 32).c_str());
+                //CRLog::trace("unexpected char %02x at position %x, str=%s", ch, (buf-1-start), lString8((const char *)(buf-1), 32).c_str());
                 return false;
             }
         } else if ( (ch & 0xF0) == 0xE0 ) {
@@ -1792,8 +1802,7 @@ void MakeDblCharStat(const unsigned char * buf, int buf_size, dbl_char_stat_t * 
 
 void MakeCharStat(const unsigned char * buf, int buf_size, short stat_table[256], bool skipHtml)
 {
-   int stat[256];
-   memset( stat, 0, sizeof(int)*256 );
+   int stat[256] = { 0 };
    int total=0;
    unsigned char ch;
    bool insideTag = false;
@@ -1905,29 +1914,29 @@ int AutodetectCodePageUtf( const unsigned char * buf, int buf_size, char * cp_na
 {
     // checking byte order signatures
     if ( buf[0]==0xEF && buf[1]==0xBB && buf[2]==0xBF ) {
-        strcpy( cp_name, "utf-8" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-8" );     // NOLINT: strcpy is fine with hardcoded string with len < 32
+        strcpy( lang_name, "en" );      // NOLINT
         return 1;
     } else if ( buf[0]==0 && buf[1]==0 && buf[2]==0xFE && buf[3]==0xFF ) {
-        strcpy( cp_name, "utf-32be" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-32be" ); // NOLINT
+        strcpy( lang_name, "en" );     // NOLINT
         return 1;
     } else if ( buf[0]==0xFE && buf[1]==0xFF ) {
-        strcpy( cp_name, "utf-16be" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-16be" ); // NOLINT
+        strcpy( lang_name, "en" );     // NOLINT
         return 1;
     } else if ( buf[0]==0xFF && buf[1]==0xFE && buf[2]==0 && buf[3]==0 ) {
-        strcpy( cp_name, "utf-32le" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-32le" ); // NOLINT
+        strcpy( lang_name, "en" );     // NOLINT
         return 1;
     } else if ( buf[0]==0xFF && buf[1]==0xFE ) {
-        strcpy( cp_name, "utf-16le" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-16le" ); // NOLINT
+        strcpy( lang_name, "en" );     // NOLINT
         return 1;
     }
     if ( isValidUtf8Data( buf, buf_size ) ) {
-        strcpy( cp_name, "utf-8" );
-        strcpy( lang_name, "en" );
+        strcpy( cp_name, "utf-8" );    // NOLINT
+        strcpy( lang_name, "en" );     // NOLINT
         return 1;
     }
    return 0;
@@ -2045,8 +2054,8 @@ int AutodetectCodePage(const unsigned char * buf, int buf_size, char * cp_name, 
 		   bestq = q;
 	   }
    }
-   strcpy(cp_name, cp_stat_table[bestn].cp_name);
-   strcpy(lang_name, cp_stat_table[bestn].lang_name);
+   strcpy(cp_name, cp_stat_table[bestn].cp_name);     // NOLINT: strcpy is fine, all strings are len < 32
+   strcpy(lang_name, cp_stat_table[bestn].lang_name); // NOLINT
    CRLog::debug("Detected codepage:%s lang:%s index:%d %s", cp_name, lang_name, bestn, skipHtml ? "(skipHtml)" : "");
    if (skipHtml) {
        if (detectXmlHtmlEncoding(buf, buf_size, cp_name)) {
@@ -2081,11 +2090,15 @@ void MakeStatsForFile( const char * fname, const char * cp_name, const char * la
    if (!in)
       return;
    fseek( in, 0, SEEK_END );
-   int buf_size = ftell(in);
+   size_t buf_size = ftell(in);
    fseek( in, 0, SEEK_SET );
    unsigned char * buf = new unsigned char[buf_size];
-   fread(buf, 1, buf_size, in);
-   short char_stat[256];
+   if ( fread(buf, 1, buf_size, in) != buf_size ) {
+      fclose(in);
+       delete[] buf;
+      return;
+   }
+   short char_stat[256] = { 0 };
    dbl_char_stat_t dbl_char_stat[DBL_CHAR_STAT_SIZE];
    bool skipHtml = hasXmlTags(buf, buf_size);
    MakeCharStat(buf, buf_size, char_stat, skipHtml);
@@ -2094,7 +2107,7 @@ void MakeStatsForFile( const char * fname, const char * cp_name, const char * la
    int i;
    for (i=0; i<16; i++)
    {
-      for (int j=0; j<16; j++) 
+      for (int j=0; j<16; j++)
       {
          fprintf(f, "0x%04x,", (unsigned int)char_stat[i*16+j] );
       }
@@ -2104,7 +2117,7 @@ void MakeStatsForFile( const char * fname, const char * cp_name, const char * la
    fprintf(f, "static const dbl_char_stat_t dbl_ch_stat_%s_%s%d[%d] = {\n", cp_name, lang_name, index, DBL_CHAR_STAT_SIZE  );
    for (i=0; i<DBL_CHAR_STAT_SIZE/16; i++)
    {
-      for (int j=0; j<16; j++) 
+      for (int j=0; j<16; j++)
       {
          fprintf(f, "{0x%02x,0x%02x,0x%04x}, ", (unsigned int)dbl_char_stat[i*16+j].ch1, (unsigned int)dbl_char_stat[i*16+j].ch2, (unsigned int)((lUInt16)dbl_char_stat[i*16+j].count) );
       }

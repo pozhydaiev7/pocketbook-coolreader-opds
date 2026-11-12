@@ -1,14 +1,28 @@
-/** \file lvhashtable.h
-    \brief hash table template
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007,2009-2013 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2020,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-    See LICENSE file for details.
-
-*/
+/**
+ * \file lvhashtable.h
+ * \brief hash table template
+ */
 
 #ifndef __LVHASHTABLE_H_INCLUDED__
 #define __LVHASHTABLE_H_INCLUDED__
@@ -104,8 +118,7 @@ public:
     {
         if (size < 16 )
             size = 16;
-        _table = new pair* [ size ];
-        memset( _table, 0, sizeof(pair*) * size );
+        _table = new pair* [ size ]();
         _size = size;
         _count = 0;
     }
@@ -129,12 +142,11 @@ public:
         memset( _table, 0, sizeof(pair*) * _size );
         _count = 0;
     }
-    int length() { return _count; }
-    int size() { return _size; }
+    int length() const { return _count; }
+    int size() const { return _size; }
     void resize( int nsize )
     {
-        pair ** new_table = new pair * [ nsize ];
-        memset( new_table, 0, sizeof(pair*) * nsize );
+        pair ** new_table = new pair * [ nsize ]();
 		if (_table) {
 			for ( int i=0; i<_size; i++ ) {
 				pair * p = _table[i];
@@ -192,7 +204,7 @@ public:
             }
         }
     }
-    valueT get( const keyT & key )
+    valueT get( const keyT & key ) const
     {
         lUInt32 index = getHash( key ) % ( _size );
         pair * p = _table[index];
@@ -205,7 +217,7 @@ public:
         }
         return valueT();
     }
-    bool get( const keyT & key, valueT & res )
+    bool get( const keyT & key, valueT & res ) const
     {
         lUInt32 index = getHash( key ) % ( _size );
         pair * p = _table[index];
@@ -218,6 +230,11 @@ public:
             }
         }
         return false;
+    }
+    void compact()
+    {
+        if (_count > 0 && _count < _size)
+            resize(_count);
     }
 private:
     int _size;

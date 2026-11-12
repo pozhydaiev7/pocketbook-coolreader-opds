@@ -7,7 +7,7 @@ int main(int argc, char **argv)
         printf("Usage: logocnv startlogo stoplogo outfile\n");
         exit(1);
     }
-    LVImageSourceRef startimg = LVCreateFileCopyImageSource( lString16(argv[1]) );
+    LVImageSourceRef startimg = LVCreateFileCopyImageSource( lString32(argv[1]) );
     if ( startimg.isNull() ) {
         printf("Cannot open image from file %s\n", argv[1]);
         exit(1);
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     printf("Start image: %s %d x %d\n", argv[1], startimg->GetWidth(), startimg->GetHeight());
     LVGrayDrawBuf buf1( 600, 800, 3 );
     buf1.Draw(startimg, 0, 0, 600, 800, true);
-    LVImageSourceRef stopimg = LVCreateFileCopyImageSource( lString16(argv[2]) );
+    LVImageSourceRef stopimg = LVCreateFileCopyImageSource( lString32(argv[2]) );
     if ( stopimg.isNull() ) {
         printf("Cannot open image from file %s\n", argv[2]);
         exit(1);

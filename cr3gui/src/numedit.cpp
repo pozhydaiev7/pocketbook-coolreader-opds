@@ -26,10 +26,10 @@ void CRNumberEditDialog::draw()
     _skin->drawText( *drawbuf, _rect, _value + "_" );
 }
 
-CRNumberEditDialog::CRNumberEditDialog( CRGUIWindowManager * wm, lString16 title, lString16 initialValue, int resultCmd, int minvalue, int maxvalue )
+CRNumberEditDialog::CRNumberEditDialog( CRGUIWindowManager * wm, lString32 title, lString32 initialValue, int resultCmd, int minvalue, int maxvalue )
 : CRGUIWindowBase( wm ), _title(title), _value(initialValue), _minvalue(minvalue), _maxvalue(maxvalue), _resultCmd(resultCmd)
 {
-    _skin = _wm->getSkin()->getMenuSkin(L"#toc");
+    _skin = _wm->getSkin()->getMenuSkin(U"#toc");
     _fullscreen = false;
     lvPoint clientSize( 350, _skin->getFont()->getHeight() + 24 );
     lvPoint sz = _skin->getWindowSize( clientSize );
@@ -41,9 +41,9 @@ CRNumberEditDialog::CRNumberEditDialog( CRGUIWindowManager * wm, lString16 title
     _rect.right = x + sz.x;
     _rect.bottom = y + sz.y;
 }
-bool CRNumberEditDialog::digitEntered( lChar16 c )
+bool CRNumberEditDialog::digitEntered( lChar32 c )
 {
-    lString16 v = _value;
+    lString32 v = _value;
     v << c;
     int n = v.atoi();
     if ( n<=_maxvalue ) {

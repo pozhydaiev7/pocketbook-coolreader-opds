@@ -1,14 +1,31 @@
-/** \file lvpagesplitter.h
-    \brief page splitter interface
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2012 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2020 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *   Copyright (C) 2020 Jellby <jellby@yahoo.com>                          *
+ *   Copyright (C) 2018-2021 poire-z <poire-z@users.noreply.github.com>    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-*/
+/**
+ * \file lvpagesplitter.h
+ * \brief page splitter interface
+ */
 
 #ifndef __LV_PAGESPLITTER_H_INCLUDED__
 #define __LV_PAGESPLITTER_H_INCLUDED__
@@ -21,9 +38,11 @@
 #include "lvref.h"
 #include "lvstring.h"
 #include "lvhashtable.h"
+#include "crtimerutil.h"
+#include "lvstring32collection.h"
 
 #ifndef RENDER_PROGRESS_INTERVAL_MILLIS
-#define RENDER_PROGRESS_INTERVAL_MILLIS 1200
+#define RENDER_PROGRESS_INTERVAL_MILLIS 300
 #endif
 #ifndef RENDER_PROGRESS_INTERVAL_PERCENT
 #define RENDER_PROGRESS_INTERVAL_PERCENT 2
@@ -44,13 +63,25 @@
 #define RN_SPLIT_AFTER_AVOID   (RN_SPLIT_AVOID<<RN_SPLIT_AFTER)
 #define RN_SPLIT_AFTER_ALWAYS  (RN_SPLIT_ALWAYS<<RN_SPLIT_AFTER)
 
+#define RN_SPLIT_BOTH_AUTO      RN_SPLIT_BEFORE_AUTO | RN_SPLIT_AFTER_AUTO
+#define RN_SPLIT_BOTH_AVOID    RN_SPLIT_BEFORE_AVOID | RN_SPLIT_AFTER_AVOID
+
 #define RN_SPLIT_FOOT_NOTE 0x100
 #define RN_SPLIT_FOOT_LINK 0x200
 
-enum page_type_t {
-    PAGE_TYPE_NORMAL = 0,
-    PAGE_TYPE_COVER = 1
-};
+#define RN_SPLIT_DISCARD_AT_START 0x400
+
+#define RN_LINE_IS_RTL 0x1000
+
+#define RN_GET_SPLIT_BEFORE(flags) (flags & 0x7)
+#define RN_GET_SPLIT_AFTER(flags) (flags >> 3)
+
+#define RN_PAGE_TYPE_NORMAL           0x01
+#define RN_PAGE_TYPE_COVER            0x02
+#define RN_PAGE_MOSTLY_RTL            0x10
+#define RN_PAGE_FOOTNOTES_MOSTLY_RTL  0x20
+
+class SerialBuf;
 
 /// footnote fragment inside page
 class LVPageFootNoteInfo {
@@ -207,22 +238,27 @@ public:
     int start; /// start of page
     int index;  /// index of page
     lInt16 height; /// height of page, does not include footnotes
-    lInt16 type;   /// type: PAGE_TYPE_NORMAL, PAGE_TYPE_COVER
+    lInt8 flags;   /// RN_PAGE_*
     CompactArray<LVPageFootNoteInfo, 1, 4> footnotes; /// footnote fragment list for page
+    lUInt16 flow;
     LVRendPageInfo(int pageStart, lUInt16 pageHeight, int pageIndex)
-    : start(pageStart), index(pageIndex), height(pageHeight), type(PAGE_TYPE_NORMAL) {}
+    : start(pageStart), index(pageIndex), height(pageHeight), flags(RN_PAGE_TYPE_NORMAL), flow(0) {}
     LVRendPageInfo(lUInt16 coverHeight)
-    : start(0), index(0), height(coverHeight), type(PAGE_TYPE_COVER) {}
+    : start(0), index(0), height(coverHeight), flags(RN_PAGE_TYPE_COVER), flow(0) {}
     LVRendPageInfo() 
-    : start(0), index(0), height(0), type(PAGE_TYPE_NORMAL) { }
+    : start(0), index(0), height(0), flags(RN_PAGE_TYPE_NORMAL), flow(0) {}
     bool serialize( SerialBuf & buf );
     bool deserialize( SerialBuf & buf );
 };
 
 class LVRendPageList : public LVPtrVector<LVRendPageInfo>
 {
+    bool has_nonlinear_flows;
 public:
+    LVRendPageList() : has_nonlinear_flows(false) {}
     int FindNearestPage( int y, int direction );
+    void setHasNonLinearFlows() { has_nonlinear_flows=true; }
+    bool hasNonLinearFlows() { return has_nonlinear_flows; }
     bool serialize( SerialBuf & buf );
     bool deserialize( SerialBuf & buf );
 };
@@ -241,9 +277,10 @@ class LVRendLineInfo {
     friend struct PageSplitState;
     LVFootNoteList * links; // 4 bytes
     int start;              // 4 bytes
-    lInt16 height;          // 2 bytes
+    int height;             // 4 bytes (we may get extra tall lines with tables TR)
 public:
-    lInt16 flags;           // 2 bytes
+    lUInt16 flags;          // 2 bytes
+    lUInt16 flow;           // 2 bytes (should be enough)
     int getSplitBefore() const { return (flags>>RN_SPLIT_BEFORE)&7; }
     int getSplitAfter() const { return (flags>>RN_SPLIT_AFTER)&7; }
 /*
@@ -270,10 +307,15 @@ public:
     inline int getEnd() const { return start + height; }
     inline int getStart() const { return start; }
     inline int getHeight() const { return height; }
+    inline lUInt16 getFlags() const { return flags; }
 
-    LVRendLineInfo() : links(NULL), start(-1), height(0), flags(0) { }
+    LVRendLineInfo() : links(NULL), start(-1), height(0), flags(0), flow(0) { }
     LVRendLineInfo( int line_start, int line_end, lUInt16 line_flags )
-    : links(NULL), start(line_start), height((lUInt16)(line_end-line_start)), flags(line_flags)
+    : links(NULL), start(line_start), height(line_end-line_start), flags(line_flags), flow(0)
+    {
+    }
+    LVRendLineInfo( int line_start, int line_end, lUInt16 line_flags, int flow )
+    : links(NULL), start(line_start), height(line_end-line_start), flags(line_flags), flow(flow)
     {
     }
     LVFootNoteList * getLinks() { return links; }
@@ -281,11 +323,20 @@ public:
     {
         clear();
     }
-    void addLink( LVFootNote * note )
+    int getLinksCount()
+    {
+        if ( links==NULL )
+            return 0;
+        return links->length();
+    }
+    void addLink( LVFootNote * note, int pos=-1 )
     {
         if ( links==NULL )
             links = new LVFootNoteList();
-        links->add( note );
+        if ( pos >= 0 ) // insert at pos
+            links->insert( pos, note );
+        else // append
+            links->add( note );
         flags |= RN_SPLIT_FOOT_LINK;
     }
 };
@@ -294,10 +345,10 @@ public:
 typedef LVFastRef<LVFootNote> LVFootNoteRef;
 
 class LVFootNote : public LVRefCounter {
-    lString16 id;
+    lString32 id;
     CompactArray<LVRendLineInfo*, 2, 4> lines;
 public:
-    LVFootNote( lString16 noteId )
+    LVFootNote( lString32 noteId )
         : id(noteId)
     {
     }
@@ -308,6 +359,7 @@ public:
     CompactArray<LVRendLineInfo*, 2, 4> & getLines() { return lines; }
     bool empty() { return lines.empty(); }
     void clear() { lines.clear(); }
+    lString32 getId() { return id; }
 };
 
 class LVDocViewCallback;
@@ -335,20 +387,30 @@ class LVRendPageContext
     // page list to fill
     LVRendPageList * page_list;
     // page height
-    int          page_h;
+    int page_h;
+    // document default font size (= root node font size)
+    int doc_font_size;
+    // Whether to gather lines or not (only footnote links will be gathered if not)
+    bool gather_lines;
+    // Links gathered when !gather_lines
+    lString32Collection link_ids;
+    // current flow being processed
+    int current_flow;
+    // maximum flow encountered so far
+    int max_flow;
 
-    LVHashTable<lString16, LVFootNoteRef> footNotes;
+    LVHashTable<lString32, LVFootNoteRef> footNotes;
 
     LVFootNote * curr_note;
 
-    LVFootNote * getOrCreateFootNote( lString16 id )
+    LVFootNoteRef getOrCreateFootNote( lString32 id )
     {
         LVFootNoteRef ref = footNotes.get(id);
         if ( ref.isNull() ) {
             ref = LVFootNoteRef( new LVFootNote( id ) );
             footNotes.set( id, ref );
         }
-        return ref.get();
+        return ref;
     }
 
     void split();
@@ -361,11 +423,24 @@ public:
     }
     bool updateRenderProgress( int numFinalBlocksRendered );
 
-    /// append footnote link to last added line
-    void addLink( lString16 id );
+    bool wantsLines() { return gather_lines; }
+
+    void newFlow( bool nonlinear );
+
+    /// Get the number of links in the current line links list, or
+    // in link_ids when !gather_lines
+    int getCurrentLinksCount();
+
+    /// append or insert footnote link to last added line
+    void addLink( lString32 id, int pos=-1 );
+
+    /// get gathered links when !gather_lines
+    // (returns a reference to avoid lString32Collection destructor from
+    // being called twice and a double free crash)
+    lString32Collection * getLinkIds() { return &link_ids; }
 
     /// mark start of foot note
-    void enterFootNote( lString16 id );
+    void enterFootNote( lString32 id );
 
     /// mark end of foot note
     void leaveFootNote();
@@ -373,14 +448,21 @@ public:
     /// returns page height
     int getPageHeight() { return page_h; }
 
+    /// returns document font size
+    int getDocFontSize() { return doc_font_size; }
+
     /// returns page list pointer
     LVRendPageList * getPageList() { return page_list; }
 
-    LVRendPageContext(LVRendPageList * pageList, int pageHeight);
+    /// constructor (docFontSize is only needed for with main context actually used to split pages)
+    LVRendPageContext(LVRendPageList * pageList, int pageHeight, int docFontSize=0, bool gatherLines=true);
 
     /// add source line
     void AddLine( int starty, int endy, int flags );
 
+    LVPtrVector<LVRendLineInfo> * getLines() {
+        return &lines;
+    };
     void Finalize();
 };
 

@@ -13,13 +13,13 @@
 #include "tocdlg.h"
 #include <cri18n.h>
 
-lString16 limitTextWidth( lString16 s, int width, LVFontRef font )
+lString32 limitTextWidth( lString32 s, int width, LVFontRef font )
 {
 
     int w = font->getTextWidth(s.c_str(), s.length());
     if ( w<width )
         return s;
-    lString16 sss("...");
+    lString32 sss("...");
     int www = font->getTextWidth(sss.c_str(), sss.length());
     while (s.length()>0) {
         s.erase(s.length()-1, 1);
@@ -27,7 +27,7 @@ lString16 limitTextWidth( lString16 s, int width, LVFontRef font )
         if ( w+www<=width )
             return s+sss;
     }
-    return lString16(".");
+    return lString32(".");
 }
 
 void CRTOCDialog::draw()
@@ -71,8 +71,8 @@ void CRTOCDialog::draw()
 
 
 
-        lString16 titleString = item->getName();
-        lString16 pageString = lString16::itoa( item->getPage() + 1 );
+        lString32 titleString = item->getName();
+        lString32 pageString = lString32::itoa( item->getPage() + 1 );
         int pageNumWidth = valueSkin->getFont()->getTextWidth( pageString.c_str(), pageString.length() );
         int titleWidth = itemSkin->getFont()->getTextWidth( titleString.c_str(), titleString.length() );
         int level = item->getLevel();
@@ -85,7 +85,7 @@ void CRTOCDialog::draw()
         if ( !itemRect.isEmpty() ) {
             lvRect rc = itemRect;
             //rc.extendBy( borders );
-            lString16 s = limitTextWidth( titleString, rc.width()-borders.left-borders.right, itemSkin->getFont() );
+            lString32 s = limitTextWidth( titleString, rc.width()-borders.left-borders.right, itemSkin->getFont() );
             itemSkin->drawText( *drawbuf, rc, s );
         }
         if ( !pageNumRect.isEmpty() ) {
@@ -110,8 +110,8 @@ void CRTOCDialog::draw()
     }
 }
 
-CRTOCDialog::CRTOCDialog( CRGUIWindowManager * wm, lString16 title, int resultCmd, int pageCount, LVDocView * docview )
-: CRNumberEditDialog( wm, title, lString16::empty_str, resultCmd, 1, pageCount )
+CRTOCDialog::CRTOCDialog( CRGUIWindowManager * wm, lString32 title, int resultCmd, int pageCount, LVDocView * docview )
+: CRNumberEditDialog( wm, title, lString32::empty_str, resultCmd, 1, pageCount )
 ,_docview(docview)
 {
     docview->getFlatToc( _items );
@@ -147,16 +147,16 @@ CRTOCDialog::CRTOCDialog( CRGUIWindowManager * wm, lString16 title, int resultCm
     _pages = (_items.length() + (_pageItems - 1)) / _pageItems;
     int curPage = _docview->getCurPage();
     int docPages = _docview->getPageCount();
-    lString16 pageString(_("Current page: $1 of $2\n"));
+    lString32 pageString(_("Current page: $1 of $2\n"));
     pageString.replaceIntParam(1, curPage+1);
     pageString.replaceIntParam(2, docPages);
-    _statusText = pageString + lString16(_("Enter page number:"));
+    _statusText = pageString + lString32(_("Enter page number:"));
     _inputText = "_";
 }
 
-bool CRTOCDialog::digitEntered( lChar16 c )
+bool CRTOCDialog::digitEntered( lChar32 c )
 {
-    lString16 v = _value;
+    lString32 v = _value;
     v << c;
     int n = v.atoi();
     if ( n<=_maxvalue ) {

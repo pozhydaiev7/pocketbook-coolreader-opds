@@ -1,17 +1,32 @@
-/** \file lvptrvec.h
-    \brief pointer vector template
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2013 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2011 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2018 Aleksey Chernov <valexlin@gmail.com>               *
+ *   Copyright (C) 2018-2020 poire-z <poire-z@users.noreply.github.com>    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    Implements vector of pointers.
-
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-
-*/
+/**
+ * \file lvptrvec.h
+ * \brief pointer vector template
+ *
+ * Implements vector of pointers.
+ */
 
 #ifndef __LVPTRVEC_H_INCLUDED__
 #define __LVPTRVEC_H_INCLUDED__
@@ -29,17 +44,17 @@ class LVPtrVector
     T * * _list;
     int _size;
     int _count;
-	LVPtrVector & operator = (LVPtrVector&) {
-		// no assignment
-		return *this;
-	}
+    LVPtrVector & operator = (LVPtrVector&) {
+        // no assignment
+        return *this;
+    }
 public:
     /// default constructor
     LVPtrVector() : _list(NULL), _size(0), _count(0) {}
     /// retrieves item from specified position
     T * operator [] ( int pos ) const { return _list[pos]; }
-	/// returns pointer array
-	T ** get() { return _list; }
+    /// returns pointer array
+    T ** get() { return _list; }
     /// retrieves item from specified position
     T * get( int pos ) const { return _list[pos]; }
     /// retrieves item reference from specified position
@@ -49,7 +64,7 @@ public:
     {
         if ( size > _size )
         {
-            _list = (T**)realloc( _list, size * sizeof( T* ));
+            _list = cr_realloc( _list, size );
             for (int i=_size; i<size; i++)
                 _list[i] = NULL;
             _size = size;
@@ -85,7 +100,8 @@ public:
             _count = 0;
             if ( ownItems ) {
                 for (int i=cnt - 1; i>=0; --i)
-                    delete _list[i];
+                    if (_list[i])
+                        delete _list[i];
             }
             free( _list );
         }
@@ -120,7 +136,7 @@ public:
     /// removes item from vector by index
     T * remove( int pos )
     {
-        if (pos < 0 || (unsigned)pos > (unsigned)_count)
+        if (pos < 0 || (unsigned)pos >= (unsigned)_count)
             crFatalError();
         int i;
         T * item = _list[pos];
@@ -197,6 +213,17 @@ public:
         }
         _list[ indexTo ] = p;
     }
+    /// reverse items
+    void reverse()
+    {
+        if ( empty() )
+            return;
+        for ( int i=0; i < _count/2; i++ ) {
+            T * tmp = _list[i];
+            _list[i] = _list[_count-1 - i];
+            _list[_count-1 - i] = tmp;
+        }
+    }
     /// copy constructor
     LVPtrVector( const LVPtrVector & v )
         : _list(NULL), _size(0), _count(0)
@@ -219,7 +246,7 @@ public:
     {
         if ( empty() )
             return NULL;
-        return remove( 0 );
+        return remove( (int)0 );
     }
     /// stack-like interface: push item to stack
     void push( T * item )
@@ -255,7 +282,7 @@ protected:
     int numrows;
     _Ty ** rows;
 public:
-    LVMatrix<_Ty> () : numcols(0), numrows(0), rows(NULL) {}
+    LVMatrix() : numcols(0), numrows(0), rows(NULL) {}
     void Clear() {
         if (rows) {
 			if (numrows && numcols) {
@@ -268,7 +295,7 @@ public:
         numrows = 0;
         numcols = 0;
     }
-    ~LVMatrix<_Ty> () {
+    ~LVMatrix() {
         Clear();
     }   
 
@@ -284,17 +311,16 @@ public:
                 free( rows[i] );
             numrows = nrows;
         } else if (nrows>numrows) {
-            rows = (_Ty**) realloc( rows, sizeof(_Ty)*nrows );
+            rows = cr_realloc( rows, nrows );
             for (int i=numrows; i<nrows; i++) {
                 rows[i] = (_Ty*)malloc( sizeof(_Ty*) * ncols );
                 for (int j=0; j<numcols; j++)
                     rows[i][j]=fill_elem;
             }
-            numrows = nrows;
         }
         if (ncols>numcols) {
             for (int i=0; i<numrows; i++) {
-                rows[i] = (_Ty*)realloc( rows[i], sizeof(_Ty) * ncols );
+                rows[i] = cr_realloc( rows[i], ncols );
                 for (int j=numcols; j<ncols; j++)
                     rows[i][j]=fill_elem;
             }

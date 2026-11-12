@@ -207,7 +207,7 @@ typedef LVRef<CRGUIAcceleratorTable> CRGUIAcceleratorTableRef;
 class CRGUIAcceleratorTableList
 {
 private:
-    LVHashTable<lString16, CRGUIAcceleratorTableRef> _table;
+    LVHashTable<lString32, CRGUIAcceleratorTableRef> _table;
 public:
 	/// add all tables
 	void addAll( const CRGUIAcceleratorTableList & v );
@@ -216,18 +216,18 @@ public:
     /// add accelerator table definition from array
     void add( const char * name, const int * defs )
     {
-        add( lString16( name ), defs );
+        add( lString32( name ), defs );
     }
     /// add accelerator table definition from array
-    void add( const lString16 & name, const int * defs )
+    void add( const lString32 & name, const int * defs )
     {
         _table.set( name, CRGUIAcceleratorTableRef( new CRGUIAcceleratorTable( defs ) ) );
     }
     /// find accelerator table by name
-    CRGUIAcceleratorTableRef get( const lString16 & name ) { return _table.get( name ); }
-    CRGUIAcceleratorTableRef get( const lString16 & name, CRPropRef keyRemappingOptions );
+    CRGUIAcceleratorTableRef get( const lString32 & name ) { return _table.get( name ); }
+    CRGUIAcceleratorTableRef get( const lString32 & name, CRPropRef keyRemappingOptions );
     /// find accelerator table by name
-    CRGUIAcceleratorTableRef get( const char * name ) { return _table.get( lString16( name ) ); }
+    CRGUIAcceleratorTableRef get( const char * name ) { return _table.get( lString32( name ) ); }
     /// returns true if there are no no tables in list
     bool empty() { return _table.length()==0; }
     /// constructs empty list, then it should be filled from file using openFromFile()
@@ -242,22 +242,22 @@ public:
 
 class CRKeyboardLayout
 {
-	lString16Collection _items;
+	lString32Collection _items;
 public:
 	CRKeyboardLayout() { }
-	const lString16Collection & getItems() { return _items; }
-	lString16 get( int i )
+	const lString32Collection & getItems() { return _items; }
+	lString32 get( int i )
 	{
 		if ( i<0 || i>= (int)_items.length() )
-            return lString16::empty_str;
+            return lString32::empty_str;
 		return _items[i];
 	}
-	void set( int index, lString16 chars )
+	void set( int index, lString32 chars )
 	{
 		if ( index<0 || index>20 )
 			return;
 		while ( (int)_items.length() <= index )
-            _items.add(lString16::empty_str);
+            _items.add(lString32::empty_str);
 		_items[ index ] = chars;
 	}
 };
@@ -265,7 +265,7 @@ public:
 class CRKeyboardLayoutSet
 {
 public:
-	lString16 name;
+	lString32 name;
 	LVRef<CRKeyboardLayout> vKeyboard;
 	LVRef<CRKeyboardLayout> tXKeyboard;
 	CRKeyboardLayoutSet()
@@ -289,7 +289,7 @@ typedef LVRef<CRKeyboardLayoutSet> CRKeyboardLayoutRef;
 
 class CRKeyboardLayoutList
 {
-    LVHashTable<lString16, CRKeyboardLayoutRef> _table;
+    LVHashTable<lString32, CRKeyboardLayoutRef> _table;
 	CRKeyboardLayoutRef _current;
 public:
 	// get currently set layout
@@ -299,8 +299,8 @@ public:
 	// get previous layout
 	CRKeyboardLayoutRef prevLayout();
 
-	CRKeyboardLayoutRef get( lString16 name ) { return _table.get( name ); }
-	void set( lString16 name, CRKeyboardLayoutRef v ) { _table.set( name, v ); }
+	CRKeyboardLayoutRef get( lString32 name ) { return _table.get( name ); }
+	void set( lString32 name, CRKeyboardLayoutRef v ) { _table.set( name, v ); }
 	CRKeyboardLayoutList() : _table(16) { }
     /// reads definitions from files
     bool openFromFile( const char  * layoutFile );
@@ -311,7 +311,7 @@ class CRGUIStringTranslator
 {
 public:
     /// translate string by key, return default value if not found
-    virtual lString16 translateString( const char *, const char * defValue )
+    virtual lString32 translateString( const char *, const char * defValue )
     {
         return Utf8ToUnicode( lString8(defValue) );
     }
@@ -427,13 +427,13 @@ class CRGUIWindow
             return event->handle( this );
         }
         /// sets scroll label (e.g. "Page $1 of $2" or "$1 / $2")
-        virtual void setScrollLabelTemplate( lString16 text ) = 0;
+        virtual void setScrollLabelTemplate( lString32 text ) = 0;
         /// returns scroll label (e.g. "$1 of $2")
-        virtual lString16 getScrollLabelTemplate() = 0;
+        virtual lString32 getScrollLabelTemplate() = 0;
         /// sets skin name for window
-        virtual void setSkinName( const lString16  & skin ) = 0;
+        virtual void setSkinName( const lString32  & skin ) = 0;
         /// returns skin name for window
-        virtual lString16 getSkinName() = 0;
+        virtual lString32 getSkinName() = 0;
         /// set accelerator table for window
         virtual void setAccelerators( CRGUIAcceleratorTableRef ) { }
         /// get window accelerator table
@@ -500,8 +500,8 @@ class CRGUIWindowManager : public CRGUIStringTranslator
         LVRefVec<LVImageSource> m_batteryIcons;
         bool _stopFlag;
         bool _ignoreTillUp;
-        lString16 _keymapFilePath;
-        lString16 _skinFilePath;
+        lString32 _keymapFilePath;
+        lString32 _skinFilePath;
 
         void reconfigureWindows(int flags);
         void loadSkinKeymaps();
@@ -544,11 +544,11 @@ class CRGUIWindowManager : public CRGUIStringTranslator
         /// returns current screen orientation
         virtual cr_rotate_angle_t getScreenOrientation() { return _orientation; }
         /// draws icon at center of screen, with optional progress gauge
-        virtual void showWaitIcon( lString16 filename, int progressPercent=-1 );
+        virtual void showWaitIcon( lString32 filename, int progressPercent=-1 );
         /// draws icon with gauge at center of screen, skipping too frequent updates
-        virtual void showProgress( lString16 filename, int progressPercent );
+        virtual void showProgress( lString32 filename, int progressPercent );
 		/// loads skin from file
-	    virtual bool loadSkin( lString16 pathname );
+	    virtual bool loadSkin( lString32 pathname );
 		/// returns keyboard layouts
 		virtual CRKeyboardLayoutList & getKeyboardLayouts() { return _kbLayouts; }
         /// returns accelerator table list
@@ -566,7 +566,7 @@ class CRGUIWindowManager : public CRGUIStringTranslator
         /// set skin
         virtual void setSkin( CRSkinRef skin );
         /// set skin using its name
-        virtual bool setSkin( lString16 name );
+        virtual bool setSkin( lString32 name );
         /// returns currently selected skin
         virtual CRSkinRef getSkin() { return _skin; }
         /// sets another i18n translator
@@ -575,7 +575,7 @@ class CRGUIWindowManager : public CRGUIStringTranslator
             _i18n = i18n;
         }
         /// translate string by key, return default value if not found
-        virtual lString16 translateString( const char * key, const char * defValue )
+        virtual lString32 translateString( const char * key, const char * defValue )
         {
             if ( _i18n.isNull() )
                 return Utf8ToUnicode( lString8(defValue) );
@@ -671,10 +671,10 @@ class CRGUIWindowManager : public CRGUIStringTranslator
             if ( _ownScreen )
                 delete _screen;
         }
-        lString16 getKeymapFilePath() { return _keymapFilePath; }
-        void setKeymapFilePath(lString16 keymapPath) { _keymapFilePath = keymapPath; }
-        lString16 getSkinFilePath() { return _skinFilePath; }
-        void setSkinFilePath(lString16 skinPath) { _skinFilePath = skinPath; }
+        lString32 getKeymapFilePath() { return _keymapFilePath; }
+        void setKeymapFilePath(lString32 keymapPath) { _keymapFilePath = keymapPath; }
+        lString32 getSkinFilePath() { return _skinFilePath; }
+        void setSkinFilePath(lString32 skinPath) { _skinFilePath = skinPath; }
         /// call when long tap processed and it is known touch up event will not arrive
         void resetTillUp() { _ignoreTillUp = false; }
 };
@@ -695,12 +695,12 @@ class CRGUIWindowBase : public CRGUIWindow
         int _page;
         int _pages;
         CRGUIAcceleratorTableRef _acceleratorTable;
-        lString16 _skinName;
-        lString16 _baseSkinName;
-        lString16 _scrollLabel;
-        lString16 _caption;
-        lString16 _statusText;
-        lString16 _inputText;
+        lString32 _skinName;
+        lString32 _baseSkinName;
+        lString32 _scrollLabel;
+        lString32 _caption;
+        lString32 _statusText;
+        lString32 _inputText;
         LVImageSourceRef _icon; // window title icon
         LVPtrVector<CRGUIControl> _controls;
         bool _controlsCreated;
@@ -711,7 +711,7 @@ class CRGUIWindowBase : public CRGUIWindow
         /// draws frame, title, status and client
         virtual void draw();
         /// use to override status text
-        virtual lString16 getStatusText() { return _statusText; }
+        virtual lString32 getStatusText() { return _statusText; }
         /// draw status bar using current skin, with optional status text and scroll/tab/page indicator
         virtual void drawStatusBar();
         /// draw status text
@@ -728,25 +728,25 @@ class CRGUIWindowBase : public CRGUIWindow
         int getTapZone(int x, int y, CRPropRef props);
     public:
         /// use to override status text
-        virtual void setStatusText( lString16 s ) { _statusText = s; }
+        virtual void setStatusText( lString32 s ) { _statusText = s; }
         /// formats scroll label (like "1 of 2")
-        virtual lString16 getScrollLabel( int page, int pages );
+        virtual lString32 getScrollLabel( int page, int pages );
         /// calculates minimum scroll size
         virtual lvPoint getMinScrollSize( int page, int pages );
         /// sets scroll label (e.g. "Page $1 of $2" or "$1 / $2")
-        virtual void setScrollLabelTemplate( lString16 text ) { _scrollLabel=text; }
+        virtual void setScrollLabelTemplate( lString32 text ) { _scrollLabel=text; }
         /// returns scroll label (e.g. "$1 of $2")
-        virtual lString16 getScrollLabelTemplate() { return _scrollLabel; }
+        virtual lString32 getScrollLabelTemplate() { return _scrollLabel; }
         /// called on system configuration change: screen size and orientation
         virtual void reconfigure( int flags );
         /// sets skin name for window
-        virtual void setSkinName( const lString16  & skin );
+        virtual void setSkinName( const lString32  & skin );
         /// sets skin name for window, if a skin doesn't exist set name to the baseSkin
-        virtual void setSkinName( const lString16  & skin, const lString16 & baseSkin );
+        virtual void setSkinName( const lString32  & skin, const lString32 & baseSkin );
         /// returns skin of this window
         CRWindowSkinRef getSkin();
         /// returns skin name for window
-        virtual lString16 getSkinName() { return _skinName; }
+        virtual lString32 getSkinName() { return _skinName; }
         /// returns true if command is processed
         virtual bool onCommand( int command, int params = 0 ) { return !_passCommandsToParent; }
         /// returns true if key is processed (by default, let's translate key to command using accelerator table)
@@ -1101,38 +1101,38 @@ class CRMenuItem
     protected:
         CRMenu * _menu;
         int _id;
-        lString16 _label;
+        lString32 _label;
         LVImageSourceRef _image;
         LVFontRef _defFont;
-        lString16 _propValue;
+        lString32 _propValue;
         bool _itemDirty;
-        lString16 _imageId;
+        lString32 _imageId;
     public:
         /// id of item
         int getId() { return _id; }
         /// set id of item
         void setId( int id ) { _id = id; }
         /// item label
-        lString16 getLabel() { return _label; }
-        void setLabel(lString16 label) { _label = label; setItemDirty(); }
+        lString32 getLabel() { return _label; }
+        void setLabel(lString32 label) { _label = label; setItemDirty(); }
         /// item icon
         LVImageSourceRef getItemIcon();
         void setItemIcon(LVImageSourceRef icon) { _image = icon; }
         /// item label font
         virtual LVFontRef getFont() { return _defFont; }
         /// constructor
-        CRMenuItem( CRMenu * menu, int id, lString16 label, LVImageSourceRef image, LVFontRef defFont,
-                   const lChar16 * propValue=NULL  ) :
+        CRMenuItem( CRMenu * menu, int id, lString32 label, LVImageSourceRef image, LVFontRef defFont,
+                   const lChar32 * propValue=NULL  ) :
             _menu(menu), _id(id), _label(label), _image(image), _defFont(defFont), _propValue(propValue) { }
         /// constructor
         CRMenuItem( CRMenu * menu, int id, const char * label, LVImageSourceRef image, LVFontRef defFont,
-                   const lChar16 * propValue=NULL  ) :
+                   const lChar32 * propValue=NULL  ) :
             _menu(menu), _id(id), _label(label), _image(image), _defFont(defFont), _propValue(propValue) { }
-        CRMenuItem( CRMenu * menu, int id, lString16 label, const char *imageId, LVFontRef defFont,
-                   const lChar16 * propValue=NULL  ) :
+        CRMenuItem( CRMenu * menu, int id, lString32 label, const char *imageId, LVFontRef defFont,
+                   const lChar32 * propValue=NULL  ) :
             _menu(menu), _id(id), _label(label), _image(NULL), _defFont(defFont), _propValue(propValue), _imageId(imageId) { }
         CRMenuItem( CRMenu * menu, int id, const char * label, const char *imageId, LVFontRef defFont,
-                   const lChar16 * propValue=NULL  ) :
+                   const lChar32 * propValue=NULL  ) :
             _menu(menu), _id(id), _label(label), _image(NULL), _defFont(defFont), _propValue(propValue), _imageId(imageId) { }
         /// measures item size
         virtual lvPoint getItemSize( CRRectSkinRef skin );
@@ -1147,9 +1147,9 @@ class CRMenuItem
         virtual int onSelect() { return 0; }
         virtual ~CRMenuItem() { }
         /// submenu for options dialog support
-        virtual lString16 getSubmenuValue() { return lString16::empty_str; }
+        virtual lString32 getSubmenuValue() { return lString32::empty_str; }
         /// property value, for options editor support
-        virtual lString16 getPropValue() { return _propValue; }
+        virtual lString32 getPropValue() { return _propValue; }
         virtual bool isItemDirty() { return _itemDirty; }
         virtual void setItemDirty() { _itemDirty = true; }
         virtual void onLeave() { CRLog::trace("Menu item %d leave", _id); setItemDirty(); }
@@ -1161,7 +1161,7 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
     protected:
         LVPtrVector<CRMenuItem> _items;
         CRPropRef _props;
-        lString16 _propName;
+        lString32 _propName;
         LVFontRef _valueFont;
         int _topItem;
         int _pageItems;
@@ -1192,7 +1192,7 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual void drawClient();
         virtual int getScrollHeight();
         CRMenuSkinRef getSkin();
-        CRMenu( CRGUIWindowManager * wm, CRMenu * parentMenu, int id, lString16 label, LVImageSourceRef image,
+        CRMenu( CRGUIWindowManager * wm, CRMenu * parentMenu, int id, lString32 label, LVImageSourceRef image,
                LVFontRef defFont, LVFontRef valueFont, CRPropRef props=CRPropRef(), const char * propName=NULL,
                int pageItems=8 ) :
             CRGUIWindowBase( wm ), CRMenuItem( parentMenu, id, label, image, defFont ), _props(props),
@@ -1213,7 +1213,7 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
                 _propName(Utf8ToUnicode(lString8(propName))), _valueFont(valueFont), _topItem(0),
                 _pageItems(pageItems), _cmdToHighlight(-1)
                     { _fullscreen = false; _helpHeight=0; }
-        CRMenu( CRGUIWindowManager * wm, CRMenu * parentMenu, int id, lString16 label,
+        CRMenu( CRGUIWindowManager * wm, CRMenu * parentMenu, int id, lString32 label,
                const char *imageId, LVFontRef defFont, LVFontRef valueFont, CRPropRef props=CRPropRef(),
                const char * propName=NULL, int pageItems=8 ) :
             CRGUIWindowBase( wm ), CRMenuItem( parentMenu, id, label, imageId, defFont ), _props(props),
@@ -1224,7 +1224,7 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual bool isMainMenu() const { return ( _menu==NULL ); }
         LVPtrVector<CRMenuItem> & getItems() { return _items; }
         CRPropRef getProps() const { return _props; }
-        lString16 getPropName() const { return _propName; }
+        lString32 getPropName() const { return _propName; }
         LVFontRef getValueFont() const { return _valueFont; }
         void setValueFont( LVFontRef font ) { _valueFont = font; }
         void addItem( CRMenuItem * item ) { _items.add( item ); }
@@ -1248,9 +1248,10 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual void setCurItem(int nItem);
         virtual int getCurPage( );
         virtual int getTopItem();
-        virtual lString16 getSubmenuValue();
+        virtual lString32 getSubmenuValue();
         virtual void toggleSubmenuValue();
         virtual int getItemHeight();
+        virtual bool getTitleRect(lvRect &rc);
         virtual lvPoint getMaxItemSize();
         virtual lvPoint getItemSize();
         virtual lvPoint getSize();
@@ -1275,8 +1276,8 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
                 return (_topItem + _pageItems < (int)_items.length());
             return (_topItem > 0);
         }
-        LVImageSourceRef getImage(lString16 imageId) { return getImage( imageId.c_str()); }
-        LVImageSourceRef getImage(const lChar16 * imageId);
+        LVImageSourceRef getImage(lString32 imageId) { return getImage( imageId.c_str()); }
+        LVImageSourceRef getImage(const lChar32 * imageId);
 };
 
 class CRToolBar;
@@ -1284,7 +1285,7 @@ class CRToolBar;
 class CRToolButton
 {
 public:
-    CRToolButton(CRToolBar *toolbar, int id, lString16 label, int command, int param = 0,
+    CRToolButton(CRToolBar *toolbar, int id, lString32 label, int command, int param = 0,
                  int paramLong=-1, int commandLong=DCMD_BUTTON_PRESSED_LONG) :
         m_toolbar(toolbar), m_id(id), m_command(command), m_param(param),
         m_commandLong(commandLong), m_paramLong(paramLong),
@@ -1312,7 +1313,7 @@ private:
     int m_param;
     int m_commandLong;
     int m_paramLong;
-    lString16 m_label;
+    lString32 m_label;
     LVImageSourceRef m_image;
     bool m_enabled;
 };
@@ -1320,13 +1321,13 @@ private:
 class CRToolBar
 {
 public:
-    CRToolBar(CRGUIWindowBase *window, lString16 id, CRToolBarSkinRef tbskin, bool active = true);
+    CRToolBar(CRGUIWindowBase *window, lString32 id, CRToolBarSkinRef tbskin, bool active = true);
     virtual ~CRToolBar() { }
     void addButton( CRToolButton * button )
     {
         m_buttons.add( button );
     }
-    virtual bool init(lString16 id);
+    virtual bool init(lString32 id);
     virtual void initDefault() {}
     void init()
     {
@@ -1390,7 +1391,7 @@ private:
     int m_currentButton;
     bool m_active;
     bool _controlsCreated;
-    lString16 m_id;
+    lString32 m_id;
     CRToolBarSkinRef _tbSkin;
 };
 
@@ -1488,6 +1489,7 @@ public:
     virtual bool setSelected(bool selected)
     {
         if (selected != _selected) {
+            _selected = selected;
             LVDrawBuf & buf = *_parent->getWindowManager()->getScreen()->getCanvas();
             int flags = selected ? CRButtonSkin::ENABLED|CRButtonSkin::PRESSED : CRButtonSkin::ENABLED;
             _btnSkin->drawButton(buf, _rect, flags);

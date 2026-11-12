@@ -53,7 +53,7 @@ class CiteToolBar : public CRToolBar
 {
     int _defaultButtons;
 public:
-    CiteToolBar(CRGUIWindowBase *window, lString16 id, CRToolBarSkinRef tbskin, bool active = true)
+    CiteToolBar(CRGUIWindowBase *window, lString32 id, CRToolBarSkinRef tbskin, bool active = true)
         :  CRToolBar(window, id, tbskin, active), _defaultButtons(CITETOOLBAR_BUTTONS)
     {
 #ifdef POCKETBOOK_PRO
@@ -68,7 +68,7 @@ public:
     virtual void initDefault()
     {
         for (int i=0; i<_defaultButtons; i++) {
-            addButton(new CRToolButton(this, i, lString16(), DCMD_BUTTON_PRESSED));
+            addButton(new CRToolButton(this, i, lString32(), DCMD_BUTTON_PRESSED));
         }
     }
 #ifdef POCKETBOOK_PRO
@@ -243,23 +243,23 @@ protected:
         lvRect borders = skin->getBorderWidths();
         lvRect keyRect;
         if ( isDefaultToolBar) {
-            lString16 prompt;
+            lString32 prompt;
             int index = getSelectedIndex();
             switch (index) {
             case 0:
-                prompt = lString16(_("Select next/prev paragraph"));
+                prompt = lString32(_("Select next/prev paragraph"));
                 break;
             case 1:
-                prompt = lString16(_("Select one more paragraph"));
+                prompt = lString32(_("Select one more paragraph"));
                 break;
             case 2:
-                prompt = lString16(_("Deselect paragraph"));
+                prompt = lString32(_("Deselect paragraph"));
                 break;
             case 3:
-                prompt = lString16(_("Select one more phrase"));
+                prompt = lString32(_("Select one more phrase"));
                 break;
             case 4:
-                prompt = lString16(_("Deselect phrase"));
+                prompt = lString32(_("Deselect phrase"));
                 break;
             }
             int promptWidth = skin->measureText(prompt).x;
@@ -273,7 +273,7 @@ protected:
         if (toolbar != NULL)
             toolbar->draw(*_wm->getScreen()->getCanvas(), toolbarRect);
 #else
-        lString16 prompt(_("Select text"));
+        lString32 prompt(_("Select text"));
         buf->FillRect( _rect, 0xAAAAAA );
         lvRect keyRect = _rect;
         LVFontRef font = fontMan->GetFont( 20, 600, false, css_ff_sans_serif, lString8("Arial")); //skin->getFont();
@@ -300,14 +300,14 @@ public:
         _rect = _wm->getScreen()->getRect();
         selector_.highlight();
         setDirty();
-        setSkinName(L"#cite-dialog");
+        setSkinName(U"#cite-dialog");
         CRToolBarSkinRef tbSkin;
         CRWindowSkinRef windowSkin = getSkin();
         if ( !windowSkin.isNull() )
             tbSkin = windowSkin->getToolBar1Skin();
         isDefaultToolBar = false;
         if ( !tbSkin.isNull()) {
-            toolbar = new CiteToolBar(this, cs16("cite-toolbar"), tbSkin);
+            toolbar = new CiteToolBar(this, cs32("cite-toolbar"), tbSkin);
             isDefaultToolBar = toolbar->isDefault();
             int index = toolbar->findButton(DCMD_BUTTON_PRESSED, 0);
             if (index > 0)
@@ -407,8 +407,8 @@ public:
             ldomXRange range;
             selector_.getRange(range);
             if ( !range.isNull() ) {
-                mainwin_->getDocView()->saveRangeBookmark( range, bmkt_comment, lString16::empty_str);
-                mainwin_->saveHistory(lString16::empty_str);
+                mainwin_->getDocView()->saveRangeBookmark( range, bmkt_comment, lString32::empty_str);
+                mainwin_->saveHistory(lString32::empty_str);
             }
             close();
         };

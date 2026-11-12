@@ -37,7 +37,7 @@ private:
     struct Entry {
         int level;
         int page;
-        lString16 text;
+        lString32 text;
     };
     std::vector<Entry> _entries;
     int _current;  // entry of the current page

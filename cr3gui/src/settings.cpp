@@ -72,7 +72,7 @@
 #endif
 #endif
 
-extern lString16 pbSkinFileName;
+extern lString32 pbSkinFileName;
 extern bool useDeveloperFeatures;
 
 typedef struct {
@@ -151,29 +151,29 @@ private:
     int _command;
     int _params;
     CRControlsMenu * _controlsMenu;
-    lString16 _settingKey;
+    lString32 _settingKey;
     int _defCommand;
     int _defParams;
 public:
     bool getCommand( int & cmd, int & params )
     {
-        lString16 v = _menu->getProps()->getStringDef(LCSTR(_settingKey), "");
+        lString32 v = _menu->getProps()->getStringDef(LCSTR(_settingKey), "");
         cmd = _defCommand;
         params = _defParams;
-        return splitIntegerList( v, lString16(","), cmd, params );
+        return splitIntegerList( v, lString32(","), cmd, params );
    }
     /// submenu for options dialog support
-    virtual lString16 getSubmenuValue()
+    virtual lString32 getSubmenuValue()
     {
         int cmd;
         int params;
         bool isSet = getCommand( cmd, params );
         if(isSet) {
-            lString16 res = Utf8ToUnicode(lString8(getCommandName( cmd, params )));
+            lString32 res = Utf8ToUnicode(lString8(getCommandName( cmd, params )));
             // TODO: use default flag
             return res;
         }
-        return lString16::empty_str;
+        return lString32::empty_str;
     }
     /// called on item selection
     virtual int onSelect();
@@ -183,44 +183,44 @@ public:
 
 class CRControlsMenu : public CRFullScreenMenu
 {
-    lString16 _accelTableId;
+    lString32 _accelTableId;
     CRGUIAcceleratorTableRef _baseAccs;
     CRGUIAcceleratorTableRef _overrideCommands;
-    lString16 _settingKey;
+    lString32 _settingKey;
 public:
     CRPropRef getProps() { return _props; }
-    lString16 getSettingKey( int key, int flags )
+    lString32 getSettingKey( int key, int flags )
     {
-        lString16 res = _settingKey;
+        lString32 res = _settingKey;
         if ( key!=0 )
             res << "." << fmt::decimal(key) << "." << fmt::decimal(flags);
         return res;
     }
-    lString16 getSettingLabel( int key, int flags )
+    lString32 getSettingLabel( int key, int flags )
     {
-        return lString16(getKeyName(key, flags));
+        return lString32(getKeyName(key, flags));
     }
     CRMenu * createCommandsMenu(int key, int flags)
     {
-        lString16 label = getSettingLabel( key, flags ) + " - " + lString16(_("choose command"));
-        lString16 keyid = getSettingKey( key, flags );
+        lString32 label = getSettingLabel( key, flags ) + " - " + lString32(_("choose command"));
+        lString32 keyid = getSettingKey( key, flags );
         CRMenu * menu = new CRMenu(_wm, this, _id, label, LVImageSourceRef(), LVFontRef(), LVFontRef(), _props, LCSTR(keyid), 8);
         for ( int i=0; i<_overrideCommands->length(); i++ ) {
             const CRGUIAccelerator * acc = _overrideCommands->get(i);
-            lString16 cmdLabel = lString16( getCommandName(acc->commandId, acc->commandParam) );
-            lString16 cmdValue = lString16::itoa(acc->commandId) << "," << lString16::itoa(acc->commandParam);
+            lString32 cmdLabel = lString32( getCommandName(acc->commandId, acc->commandParam) );
+            lString32 cmdValue = lString32::itoa(acc->commandId) << "," << lString32::itoa(acc->commandParam);
             CRMenuItem * item = new CRMenuItem( menu, i, cmdLabel, LVImageSourceRef(), LVFontRef(), cmdValue.c_str());
             menu->addItem(item);
         }
         menu->setAccelerators( getAccelerators() );
-        menu->setSkinName(lString16("#settings"));
+        menu->setSkinName(lString32("#settings"));
         menu->setValueFont(_valueFont);
         menu->setFullscreen(true);
         menu->reconfigure( 0 );
         return menu;
     }
-    CRControlsMenu(CRMenu * baseMenu, int id, CRPropRef props, lString16 accelTableId, int numItems, lvRect & rc)
-    : CRFullScreenMenu( baseMenu->getWindowManager(), id, lString16(_("Controls")), numItems, rc )
+    CRControlsMenu(CRMenu * baseMenu, int id, CRPropRef props, lString32 accelTableId, int numItems, lvRect & rc)
+    : CRFullScreenMenu( baseMenu->getWindowManager(), id, lString32(_("Controls")), numItems, rc )
     {
         _menu = baseMenu;
         _props = props;
@@ -239,7 +239,7 @@ public:
             CRLog::error("CRControlsMenu: No table of allowed commands to override accelerators %s", LCSTR(_accelTableId) );
             return;
         }
-        _settingKey = lString16("keymap.") + _accelTableId;
+        _settingKey = lString32("keymap.") + _accelTableId;
         for ( int i=0; i<_overrideKeys->length(); i++ ) {
             const CRGUIAccelerator * acc = _overrideKeys->get(i);
             CRControlsMenuItem * item = new CRControlsMenuItem(this, i, acc->keyCode, acc->keyFlags,
@@ -271,12 +271,12 @@ class CRActionsMenu : public CRFullScreenMenu
 {
 public:
     CRActionsMenu(CRMenu * baseMenu, CRPropRef props, lvRect &rc)
-    : CRFullScreenMenu( baseMenu->getWindowManager(), 0, lString16(), 8, rc )
+    : CRFullScreenMenu( baseMenu->getWindowManager(), 0, lString32(), 8, rc )
     {
         _menu = baseMenu;
         _props = props;
     }
-    void setPropertyName(lString16 propertyName)
+    void setPropertyName(lString32 propertyName)
     {
         _propName = propertyName;
     }
@@ -293,16 +293,16 @@ protected:
     virtual void drawClient();
     const char * getActionName(int index);
     int getActionIndex(const char *actionId);
-    lString16 getActionNameForTapZone(int tapZone);
+    lString32 getActionNameForTapZone(int tapZone);
     void drawTapZonesRow(LVDrawBuf & buf, CRRectSkinRef clientSkin, int row,
                          int rowStart, int rowEnd);
 public:
-    CRTapZoneSettings(CRMenu * parentMenu, int id, const lString16 & label, CRPropRef props,
+    CRTapZoneSettings(CRMenu * parentMenu, int id, const lString32 & label, CRPropRef props,
                       const char *propName, lvRect & rc) :
         CRFullScreenMenu( parentMenu->getWindowManager(), id,  label, 1, rc ),
         _propertyName(propName), _props(props)
     {
-        setSkinName(lString16("#tapSettings"));
+        setSkinName(lString32("#tapSettings"));
         setAccelerators(parentMenu->getAccelerators());
         _actionsMenu = new CRActionsMenu(this, _props, rc);
         for ( int i=0; availableActions[i].action_id; i++ ) {
@@ -326,7 +326,7 @@ public:
                                                   Utf8ToUnicode( propertyValue ).c_str()) );
         }
         _actionsMenu->setAccelerators( parentMenu->getAccelerators() );
-        _actionsMenu->setSkinName(lString16("#settings"));
+        _actionsMenu->setSkinName(lString32("#settings"));
         _actionsMenu->reconfigure( 0 );
     }
 
@@ -353,7 +353,7 @@ public:
         bool ret = false;
         int selectedZone = getTapZone(pt.x, pt.y, _props);
         if (CRTOUCH_UP == evType || CRTOUCH_DOWN_LONG == evType) {
-            _actionsMenu->setPropertyName( lString16(_propertyName).appendDecimal(selectedZone));
+            _actionsMenu->setPropertyName( lString32(_propertyName).appendDecimal(selectedZone));
             _actionsMenu->setLabel( getLabel() );
             _wm->activateWindow(_actionsMenu);
             ret = true;
@@ -395,7 +395,7 @@ const char * CRTapZoneSettings::getActionName(int index)
 
 int CRTapZoneSettings::getActionIndex(const char *actionId)
 {
-    lString16 id(actionId);
+    lString32 id(actionId);
     int ret = 0;
     for ( int i=0; availableActions[i].action_id; i++ ) {
         if ( id == availableActions[i].action_id ) {
@@ -406,11 +406,11 @@ int CRTapZoneSettings::getActionIndex(const char *actionId)
     return ret;
 }
 
-lString16 CRTapZoneSettings::getActionNameForTapZone(int tapZone)
+lString32 CRTapZoneSettings::getActionNameForTapZone(int tapZone)
 {
-    lString16 value = _props->getStringDef(lString8(_propertyName).appendDecimal(tapZone).c_str(),
+    lString32 value = _props->getStringDef(lString8(_propertyName).appendDecimal(tapZone).c_str(),
                                            CR3_ACTION_NONE);
-    return lString16(getActionName(getActionIndex(LCSTR(value))));
+    return lString32(getActionName(getActionIndex(LCSTR(value))));
 
 }
 
@@ -504,7 +504,7 @@ void getCommandForTapZone(int tapZone, CRPropRef props, bool longTap, int &comma
         property = PROP_TAP_ZONE_ACTION;
     }
     property.appendDecimal(tapZone);
-    lString16 value = props->getStringDef(property.c_str(), CR3_ACTION_NONE);
+    lString32 value = props->getStringDef(property.c_str(), CR3_ACTION_NONE);
     command = param = 0;
     for ( int i=0; availableActions[i].action_id; i++ ) {
         if ( value == availableActions[i].action_id ) {
@@ -537,10 +537,10 @@ void CRControlsMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
     // lvRect borders = skin->getBorderWidths();
     //textRect.shrinkBy(borders);
     skin->drawText(buf, textRect, _label);
-    lString16 s = getSubmenuValue();
+    lString32 s = getSubmenuValue();
     if ( s.empty() )
-        s = lString16(_("[Command is not assigned]"));
-    //_menu->getValueFont()->DrawTextString( &buf, rc.right - w - 8, rc.top + hh/2 - _menu->getValueFont()->getHeight()/2, s.c_str(), s.length(), L'?', NULL, false, 0 );
+        s = lString32(_("[Command is not assigned]"));
+    //_menu->getValueFont()->DrawTextString( &buf, rc.right - w - 8, rc.top + hh/2 - _menu->getValueFont()->getHeight()/2, s.c_str(), s.length(), U'?', NULL, false, 0 );
     valueSkin->drawText(buf, textRect, s);
 }
 
@@ -574,10 +574,10 @@ CRMenu * CRSettingsMenu::createOrientationMenu( CRGUIWindowManager * wm, CRMenu 
     const char * propName = PROP_ROTATE_ANGLE;
 #endif
     CRMenu * orientationMenu = new CRMenu(wm, mainMenu, mm_Orientation,
-            lString16(_("Page orientation")), "cr3_option_orientation", LVFontRef(),
+            lString32(_("Page orientation")), "cr3_option_orientation", LVFontRef(),
                                           valueFont, props,  propName);
     if(NULL == mainMenu) {
-        orientationMenu->setItemIcon( wm->getSkin()->getImage( L"cr3_option_orientation" ));
+        orientationMenu->setItemIcon( wm->getSkin()->getImage( U"cr3_option_orientation" ));
     }
     addMenuItems( orientationMenu, wm->getAccTables().get("menu"), page_orientations );
     orientationMenu->reconfigure( 0 );
@@ -601,7 +601,7 @@ public:
     }
 
     /// submenu for options dialog support
-    virtual lString16 getSubmenuValue()
+    virtual lString32 getSubmenuValue()
     { 
         return getProps()->getStringDef( UnicodeToUtf8(getPropName()).c_str(), "32" );
     }
@@ -616,7 +616,7 @@ class OnDemandFontMenuItem : public CRMenuItem
     lString8 _typeface;
     lString8 _deftypeface;
     public:
-    OnDemandFontMenuItem( CRMenu * menu, int id, lString16 label, LVImageSourceRef image, const lChar16 * propValue,
+    OnDemandFontMenuItem( CRMenu * menu, int id, lString32 label, LVImageSourceRef image, const lChar32 * propValue,
                           int size, int weight, bool italic, css_font_family_t family, lString8 typeface, lString8 deftypeface )
     : CRMenuItem(menu, id, LCSTR(label), image, LVFontRef(), propValue)
     , _size(size), _weight(weight), _italic(italic), _family(family), _typeface(typeface), _deftypeface(deftypeface)
@@ -641,10 +641,10 @@ CRMenu * CRSettingsMenu::createFontSizeMenu( CRGUIWindowManager * wm, CRMenu * m
                                             unsigned sizesCount, const char *imageId, CRPropRef props,
                                             const char * propName )
 {
-    lString16Collection list;
+    lString32Collection list;
     fontMan->getFaceList( list );
     lString8 fontFace = UnicodeToUtf8(props->getStringDef( PROP_FONT_FACE, UnicodeToUtf8(list[0]).c_str() ));
-    CRMenuSkinRef skin = wm->getSkin()->getMenuSkin(L"#settings");
+    CRMenuSkinRef skin = wm->getSkin()->getMenuSkin(U"#settings");
     LVFontRef valueFont = skin->getValueSkin()->getFont();
     CRMenu * fontSizeMenu;
     fontSizeMenu = new FontSizeMenu(wm, mainMenu, valueFont, imageId, props, propName );
@@ -652,19 +652,19 @@ CRMenu * CRSettingsMenu::createFontSizeMenu( CRGUIWindowManager * wm, CRMenu * m
         char defvalue[400];
         sprintf( defvalue, "%d %s", fontSizes[i], _("The quick brown fox jumps over lazy dog") );
         fontSizeMenu->addItem( new OnDemandFontMenuItem( fontSizeMenu, 0,
-                        lString16(defvalue),
-                        LVImageSourceRef(), lString16::itoa(fontSizes[i]).c_str(),
+                        lString32(defvalue),
+                        LVImageSourceRef(), lString32::itoa(fontSizes[i]).c_str(),
                         fontSizes[i], 400, false, css_ff_sans_serif, fontFace, UnicodeToUtf8(skin->getItemSkin()->getFontFace())) );
     }
     fontSizeMenu->setAccelerators( wm->getAccTables().get("menu") );
     //fontSizeMenu->setAccelerators( _menuAccelerators );
-    fontSizeMenu->setSkinName(lString16("#settings"));
-    //fontSizeMenu->setSkinName(lString16("#main"));
+    fontSizeMenu->setSkinName(lString32("#settings"));
+    //fontSizeMenu->setSkinName(lString32("#main"));
     fontSizeMenu->reconfigure( 0 );
     if(NULL != mainMenu) {
         mainMenu->addItem(fontSizeMenu);
     } else {
-        fontSizeMenu->setItemIcon(wm->getSkin()->getImage( lString16(imageId) ));
+        fontSizeMenu->setItemIcon(wm->getSkin()->getImage( lString32(imageId) ));
     }
     return fontSizeMenu;
 }
@@ -674,11 +674,11 @@ void CRSettingsMenu::addMenuItems( CRMenu * menu, CRGUIAcceleratorTableRef menuA
 {
     for ( int i=0; values[i].translate_default; i++)
         menu->addItem( new CRMenuItem( menu, i,
-            lString16(values[i].translate_default),
+            lString32(values[i].translate_default),
             LVImageSourceRef(),
             LVFontRef(), Utf8ToUnicode(lString8(values[i].value)).c_str() ) );
     menu->setAccelerators( menuAccelerators );
-    menu->setSkinName(lString16("#settings"));
+    menu->setSkinName(lString32("#settings"));
     menu->reconfigure( 0 );
 }
 
@@ -708,7 +708,7 @@ public:
     {
         if ( !isSubmenu() || _propName.empty() || _props.isNull() )
             return;
-        lString16 value = getProps()->getStringDef(
+        lString32 value = getProps()->getStringDef(
                                    UnicodeToUtf8(getPropName()).c_str(), "");
         for ( int i=0; i<_items.length(); i++ ) {
             if ( value==(_items[i]->getPropValue()) ) {
@@ -796,9 +796,9 @@ CRMenu * CRSettingsMenu::createFontFaceMenuItem( CRMenu * mainMenu, LVFontRef va
 {
     CRMenu * fontFaceMenu = new CRMenu(_wm, mainMenu, id, label, imageId, LVFontRef(), valueFont,
                                        props, propName );
-    fontFaceMenu->setSkinName(lString16("#settings"));
+    fontFaceMenu->setSkinName(lString32("#settings"));
     CRLog::trace("getting font face list");
-    lString16Collection list;
+    lString32Collection list;
     fontMan->getFaceList( list );
     CRLog::trace("faces found: %d", list.length());
     lString8 defFont = UnicodeToUtf8(getSkin()->getItemSkin()->getFontFace());
@@ -1009,12 +1009,12 @@ void CRSettingsMenu::createStyleMenuItems(CRMenu * menu, LVFontRef valueFont, co
 
     CRMenu * menuItem = createStyleMenuItem(menu, valueFont, _("Font face"), "cr3_style_font_face",
                                         lString8(prefix) + ".font-face", font_face_options);
-    lString16Collection list;
+    lString32Collection list;
     fontMan->getFaceList( list );
     lString8 defFont = UnicodeToUtf8(getSkin()->getItemSkin()->getFontFace());
 
     for ( int i=0; i<(int)list.length(); i++ ) {
-        lString16 fontFamily = lString16("font-family: ") + list[i];
+        lString32 fontFamily = lString32("font-family: ") + list[i];
         menuItem->addItem( new OnDemandFontMenuItem( menuItem, i,
                                                     list[i], LVImageSourceRef(), fontFamily.c_str(),
                                                     MENU_FONT_FACE_SIZE, 400,
@@ -1061,7 +1061,7 @@ CRMenu * CRSettingsMenu::createSettingsMenuItem(CRMenu * menu, int id, const cha
 }
 
 CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id, LVFontRef font, CRGUIAcceleratorTableRef menuAccelerators, lvRect &rc )
-: CRFullScreenMenu( wm, id, lString16(_("Settings")), 8, rc ),
+: CRFullScreenMenu( wm, id, lString32(_("Settings")), 8, rc ),
   props( newProps ),
   _menuAccelerators( menuAccelerators ), _menuItemId(mm_Last)
 {
@@ -1070,7 +1070,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         )
         forcePartialBwUpdates = true;
 
-    setSkinName(lString16("#settings"));
+    setSkinName(lString32("#settings"));
 
     _fullscreen = true;
 
@@ -1419,40 +1419,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {NULL, NULL}
     };
 
-    item_def_t font_embolding[] = {
-        {"-2.0",   "-16"},
-        {"-1.75",  "-14"},
-        {"-1.5",   "-12"},
-        {"-1.25",  "-10"},
-        {"-1.0",   "-8"},
-        {"-0.875", "-7"},
-        {"-0.75",  "-6"},
-        {"-0.625", "-5"},
-        {"-0.5",   "-4"},
-        {"-0.375", "-3"},
-        {"-0.25",  "-2"},
-        {"-0.125", "-1"},
-        {"0",       "0"},
-        {"0.125",  "1"},
-        {"0.25",   "2"},
-        {"0.375",  "3"},
-        {"0.5",    "4"},
-        {"0.625",  "5"},
-        {"0.75",   "6"},
-        {"0.875",  "7"},
-        {"1.0",    "8"},
-        {"1.25",   "10"},
-        {"1.5",    "12"},
-        {"1.75",   "14"},
-        {"2.0",    "16"},
-        {"2.5",    "20"},
-        {"3.0",    "24"},
-        {"3.5",    "28"},
-        {"4.0",    "32"},
-        {"5.0",    "64"},
-        {NULL, NULL}
-    };
-
     item_def_t font_gammas[] = {
         {"0.3",  "0.3"},
         {"0.35", "0.35"},
@@ -1552,8 +1518,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     CRLog::trace("showSettingsMenu() - %d property values found", props->getCount() );
 
-    setSkinName(lString16("#settings"));
-    //setSkinName(lString16(L"#main"));
+    setSkinName(lString32("#settings"));
+    //setSkinName(lString32(U"#main"));
 
     LVFontRef valueFont( fontMan->GetFont( VALUE_FONT_SIZE, 400, true, css_ff_sans_serif, lString8("Arial")) );
     CRMenu * mainMenu = this;
@@ -1566,7 +1532,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     CRMenu * fontSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Font settings"),
                                            "cr3_option_font_settings", LVFontRef(), valueFont, CRPropRef());
-    fontSettingsMenu->setSkinName(lString16("#settings"));
+    fontSettingsMenu->setSkinName(lString32("#settings"));
     fontSettingsMenu->setAccelerators( _menuAccelerators );
 
     createSettingsMenuItem(fontSettingsMenu, mm_Embolden, _("Font weight"), "cr3_option_font_weight",
@@ -1578,8 +1544,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                            valueFont, PROP_FONT_HINTING, font_hinting);
     createSettingsMenuItem(fontSettingsMenu, mm_Kerning, _("Font kerning"), "cr3_option_font_kerning",
                            valueFont, PROP_FONT_KERNING_ENABLED, on_off_option);
-    createSettingsMenuItem(fontSettingsMenu, mm_Embolding, _("Font embolding"), "cr3_option_font_embolding",
-                           valueFont, PROP_FONT_EMBOLDING, font_embolding);
+    // Legacy font.embolding has no adjustable rasterizer backend in CREngine
+    // 3.2. Keep the saved key for rollback; Normal/Bold remains available.
     createSettingsMenuItem(fontSettingsMenu, mm_Tracking, _("Tracking"), "cr3_option_font_tracking",
                            valueFont, PROP_FONT_TRACKING, tracking);
     createSettingsMenuItem(fontSettingsMenu, mm_fontGamma, _("Font Gamma"), "cr3_option_font_gamma",
@@ -1595,7 +1561,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     CRMenu * formatSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Formatting settings"),
                                              "cr3_option_format", LVFontRef(), valueFont, CRPropRef());
-    formatSettingsMenu->setSkinName(lString16("#settings"));
+    formatSettingsMenu->setSkinName(lString32("#settings"));
     formatSettingsMenu->setAccelerators( _menuAccelerators );
 
     createSettingsMenuItem(formatSettingsMenu, mm_InterlineSpace, _("Interline space"),
@@ -1618,7 +1584,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                               LVFontRef(), item->getId().c_str() ) );
         }
         hyphMenu->setAccelerators( _menuAccelerators );
-        hyphMenu->setSkinName(lString16("#settings"));
+        hyphMenu->setSkinName(lString32("#settings"));
         hyphMenu->reconfigure( 0 );
         formatSettingsMenu->addItem( hyphMenu );
     }
@@ -1640,7 +1606,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                       _("Image scaling"), "cr3_option_scaling", LVFontRef(),
                                       valueFont, CRPropRef() );
     scalingMenu->setAccelerators( _menuAccelerators );
-    scalingMenu->setSkinName(lString16("#settings"));
+    scalingMenu->setSkinName(lString32("#settings"));
 
     createSettingsMenuItem(scalingMenu, mm_blockImagesZoominMode, _("Block image scaling mode"),
                            "cr3_option_scaling_block_mode", valueFont,
@@ -1662,7 +1628,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     CRMenu * pageSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Page settings"),
                                            "cr3_option_page", LVFontRef(), valueFont, CRPropRef());
-    pageSettingsMenu->setSkinName(lString16("#settings"));
+    pageSettingsMenu->setSkinName(lString32("#settings"));
     pageSettingsMenu->setAccelerators( _menuAccelerators );
 
     createSettingsMenuItem(pageSettingsMenu, mm_StatusLine, _("Status line"),
@@ -1673,7 +1639,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                      _("Status line settings"), "cr3_option_status",
                                      LVFontRef(), valueFont, CRPropRef() );
     statusMenu->setAccelerators( _menuAccelerators );
-    statusMenu->setSkinName(lString16(L"#settings"));
+    statusMenu->setSkinName(lString32(U"#settings"));
 
     createFontFaceMenuItem(statusMenu, valueFont, _menuItemId++, _("Font face"),
                            "cr3_option_status_font_face", PROP_STATUS_FONT_FACE);
@@ -1719,7 +1685,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                       _("Page margins"), "cr3_option_margins",
                                       LVFontRef(), valueFont, CRPropRef() );
     marginsMenu->setAccelerators( _menuAccelerators );
-    marginsMenu->setSkinName(lString16("#settings"));
+    marginsMenu->setSkinName(lString32("#settings"));
 
     createSettingsMenuItem(marginsMenu, mm_PageMarginTop, _("Top margin"),
                            "cr3_option_margins_top", valueFont, PROP_PAGE_MARGIN_TOP, page_margins);
@@ -1740,7 +1706,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     CRMenu * displaySettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Display settings"),
                                               "cr3_option_display", LVFontRef(), valueFont, CRPropRef());
-    displaySettingsMenu->setSkinName(lString16("#settings"));
+    displaySettingsMenu->setSkinName(lString32("#settings"));
     displaySettingsMenu->setAccelerators( _menuAccelerators );
 
 #if CR_INTERNAL_PAGE_ORIENTATION==1 || defined(CR_POCKETBOOK)
@@ -1810,7 +1776,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                               LVFontRef(), item->getId().c_str() ) );
         }
         skinsMenu->setAccelerators( _menuAccelerators );
-        skinsMenu->setSkinName(lString16("#settings"));
+        skinsMenu->setSkinName(lString32("#settings"));
         skinsMenu->reconfigure( 0 );
         displaySettingsMenu->addItem( skinsMenu );
     }
@@ -1822,7 +1788,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     // CRStyleMenu: a plain CRMenu with three items or fewer is toggled by a tap instead of opened
     CRMenu * dictSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
                                                 "cr3_option_dict_settings", valueFont, CRPropRef());
-    dictSettingsMenu->setSkinName(lString16("#settings"));
+    dictSettingsMenu->setSkinName(lString32("#settings"));
     dictSettingsMenu->setAccelerators( _menuAccelerators );
     createSettingsMenuItem(dictSettingsMenu, mm_dictPosition, _("Dictionary window"),
                            "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
@@ -1842,7 +1808,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     CRMenu * controlSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Control settings"),
                                                    "cr3_option_controls", valueFont, CRPropRef());
     //style menu doesn't toggle when number of items <= 3, we don't need toggling
-    controlSettingsMenu->setSkinName(lString16("#settings"));
+    controlSettingsMenu->setSkinName(lString32("#settings"));
     controlSettingsMenu->setAccelerators( _menuAccelerators );
 #ifdef CR_POCKETBOOK
     if (isGSensorSupported()) {
@@ -1856,9 +1822,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 #endif
 #ifndef CR_POCKETBOOK
     CRControlsMenu * controlsMenu =
-            new CRControlsMenu(controlSettingsMenu, mm_Controls, props, lString16("main"), 8, _rect);
+            new CRControlsMenu(controlSettingsMenu, mm_Controls, props, lString32("main"), 8, _rect);
     controlsMenu->setAccelerators( _menuAccelerators );
-    controlsMenu->setSkinName(lString16("#settings"));
+    controlsMenu->setSkinName(lString32("#settings"));
     controlsMenu->setValueFont(valueFont);
     controlsMenu->reconfigure( 0 );
     controlSettingsMenu->addItem( controlsMenu );
@@ -1904,7 +1870,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
     /*
         SetTimeMenuItem * setTime = new SetTimeMenuItem( mainMenu, mm_SetTime, _wm->translateString("VIEWER_MENU_SET_TIME", "Set time"),
-                LVImageSourceRef(), menuFont, L"bla" );
+                LVImageSourceRef(), menuFont, U"bla" );
         mainMenu->addItem( setTime );
 */
 
@@ -1912,17 +1878,17 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                      _("Style settings"),
                                      "cr3_option_styles", LVFontRef(), valueFont, CRPropRef() );
     stylesMenu->setAccelerators( _menuAccelerators );
-    stylesMenu->setSkinName(lString16("#settings"));
+    stylesMenu->setSkinName(lString32("#settings"));
 
     createSettingsMenuItem(stylesMenu, mm_EmbeddedStyles, _("Document embedded styles"),
                            "cr3_option_styles_embedded",
                            valueFont, PROP_EMBEDDED_STYLES, on_off_option);
     for ( int i=0; css_styles[i].translate_default; i++) {
         CRMenu * styleMenu = new CRMenu(_wm, stylesMenu, _menuItemId++,
-                                        lString16(css_styles[i].translate_default),
+                                        lString32(css_styles[i].translate_default),
                                         css_style_icons[i], LVFontRef(), valueFont, CRPropRef() );
         styleMenu->setAccelerators( _menuAccelerators );
-        styleMenu->setSkinName(lString16("#settings"));
+        styleMenu->setSkinName(lString32("#settings"));
         createStyleMenuItems(styleMenu, valueFont, css_styles[i].value );
         styleMenu->reconfigure( 0 );
         stylesMenu->addItem( styleMenu );
@@ -1969,7 +1935,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 }
 
 /// use to override status text
-lString16 CRSettingsMenu::getStatusText()
+lString32 CRSettingsMenu::getStatusText()
 {
     /// find key by command
     int applyKey = 0;
@@ -1979,7 +1945,7 @@ lString16 CRSettingsMenu::getStatusText()
     if ( !_acceleratorTable->findCommandKey( MCMD_OK, 0, applyKey, applyFlags )
         || !_acceleratorTable->findCommandKey( MCMD_CANCEL, 0, cancelKey, cancelFlags ) )
         return _statusText;
-    lString16 pattern(_("Press $1 to change option\n$2 to apply, $3 to cancel"));
+    lString32 pattern(_("Press $1 to change option\n$2 to apply, $3 to cancel"));
 #ifdef CR_POCKETBOOK
 	pattern.replaceParam(1, getCommandKeyName(MCMD_SELECT) );
 #else

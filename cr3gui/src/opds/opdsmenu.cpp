@@ -19,18 +19,18 @@ const char * const MARK_NEXT = " \xE2\x80\xBA";    // " ›"
 const char * const MARK_OPEN = "\xC2\xBB ";        // "» "
 const char * const DOT       = "  \xC2\xB7  ";     // "  ·  "
 const char * const DASH      = " \xE2\x80\x94 ";   // " — "
-const lChar16 ELLIPSIS = 0x2026;
+const lChar32 ELLIPSIS = 0x2026;
 
-lString16 u16(const std::string & s)
+lString32 u16(const std::string & s)
 {
     return Utf8ToUnicode(lString8(s.c_str()));
 }
 
-lString16 fitText(LVFontRef font, const lString16 & text, int maxWidth)
+lString32 fitText(LVFontRef font, const lString32 & text, int maxWidth)
 {
     if (maxWidth <= 0 || (int)font->getTextWidth(text.c_str(), text.length()) <= maxWidth)
         return text;
-    lChar16 ell[2] = { ELLIPSIS, 0 };
+    lChar32 ell[2] = { ELLIPSIS, 0 };
     int ellWidth = font->getTextWidth(ell, 1);
     int lo = 0, hi = text.length();
     while (lo < hi) { // longest prefix that fits together with the ellipsis
@@ -42,29 +42,29 @@ lString16 fitText(LVFontRef font, const lString16 & text, int maxWidth)
     }
     while (lo > 0 && (text[lo - 1] == ' ' || text[lo - 1] == ',' || text[lo - 1] == '.'))
         lo--;
-    lString16 res = text.substr(0, lo);
+    lString32 res = text.substr(0, lo);
     res << ell;
     return res;
 }
 
-int textWidth(LVFontRef font, const lString16 & text)
+int textWidth(LVFontRef font, const lString32 & text)
 {
     return font->getTextWidth(text.c_str(), text.length());
 }
 
-std::vector<lString16> wrapText(LVFontRef font, const lString16 & text, int firstWidth, int width)
+std::vector<lString32> wrapText(LVFontRef font, const lString32 & text, int firstWidth, int width)
 {
-    std::vector<lString16> lines;
-    lString16 line, word;
+    std::vector<lString32> lines;
+    lString32 line, word;
     for (int i = 0; i <= text.length(); i++) {
-        lChar16 ch = i < text.length() ? text[i] : L' ';
-        if (ch != L' ' && ch != L'\t' && ch != L'\r' && ch != L'\n') {
+        lChar32 ch = i < text.length() ? text[i] : U' ';
+        if (ch != U' ' && ch != U'\t' && ch != U'\r' && ch != U'\n') {
             word << ch;
             continue;
         }
         if (word.empty())
             continue;
-        lString16 candidate = line.empty() ? word : line + L" " + word;
+        lString32 candidate = line.empty() ? word : line + U" " + word;
         int limit = lines.empty() ? firstWidth : width;
         if (line.empty() || textWidth(font, candidate) <= limit) {
             line = candidate;
@@ -79,21 +79,21 @@ std::vector<lString16> wrapText(LVFontRef font, const lString16 & text, int firs
     return lines;
 }
 
-lString16 menuSkinName(CRGUIWindowManager * wm)
+lString32 menuSkinName(CRGUIWindowManager * wm)
 {
-    static const lChar16 * const ids[] = { L"touch-toc", L"settings", L"main" };
+    static const lChar32 * const ids[] = { U"touch-toc", U"settings", U"main" };
     CRSkinRef skin = wm->getSkin();
     if (!skin.isNull()) {
         for (size_t i = 0; i < sizeof(ids) / sizeof(ids[0]); i++)
             if (!skin->pathById(ids[i]).empty())
-                return lString16(L"#") + ids[i];
+                return lString32(U"#") + ids[i];
     }
-    return lString16(L"#main");
+    return lString32(U"#main");
 }
 
 // ------------------------------------------------------------ OpdsMenu
 
-OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString16 & caption, lvRect & rc, bool paged)
+OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged)
     : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _lastTouchX(-1), _paged(paged),
       _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE)
 {
@@ -124,8 +124,8 @@ void OpdsMenu::setPlainRows()
 {
     // the touch TOC with page numbers has the same rows without separator lines
     CRSkinRef skin = _wm->getSkin();
-    if (!skin.isNull() && !skin->pathById(L"touch-toc-dots").empty())
-        setSkinName(lString16(L"#touch-toc-dots"));
+    if (!skin.isNull() && !skin->pathById(U"touch-toc-dots").empty())
+        setSkinName(lString32(U"#touch-toc-dots"));
 }
 
 void OpdsMenu::fitCaption()
@@ -210,14 +210,14 @@ int OpdsMenu::rowTextWidth()
     return width;
 }
 
-void OpdsMenu::add(int command, const lString16 & title, const lString16 & subtitle)
+void OpdsMenu::add(int command, const lString32 & title, const lString32 & subtitle)
 {
     addItem(new OpdsItem(this, command, title, subtitle));
 }
 
 // ------------------------------------------------------------ OpdsItem
 
-OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString16 & title, const lString16 & subtitle, Kind kind)
+OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
       leftCommand(0), rightCommand(0), centerCommand(OPDS_CMD_SERVICE), indent(0),
       _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
@@ -252,15 +252,15 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
     if (_kind == PAGER) {
         int third = r.width() / 3;
         int y = r.top + (r.height() - tf->getHeight()) / 2;
-        lString16 l = fitText(tf, left, third);
-        lString16 c = fitText(sf, center, third);
-        lString16 rt = fitText(tf, right, third);
-        tf->DrawTextString(&buf, r.left, y, l.c_str(), l.length(), L'?', NULL, false, 0);
+        lString32 l = fitText(tf, left, third);
+        lString32 c = fitText(sf, center, third);
+        lString32 rt = fitText(tf, right, third);
+        tf->DrawTextString(&buf, r.left, y, l.c_str(), l.length(), U'?', NULL, false, 0);
         int cw = sf->getTextWidth(c.c_str(), c.length());
         sf->DrawTextString(&buf, r.left + (r.width() - cw) / 2, r.top + (r.height() - sf->getHeight()) / 2,
-                           c.c_str(), c.length(), L'?', NULL, false, 0);
+                           c.c_str(), c.length(), U'?', NULL, false, 0);
         int rw = tf->getTextWidth(rt.c_str(), rt.length());
-        tf->DrawTextString(&buf, r.right - rw, y, rt.c_str(), rt.length(), L'?', NULL, false, 0);
+        tf->DrawTextString(&buf, r.right - rw, y, rt.c_str(), rt.length(), U'?', NULL, false, 0);
     } else if (_kind == TEXT) {
         int gap = sf->getHeight() / 8;
         int h1 = first.font.isNull() ? 0 : first.font->getHeight();
@@ -284,20 +284,20 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
             int aw = textWidth(sf, aside);
             int base = r.top + (r.height() - tf->getHeight()) / 2 + tf->getBaseline();
             sf->DrawTextString(&buf, r.right - aw, base - sf->getBaseline(),
-                               aside.c_str(), aside.length(), L'?', NULL, false, 0);
+                               aside.c_str(), aside.length(), U'?', NULL, false, 0);
             tr.right -= aw + sf->getHeight();
         }
-        lString16 t = fitText(tf, _title, tr.width());
+        lString32 t = fitText(tf, _title, tr.width());
         tf->DrawTextString(&buf, tr.left, r.top + (r.height() - tf->getHeight()) / 2,
-                           t.c_str(), t.length(), L'?', NULL, false, 0);
+                           t.c_str(), t.length(), U'?', NULL, false, 0);
     } else {
         int gap = sf->getHeight() / 8;
         int total = tf->getHeight() + gap + sf->getHeight();
         int y = r.top + (r.height() - total) / 2;
-        lString16 t = fitText(tf, _title, r.width());
-        lString16 s = fitText(sf, _subtitle, r.width());
-        tf->DrawTextString(&buf, r.left, y, t.c_str(), t.length(), L'?', NULL, false, 0);
-        sf->DrawTextString(&buf, r.left, y + tf->getHeight() + gap, s.c_str(), s.length(), L'?', NULL, false, 0);
+        lString32 t = fitText(tf, _title, r.width());
+        lString32 s = fitText(sf, _subtitle, r.width());
+        tf->DrawTextString(&buf, r.left, y, t.c_str(), t.length(), U'?', NULL, false, 0);
+        sf->DrawTextString(&buf, r.left, y + tf->getHeight() + gap, s.c_str(), s.length(), U'?', NULL, false, 0);
     }
     buf.SetClipRect(&oldClip);
 }
@@ -312,13 +312,13 @@ void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r
     if (!line.label.empty()) {
         lUInt32 color = buf.GetTextColor();
         buf.SetTextColor(OPDSUI_LABEL_COLOR);
-        lString16 l = fitText(line.font, line.label, r.right - x);
-        line.font->DrawTextString(&buf, x, top, l.c_str(), l.length(), L'?', NULL, false, 0);
+        lString32 l = fitText(line.font, line.label, r.right - x);
+        line.font->DrawTextString(&buf, x, top, l.c_str(), l.length(), U'?', NULL, false, 0);
         buf.SetTextColor(color);
         x += textWidth(line.font, l);
     }
-    lString16 t = fitText(line.font, line.text, r.right - x);
-    line.font->DrawTextString(&buf, x, top, t.c_str(), t.length(), L'?', NULL, false, 0);
+    lString32 t = fitText(line.font, line.text, r.right - x);
+    line.font->DrawTextString(&buf, x, top, t.c_str(), t.length(), U'?', NULL, false, 0);
 }
 
 int OpdsItem::onSelect()

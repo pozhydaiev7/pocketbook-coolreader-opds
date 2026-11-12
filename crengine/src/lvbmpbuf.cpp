@@ -1,15 +1,29 @@
-/*******************************************************
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007,2012,2013 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine C-compatible API
-
-   lvbmpbuf.cpp:  Gray bitmap buffer
-
-   (c) Vadim Lopatin, 2000-2006
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
+/**
+ * \file lvbmpbuf.cpp
+ * \brief Gray bitmap buffer
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -211,7 +225,6 @@ void lvdrawbufDrawUnpacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitma
     dstline = buf->data + buf->bytesPerRow*y + (x >> 2);
     dst = dstline;
     shift0 = (x & 3);
-    xx = width;
 
     bitmap += bx + by*bmp_width;
     shift = shift0;
@@ -241,8 +254,8 @@ void lvdrawbufDrawUnpacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitma
 void lvdrawbufDrawPacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitmap, int width, int height, const hrle_decode_info_t * table )
 {
     int buf_width = buf->bytesPerRow << 2; /* 2bpp */
-    int bx = 0;
-    int by = 0;
+    // int bx = 0;
+    // int by = 0;
     int xx;
     int bmp_width = width;
     lUInt16  b;
@@ -259,7 +272,7 @@ void lvdrawbufDrawPacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitmap,
     if (x<0)
     {
         width += x;
-        bx -= x;
+        // bx -= x;
         x = 0;
         if (width<=0)
             return;
@@ -267,7 +280,7 @@ void lvdrawbufDrawPacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitmap,
     if (y<0)
     {
         height += y;
-        by -= y;
+        // by -= y;
         y = 0;
         if (height<=0)
             return;
@@ -288,7 +301,7 @@ void lvdrawbufDrawPacked( draw_buf_t * buf, int x, int y, const lUInt8 * bitmap,
     dst = dstline;
     shift0 = (x & 3);
     xx = width;
-    srcskip = by*bmp_width + bx;
+    //srcskip = by*bmp_width + bx;
     //bitmap += srcskip >> 2;
     srcshift = 0; //(srcskip & 3);
     srcskip = 0;
@@ -384,7 +397,7 @@ void lvdrawbufDraw( draw_buf_t * buf, int x, int y, const lUInt8 * bitmap, int n
 */
 /*
 void lvdrawbufDrawText( draw_buf_t * buf, int x, int y, const lvfont_handle pfont, 
-                       const lChar16 * text, int len, lChar16 def_char )
+                       const lChar32 * text, int len, lChar32 def_char )
 {
    const lvfont_glyph_t * glyph;
    int baseline = lvfontGetHeader( pfont )->fontBaseline;
@@ -416,7 +429,7 @@ void lvdrawbufDrawText( draw_buf_t * buf, int x, int y, const lvfont_handle pfon
 }
 */
 void lvdrawbufDrawText( draw_buf_t * buf, int x, int y, const lvfont_handle pfont, 
-                       const lChar16 * text, int len, lChar16 def_char )
+                       const lChar32 * text, int len, lChar32 def_char )
 {
     static lUInt8 glyph_buf[16384];
     const lvfont_glyph_t * glyph;

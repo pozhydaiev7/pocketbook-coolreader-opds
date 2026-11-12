@@ -6,10 +6,10 @@
 
 // T9-like encoding table
 class TEncoding {
-    lString16Collection keytable_;
+    lString32Collection keytable_;
 public:
 
-	void set( const lString16Collection & items )
+	void set( const lString32Collection & items )
 	{
 		keytable_.clear();
 		keytable_.addAll( items );
@@ -17,11 +17,11 @@ public:
 
     int length() const { return keytable_.length(); }
 
-    const lString16 & operator [] ( int index ) const { return keytable_[index]; }
+    const lString32 & operator [] ( int index ) const { return keytable_[index]; }
 
     TEncoding() { }
 
-    TEncoding( const lChar16 ** defs )
+    TEncoding( const lChar32 ** defs )
     {
         init( defs );
     }
@@ -30,21 +30,21 @@ public:
 
     virtual ~TEncoding() {}
 
-    void init(  const lChar16 ** defs )
+    void init(  const lChar32 ** defs )
     {
         keytable_.clear();
         for (; *defs; defs++ ) {
-            lString16 s( *defs );
+            lString32 s( *defs );
             assert(keytable_.length() <= 10);
             keytable_.add( s );
         }
     }
 
-    int encode(lChar16 ch) const
+    int encode(lChar32 ch) const
     {
         assert(keytable_.length() <= 10);
         for (int i = 0; i < keytable_.length(); i++) {
-            const lString16& ref = keytable_[i];
+            const lString32& ref = keytable_[i];
             for( int j = 0; j < ref.length(); j ++ ) {
                 if (ref[j] == ch) {
                     return i;
@@ -55,7 +55,7 @@ public:
     }
 
     lString8
-    encode_string( lString16 s ) const
+    encode_string( lString32 s ) const
     { // s not const, because we lower it here
         s.lowercase();
         lString8 result;
@@ -66,9 +66,9 @@ public:
     }
 
 protected:
-   void defkey(const wchar_t *chars) {
+   void defkey(const lChar32 *chars) {
         assert(keytable_.length() <= 10);
-        keytable_.add(lString16(chars));
+        keytable_.add(lString32(chars));
    }
 };
 
@@ -76,16 +76,16 @@ class T9ClassicEncoding : public TEncoding {
        //T9 drawn on my Siemens S55 ;)
 public:
    T9ClassicEncoding () : TEncoding() {
-       defkey(L".,"); // 0 STUB
-       defkey(L" "); // 1 are STUBs
-       defkey(L"abc"); // 2
-       defkey(L"def"); // 3
-       defkey(L"ghi"); // 4
-       defkey(L"jkl"); // 5
-       defkey(L"mno"); // 6
-       defkey(L"pqrs"); // 7
-       defkey(L"tuv"); // 8
-       defkey(L"wxyz"); // 9
+       defkey(U".,"); // 0 STUB
+       defkey(U" "); // 1 are STUBs
+       defkey(U"abc"); // 2
+       defkey(U"def"); // 3
+       defkey(U"ghi"); // 4
+       defkey(U"jkl"); // 5
+       defkey(U"mno"); // 6
+       defkey(U"pqrs"); // 7
+       defkey(U"tuv"); // 8
+       defkey(U"wxyz"); // 9
     }
 };
 
@@ -93,16 +93,16 @@ class T9Encoding : public TEncoding {
    // T9 by LV
 public:
    T9Encoding () : TEncoding() {
-       defkey(L" .,"); // 0 STUB
-       defkey(L"abc"); // 1
-       defkey(L"def"); // 2
-       defkey(L"ghi"); // 3
-       defkey(L"jkl"); // 4
-       defkey(L"mno"); // 5
-       defkey(L"pqrs"); // 6
-       defkey(L"tuv"); // 7
-       defkey(L"wxyz"); // 8
-       defkey(L""); // 9 are STUBs
+       defkey(U" .,"); // 0 STUB
+       defkey(U"abc"); // 1
+       defkey(U"def"); // 2
+       defkey(U"ghi"); // 3
+       defkey(U"jkl"); // 4
+       defkey(U"mno"); // 5
+       defkey(U"pqrs"); // 6
+       defkey(U"tuv"); // 7
+       defkey(U"wxyz"); // 8
+       defkey(U""); // 9 are STUBs
     }
 };
 #endif

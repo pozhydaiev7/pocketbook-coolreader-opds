@@ -16,24 +16,24 @@
 #define PB_DICT_ID_STARDICT "sd:"
 #define PB_DICT_ID_XDXF "xd:"
 
-lString16 PbDictSource::label() const
+lString32 PbDictSource::label() const
 {
     // only the dictionaries that the firmware reader cannot use are marked
     if (type() == PB_DICT_TYPE_INKVIEW)
         return _title;
-    lString16 mark(type() == PB_DICT_TYPE_STARDICT ? "StarDict" : "XDXF");
+    lString32 mark(type() == PB_DICT_TYPE_STARDICT ? "StarDict" : "XDXF");
     return _title + Utf8ToUnicode(lString8(" \xC2\xB7 ")) + mark;
 }
 
 // lower case and capitalized forms of the word, without repeats
-static void pbDictWordForms(const lString16 & w, lString16Collection & forms)
+static void pbDictWordForms(const lString32 & w, lString32Collection & forms)
 {
     forms.clear();
-    lString16 lower = w;
+    lString32 lower = w;
     lower.lowercase();
-    lString16 capital = lower;
+    lString32 capital = lower;
     if (!capital.empty()) {
-        lString16 first = capital.substr(0, 1);
+        lString32 first = capital.substr(0, 1);
         first.uppercase();
         capital = first + capital.substr(1);
     }
@@ -62,7 +62,7 @@ public:
     PbInkviewDict(const char * name) : _name(name)
     {
         _title = Utf8ToUnicode(_name);
-        _id = lString16(PB_DICT_ID_INKVIEW) + _title;
+        _id = lString32(PB_DICT_ID_INKVIEW) + _title;
     }
     virtual PbDictType type() const { return PB_DICT_TYPE_INKVIEW; }
     virtual bool isOpen() const { return pbOpenInkviewDict == this; }
@@ -86,7 +86,7 @@ public:
         CloseDictionary();
         pbOpenInkviewDict = NULL;
     }
-    virtual int lookup(const lString16 & w, lString8 & word, lString8 & article)
+    virtual int lookup(const lString32 & w, lString8 & word, lString8 & article)
     {
         if (!open())
             return 0;
@@ -94,7 +94,7 @@ public:
         lString8 what = UnicodeToUtf8(w);
         int rc = LookupWord((char *)what.c_str(), &wd, &tr);
         if (rc == 0) {
-            lString16 lower = w;
+            lString32 lower = w;
             lower.lowercase();
             what = UnicodeToUtf8(lower);
             rc = LookupWord((char *)what.c_str(), &wd, &tr);
@@ -105,12 +105,12 @@ public:
         }
         return rc;
     }
-    virtual bool lookupExact(const lString16 & w, lString8 & word, lString8 & article)
+    virtual bool lookupExact(const lString32 & w, lString8 & word, lString8 & article)
     {
         if (lookup(w, word, article) == 0 || word.empty())
             return false;
-        lString16 got = Utf8ToUnicode(word);
-        lString16 wanted = w;
+        lString32 got = Utf8ToUnicode(word);
+        lString32 wanted = w;
         got.lowercase();
         wanted.lowercase();
         return got == wanted;
@@ -167,9 +167,9 @@ private:
         article = lString8(text.c_str());
     }
     // index of the word itself or of the entry its form points to, or -1
-    int findWord(const lString16 & w)
+    int findWord(const lString32 & w)
     {
-        lString16Collection forms;
+        lString32Collection forms;
         pbDictWordForms(w, forms);
         for (int i = 0; i < forms.length(); i++) {
             int index = _dict.findExact(UnicodeToUtf8(forms[i]).c_str());
@@ -192,7 +192,7 @@ public:
             return false;
         }
         _title = Utf8ToUnicode(lString8(_dict.bookName().c_str()));
-        _id = lString16(_type == PB_DICT_TYPE_XDXF ? PB_DICT_ID_XDXF : PB_DICT_ID_STARDICT) + Utf8ToUnicode(path);
+        _id = lString32(_type == PB_DICT_TYPE_XDXF ? PB_DICT_ID_XDXF : PB_DICT_ID_STARDICT) + Utf8ToUnicode(path);
         return true;
     }
     virtual PbDictType type() const { return _type; }
@@ -217,7 +217,7 @@ public:
     }
     // the index stays loaded: the next lookup does not read it again
     virtual void close() {}
-    virtual int lookup(const lString16 & w, lString8 & word, lString8 & article)
+    virtual int lookup(const lString32 & w, lString8 & word, lString8 & article)
     {
         if (!open() || _dict.wordCount() == 0)
             return 0;
@@ -227,7 +227,7 @@ public:
             return 2;
         }
         // the nearest word for the word list
-        lString16 lower = w;
+        lString32 lower = w;
         lower.lowercase();
         index = _dict.lowerBound(UnicodeToUtf8(lower).c_str());
         if (index >= _dict.wordCount())
@@ -235,7 +235,7 @@ public:
         fill(index, word, article);
         return 1;
     }
-    virtual bool lookupExact(const lString16 & w, lString8 & word, lString8 & article)
+    virtual bool lookupExact(const lString32 & w, lString8 & word, lString8 & article)
     {
         if (!open())
             return false;
@@ -367,19 +367,19 @@ void PbDictManager::scan()
     CRLog::info("dictionaries: %d .dic, %d StarDict and XDXF", dicCount, found.length());
 }
 
-lString16 PbDictManager::normalizeId(const lString16 & value)
+lString32 PbDictManager::normalizeId(const lString32 & value)
 {
-    if (value.empty() || value.startsWith(lString16(PB_DICT_ID_INKVIEW)) ||
-        value.startsWith(lString16(PB_DICT_ID_STARDICT)) || value.startsWith(lString16(PB_DICT_ID_XDXF)) ||
-        value == lString16(PB_DICT_ID_SELECTED))
+    if (value.empty() || value.startsWith(lString32(PB_DICT_ID_INKVIEW)) ||
+        value.startsWith(lString32(PB_DICT_ID_STARDICT)) || value.startsWith(lString32(PB_DICT_ID_XDXF)) ||
+        value == lString32(PB_DICT_ID_SELECTED))
         return value;
-    return lString16(PB_DICT_ID_INKVIEW) + value;
+    return lString32(PB_DICT_ID_INKVIEW) + value;
 }
 
-PbDictSource * PbDictManager::find(const lString16 & id)
+PbDictSource * PbDictManager::find(const lString32 & id)
 {
     scan();
-    lString16 wanted = normalizeId(id);
+    lString32 wanted = normalizeId(id);
     for (int i = 0; i < _sources.length(); i++)
         if (_sources[i]->id() == wanted)
             return _sources[i];

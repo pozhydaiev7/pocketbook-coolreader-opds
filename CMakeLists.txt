@@ -30,6 +30,8 @@ if(MSVC)
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   # Update if necessary
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long")
+  # CREngine 3.2 needs char32_t and U"" literals; gcc 4.8 of the FW5 SDK has them in this mode
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
   # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
 
   if(POCKETBOOK_PRO_FW5)
@@ -150,77 +152,11 @@ else()
   SET(USE_UNRAR 0)
 endif(DEFINED USE_UNRAR)
 
-if (MAC)
-  message("will use zlib, libpng, libjpeg, freetype from Qt static library")
-  SET(ZLIB_INCLUDE_DIR ${QT_3RDPARTY_DIR}/zlib)
-  SET(ZLIB_LIBRARIES )
-  SET(PNG_INCLUDE_DIR ${QT_3RDPARTY_DIR}/libpng)
-  SET(PNG_LIBRARIES )
-  SET(FREETYPE_INCLUDE_DIRS ${QT_3RDPARTY_DIR}/freetype/include)
-  SET(FREETYPE_LIBRARIES )
-  SET(JPEG_INCLUDE_DIR ${QT_3RDPARTY_DIR}/libjpeg)
-  SET(JPEG_LIBRARIES )
-endif(MAC)
-
-if (NOT MAC)
-if (DEFINED USE_QT_ZLIB)
-  SET(ZLIB_INCLUDE_DIR ${QT_INCLUDE_DIR}/../src/3rdparty/zlib)
-  message("Using QT ZLIB ${USE_QT_ZLIB} include dir: ${ZLIB_INCLUDE_DIR}\n")
-# SET(ZLIB_LIBRARIES "")
-else()
-
-if (NOT WIN32 AND NOT DEFINED USE_STATIC_ZLIB)
-FIND_PACKAGE(ZLIB)
-endif (NOT WIN32 AND NOT DEFINED USE_STATIC_ZLIB)
-
-if (NOT ZLIB_FOUND)
-  message("System ZLIB not found, will build local one\n")
-  #to disable #include <qconfig.h>
-  ADD_DEFINITIONS(-DCR3_PATCH=1)
-  ADD_SUBDIRECTORY(thirdparty/zlib)
-  SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/zlib)
-  SET(ZLIB_LIBRARIES z)
-endif (NOT ZLIB_FOUND)
-endif(DEFINED USE_QT_ZLIB)
-endif(NOT MAC)
+# zlib, libpng, libjpeg-turbo, FreeType and the image scaler of the engine are built from
+# thirdparty/ as private static libraries (tools/dependencies.cmake).
+include(tools/dependencies.cmake)
 
 if ( NOT ${GUI} STREQUAL FB2PROPS )
-if (NOT MAC)
-if (NOT WIN32 AND NOT CR3_PNG)
-FIND_PACKAGE(PNG)
-endif (NOT WIN32 AND NOT CR3_PNG)
-
-if (NOT PNG_FOUND)
-  message("System LIBPNG not found, will build local one\n")
-  #to disable #include <qconfig.h>
-  ADD_DEFINITIONS(-DCR3_PATCH=1)
-  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
-  ADD_SUBDIRECTORY(thirdparty/libpng)
-  SET(PNG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libpng)
-  SET(PNG_LIBRARIES png)
-endif (NOT PNG_FOUND)
-
-if (NOT WIN32 AND NOT CR3_JPEG)
-FIND_PACKAGE(JPEG)
-endif (NOT WIN32 AND NOT CR3_JPEG)
-if (NOT JPEG_FOUND)
-  message("System LIBJPEG not found, will build local one\n")
-  ADD_SUBDIRECTORY(thirdparty/libjpeg)
-  SET(JPEG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/libjpeg)
-  SET(JPEG_LIBRARIES jpeg)
-endif (NOT JPEG_FOUND)
-
-# if (NOT WIN32 AND NOT CR3_FREETYPE)
-# FIND_PACKAGE(Freetype)
-# endif (NOT WIN32 AND NOT CR3_FREETYPE)
-# if (NOT FREETYPE_FOUND)
-  # message("System FREETYPE not found, will build local one\n")
-  message("Will build local FREETYPE library\n")
-  ADD_SUBDIRECTORY(thirdparty/freetype)
-  SET(FREETYPE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/freetype/include)
-  SET(FREETYPE_LIBRARIES freetype)
-# endif (NOT FREETYPE_FOUND)
-endif (NOT MAC)
 
 #if (ENABLE_CHM)
 message("Will build patched LIBCHM library\n")
@@ -245,7 +181,7 @@ endif ( NOT ${GUI} STREQUAL FB2PROPS )
 INCLUDE_DIRECTORIES(
   ${PNG_INCLUDE_DIR}
   ${JPEG_INCLUDE_DIR}
-  ${ZLIB_INCLUDE_DIR}
+  ${ZLIB_INCLUDE_DIRS}
   ${FREETYPE_INCLUDE_DIRS}
   ${ANTIWORD_INCLUDE_DIR}
   ${CHM_INCLUDE_DIR}
@@ -281,6 +217,7 @@ else()
       ${ANTIWORD_LIBRARIES}
     )
   endif( DEFINED POCKETBOOK_PRO )
+  list(APPEND STD_LIBS qimagescale)
   include_directories(${FT_INCLUDE_PATH})
 endif ( ${GUI} STREQUAL FB2PROPS )
 

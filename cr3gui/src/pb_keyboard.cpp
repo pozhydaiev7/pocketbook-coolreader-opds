@@ -9,7 +9,7 @@
 #include "mainwnd.h"
 
 extern V3DocViewWin * main_win;
-extern lString16 currentLang;
+extern lString32 currentLang;
 
 namespace {
 
@@ -29,17 +29,17 @@ const char * const SYMBOLS[3] = { "1234567890", "-/:;()&@\".", ",?!'*+=#_%" };
 const char * const LAYOUT_NAMES[3] = { "EN", "RU", "UK" };
 const char * const LETTERS_NAMES[3] = { "ABC", "АБВ", "АБВ" };
 
-lString16 u16(const char * s)
+lString32 u16(const char * s)
 {
     return Utf8ToUnicode(lString8(s));
 }
 
 // the layout for a text: Ukrainian or Russian letters in it, otherwise the language of the interface
-int layoutFor(const lString16 & text)
+int layoutFor(const lString32 & text)
 {
     bool cyrillic = false;
     for (int i = 0; i < text.length(); i++) {
-        lChar16 c = text[i];
+        lChar32 c = text[i];
         if (c == 0x0456 || c == 0x0457 || c == 0x0454 || c == 0x0491 ||
             c == 0x0406 || c == 0x0407 || c == 0x0404 || c == 0x0490)
             return 2; // і ї є ґ
@@ -65,7 +65,7 @@ PbKeyboard::PbKeyboard(CRGUIWindowManager * wm, const char * title, char * buffe
     : CRGUIWindowBase(wm), _buffer(buffer), _maxlen(maxlen), _handler(handler), _inverted(inverted),
       _textSelected(false), _layout(0), _symbols(false), _shift(false), _pressed(-1), _line(1)
 {
-    _title = title != NULL ? Utf8ToUnicode(lString8(title)) : lString16::empty_str;
+    _title = title != NULL ? Utf8ToUnicode(lString8(title)) : lString32::empty_str;
     _text = Utf8ToUnicode(lString8(buffer != NULL ? buffer : ""));
     _textSelected = !_text.empty();
     _fullscreen = false;
@@ -75,13 +75,13 @@ PbKeyboard::PbKeyboard(CRGUIWindowManager * wm, const char * title, char * buffe
     if (layout < 0 && main_win != NULL)
         layout = main_win->getProps()->getIntDef(PROP_POCKETBOOK_KEYBOARD_LAYOUT, -1);
     if (layout < 0 || layout >= LAYOUT_COUNT)
-        layout = currentLang.startsWith(lString16("uk")) ? LAYOUT_UK
-                 : currentLang.startsWith(lString16("ru")) ? LAYOUT_RU : LAYOUT_EN;
+        layout = currentLang.startsWith(lString32("uk")) ? LAYOUT_UK
+                 : currentLang.startsWith(lString32("ru")) ? LAYOUT_RU : LAYOUT_EN;
     _layout = layout;
     build();
 }
 
-void PbKeyboard::addRow(const lString16 & letters, int row, bool shiftRow, int rows, int keyHeight,
+void PbKeyboard::addRow(const lString32 & letters, int row, bool shiftRow, int rows, int keyHeight,
                         int unitWidth, int maxUnits, const lvRect & area, std::vector<Key> & keys)
 {
     (void)rows;
@@ -167,21 +167,21 @@ void PbKeyboard::build()
     setDirty();
 }
 
-lString16 PbKeyboard::label(const Key & key) const
+lString32 PbKeyboard::label(const Key & key) const
 {
     switch (key.code) {
-    case PBK_SHIFT: return lString16(L"\x2191");      // up arrow
-    case PBK_BACKSPACE: return lString16(L"\x2190");  // left arrow
-    case PBK_SPACE: return lString16::empty_str;
-    case PBK_SYMBOLS: return _symbols ? u16(LETTERS_NAMES[_layout]) : lString16("123");
-    case PBK_LAYOUT: return lString16(LAYOUT_NAMES[_layout]);
-    case PBK_OK: return lString16("OK");
-    case PBK_CANCEL: return lString16(_("Cancel"));
+    case PBK_SHIFT: return lString32(U"\x2191");      // up arrow
+    case PBK_BACKSPACE: return lString32(U"\x2190");  // left arrow
+    case PBK_SPACE: return lString32::empty_str;
+    case PBK_SYMBOLS: return _symbols ? u16(LETTERS_NAMES[_layout]) : lString32("123");
+    case PBK_LAYOUT: return lString32(LAYOUT_NAMES[_layout]);
+    case PBK_OK: return lString32("OK");
+    case PBK_CANCEL: return lString32(_("Cancel"));
     default:
         break;
     }
-    lChar16 c[2] = { (lChar16)key.code, 0 };
-    lString16 s(c);
+    lChar32 c[2] = { (lChar32)key.code, 0 };
+    lString32 s(c);
     if (_shift)
         s.uppercase();
     return s;
@@ -198,18 +198,18 @@ void PbKeyboard::drawTextField(LVDrawBuf & buf, bool invert)
     inner.left += textPad;
     inner.right -= textPad;
     int y = inner.top + (inner.height() - _textFont->getHeight()) / 2;
-    lString16 shown = _text;
+    lString32 shown = _text;
     int caret = _textFont->getHeight() / 12 + 1;
     while (!shown.empty() && _textFont->getTextWidth(shown.c_str(), shown.length()) > inner.width() - 2 * caret)
         shown = shown.substr(1); // the end of a long text stays visible
     buf.SetBackgroundColor(0xFFFFFF);
     if (shown.empty() && !_title.empty()) {
         buf.SetTextColor(0x888888);
-        _textFont->DrawTextString(&buf, inner.left, y, _title.c_str(), _title.length(), L'?', NULL, false, 0);
+        _textFont->DrawTextString(&buf, inner.left, y, _title.c_str(), _title.length(), U'?', NULL, false, 0);
     }
     buf.SetTextColor(0x000000);
     int textWidth = _textFont->getTextWidth(shown.c_str(), shown.length());
-    _textFont->DrawTextString(&buf, inner.left, y, shown.c_str(), shown.length(), L'?', NULL, false, 0);
+    _textFont->DrawTextString(&buf, inner.left, y, shown.c_str(), shown.length(), U'?', NULL, false, 0);
     if (_textSelected && textWidth > 0)
         buf.InvertRect(inner.left - caret, y, inner.left + textWidth + caret, y + _textFont->getHeight());
     else
@@ -233,14 +233,14 @@ void PbKeyboard::drawKey(LVDrawBuf & buf, int index, bool invert)
     rc.top += gap;
     rc.bottom -= gap;
     buf.DrawFrame(rc, 0x000000, _line);
-    lString16 l = label(k);
+    lString32 l = label(k);
     if (!l.empty()) {
         LVFontRef font = k.code < 0 ? _keyBoldFont : _keyFont;
         buf.SetTextColor(0x000000);
         buf.SetBackgroundColor(0xFFFFFF);
         int w = font->getTextWidth(l.c_str(), l.length());
         font->DrawTextString(&buf, rc.left + (rc.width() - w) / 2, rc.top + (rc.height() - font->getHeight()) / 2,
-                             l.c_str(), l.length(), L'?', NULL, false, 0);
+                             l.c_str(), l.length(), U'?', NULL, false, 0);
     }
     bool dark = (k.code == PBK_SHIFT && _shift) != (index == _pressed);
     if (dark)
@@ -331,8 +331,8 @@ PbKeyboard::Changed PbKeyboard::press(const Key & key)
         _text.clear();
     _textSelected = false;
     if (_text.length() < MAX_TEXT) {
-        lChar16 c[2] = { (lChar16)(key.code == PBK_SPACE ? ' ' : key.code), 0 };
-        lString16 s(c);
+        lChar32 c[2] = { (lChar32)(key.code == PBK_SPACE ? ' ' : key.code), 0 };
+        lString32 s(c);
         if (_shift)
             s.uppercase();
         _text << s;
@@ -357,7 +357,7 @@ void PbKeyboard::finish(bool accept)
     }
     if (main_win != NULL && main_win->getProps()->getIntDef(PROP_POCKETBOOK_KEYBOARD_LAYOUT, -1) != _layout) {
         main_win->getProps()->setInt(PROP_POCKETBOOK_KEYBOARD_LAYOUT, _layout);
-        main_win->saveSettings(lString16::empty_str);
+        main_win->saveSettings(lString32::empty_str);
     }
     wm->closeWindow(this); // deletes this window
     if (call)

@@ -1,23 +1,36 @@
-/** \file lvtypes.h
-    \brief CREngine common types definition
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2011,2013,2015 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2011 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2018,2020,2021 Aleksey Chernov <valexlin@gmail.com>     *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-    See LICENSE file for details.
-*/
+/**
+ * \file lvtypes.h
+ * \brief CREngine common types definition
+ */
 
 #ifndef LVTYPES_H_INCLUDED
 #define LVTYPES_H_INCLUDED
 
 #include <stdlib.h>
 #include "crsetup.h"
-
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <sys/time.h>
-#endif
 
 #ifdef _WIN32
 typedef long lInt32;            ///< signed 32 bit int
@@ -33,8 +46,14 @@ typedef unsigned short int lUInt16; ///< unsigned 16 bit int
 typedef signed char lInt8;          ///< signed 8 bit int
 typedef unsigned char lUInt8;       ///< unsigned 8 bit int
 
-typedef wchar_t lChar16;            ///< 16 bit char
+typedef char32_t lChar32;           ///< 32 bit char
 typedef char lChar8;                ///< 8 bit char
+
+#ifdef _WIN32
+typedef wchar_t lChar16;            ///< 16 bit char, only for Windows
+#else
+typedef char16_t lChar16;           ///< 16 bit char
+#endif
 
 #if defined(_WIN32) && !defined(CYGWIN)
 typedef __int64 lInt64;             ///< signed 64 bit int
@@ -143,8 +162,9 @@ public:
     /// returns true if specified rectangle is fully covered by this rectangle
     bool isRectInside( lvRect rc ) const
     {
-        if ( rc.isEmpty() || isEmpty() )
-            return false;
+        // This was wrong: a 0-height or 0-width rect can be inside another rect
+        // if ( rc.isEmpty() || isEmpty() )
+        //    return false;
         if ( rc.left < left || rc.right > right || rc.top < top || rc.bottom > bottom )
             return false;
         return true;
@@ -212,6 +232,19 @@ public:
         test.word = 1;
         _lsf = test.bytes[0]!=0;
     }
+    /// reverse 64 bit word
+    inline static lUInt64 rev( lUInt64 w )
+    {
+        return
+            ((w&0xFF00000000000000UL)>>56) |
+            ((w&0x00FF000000000000UL)>>40) |
+            ((w&0x0000FF0000000000UL)>>32) |
+            ((w&0x000000FF00000000UL)>>24) |
+            ((w&0x00000000FF000000UL)<<24) |
+            ((w&0x0000000000FF0000UL)<<32) |
+            ((w&0x000000000000FF00UL)<<40) |
+            ((w&0x00000000000000FFUL)<<56);
+    }
     /// reverse 32 bit word
     inline static lUInt32 rev( lUInt32 w )
     {
@@ -228,6 +261,16 @@ public:
             (lUInt16)(
             ((w&0xFF00)>>8)|
             ((w&0x00FF)<<8) );
+    }
+    /// make 64 bit word least-significant-first byte order (Intel)
+    lUInt32 lsf( lUInt64 w )
+    {
+        return ( _lsf ) ? w : rev(w);
+    }
+    /// make 64 bit word most-significant-first byte order (PPC)
+    lUInt32 msf( lUInt64 w )
+    {
+        return ( !_lsf ) ? w : rev(w);
     }
     /// make 32 bit word least-significant-first byte order (Intel)
     lUInt32 lsf( lUInt32 w )
@@ -249,6 +292,10 @@ public:
     {
         return ( !_lsf ) ? w : rev(w);
     }
+    void rev( lUInt64 * w )
+    {
+        *w = rev(*w);
+    }
     void rev( lUInt32 * w )
     {
         *w = rev(*w);
@@ -256,6 +303,30 @@ public:
     void rev( lUInt16 * w )
     {
         *w = rev(*w);
+    }
+    void msf( lUInt64 * w )
+    {
+        if ( _lsf )
+            *w = rev(*w);
+    }
+    void lsf( lUInt64 * w )
+    {
+        if ( !_lsf )
+            *w = rev(*w);
+    }
+    void msf( lUInt64 * w, int len )
+    {
+        if ( _lsf ) {
+            for ( int i=0; i<len; i++)
+                w[i] = rev(w[i]);
+        }
+    }
+    void lsf( lUInt64 * w, int len )
+    {
+        if ( !_lsf ) {
+            for ( int i=0; i<len; i++)
+                w[i] = rev(w[i]);
+        }
     }
     void msf( lUInt32 * w )
     {
@@ -312,73 +383,6 @@ public:
     bool msf()
     {
         return (!_lsf);
-    }
-};
-
-/// timer to interval expiration, in milliseconds
-class CRTimerUtil {
-    lInt64 _start;
-    volatile lInt64 _interval;
-public:
-    static lInt64 getSystemTimeMillis() {
-#ifdef _WIN32
-        FILETIME ts;
-        GetSystemTimeAsFileTime(&ts);
-        return ((lInt64)ts.dwLowDateTime)/10000 + ((lInt64)ts.dwHighDateTime)*1000;
-#else
-        timeval ts;
-        gettimeofday(&ts, 0);
-        return ((lInt64)ts.tv_usec)/1000 + ((lInt64)ts.tv_sec)*1000;
-#endif
-    }
-
-    /// create timer with infinite limit
-    CRTimerUtil() {
-        _start = getSystemTimeMillis();
-        _interval = -1;
-    }
-
-    /// create timer with limited interval (milliseconds)
-    CRTimerUtil(lInt64 expirationIntervalMillis) {
-        _start = getSystemTimeMillis();
-        _interval = expirationIntervalMillis;
-    }
-
-    void restart() {
-        _start = getSystemTimeMillis();
-    }
-
-    void restart(lInt64 expirationIntervalMillis) {
-        _start = getSystemTimeMillis();
-        _interval = expirationIntervalMillis;
-    }
-
-    CRTimerUtil & operator = (const CRTimerUtil & t) {
-    	_start = t._start;
-    	_interval = t._interval;
-    	return *this;
-    }
-
-    void cancel() {
-    	_interval = 0;
-    }
-
-    /// returns true if timeout is infinite
-    bool infinite() {
-        return _interval==-1;
-    }
-    /// returns true if expirationIntervalMillis is expired
-    bool expired() {
-        if ( _interval==-1 )
-            return false;
-        return getSystemTimeMillis() - _start >= _interval;
-    }
-    /// return milliseconds elapsed since timer start
-    lInt64 elapsed() {
-        return getSystemTimeMillis() - _start;
-    }
-    int interval() {
-        return (int)_interval;
     }
 };
 

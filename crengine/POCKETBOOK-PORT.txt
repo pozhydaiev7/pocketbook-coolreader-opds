@@ -1,0 +1,82 @@
+CREngine migration: PocketBook compatibility baseline
+===================================================
+
+Source
+------
+The engine is based on official CoolReader commit
+  dcc2d4c88b7ee66b8ee1223833c1a72cad3cdbc5
+which reports CREngine 3.2.59-1 (2026-07-20). UPSTREAM.json records the source
+archive checksum and retained/excluded paths. The previous engine reported
+3.1.2-52 (2014-11-19), with later PocketBook customizations.
+
+The supporting-library upgrade was merged separately in PR #2 and confirmed
+working by the user on the Touch HD 3. The engine migration was installed on the Touch HD 3. Device feedback exposed
+status-line and FB2 footnote regressions; fixes were installed subsequently.
+Comprehensive device validation remains pending.
+
+Ported integration
+------------------
+* The PocketBook frontend and tests use explicit UTF-32 engine strings and
+  literals. UTF-8 remains the boundary for InkView and filesystem APIs.
+* The fork's touch-capable crgui/crskin framework is retained and adapted,
+  preserving header height, wide Back target, chevron and pressed feedback.
+* Battery state, text input, contextual translations, link rectangles,
+  in-memory documents and generated covers use current engine interfaces.
+* pocketbook_compat.cpp carries chapter/section navigation, bookmark controls
+  and page-progress helpers. Legacy UI commands use a separate command range.
+* Static LVRef initialization, settings serialization, short-write reporting,
+  XML history escaping, atomic save/backup and bounded stream fragments remain.
+* Malformed UTF-8 ZIP names are rejected whenever the encoding flag is set,
+  independently of the ZIP producer's version. Legacy charset support remains.
+* The standalone upstream QImageScale component supplies the engine's smooth
+  image scaler. It is private/static, uses the same ARM flags and includes
+  the applicable source notices and GPLv2 license alternative in packages.
+* Disabled UnRAR and unsupported desktop conversion tools are not reintroduced.
+* Build metadata and startup logs identify the engine revision explicitly.
+
+Feature baseline
+----------------
+The initial port keeps the previous dependency footprint for text shaping and
+cache compression: HarfBuzz, FriBidi, libunibreak, Zstd, NanoSVG and utf8proc are
+not enabled. Upstream parser/layout/font code is modernized; this milestone
+does not claim every optional feature of upstream CoolReader or KOReader.
+Adding these integrations is separate from getting the current PocketBook UI
+and saved preferences working with the modern engine.
+
+Validation and remaining work
+-----------------------------
+Run tools/build-touch-hd3.sh with the B288 SDK and the extracted firmware runtime.
+The eleven ARM/QEMU regression groups cover the retained menu geometry,
+startup/Cyrillic FB2 layout, captured preferences, image decoding, TLS,
+dictionaries, history, archives and failed atomic writes. Migration cases also
+exercise supplementary Unicode, EPUB CSS/image page painting and parsing older
+history XML without doc-dom-version.
+
+Remaining physical-reader checks before promoting a public release:
+* Validate startup, normal exit and settings on the Touch HD 3.
+* Validate existing reading positions and bookmarks across the upstream DOM
+  version conversion, including books with zero or one explicit bookmark.
+  Automated pointer conversion is covered; device navigation still needs checking.
+* Validate old cache invalidation, EPUBs with embedded fonts, CHM/Word documents,
+  dictionary navigation, links, sleep/wake, rotation and physical page buttons.
+* Audit remaining legacy font/rendering knobs, then assess optional shaping/
+  line-breaking integration and rendering performance.
+
+Keep a backup of the working library-upgrade build and user settings before
+any physical-reader migration test. Candidate package validation reports
+remain explicitly separate from device validation.
+
+Reading-state hardening
+-----------------------
+The migration group now resolves real FB2 reading positions with zero, one and
+two bookmarks through stream, ordinary-file and ZIP loads, saves and reopens
+the migrated history, and checks the referenced text and offsets. Conversion
+includes the separately stored last position, is staged before changing history,
+and reloads the document with current DOM/layout settings. Metadata-only loads
+do not migrate history; a failed modern reload restores the original pointers.
+Bookmark highlighting reads history without implicitly saving a new position.
+
+Settings/history save failures now produce a warning once per failure episode;
+a successful retry resets it. Atomic writes and backup retention remain intact.
+The unsupported legacy font.embolding slider is removed from the UI; the saved
+key is retained for rollback, and the supported Normal/Bold control remains.

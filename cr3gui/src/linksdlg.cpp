@@ -36,7 +36,8 @@ void CRLinksDialog::draw()
         for (int i=0; i<list.length(); i++) {
             ldomXRange * link = list[i];
             LVArray<lvRect> rects;
-            if ( link && link->getRectangles( rects ) ) {
+            if ( link ) {
+                link->getSegmentRects(rects);
                 for ( int j=0; j<rects.length(); j++ ) {
                     lvRect rc = rects[j];
                     lvPoint topLeft = rc.topLeft();
@@ -79,7 +80,7 @@ CRLinksDialog * CRLinksDialog::create( CRGUIWindowManager * wm, CRViewDialog * d
 class LinksToolbar : public CRToolBar
 {
 public:
-    LinksToolbar(CRGUIWindowBase *window, lString16 id, CRToolBarSkinRef tbskin, bool active = true)
+    LinksToolbar(CRGUIWindowBase *window, lString32 id, CRToolBarSkinRef tbskin, bool active = true)
         :  CRToolBar(window, id, tbskin, active)
     {
         init();
@@ -88,17 +89,17 @@ public:
     {}
     void initDefault()
     {
-        addButton( new CRToolButton(this, 0, cs16("<-"), DCMD_LINK_BACK, 0) ); //back
-        addButton( new CRToolButton(this, 1, cs16("->"), DCMD_LINK_FORWARD, 0) ); //forward
-        addButton( new CRToolButton(this, 2, cs16(""), MCMD_SWAP, 0) ); //swap
-        addButton( new CRToolButton(this, 0, cs16("X"), MCMD_CANCEL, 0) ); // cancel
+        addButton( new CRToolButton(this, 0, cs32("<-"), DCMD_LINK_BACK, 0) ); //back
+        addButton( new CRToolButton(this, 1, cs32("->"), DCMD_LINK_FORWARD, 0) ); //forward
+        addButton( new CRToolButton(this, 2, cs32(""), MCMD_SWAP, 0) ); //swap
+        addButton( new CRToolButton(this, 0, cs32("X"), MCMD_CANCEL, 0) ); // cancel
     }
 };
 
 CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bool backPreffered )
 : CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView()), _toolBar(NULL)
 {
-    setSkinName( L"#links-dialog");
+    setSkinName( U"#links-dialog");
     _invalidateRect.left = 0;
     _invalidateRect.top = 0;
     _invalidateRect.right = _wm->getScreen()->getWidth();
@@ -111,7 +112,7 @@ CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bo
         tb2Skin = windowSkin->getToolBar2Skin();
     }
     if ( !tb1Skin.isNull() ) {
-        _toolBar = new LinksToolbar(this, cs16("links-toolbar"), tb1Skin, backPreffered);
+        _toolBar = new LinksToolbar(this, cs32("links-toolbar"), tb1Skin, backPreffered);
 
         _forwardIndex = _toolBar->findButton(DCMD_LINK_FORWARD, 0);
         if ( -1 == _forwardIndex )
@@ -249,7 +250,8 @@ void CRLinksDialog::invalidateCurrentSelection()
         return;
     }
     LVArray<lvRect> rects;
-    if ( link->getRectangles( rects ) ) {
+    link->getSegmentRects(rects);
+    if (rects.length() > 0) {
 #if 1
         _invalidateRect.left = 0;
         _invalidateRect.top = 0;

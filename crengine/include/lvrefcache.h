@@ -1,20 +1,37 @@
-/*******************************************************
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007,2009-2011 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2013 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2018 Aleksey Chernov <valexlin@gmail.com>               *
+ *   Copyright (C) 2018,2020 poire-z <poire-z@users.noreply.github.com>    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine
-
-   lvrefcache.h:  Referenced objects cache
-      allows to reuse objects with the same concents
-
-   (c) Vadim Lopatin, 2000-2006
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
+/**
+ * \file lvrefcache.h
+ * \brief Referenced objects cache.
+ *
+ * Allows to reuse objects with the same contents.
+ */
 
 #if !defined(__LV_REF_CACHE_H_INCLUDED__)
 #define __LV_REF_CACHE_H_INCLUDED__
 
+#include "lvmemman.h"
 #include "lvref.h"
 #include "lvarray.h"
 
@@ -152,7 +169,7 @@ private:
                 indexsize = size/2;
             else
                 indexsize *= 2;
-            index = (LVRefCacheIndexRec*)realloc( index, sizeof(LVRefCacheIndexRec)*indexsize );
+            index = cr_realloc( index, indexsize );
             for ( int i=nextindex+1; i<indexsize; i++ ) {
                 index[i].item = NULL;
                 index[i].refcount = 0;
@@ -235,13 +252,34 @@ public:
     bool cache( lUInt16 &indexholder, ref_t & style)
     {
         int newindex = cache( style );
+        // printf("newindex: %d  /  provided indexholder: %d\n", newindex, (int)indexholder);
         if ( indexholder != newindex ) {
             release( indexholder );
             indexholder = (lUInt16)newindex;
             return true;
-        } else {
-            release( indexholder );
+        } else { // indexholder == newindex
+            // Here, we want to decrement the refcount that has been incremented
+            // by the above call "newindex = cache( style )", as it returned the
+            // same index as the already referenced one.
+            // In normal cases, when the item is already present in the cache
+            // and referenced once, we are here with refcount=2, and we want to
+            // put it back to refcount=1, as it should be.
+            // In rare cases for some yet undertermined reason or bug, we may
+            // have been called with a non-0 indexholder, but not previously
+            // present in the cache, and we get the same value for newindex:
+            // the cache item refcount is then 1. And we want it to stay 1 (as
+            // it's really referenced once) so the value/pointer are not freed,
+            // and some segmentation fault is avoided later.
+            // So, we just don't release it if the refcount is 1 (we were
+            // asked to cache something: so don't drop it!)
+            // printf("released: refcount for %d = %d\n", indexholder, this->index[indexholder].refcount);
+            if (this->index[indexholder].refcount > 1)
+                release( indexholder );
             return false;
+            // This returned boolean seems not used anywhere, so it's not
+            // clear whether we should return true or false when the
+            // item was not in the cache, and thus created - but the
+            // indexholder (although not existing) stayed unchanged.
         }
     }
 
@@ -332,7 +370,7 @@ public:
         indexsize = list.length();
         nextindex = indexsize > 0 ? indexsize-1 : 0;
         if ( indexsize ) {
-            index = (LVRefCacheIndexRec*)realloc( index, sizeof(LVRefCacheIndexRec)*indexsize );
+            index = cr_realloc( index, indexsize );
             index[0].item = NULL;
             index[0].refcount=0;
             for ( int i=1; i<indexsize; i++ ) {
@@ -419,6 +457,7 @@ private:
     };
     Pair * buf;
     int size;
+    int orig_size;
     int numitems;
     int lastAccess;
     void checkOverflow( int oldestAccessTime )
@@ -445,9 +484,21 @@ public:
         return numitems;
     }
     LVCacheMap( int maxSize )
-    : size(maxSize), numitems(0), lastAccess(1)
+    : size(maxSize), orig_size(maxSize), numitems(0), lastAccess(1)
     {
         buf = new Pair[ size ];
+        clear();
+    }
+    void reduceSize(int newSize)
+    {
+        if (newSize < orig_size) {
+            clear();
+            size = newSize;
+        }
+    }
+    void restoreSize()
+    {
+        size = orig_size;
         clear();
     }
     void clear()

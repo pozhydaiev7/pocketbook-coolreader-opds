@@ -1,18 +1,33 @@
-/** \file lstridmap.h
-    \brief Name <-> Id map
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2012 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine DOM Tree 
-
-   Implements mapping between Name and Id
-
-   (c) Vadim Lopatin, 2000-2006
-
-   This source code is distributed under the terms of
-   GNU General Public License.
-
-   See LICENSE file for details.
-
-*/
+/**
+ * \file lstridmap.h
+ * \brief Name <-> Id map
+ *
+ * CoolReader Engine DOM Tree
+ *
+ * Implements mapping between Name and Id
+ */
 
 #ifndef __LSTR_ID_MAP_H__INCLUDED__
 #define __LSTR_ID_MAP_H__INCLUDED__
@@ -21,6 +36,7 @@
 #include <stdio.h>
 
 struct css_elem_def_props_t;
+class SerialBuf;
 
 //===========================================
 class LDOMNameIdMapItem 
@@ -31,9 +47,9 @@ public:
     /// id
     lUInt16    id;
     /// value
-    lString16 value;
+    lString32 value;
 	/// constructor
-    LDOMNameIdMapItem(lUInt16 _id, const lString16 & _value, const css_elem_def_props_t * _data);
+    LDOMNameIdMapItem(lUInt16 _id, const lString32 & _value, const css_elem_def_props_t * _data);
     /// copy constructor
     LDOMNameIdMapItem(LDOMNameIdMapItem & item);
 	/// destructor
@@ -74,7 +90,7 @@ public:
 
     void Clear();
 
-    void AddItem( lUInt16 id, const lString16 & value, const css_elem_def_props_t * data );
+    void AddItem( lUInt16 id, const lString32 & value, const css_elem_def_props_t * data );
 
     void AddItem( LDOMNameIdMapItem * item );
 
@@ -83,11 +99,11 @@ public:
        return m_by_id[id];
     }
 
-    const LDOMNameIdMapItem * findItem( const lChar16 * name );
+    const LDOMNameIdMapItem * findItem( const lChar32 * name );
     const LDOMNameIdMapItem * findItem( const lChar8 * name );
-    const LDOMNameIdMapItem * findItem( const lString16 & name ) { return findItem(name.c_str()); }
+    const LDOMNameIdMapItem * findItem( const lString32 & name ) { return findItem(name.c_str()); }
 
-    inline lUInt16 idByName( const lChar16 * name )
+    inline lUInt16 idByName( const lChar32 * name )
     {
         const LDOMNameIdMapItem * item = findItem(name);
         return item?item->id:0;
@@ -99,12 +115,12 @@ public:
         return item?item->id:0;
     }
 
-    inline const lString16 & nameById( lUInt16 id )
+    inline const lString32 & nameById( lUInt16 id )
     { 
         if (id>=m_size)
-            return lString16::empty_str;
+            return lString32::empty_str;
         const LDOMNameIdMapItem * item = findItem(id);
-        return item?item->value:lString16::empty_str;
+        return item?item->value:lString32::empty_str;
     }
 
     inline const css_elem_def_props_t * dataById( lUInt16 id )
@@ -117,6 +133,7 @@ public:
 
     // debug dump of all unknown entities
     void dumpUnknownItems( FILE * f, int start_id );
+    lString32 getUnknownItems( int start_id );
 };
 
 #endif

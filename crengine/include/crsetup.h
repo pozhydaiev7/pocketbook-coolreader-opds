@@ -1,14 +1,29 @@
-/** \file crsetup.h
-    \brief CREngine options definitions
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2011,2013,2018 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2020 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2018-2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    (c) Vadim Lopatin, 2000-2006
-
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-
-*/
+/**
+ * \file crsetup.h
+ * \brief CREngine options definitions
+ */
 
 #ifndef CRSETUP_H_INCLUDED
 #define CRSETUP_H_INCLUDED
@@ -17,71 +32,128 @@
 
 // features set for LBOOK
 #if (LBOOK==1)
+
 #ifndef LDOM_USE_OWN_MEM_MAN
 #define LDOM_USE_OWN_MEM_MAN                 1
 #endif
+
 #define USE_DOM_UTF8_STORAGE                 1
 #define CR_USE_THREADS                       0
+
 #ifndef MAX_IMAGE_SCALE_MUL
 #define MAX_IMAGE_SCALE_MUL                  2
 #endif
+
 #define USE_ZLIB                             1
 #define COLOR_BACKBUFFER                     0
 #define USE_ANSI_FILES                       1
 #define GRAY_INVERSE                         0
 #define ALLOW_KERNING                        1
+
 #if (BUILD_LITE==1)
+
+#define USE_ZSTD                             0
 #define USE_LIBJPEG                          0
 #define USE_LIBPNG                           0
 #define USE_GIF                              0
 #define USE_FREETYPE                         0
+#define USE_HARFBUZZ                         0
+#define USE_FRIBIDI                          0
+#define USE_LIBUNIBREAK                      0
+#define USE_GLYPHCACHE_HASHTABLE             0
 #define GLYPH_CACHE_SIZE                     0x1000
 #define ZIP_STREAM_BUFFER_SIZE               0x1000
 #define FILE_STREAM_BUFFER_SIZE              0x1000
+#define MATHML_SUPPORT                       0
+#define USE_LOCALE_DATA                      0
+
 #else
+
+#define USE_ZSTD                             1
 #define USE_LIBJPEG                          1
 #define USE_LIBPNG                           1
 #define USE_GIF                              1
 #define USE_FREETYPE                         1
-#ifdef POCKETBOOK_PRO_FW5
-// 300 dpi screens: a glyph of the text takes about 1 KB, 128 KB kept too few of them
-#define GLYPH_CACHE_SIZE                     0x200000
-#else
+#define USE_HARFBUZZ                         1
+#define USE_FRIBIDI                          1
+#define USE_LIBUNIBREAK                      1
+#define USE_GLYPHCACHE_HASHTABLE             0
+#define USE_FT_EMBOLDEN                      1
 #define GLYPH_CACHE_SIZE                     0x20000
-#endif
 #define ZIP_STREAM_BUFFER_SIZE               0x80000
 #define FILE_STREAM_BUFFER_SIZE              0x40000
-#endif
+#define MATHML_SUPPORT                       1
+#define USE_LOCALE_DATA                      1
+
+#endif  // (BUILD_LITE==1)
 
 #elif defined(_LINUX) || defined (LINUX)
 
 #ifndef LDOM_USE_OWN_MEM_MAN
 #define LDOM_USE_OWN_MEM_MAN                 1
 #endif
+
+#ifdef ANDROID
+#define CR_USE_THREADS                       1
+#define USE_ATOMIC_REFCOUNT
+#define USE_LIMITED_FONT_SIZES_SET           0
+#else
 #define CR_USE_THREADS                       0
+#endif // ANDROID
+
 #define USE_LIBJPEG                          1
 #define USE_LIBPNG                           1
 #define USE_GIF                              1
 #define USE_ZLIB                             1
+#define USE_ZSTD                             1
+
 #ifndef COLOR_BACKBUFFER
 #define COLOR_BACKBUFFER                     1
 #endif
+
 #define USE_ANSI_FILES                       1
 #define GRAY_INVERSE                         0
 #define USE_FREETYPE                         1
+#define USE_FT_EMBOLDEN                      1
+#define USE_HARFBUZZ                         1
+#define USE_FRIBIDI                          1
+#define USE_LIBUNIBREAK                      1
+#define USE_GLYPHCACHE_HASHTABLE             1
+#define MATHML_SUPPORT                       1
+#define USE_LOCALE_DATA                      1
+
 #ifndef ANDROID
 #ifndef MAC
 #ifndef TIZEN
 #ifndef USE_FONTCONFIG
 #define USE_FONTCONFIG						 1
 #endif
-#endif
-#endif
-#endif
+#endif  // TIZEN
+#endif  // MAC
+#endif  // ANDROID
 #define ALLOW_KERNING                        1
 #define GLYPH_CACHE_SIZE                     0x40000
 #define ZIP_STREAM_BUFFER_SIZE               0x40000
 #define FILE_STREAM_BUFFER_SIZE              0x20000
+#endif  // defined(_LINUX) || defined (LINUX)
+
+// PocketBook migration bootstrap: retain the previous dependency footprint.
+#if defined(POCKETBOOK_FW6) || defined(CR_POCKETBOOK)
+// glyphs of a font are found by a hash of the character code; 2 MB of glyph images
+#undef USE_GLYPHCACHE_HASHTABLE
+#undef GLYPH_CACHE_SIZE
+#define USE_GLYPHCACHE_HASHTABLE 1
+#define GLYPH_CACHE_SIZE 0x200000
+#undef USE_ZSTD
+#undef USE_HARFBUZZ
+#undef USE_FRIBIDI
+#undef USE_LIBUNIBREAK
+#define USE_ZSTD 0
+#define USE_HARFBUZZ 0
+#define USE_FRIBIDI 0
+#define USE_LIBUNIBREAK 0
+#define USE_NANOSVG 0
+#define USE_UTF8PROC 0
 #endif
 
 //==================================================
@@ -97,17 +169,30 @@
 #ifndef MAX_IMAGE_SCALE_MUL
 #define MAX_IMAGE_SCALE_MUL                  1
 #endif
+#define USE_ZSTD                             1
 #if defined(CYGWIN)
 #define USE_FREETYPE                         0
+#define USE_HARFBUZZ                         0
+#define USE_FRIBIDI                          0
+#define USE_LIBUNIBREAK                      0
 #else
 #define USE_FREETYPE                         1
+#define USE_FT_EMBOLDEN                      1
+#define USE_HARFBUZZ                         1
+#ifndef _MSC_VER
+#define USE_FRIBIDI                          1
+#endif
+#define USE_LIBUNIBREAK                      1
 #endif
 #define ALLOW_KERNING                        1
+#define USE_GLYPHCACHE_HASHTABLE             1
 #define GLYPH_CACHE_SIZE                     0x20000
 #define ZIP_STREAM_BUFFER_SIZE               0x80000
 #define FILE_STREAM_BUFFER_SIZE              0x40000
 //#define USE_LIBJPEG 0
-#endif
+#define MATHML_SUPPORT                       1
+#define USE_LOCALE_DATA                      1
+#endif  // !defined(__SYMBIAN32__) && defined(_WIN32)
 
 #ifndef GLYPH_CACHE_SIZE
 /// freetype font glyph buffer size, in bytes
@@ -138,14 +223,13 @@
 #define USE_LIBPNG 1
 #endif
 
-#ifndef USE_GIF
-///allow GIF support (internal)
-#define USE_GIF 1
-#endif
-
 #ifndef USE_ZLIB
 ///allow PNG support via libpng
 #define USE_ZLIB 1
+#endif
+
+#ifndef USE_ZSTD
+#define USE_ZSTD 0
 #endif
 
 #ifndef GRAY_INVERSE
@@ -156,7 +240,9 @@
 /** \def LVLONG_FILE_SUPPORT
     \brief define to 1 to use 64 bits for file position types
 */
+#ifndef LVLONG_FILE_SUPPORT
 #define LVLONG_FILE_SUPPORT 0
+#endif
 
 //#define USE_ANSI_FILES 1
 
@@ -176,7 +262,7 @@
 #else
 #define COLOR_BACKBUFFER 1
 #endif
-#endif
+#endif  // COLOR_BACKBUFFER
 
 /// zlib stream decode cache size, used to avoid restart of decoding from beginning to move back
 #ifndef ZIP_STREAM_BUFFER_SIZE
@@ -206,16 +292,27 @@
 #define ALLOW_KERNING 0
 #endif
 
-
-#endif
+#endif  // !defined(USE_WIN32_FONTS) && (USE_FREETYPE!=1)
 
 
 #ifndef CHM_SUPPORT_ENABLED
 #define CHM_SUPPORT_ENABLED 1
 #endif
 
+#ifndef MATHML_SUPPORT
+#define MATHML_SUPPORT 0
+#endif
+
+#ifndef USE_LOCALE_DATA
+#define USE_LOCALE_DATA 0
+#endif
+
 #ifndef USE_FREETYPE
 #define USE_FREETYPE 0
+#endif
+
+#ifndef USE_FT_EMBOLDEN
+#define USE_FT_EMBOLDEN 0
 #endif
 
 #ifndef USE_WIN32_FONTS
@@ -244,7 +341,7 @@
 #define USE_BITMAP_FONTS 1
 #endif
 
-#endif
+#endif  // USE_BITMAP_FONTS
 
 /// maximum picture zoom (1, 2, 3)
 #ifndef MAX_IMAGE_SCALE_MUL
@@ -291,8 +388,21 @@
 #define MAX_IMAGE_SCALE_MUL 2
 #endif
 
-#if CR_POCKETBOOK==1
-#define CR_INVERT_PRSERVE_GRAYS 1
-#define CR_USE_UNDERLINE_FOR_SELECTION 1
+#ifndef USE_GLYPHCACHE_HASHTABLE
+#define USE_GLYPHCACHE_HASHTABLE 0
 #endif
+
+#ifndef USE_LIMITED_FONT_SIZES_SET
+#define USE_LIMITED_FONT_SIZES_SET 1
+#endif
+
+// Maximum & minimum screen resolution
+#ifndef SCREEN_SIZE_MIN
+#define SCREEN_SIZE_MIN 80
+#endif
+
+#ifndef SCREEN_SIZE_MAX
+#define SCREEN_SIZE_MAX 32767
+#endif
+
 #endif//CRSETUP_H_INCLUDED

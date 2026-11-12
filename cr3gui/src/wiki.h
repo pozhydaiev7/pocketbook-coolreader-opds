@@ -5,7 +5,7 @@
 
 #define WIKI_baseURL "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=xml&titles="
 
-extern lString16 appLanguage;
+extern lString32 appLanguage;
 
 class wiki
 {
@@ -15,7 +15,7 @@ public:
     wiki(){};
     ~wiki(){};
     
-    static lString16 getWordDescription(const lString16 * word);
+    static lString32 getWordDescription(const lString32 * word);
 };
 
 #endif

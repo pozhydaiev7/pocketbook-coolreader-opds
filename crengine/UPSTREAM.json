@@ -1,0 +1,26 @@
+{
+  "repository": "https://github.com/buggins/coolreader",
+  "commit": "dcc2d4c88b7ee66b8ee1223833c1a72cad3cdbc5",
+  "version": "3.2.59-1",
+  "archive_sha256": "391c63ed55b6014edf7312d6d2ea323a5c95404253a0232f5d00ea2849aa0731",
+  "retained_pocketbook_ui_files": [
+    "crengine/include/crgui.h",
+    "crengine/src/crgui.cpp",
+    "crengine/include/crskin.h",
+    "crengine/src/crskin.cpp"
+  ],
+  "status": "experimental-compatibility-baseline",
+  "excluded_upstream_paths": [
+    "Tools/",
+    "src/lvstream/lvrararc.h",
+    "src/lvstream/lvrararc.cpp"
+  ],
+  "optional_features_not_enabled": [
+    "HarfBuzz",
+    "FriBidi",
+    "libunibreak",
+    "Zstd",
+    "NanoSVG",
+    "utf8proc"
+  ]
+}

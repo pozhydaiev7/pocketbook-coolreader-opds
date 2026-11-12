@@ -192,6 +192,7 @@ g++ -std=c++11 -Wall -I.. opdsfeed_test.cpp ../opdsfeed.cpp -o opdsfeed_test && 
 ## Credits
 
 - **CoolReader 3 and CREngine:** Vadim Lopatin ([buggins/coolreader](https://github.com/buggins/coolreader)).
+- **PocketBook port of CREngine 3.2.59 and the updated bundled libraries** (branch `engine-3.2.59`): Dmitrij Derjugin ([dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader)).
 - **PocketBook port:** pkb ([sourceforge](https://sourceforge.net/p/crengine/crengine/ci/pocketbook-port/tree/)).
 - **PocketBook fork 0.0.6-17-62.1:** blchinezu ([blchinezu/pocketbook-coolreader](https://github.com/blchinezu/pocketbook-coolreader)) and its contributors.
 - **Community build 0.0.6-17-62.2 and the pb740fw5 skin:** sergkv12 ([4pda](https://4pda.to/forum/index.php?showtopic=886480)).

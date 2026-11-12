@@ -1,14 +1,28 @@
-/** \file cri18n.h
-    \brief internationalization support, gettext wrapper
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2009,2013 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-    See LICENSE file for details.
-
-*/
+/**
+ * \file cri18n.h
+ * \brief internationalization support, gettext wrapper
+ */
 
 #ifndef __CRI18N_H_INCLUDED__
 #define __CRI18N_H_INCLUDED__
@@ -34,7 +48,7 @@ public:
 	static void setDefTranslator( CRI18NTranslator * translator );
     static const char * translate( const char * src );
     static const lString8 translate8( const char * src );
-    static const lString16 translate16( const char * src );
+    static const lString32 translate32( const char * src );
 };
 
 class CRMoFileTranslator : public CRI18NTranslator
@@ -61,7 +75,7 @@ protected:
 	virtual void sort();
 public:
 	CRMoFileTranslator();
-	bool openMoFile( lString16 fileName );
+	bool openMoFile( lString32 fileName );
 	virtual ~CRMoFileTranslator();
 };
 
@@ -85,25 +99,22 @@ public:
 #ifdef _8
 #undef _8
 #endif
-#ifdef _16
-#undef _16
+#ifdef _32
+#undef _32
 #endif
-#ifdef C_
-#undef C_
-#endif
-#ifdef C_8
-#undef C_8
-#endif
-#ifdef C_16
-#undef C_16
-#endif
-
 #define _(String) CRI18NTranslator::translate(String)
-#define C_(Context, String) CRI18NTranslator::translate(Context "\004" String)
+// Preserve contextual keys used by the PocketBook translation catalogs.
+inline const char *CRTranslateContext(const char *key) {
+    const char *translated = CRI18NTranslator::translate(key);
+    if (!strcmp(translated, key)) {
+        const char *separator = strchr(key, '\004');
+        if (separator) return separator + 1;
+    }
+    return translated;
+}
+#define C_(Context, String) CRTranslateContext(Context "\004" String)
 #define _8(String) CRI18NTranslator::translate8(String)
-#define C_8(Context, String) CRI18NTranslator::translate8(Context "\004" String)
-#define _16(String) CRI18NTranslator::translate16(String)
-#define C_16(Context, String) CRI18NTranslator::translate16(Context "\004" String)
+#define _32(String) CRI18NTranslator::translate32(String)
 
 
 #endif

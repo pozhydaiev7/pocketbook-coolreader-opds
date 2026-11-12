@@ -13,7 +13,7 @@ enum granularity {
     grn_block
 };
 
-//const lString16 phrase_bounds(L".?!");
+//const lString32 phrase_bounds(U".?!");
 
 
 enum last_move_type {
@@ -26,7 +26,7 @@ void
 point_to_end(ldomXPointerEx& xp) {
     ldomNode * p = xp.getNode();
     if(p->isText()) {
-        lString16 text = p->getText();
+        lString32 text = p->getText();
         xp.setOffset(text.length());
     };
     if(p->isElement()) {
@@ -35,7 +35,7 @@ point_to_end(ldomXPointerEx& xp) {
             xp.nextVisibleText();
         if (xp.isText()) {
             ldomNode * p = xp.getNode();
-            lString16 text = p->getText();
+            lString32 text = p->getText();
             xp.setOffset(text.length());
         }
     }

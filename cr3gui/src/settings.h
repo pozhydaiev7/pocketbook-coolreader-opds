@@ -120,6 +120,9 @@ enum MainMenuItems_t {
 };
 
 
+// the limits of the status line font size (they were in the engine before CREngine 3.2)
+enum { MIN_STATUS_FONT_SIZE = 8, MAX_STATUS_FONT_SIZE = 100 };
+
 #define DECL_DEF_CR_FONT_SIZES static int cr_font_sizes[] = \
 {                           16,  17,  18,  19,  20,  \
    21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  \
@@ -149,7 +152,7 @@ class CRSettingsMenu : public CRFullScreenMenu
         static void addMenuItems( CRMenu * menu, CRGUIAcceleratorTableRef menuAccelerators,
                                  item_def_t values[] );
 
-        lString16 getStatusText();
+        lString32 getStatusText();
     public:
         static CRMenu * createFontSizeMenu( CRGUIWindowManager * wm, CRMenu * mainMenu, int *fontSizes,
                                            unsigned sizesCount, const char *imageId, CRPropRef props,

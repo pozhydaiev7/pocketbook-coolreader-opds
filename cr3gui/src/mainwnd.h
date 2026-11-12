@@ -107,35 +107,38 @@ class V3DocViewWin : public CRViewDialog, public LVDocViewCallback
 protected:
     CRPropRef _props;
     CRPropRef _newProps;
-    lString16 _dataDir;
-    lString16 _settingsFileName;
-    lString16 _historyFileName;
+    lString32 _dataDir;
+    lString32 _settingsFileName;
+    lString32 _historyFileName;
     lString8  _css;
-    lString16 _dictConfig;
-    lString16 _bookmarkDir;
-	lString16 _helpFile;
-    lString16 _cssDir;
+    lString32 _dictConfig;
+    lString32 _bookmarkDir;
+	lString32 _helpFile;
+    lString32 _cssDir;
+    bool _settingsSaveFailed;
+    bool _historySaveFailed;
+    void reportSaveResult(bool saved, bool history);
     time_t _loadFileStart;
-    lString16 _fileName;
+    lString32 _fileName;
 public:
-    lString16 getBookmarkDir() { return _bookmarkDir; }
-    lString16 getBookLanguage();
-    void setBookmarkDir( lString16 dir ) { _bookmarkDir = dir; }
+    lString32 getBookmarkDir() { return _bookmarkDir; }
+    lString32 getBookLanguage();
+    void setBookmarkDir( lString32 dir ) { _bookmarkDir = dir; }
     virtual void flush(); // override
-    bool loadDocument( lString16 filename );
-    bool loadDefaultCover( lString16 filename );
-    bool loadCSS( lString16 filename );
-    bool loadSettings( lString16 filename );
-    bool saveSettings( lString16 filename );
-    bool loadHistory( lString16 filename );
-    bool saveHistory( lString16 filename, bool exportBookmarks = true );
+    bool loadDocument( lString32 filename );
+    bool loadDefaultCover( lString32 filename );
+    bool loadCSS( lString32 filename );
+    bool loadSettings( lString32 filename );
+    bool saveSettings( lString32 filename );
+    bool loadHistory( lString32 filename );
+    bool saveHistory( lString32 filename, bool exportBookmarks = true );
     bool loadHistory( LVStreamRef stream );
     bool saveHistory( LVStreamRef stream );
-    bool loadDictConfig( lString16 filename );
-	bool setHelpFile( lString16 filename );
-	lString16 getHelpFile( );
+    bool loadDictConfig( lString32 filename );
+	bool setHelpFile( lString32 filename );
+	lString32 getHelpFile( );
 	/// on starting file loading
-	virtual void OnLoadFileStart( lString16 filename );
+	virtual void OnLoadFileStart( lString32 filename );
 	/// format detection finished
 	virtual void OnLoadFileFormatDetected( doc_format_t fileFormat );
 	/// file loading is finished successfully - drawCoveTo() may be called there
@@ -151,10 +154,10 @@ public:
 	/// format progress, called with values 0..100
 	virtual void OnFormatProgress( int percent );
 	/// file load finiished with error
-	virtual void OnLoadFileError( lString16 message );
+	virtual void OnLoadFileError( lString32 message );
     /// Override to handle external links
-    virtual void OnExternalLink( lString16 url, ldomNode * node );
-    virtual void showProgress( lString16 filename, int progressPercent );
+    virtual void OnExternalLink( lString32 url, ldomNode * node );
+    virtual void showProgress( lString32 filename, int progressPercent );
     /// returns current properties
     CRPropRef getProps() { return _props; }
 
@@ -165,7 +168,7 @@ public:
         _docview->propsUpdateDefaults( _props );
     }
 
-    V3DocViewWin( CRGUIWindowManager * wm, lString16 dataDir );
+    V3DocViewWin( CRGUIWindowManager * wm, lString32 dataDir );
 
     void applySettings();
 

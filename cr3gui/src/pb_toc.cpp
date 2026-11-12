@@ -11,11 +11,11 @@
 #include "pb_toc.h"
 
 // defined in tocdlg.cpp
-lString16 limitTextWidth( lString16 s, int width, LVFontRef font );
+lString32 limitTextWidth( lString32 s, int width, LVFontRef font );
 
-CRTocMenuItem::CRTocMenuItem( CRMenu * menu, int id, const lString16 & label, int page )
+CRTocMenuItem::CRTocMenuItem( CRMenu * menu, int id, const lString32 & label, int page )
 : CRMenuItem( menu, id, label, LVImageSourceRef(), LVFontRef() ),
-  _pageText( lString16::itoa(page) )
+  _pageText( lString32::itoa(page) )
 {
 }
 
@@ -44,7 +44,7 @@ void CRTocMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
     titleRc.right = inner.right - pageWidth - gap;
     if ( titleRc.width() <= 0 )
         return;
-    lString16 title = limitTextWidth( _label, titleRc.width(), font );
+    lString32 title = limitTextWidth( _label, titleRc.width(), font );
     skin->drawText( buf, titleRc, title, font, textColor, bgColor,
         SKIN_HALIGN_LEFT | SKIN_VALIGN_CENTER );
 
@@ -69,7 +69,7 @@ bool CRTocMenu::onCommand( int command, int params )
 CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
     CRGUIAcceleratorTableRef menuAccelerators, lvRect &rc, tocentry *tocItems,
     int length, int currentPage )
-: CRFullScreenMenu( wm, id, lString16(_("Contents")), 8, rc ),
+: CRFullScreenMenu( wm, id, lString32(_("Contents")), 8, rc ),
   props( newProps ),
   _menuAccelerators( menuAccelerators ), _menuItemId(mm_TouchTOC)
 {
@@ -79,7 +79,7 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
         forcePartialBwUpdates = true;
     }
 
-    setSkinName(L"#touch-toc");
+    setSkinName(U"#touch-toc");
 
     _fullscreen = true;
 
@@ -98,8 +98,8 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
 
     bool showPages = props->getIntDef( PROP_TOC_PAGE_NUMBERS, 1 ) == 1;
     // rows with dotted leaders look like a printed contents page: no separator lines
-    if ( showPages && !_wm->getSkin()->getMenuSkin( L"#touch-toc-dots" ).isNull() )
-        setSkinName( L"#touch-toc-dots" );
+    if ( showPages && !_wm->getSkin()->getMenuSkin( U"#touch-toc-dots" ).isNull() )
+        setSkinName( U"#touch-toc-dots" );
 
     if ( length ) {
 
@@ -111,26 +111,26 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
 
         for (int i = 0; i < length; i++) {
 
-            lString16 text(tocItems[i].text);
+            lString32 text(tocItems[i].text);
 
             // Prepend page number
-            // text = L"[" + lString16::itoa(tocItems[i].position) + L"] " + text;
+            // text = U"[" + lString32::itoa(tocItems[i].position) + U"] " + text;
 
             // Mark current chapter
             if( _selectedItem == i ) {
-                text = L">  " + text;
+                text = U">  " + text;
             }
 
             // Indent level
             for( int level = tocItems[i].level; level > 1; level-- ) {
-                text = L"     " + text;
+                text = U"     " + text;
             }
 
             if( showPages ) {
                 mainMenu->addItem(new CRTocMenuItem(
                     mainMenu,
                     PB_TOC_SAFE_CMD_RANGE + tocItems[i].page,
-                    lString16(UnicodeToUtf8(text).c_str()),
+                    lString32(UnicodeToUtf8(text).c_str()),
                     tocItems[i].position
                     ));
                 continue;
@@ -142,7 +142,7 @@ CRTocMenu::CRTocMenu( CRGUIWindowManager * wm, CRPropRef newProps, int id,
                 UnicodeToUtf8(text).c_str(),
                 LVImageSourceRef(),
                 LVFontRef()/*,
-                lString16::itoa(tocItems[i].position).c_str()*/
+                lString32::itoa(tocItems[i].position).c_str()*/
                 ));
         }
     }

@@ -1,15 +1,34 @@
-/** \file props.cpp
-    \brief properties container
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2013,2015 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2010 Kirill Erofeev <erofeev.info@gmail.com>            *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2020,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2007
-    This source code is distributed under the terms of
-    GNU General Public License
-    See LICENSE file for details
-*/
+/**
+ * \file props.cpp
+ * \brief properties container
+ */
 
 #include "../include/props.h"
+#include "../include/serialbuf.h"
+#include "../include/lvstreamutils.h"
 #include <stdio.h>
 
 
@@ -21,9 +40,9 @@ class CRPropItem
 {
 private:
     lString8 _name;
-    lString16 _value;
+    lString32 _value;
 public:
-    CRPropItem( const char * name, const lString16 value )
+    CRPropItem( const char * name, const lString32 value )
     : _name(name), _value(value)
     { }
     CRPropItem( const CRPropItem& v )
@@ -37,8 +56,8 @@ public:
       return *this;
     }
     const char * getName() const { return _name.c_str(); }
-    const lString16 & getValue() const { return _value; }
-    void setValue(const lString16 &v) { _value = v; }
+    const lString32 & getValue() const { return _value; }
+    void setValue(const lString32 &v) { _value = v; }
 };
 
 /// set contents from specified properties
@@ -159,8 +178,8 @@ CRPropRef operator ^ ( CRPropRef props1, CRPropRef props2 )
             if ( res<0 ) {
                 p1++;
             } else if ( res==0 ) {
-                lString16 v1 = props1->getValue( p1 );
-                lString16 v2 = props2->getValue( p2 );
+                lString32 v1 = props1->getValue( p1 );
+                lString32 v2 = props2->getValue( p2 );
                 if ( v1!=v2 )
                     v->setString( props2->getName( p2 ), v2 );
                 p1++;
@@ -209,13 +228,13 @@ public:
     /// returns property name by index
     virtual const char * getName( int index ) const;
     /// returns property value by index
-    virtual const lString16 & getValue( int index ) const;
+    virtual const lString32 & getValue( int index ) const;
     /// sets property value by index
-    virtual void setValue( int index, const lString16 &value );
+    virtual void setValue( int index, const lString32 &value );
     /// get string property by name, returns false if not found
-    virtual bool getString( const char * propName, lString16 &result ) const;
+    virtual bool getString( const char * propName, lString32 &result ) const;
     /// set string property by name
-    virtual void setString( const char * propName, const lString16 &value );
+    virtual void setString( const char * propName, const lString32 &value );
     /// get subpath container
     virtual CRPropRef getSubProps( const char * path );
     /// constructor
@@ -240,11 +259,11 @@ void CRPropAccessor::setIntDef( const char * propName, int value )
 
 void CRPropAccessor::limitValueList( const char * propName, const char * values[] )
 {
-    lString16 defValue = Utf8ToUnicode( lString8( values[0] ) );
-    lString16 value;
+    lString32 defValue = Utf8ToUnicode( lString8( values[0] ) );
+    lString32 value;
     if ( getString( propName, value ) ) {
         for ( int i=0; values[i]; i++ ) {
-            lString16 v = Utf8ToUnicode( lString8( values[i] ) );
+            lString32 v = Utf8ToUnicode( lString8( values[i] ) );
             if ( v==value )
                 return;
         }
@@ -252,44 +271,55 @@ void CRPropAccessor::limitValueList( const char * propName, const char * values[
     setString( propName, defValue );
 }
 
-void CRPropAccessor::limitValueList( const char * propName, int values[], int value_count )
+void CRPropAccessor::limitValueList(const char * propName, int values[], int valuesCount, int defValueIndex )
 {
-    lString16 defValue = lString16::itoa( values[0] );
-    lString16 value;
+    lString32 value;
     if ( getString( propName, value ) ) {
-        for ( int i=0; i < value_count; i++ ) {
-            lString16 v = lString16::itoa( values[i] );
+        for ( int i=0; i < valuesCount; i++ ) {
+            lString32 v = lString32::itoa( values[i] );
             if ( v==value )
                 return;
         }
     }
-    setString( propName, defValue );
+    if ( defValueIndex < 0 )
+        defValueIndex = 0;
+    else if ( defValueIndex >= valuesCount )
+        defValueIndex = valuesCount - 1;
+    setInt( propName, values[defValueIndex] );
 }
 
-void CRPropAccessor::limitValueRange( const char * propName, int defValue, int minValue, int maxValue )
+void CRPropAccessor::limitValueMinMax( const char * propName, int minValue, int maxValue, int defValue )
 {
-    int value = 0;
-    if ( !(getInt( propName, value ) && (value >= minValue && value <= maxValue))) {
-        setInt( propName, defValue );
+    lString32 value;
+    if ( getString( propName, value ) ) {
+        int intValue;
+        if ( value.atoi(intValue) ) {
+            if (intValue < minValue)
+                setInt( propName, minValue );
+            else if (intValue >= maxValue)
+                setInt( propName, maxValue );
+            return;
+        }
     }
+    setInt( propName, defValue );
 }
 
 //============================================================================
 // CRPropAccessor methods
 //============================================================================
 
-lString16 CRPropAccessor::getStringDef( const char * propName, const char * defValue ) const
+lString32 CRPropAccessor::getStringDef( const char * propName, const char * defValue ) const
 {
-    lString16 value;
+    lString32 value;
     if ( !getString( propName, value ) )
-        return lString16( defValue );
+        return lString32( defValue );
     else
         return value;
 }
 
 bool CRPropAccessor::getInt( const char * propName, int &result ) const
 {
-    lString16 value;
+    lString32 value;
     if ( !getString( propName, value ) )
         return false;
     return value.atoi(result);
@@ -305,25 +335,25 @@ int CRPropAccessor::getIntDef( const char * propName, int defValue ) const
 }
 
 /// set int property as hex
-void CRPropAccessor::setHex( const char * propName, int value )
+void CRPropAccessor::setHex( const char * propName, lUInt32 value )
 {
     char s[16];
-    sprintf(s, "0x%08X", value);
+    sprintf(s, "0x%08lX", value);
     setString( propName, Utf8ToUnicode(lString8(s)) );
 }
 
 void CRPropAccessor::setInt( const char * propName, int value )
 {
-    setString( propName, lString16::itoa( value ) );
+    setString( propName, lString32::itoa( value ) );
 }
 
-bool CRPropAccessor::parseColor(lString16 value, lUInt32 & result) {
+bool CRPropAccessor::parseColor(lString32 value, lUInt32 & result) {
     int n = 0;
     if ( value.empty() || (value[0]!='#' && (value[0]!='0' || value[1]!='x')) ) {
         return false;
     }
     for ( int i=value[0]=='#' ? 1 : 2; i<value.length(); i++ ) {
-        lChar16 ch = value[i];
+        lChar32 ch = value[i];
         if ( ch>='0' && ch<='9' )
             n = (n << 4) | (ch - '0');
         else if ( ch>='a' && ch<='f' )
@@ -340,8 +370,8 @@ bool CRPropAccessor::parseColor(lString16 value, lUInt32 & result) {
 /// get color (#xxxxxx) property by name, returns false if not found
 bool CRPropAccessor::getColor( const char * propName, lUInt32 &result ) const
 {
-    // int n = 0;
-    lString16 value;
+    //int n = 0;
+    lString32 value;
     if ( !getString( propName, value ) ) {
         //CRLog::debug("%s is not found", propName);
         return false;
@@ -366,7 +396,7 @@ void CRPropAccessor::setColor( const char * propName, lUInt32 value )
 {
     char s[12];
     sprintf( s, "#%06x", (int)value );
-    setString( propName, lString16( s ) );
+    setString( propName, lString32( s ) );
 }
 
 /// set argb color (#xxxxxx) property by name, if not set
@@ -379,7 +409,7 @@ void CRPropAccessor::setColorDef( const char * propName, lUInt32 defValue ) {
 /// get rect property by name, returns false if not found
 bool CRPropAccessor::getRect( const char * propName, lvRect &result ) const
 {
-    lString16 value;
+    lString32 value;
     if ( !getString( propName, value ) )
         return false;
     lString8 s8 = UnicodeToUtf8( value );
@@ -408,13 +438,13 @@ void CRPropAccessor::setRect( const char * propName, const lvRect & value )
 {
     char s[64];
     sprintf( s, "{%d,%d,%d,%d}", value.left, value.top, value.right, value.bottom );
-    setString( propName, lString16( s ) );
+    setString( propName, lString32( s ) );
 }
 
 /// get point property by name, returns false if not found
 bool CRPropAccessor::getPoint( const char * propName, lvPoint &result ) const
 {
-    lString16 value;
+    lString32 value;
     if ( !getString( propName, value ) )
         return false;
     lString8 s8 = UnicodeToUtf8( value );
@@ -441,12 +471,12 @@ void CRPropAccessor::setPoint( const char * propName, const lvPoint & value )
 {
     char s[64];
     sprintf( s, "{%d,%d}", value.x, value.y );
-    setString( propName, lString16( s ) );
+    setString( propName, lString32( s ) );
 }
 
 bool CRPropAccessor::getBool( const char * propName, bool &result ) const
 {
-    lString16 value;
+    lString32 value;
     if (!getString(propName, value))
         return false;
     if (value == "true" || value == "TRUE" || value == "yes" || value == "YES" || value == "1") {
@@ -471,12 +501,19 @@ bool CRPropAccessor::getBoolDef( const char * propName, bool defValue ) const
 
 void CRPropAccessor::setBool( const char * propName, bool value )
 {
-    setString( propName, lString16( value ? "1" : "0" ) );
+    setString( propName, lString32( value ? "1" : "0" ) );
+}
+
+void CRPropAccessor::setBoolDef( const char * propName, bool defValue )
+{
+    bool boolVal;
+    if ( !getBool( propName, boolVal ) )
+        setBool( propName, defValue );
 }
 
 bool CRPropAccessor::getInt64( const char * propName, lInt64 &result ) const
 {
-    lString16 value;
+    lString32 value;
     if ( !getString( propName, value ) )
         return false;
     return value.atoi(result);
@@ -493,7 +530,7 @@ lInt64 CRPropAccessor::getInt64Def( const char * propName, lInt64 defValue ) con
 
 void CRPropAccessor::setInt64( const char * propName, lInt64 value )
 {
-    setString( propName, lString16::itoa( value ) );
+    setString( propName, lString32::itoa( value ) );
 }
 
 CRPropAccessor::~CRPropAccessor()
@@ -608,7 +645,7 @@ bool CRPropAccessor::loadFromStream( LVStream * stream )
             lString8 value( eqpos+1, (int)(elp - eqpos - 1));
             setString( name.c_str(), Utf8ToUnicode(removeBackslashChars(value)) );
         }
-        for ( p=elp; *elp && *elp!='\r' && *elp!='\n'; elp++)
+        for ( ; *elp && *elp!='\r' && *elp!='\n'; elp++)
             ;
         p = elp;
 		while ( *p=='\r' || *p=='\n' )
@@ -622,7 +659,8 @@ bool CRPropAccessor::loadFromStream( LVStream * stream )
 /// save to stream
 bool CRPropAccessor::saveToStream( LVStream * targetStream )
 {
-    if ( !targetStream || targetStream->GetMode()!=LVOM_WRITE )
+    if ( !targetStream || (targetStream->GetMode()!=LVOM_WRITE &&
+                          targetStream->GetMode()!=LVOM_READWRITE) )
         return false;
     LVStreamRef streamref = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
     LVStream * stream = streamref.get();
@@ -631,8 +669,7 @@ bool CRPropAccessor::saveToStream( LVStream * targetStream )
     for ( int i=0; i<getCount(); i++ ) {
         *stream << getPath() << getName(i) << "=" << addBackslashChars(UnicodeToUtf8(getValue(i))) << "\r\n";
     }
-    LVPumpStream( targetStream, stream );
-    return true;
+    return LVPumpStream(targetStream, stream) == stream->GetSize();
 }
 
 //============================================================================
@@ -663,13 +700,13 @@ const char * CRPropContainer::getName( int index ) const
 }
 
 /// returns property value by index
-const lString16 & CRPropContainer::getValue( int index ) const
+const lString32 & CRPropContainer::getValue( int index ) const
 {
     return _list[index]->getValue();
 }
 
 /// sets property value by index
-void CRPropContainer::setValue( int index, const lString16 &value )
+void CRPropContainer::setValue( int index, const lString32 &value )
 {
     _list[index]->setValue( value );
 }
@@ -702,7 +739,7 @@ bool CRPropContainer::findItem( const char * name, int & pos ) const
 }
 
 /// get string property by name, returns false if not found
-bool CRPropContainer::getString( const char * propName, lString16 &result ) const
+bool CRPropContainer::getString( const char * propName, lString32 &result ) const
 {
     int pos = 0;
     if ( !findItem( propName, pos ) )
@@ -719,10 +756,10 @@ void CRPropContainer::clear()
 }
 
 /// set string property by name
-void CRPropContainer::setString( const char * propName, const lString16 &value )
+void CRPropContainer::setString( const char * propName, const lString32 &value )
 {
     int pos = 0;
-    if ( !findItem( propName, pos ) ) {
+    if ( _list.empty() || !findItem( propName, pos ) ) {
         _list.insert( pos, new CRPropItem( propName, value ) );
         _revision++;
     } else {
@@ -778,7 +815,7 @@ public:
     /// returns true if specified property exists
     virtual bool hasProperty( const char * propName ) const
     {
-        lString16 str;
+        lString32 str;
         return getString( propName, str );
     }
     CRPropSubContainer(CRPropContainer * root, lString8 path)
@@ -810,19 +847,19 @@ public:
         return _root->getName( index + _start ) + _path.length();
     }
     /// returns property value by index
-    virtual const lString16 & getValue( int index ) const
+    virtual const lString32 & getValue( int index ) const
     {
         sync();
         return _root->getValue( index + _start );
     }
     /// sets property value by index
-    virtual void setValue( int index, const lString16 &value )
+    virtual void setValue( int index, const lString32 &value )
     {
         sync();
         _root->setValue( index + _start, value );
     }
     /// get string property by name, returns false if not found
-    virtual bool getString( const char * propName, lString16 &result ) const
+    virtual bool getString( const char * propName, lString32 &result ) const
     {
         sync();
         int pos = 0;
@@ -832,7 +869,7 @@ public:
         return true;
     }
     /// set string property by name
-    virtual void setString( const char * propName, const lString16 &value )
+    virtual void setString( const char * propName, const lString32 &value )
     {
         sync();
         int pos = 0;
@@ -901,7 +938,7 @@ bool CRPropAccessor::deserialize( SerialBuf & buf )
     buf >> sz;
     for ( int i=0; i<sz; i++ ) {
         lString8 nm;
-        lString16 val;
+        lString32 val;
         if ( !buf.checkMagic( props_name_magic ) )
             return false;
         buf >> nm;
@@ -909,6 +946,7 @@ bool CRPropAccessor::deserialize( SerialBuf & buf )
             return false;
         buf >> val;
         setString( nm.c_str(), val );
+        // CRLog::debug("  deserialized prop %s: %s", nm.c_str(), UnicodeToLocal(val).c_str());
     }
     buf.checkCRC( buf.pos() - pos );
     return !buf.error();

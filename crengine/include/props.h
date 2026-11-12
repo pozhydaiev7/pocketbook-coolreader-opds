@@ -1,13 +1,28 @@
-/** \file props.h
-    \brief properties container
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2012,2013 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2020,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2007
-    This source code is distributed under the terms of
-    GNU General Public License
-    See LICENSE file for details
-*/
+/**
+ * \file props.h
+ * \brief properties container
+ */
 
 #ifndef PROPS_H_INCLUDED
 #define PROPS_H_INCLUDED
@@ -15,10 +30,11 @@
 #include "lvstring.h"
 #include "lvptrvec.h"
 #include "lvref.h"
-#include "lvstream.h"
 
 class CRPropAccessor;
 typedef LVFastRef<CRPropAccessor> CRPropRef;
+class SerialBuf;
+class LVStream;
 
 /// interface to get/set properties
 class CRPropAccessor : public LVRefCounter {
@@ -32,26 +48,26 @@ public:
     /// returns property name by index
     virtual const char * getName( int index ) const = 0;
     /// returns property value by index
-    virtual const lString16 & getValue( int index ) const = 0;
+    virtual const lString32 & getValue( int index ) const = 0;
     /// sets property value by index
-    virtual void setValue( int index, const lString16 &value ) = 0;
+    virtual void setValue( int index, const lString32 &value ) = 0;
 
     /// returns true if specified property exists
     virtual bool hasProperty( const char * propName ) const = 0;
     /// get string property by name, returns false if not found
-    virtual bool getString( const char * propName, lString16 &result ) const = 0;
+    virtual bool getString( const char * propName, lString32 &result ) const = 0;
     /// get string property by name, returns default value if not found
-    virtual lString16 getStringDef( const char * propName, const char * defValue = NULL ) const;
+    virtual lString32 getStringDef( const char * propName, const char * defValue = NULL ) const;
     /// set string property by name, if it's not set already
     virtual void setStringDef( const char * propName, const char * defValue );
     /// set string property by name, if it's not set already
-    virtual void setStringDef( const char * propName, lString16 defValue )
+    virtual void setStringDef( const char * propName, lString32 defValue )
     {
         if ( !hasProperty(propName) )
             setString( propName, defValue );
     }
     /// set string property by name
-    virtual void setString( const char * propName, const lString16 &value ) = 0;
+    virtual void setString( const char * propName, const lString32 &value ) = 0;
     /// set string property by name
     virtual void setString( const char * propName, const lString8 &value )
     {
@@ -65,9 +81,9 @@ public:
     /// do validation and corrections
     virtual void limitValueList( const char * propName, const char * values[] );
     /// do validation and corrections
-    virtual void limitValueList( const char * propName, int values[], int value_count );
+    virtual void limitValueList( const char * propName, int values[], int valuesCount, int defValueIndex );
     /// do validation and corrections
-    virtual void limitValueRange( const char * propName, int defValue, int minValue, int maxValue );
+    virtual void limitValueMinMax( const char * propName, int minValue, int maxValue, int defValue );
 
     /// get int property by name, returns false if not found
     virtual bool getInt( const char * propName, int &result ) const;
@@ -78,9 +94,9 @@ public:
     /// set int property by name, if it's not set already
     virtual void setIntDef( const char * propName, int value );
     /// set int property as hex
-    virtual void setHex( const char * propName, int value );
+    virtual void setHex( const char * propName, lUInt32 value );
     /// set int property as hex, if not exist
-    virtual void setHexDef( const char * propName, int value )
+    virtual void setHexDef( const char * propName, lUInt32 value )
     {
         if ( !hasProperty( propName ) )
             setHex( propName, value );
@@ -92,6 +108,8 @@ public:
     virtual bool getBoolDef( const char * propName, bool defValue=false ) const;
     /// set bool property by name
     virtual void setBool( const char * propName, bool value );
+    /// set bool property by name, if not exist or incorrect
+    virtual void setBoolDef( const char * propName, bool defValue );
 
     /// get lInt64 property by name, returns false if not found
     virtual bool getInt64( const char * propName, lInt64 &result ) const;
@@ -101,7 +119,7 @@ public:
     virtual void setInt64( const char * propName, lInt64 value );
 
 
-    static bool parseColor(lString16 value, lUInt32 & result);
+    static bool parseColor(lString32 value, lUInt32 & result);
     /// get argb color (#xxxxxx) property by name, returns false if not found
     virtual bool getColor( const char * propName, lUInt32 &result ) const;
     /// get argb color (#xxxxxx) property by name, returns default value if not found

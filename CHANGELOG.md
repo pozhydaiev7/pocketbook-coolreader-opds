@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.0.6-17-67-opds (branch `engine-3.2.59`, not released)
+
+The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test build: `0.0.6-17-67-opds-alpha1`. Not tested on a device yet.
+
+The engine with its PocketBook port, the bundled libraries and the reliability changes of the frontend are taken from [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader) at `8f592d51` (commits `9d969bb7`, `01403eee`, `3ab28e48`, `7a20f240`, `ebecbb7f`, `2c1e56da`, `dc91e9cd`) and two later fixes (`98fef7e0`, `f6a54727`). Not taken: its OTA update, dictionary downloads, settings menus, device table and its private curl.
+
+### Changed
+
+- **Engine:** `crengine/` is CREngine 3.2.59-1 with the PocketBook port of dderugin (`crengine/POCKETBOOK-PORT.txt`, `crengine/UPSTREAM.json`): the retained `crgui`/`crskin` window framework and `src/pocketbook_compat.cpp`. HarfBuzz, FriBidi, libunibreak, Zstd, NanoSVG and utf8proc are off (`crengine/include/crsetup.h`).
+  - New in the engine against 3.1.2: the block layout of CSS (tables, floats, borders, margins), DOCX, ODT and FB3 books, footnotes at the bottom of the page by a CSS hint, hyphenation patterns by language.
+  - The cache files of books made by the old engine are not used: a book is laid out again when it is opened for the first time. Reading positions and bookmarks are converted by the engine.
+- **Build:** the pro5 target (`SDK_481`, gcc 4.8.1) builds the engine with `-std=gnu++11`. One binary for firmware 5 and 6, as before.
+  - `tools/toolchain-arm-obreey-linux-gnueabi-pocketbook.cmake` takes the SDK path from its own folder and sets `CMAKE_SYSTEM_PROCESSOR`: libjpeg-turbo is built as a separate CMake project.
+  - The pro4, pro2 and 360 targets of `make.sh` are not supported with this engine: their compilers have no C++11.
+- **Bundled libraries** (`thirdparty/`, `tools/dependencies.cmake`): FreeType 2.15.0, libjpeg-turbo 3.2.0, libpng 1.6.59, zlib 1.3.2, private and static; `qimagescale` for the image scaler of the engine. FreeType is built without bzip2, HarfBuzz and Brotli. zlib of the firmware is not needed any more (`libz.so.1` is not in the list of the libraries of the binary).
+  - libcurl of the firmware is still used. A private curl would need the OpenSSL of one firmware generation and would not start on the other.
+- **Frontend strings:** `lString16`, `lChar16`, `L""` are `lString32`, `lChar32`, `U""`, as in the engine (47 files of `cr3gui/src`). Battery state, links, cover drawing, anti-aliasing and document loading calls follow the new engine.
+- **Settings and reading history** are written through a temporary file and renamed, with a `.bak` copy of the previous file (`LVWriteFileAtomic`). A failed write shows one warning. The font size changed by a gesture is saved in the settings.
+- **Clear cache** command: the cache is cleared by the engine (`ldomDocCache::clear()`), the cache file of the open book included. The new engine does not tell the frontend the cache folder and the file of the open book.
+- **Font embolding** (*Font settings*) is removed: the engine has no such rasterizer setting. *Bold* remains. The saved value is kept in `cr3.ini`.
+- **Speed of the new engine**, checked on the PC bench (`C:\Temp\cr3-opds-build\bench-ng`): 720 pages of three books in four configurations are the same bit for bit before and after these changes.
+  - **Page buffer copy** (`LVGrayDrawBuf::DrawTo`): the row copy of 0.0.6-17-66 and the full-copy shortcut. 3000 page drawings with their copies: 5255 ms before, 2173 ms after.
+  - **Glyph cache:** found by a hash of the character code (`USE_GLYPHCACHE_HASHTABLE`), 2 MB (`GLYPH_CACHE_SIZE`); the list fixes of the global cache.
+  - **Skin caches:** 64 images and 32 items, as in 0.0.6-17-66.
+  - **Book parsing:** `ldomNode::initNodeStyle()` searched every element among the children of its parent for a debug message. The test is made in a debug build only: parsing and layout of a chapter of 6000 paragraphs 1606 ms for 30 runs before, 1372 ms after.
+  - **Text drawing:** the glyph index of a character is looked up only for kerning.
+  - Not needed in this engine, it has them: the cache of formatted paragraphs (256), the fix of the character flags in `measureText`, the early skip of blocks outside of the page in `DrawDocument`.
+  - Tried and taken back: writing fully transparent and fully opaque glyph pixels without arithmetic in `blendBitmap_grayTo8bpp`. 2391 ms against 2137 ms on the PC, and gcc 4.8.1 makes NEON code of the original loop only.
+- **Page margins** up to 350 px are kept (`LVDocView::propsUpdateDefaults`).
+
 ## 0.0.6-17-66-opds (not released)
 
 Speed review. Test builds: `0.0.6-17-66-opds-perf0` (stage timing only), `-beta1` (timing and the changes outside of the engine) `-beta2` (the engine changes), `-beta3` (the direct copy to the screen) and `-beta4` (all changes below).

@@ -1,0 +1,5 @@
+QImageScale is derived from Qt image-scaling code, copyright 2016 The Qt
+Company Ltd. and Intel Corporation, and includes the image-transform work
+identified in QIMAGETRANSFORM_LICENSE.txt. This application uses the GPL
+version 2 alternative offered by the Qt source headers. See LICENSE.GPL2
+and the retained copyright/license headers in the corresponding source files.

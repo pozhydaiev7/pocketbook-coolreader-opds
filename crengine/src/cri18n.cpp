@@ -1,19 +1,34 @@
-/*******************************************************
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2009,2012,2013,2015 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine
-
-   cri18n.cpp: internationalization support
-
-   (c) Vadim Lopatin, 2000-2008
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
-
+/**
+ * \file cri18n.cpp
+ * \brief internationalization support
+ */
 
 #include "../include/cri18n.h"
-#include "../include/lvstream.h"
+#include "../include/lvstreamutils.h"
+#include "../include/crlog.h"
+#include "../include/lvstring8collection.h"
 
 CRI18NTranslator * CRI18NTranslator::_translator = NULL;
 CRI18NTranslator * CRI18NTranslator::_defTranslator = NULL;
@@ -49,7 +64,7 @@ const char * CRI18NTranslator::translate( const char * src )
 #if CR_EMULATE_GETTEXT==1
 	res = src;
 	CRLog::trace("translation is not supported. returning source string: %s", src);
-	return src;
+    return res;
 #else
 	res = gettext(src);
 	CRLog::trace("gettext(%s) is %s", src, res);
@@ -62,7 +77,7 @@ const lString8 CRI18NTranslator::translate8( const char * src )
 	return lString8( translate( src ) );
 }
 
-const lString16 CRI18NTranslator::translate16( const char * src )
+const lString32 CRI18NTranslator::translate32( const char * src )
 {
 	return Utf8ToUnicode( translate8( src ) );
 }
@@ -117,7 +132,7 @@ static void reverse( lUInt32 & n )
 
 #define MO_MAGIC_NUMBER 0x950412de
 #define MO_MAGIC_NUMBER_REV 0xde120495
-bool CRMoFileTranslator::openMoFile( lString16 fileName )
+bool CRMoFileTranslator::openMoFile( lString32 fileName )
 {
 	LVStreamRef stream = LVOpenFileStream( fileName.c_str(), LVOM_READ );
 	if ( stream.isNull() ) {
@@ -258,7 +273,7 @@ bool CRIniFileTranslator::open(const char * fileName)
             lString8 value( eqpos+1, (lvsize_t)(elp - eqpos - 1));
             _map.set(name, value);
         }
-        for ( p=elp; *elp && *elp!='\r' && *elp!='\n'; elp++)
+        for ( ; *elp && *elp!='\r' && *elp!='\n'; elp++)
             ;
         p = elp;
 		while ( *p=='\r' || *p=='\n' )

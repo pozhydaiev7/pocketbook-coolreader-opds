@@ -27,7 +27,7 @@ protected:
     bool _showScroll;
     bool _showFrame;
     int _lastNavigationDirection;
-    lString16 _searchPattern;
+    lString32 _searchPattern;
 	static LVRef<CRDictionary> _dict;
     virtual void draw( int pageOffset );
     virtual void draw();
@@ -38,7 +38,7 @@ public:
 
     void prepareNextPageImage( int offset );
 
-    void showWaitIcon() { /* _wm->showWaitIcon( lString16("cr3_wait_icon.png") );*/ }
+    void showWaitIcon() { /* _wm->showWaitIcon( lString32("cr3_wait_icon.png") );*/ }
     CRGUIAcceleratorTableRef getMenuAccelerators()
     {
         return  _wm->getAccTables().get("menu");
@@ -60,11 +60,11 @@ public:
 
 	void showDictWithVKeyboard();
 
-    bool findText( lString16 pattern, int origin, int direction );
+    bool findText( lString32 pattern, int origin, int direction );
 
-    int findPagesText( lString16 pattern, int origin, int direction );
+    int findPagesText( lString32 pattern, int origin, int direction );
 
-	bool findInDictionary( lString16 pattern );
+	bool findInDictionary( lString32 pattern );
 
     void showKeymapDialog();
 
@@ -72,7 +72,7 @@ public:
     /// adds XML and FictionBook tags for utf8 fb2 document
     static lString8 makeFb2Xml( const lString8 & body );
     virtual void setRect( const lvRect & rc );
-    CRViewDialog(CRGUIWindowManager * wm, lString16 title, lString8 text, lvRect rect, bool showScroll, bool showFrame );
+    CRViewDialog(CRGUIWindowManager * wm, lString32 title, lString8 text, lvRect rect, bool showScroll, bool showFrame );
 
     virtual bool onCommand( int command, int params = 0 );
 };

@@ -11,31 +11,31 @@
 
 namespace opdsui {
 
-// UTF-8 (lString16(const char*) decodes UTF-8).
+// UTF-8 (lString32(const char*) decodes UTF-8).
 extern const char * const MARK_UP;   // "« "  one level up
 extern const char * const MARK_PREV; // "‹ "  previous screen
 extern const char * const MARK_NEXT; // " ›"  next screen
 extern const char * const MARK_OPEN; // "» "  sub-catalog
 extern const char * const DOT;       // "  ·  "
 extern const char * const DASH;      // " — "
-extern const lChar16 ELLIPSIS;
+extern const lChar32 ELLIPSIS;
 
-lString16 u16(const std::string & s);
+lString32 u16(const std::string & s);
 
 // Cuts text to fit maxWidth, ending with an ellipsis.
-lString16 fitText(LVFontRef font, const lString16 & text, int maxWidth);
+lString32 fitText(LVFontRef font, const lString32 & text, int maxWidth);
 
-int textWidth(LVFontRef font, const lString16 & text);
+int textWidth(LVFontRef font, const lString32 & text);
 
 // Splits a paragraph into lines: the first one fits firstWidth, the others fit width.
 // A word longer than the line stays whole and is cut with an ellipsis when drawn.
-std::vector<lString16> wrapText(LVFontRef font, const lString16 & text, int firstWidth, int width);
+std::vector<lString32> wrapText(LVFontRef font, const lString32 & text, int firstWidth, int width);
 
 // One line of a text screen: an optional label (gray), then the text (black), in one font
 // and on one baseline. A line without text is a gap between blocks.
 struct InfoLine {
-    lString16 label;
-    lString16 text;
+    lString32 label;
+    lString32 text;
     LVFontRef font;
     int indent;
     // a thin line above it: the line starts a section of the screen
@@ -48,7 +48,7 @@ struct InfoLine {
 
 // Menu skin for the list screens. The touch-TOC skin exists only in the FW5 touch skins;
 // with any other skin a missing menu skin has no item or title parts, and drawing it crashes.
-lString16 menuSkinName(CRGUIWindowManager * wm);
+lString32 menuSkinName(CRGUIWindowManager * wm);
 
 class OpdsMenu;
 
@@ -59,12 +59,12 @@ class OpdsItem : public CRMenuItem
 public:
     enum Kind { ROW, TEXT, PAGER };
 
-    OpdsItem(OpdsMenu * menu, int id, const lString16 & title, const lString16 & subtitle, Kind kind = ROW);
+    OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind = ROW);
     virtual void Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected);
     virtual int onSelect();
 
     // Paging row texts; an empty side is disabled.
-    lString16 left, center, right;
+    lString32 left, center, right;
     // Paging row commands; 0 disables the side. The center opens the OPDS catalog menu by default.
     int leftCommand, rightCommand, centerCommand;
     // Text row lines.
@@ -72,14 +72,14 @@ public:
     // Regular row: left indent of the title in pixels and a short text at the right edge
     // (a page number), in the font of the second line.
     int indent;
-    lString16 aside;
+    lString32 aside;
 
 private:
     void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline);
 
     OpdsMenu * _owner;
-    lString16 _title;
-    lString16 _subtitle;
+    lString32 _title;
+    lString32 _subtitle;
     Kind _kind;
 };
 
@@ -99,7 +99,7 @@ public:
     LVFontRef bodyFont;  // description text
 
     // paged: page keys of the reader post OPDS_CMD_NEXT / OPDS_CMD_PREV instead of paging the menu
-    OpdsMenu(CRGUIWindowManager * wm, const lString16 & caption, lvRect & rc, bool paged);
+    OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged);
     virtual ~OpdsMenu();
     // Page keys post these commands; 0 leaves the key on that side to the menu.
     void setPageCommands(int prevCommand, int nextCommand);
@@ -120,7 +120,7 @@ public:
     int lastTouchX() const { return _lastTouchX; }
     // Width available for the text of a row (see OpdsItem::Draw).
     int rowTextWidth();
-    void add(int command, const lString16 & title, const lString16 & subtitle = lString16::empty_str);
+    void add(int command, const lString32 & title, const lString32 & subtitle = lString32::empty_str);
 };
 
 // Shows the menu as the top window.

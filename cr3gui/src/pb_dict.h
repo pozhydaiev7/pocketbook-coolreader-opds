@@ -29,27 +29,27 @@ public:
     virtual ~PbDictSource() {}
     virtual PbDictType type() const = 0;
     /// stored in the settings: "dic:<name>", "sd:<.ifo path>" or "xd:<.xdxf path>"
-    const lString16 & id() const { return _id; }
+    const lString32 & id() const { return _id; }
     /// dictionary name
-    const lString16 & title() const { return _title; }
+    const lString32 & title() const { return _title; }
     /// name for the lists of dictionaries; the dictionaries the firmware reader cannot use
     /// (StarDict, XDXF) have their type after the name
-    lString16 label() const;
+    lString32 label() const;
     /// makes lookups possible; an inkview dictionary closes the other inkview dictionary
     virtual bool open() = 0;
     virtual void close() = 0;
     virtual bool isOpen() const = 0;
     /// 0: nothing; 1: the nearest word (word list); 2: the word itself
-    virtual int lookup(const lString16 & w, lString8 & word, lString8 & article) = 0;
+    virtual int lookup(const lString32 & w, lString8 & word, lString8 & article) = 0;
     /// the word itself or its form, any letter case; for the search in several dictionaries
-    virtual bool lookupExact(const lString16 & w, lString8 & word, lString8 & article) = 0;
+    virtual bool lookupExact(const lString32 & w, lString8 & word, lString8 & article) = 0;
     /// moves the word list position to the word, as returned by lookup/next/prev
     virtual bool seek(const lString8 & word) = 0;
     virtual bool next(lString8 & word, lString8 & article) = 0;
     virtual bool prev(lString8 & word, lString8 & article) = 0;
 protected:
-    lString16 _id;
-    lString16 _title;
+    lString32 _id;
+    lString32 _title;
 };
 
 /// All dictionaries found on the device. Loaded StarDict indexes stay in memory until exit.
@@ -62,11 +62,11 @@ public:
     int count() { scan(); return _sources.length(); }
     PbDictSource * get(int index) { scan(); return _sources[index]; }
     /// by id, or by a plain .dic name saved by older versions; NULL when not found
-    PbDictSource * find(const lString16 & id);
+    PbDictSource * find(const lString32 & id);
     /// closes the open inkview dictionary
     void closeInkview();
     /// the id of a value saved by older versions (plain .dic name)
-    static lString16 normalizeId(const lString16 & value);
+    static lString32 normalizeId(const lString32 & value);
 private:
     PbDictManager() : _scanned(false) {}
     void scanStarDictFolder(const lString8 & folder, int depth, LVPtrVector<PbDictSource, false> & found);

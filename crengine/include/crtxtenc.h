@@ -1,14 +1,29 @@
-/** \file crtxtenc.h
-    \brief character encoding utils
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007,2008,2011,2012 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2012 Daniel Savard <daniels@xsoli.com>                  *
+ *   Copyright (C) 2020 Aleksey Chernov <valexlin@gmail.com>               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-    See LICENSE file for details.
-
-*/
+/**
+ * \file crtxtenc.h
+ * \brief character encoding utils
+ */
 
 #ifndef __CRTXTENC_H_INCLUDED__
 #define __CRTXTENC_H_INCLUDED__
@@ -61,7 +76,7 @@ enum char_encoding_type {
 #define CRENC_ID_UTF32_BE     ce_utf32_be
 #define CRENC_ID_8BIT_START   ce_8bit_cp
 
-int CREncodingNameToId( const lChar16 * name );
+int CREncodingNameToId( const lChar32 * name );
 const char * CREncodingIdToName( int id );
 
 /**
@@ -75,13 +90,13 @@ const char * CREncodingIdToName( int id );
 
     \return pointer to conversion table if found, NULL otherwise
 */
-const lChar16 * GetCharsetByte2UnicodeTable( const lChar16 * encoding_name );
-const lChar16 * GetCharsetByte2UnicodeTableById( int id );
-const lChar8 ** GetCharsetUnicode2ByteTable( const lChar16 * encoding_name );
+const lChar32 * GetCharsetByte2UnicodeTable( const lChar32 * encoding_name );
+const lChar32 * GetCharsetByte2UnicodeTableById( int id );
+const lChar8 ** GetCharsetUnicode2ByteTable( const lChar32 * encoding_name );
 /// get conversion table for upper 128 characters of codepage, by codepage number
-const lChar16 * GetCharsetByte2UnicodeTable( int codepage );
+const lChar32 * GetCharsetByte2UnicodeTable( int codepage );
 /// returns "cp1251" for 1251, etc. for supported codepages
-const lChar16 * GetCharsetName( int codepage );
+const lChar32 * GetCharsetName( int codepage );
 /// convert language id to codepage number (MS)
 int langToCodepage( int lang );
 const char* langToLanguage( int lang );

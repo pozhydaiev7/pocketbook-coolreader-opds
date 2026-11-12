@@ -99,7 +99,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-66-opds-beta4"
+#define CR_PB_VERSION "0.0.6-17-67-opds-alpha1"
 #define CR_PB_BUILD_DATE "2026-11-12"
 
 #define PB_ROTATE_MODE_360 0
@@ -182,21 +182,21 @@ void pbLaunchWaitBinary(const char *binary);
 void enterStandByMode();
 void toggleInvertDisplay();
 void toggleStatusLine();
-void launchBrowser(lString16 url);
+void launchBrowser(lString32 url);
 void drawTemporaryZoom();
 void exitApp();
 bool showPagesTilChapterEnd();
 bool showChapterMarks();
 bool fontAntiAliasingActivated();
 
-lString16 getPbModelNumber();
+lString32 getPbModelNumber();
 
 // True for the FW5+ touch skins that use the touch quick menu and the touch TOC
 // (pb626fw5, pb631fw5, and the 4pda skins pb740fw5, pb700fw5, pbXfw5, pb617fw5, pb618fw5).
 bool isTouchFw5Skin();
 
 // Saves the position of the current book and opens a downloaded file in the reader.
-void pbOpenDownloadedBook(const lString16 & path);
+void pbOpenDownloadedBook(const lString32 & path);
 
 // Opens the firmware on-screen keyboard safely from a CR3 menu command (see CRPocketBookKeyboardWindow).
 // The handler gets the entered text, or an empty string/NULL on cancel.

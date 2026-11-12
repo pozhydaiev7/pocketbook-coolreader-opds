@@ -1,5 +1,41 @@
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2011-2014 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2014 Huang Xin <chrox.huang@gmail.com>                  *
+ *   Copyright (C) 2018 Yifei(Frank) ZHU <fredyifei@gmail.com>             *
+ *   Copyright (C) 2020,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *   Copyright (C) 2020 NiLuJe <ninuje@gmail.com>                          *
+ *   Copyright (C) 2019,2020 poire-z <poire-z@users.noreply.github.com>    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
+
 #include "../include/pdbfmt.h"
+#include "../include/crlog.h"
+#include "../include/lvstreamfragment.h"
+#include "../include/lvcommoncontaineriteminfo.h"
+#include "../include/lvstreamutils.h"
+#include "../include/crtxtenc.h"
+#include "../include/lvxmlutils.h"
+#include "../include/lvhtmlparser.h"
+#include "../include/lvtextparser.h"
 #include <ctype.h>
+
+#include <zlib.h>
+#define UNPACK_BUF_SIZE 0x40000
 
 // uncomment following line to save PDB content streams to /tmp
 //#define DUMP_PDB_CONTENTS
@@ -190,7 +226,7 @@ struct MobiPreamble : public PalmDocPreamble
             return false; // unsupported type
         if ( mobiEncryption!=0 )
             return false; // encryption is not supported
-        if (hederLength == 0xE4 || hederLength == 0xE8) {
+        if ( hederLength >= 0xE4 ) {
             stream->Seek(242-180, LVSEEK_CUR, NULL);
             stream->Read(&extraDataFlags);
             if ( cnv.lsf() )
@@ -285,9 +321,6 @@ struct PluckerPreamble {
 //    smIcon 	2 * smIconWords 	Image 	Small image (15x9) in Palm image format to be used as an icon to represent the document on a desktop-style display. The image may not use a custom color map.
 };
 
-/// unpack data from _compbuf to _buf
-bool ldomUnpack( const lUInt8 * compbuf, int compsize, lUInt8 * &dstbuf, lUInt32 & dstsize  );
-
 class PDBFile;
 
 class LVPDBContainerItem : public LVContainerItemInfo {
@@ -296,7 +329,7 @@ protected:
     PDBFile * _file;
     int _startBlock;
     int _size;
-    lString16 _name;
+    lString32 _name;
 public:
     /// returns object size (file size or directory entry count)
     virtual lverror_t GetSize( lvsize_t * pSize ) {
@@ -304,14 +337,14 @@ public:
 		return LVERR_OK;
     }
     virtual lvsize_t        GetSize() const { return _size; }
-    virtual const lChar16 * GetName() const { return _name.c_str(); }
+    virtual const lChar32 * GetName() const { return _name.c_str(); }
     virtual lUInt32         GetFlags() const { return 0; }
     virtual bool            IsContainer() const { return false; }
     virtual LVStreamRef openStream() {
         // TODO: implement stream creation
         return LVStreamRef();
     }
-    LVPDBContainerItem( LVStreamRef stream, PDBFile * file, lString16 name, int startBlockIndex, int size )
+    LVPDBContainerItem( LVStreamRef stream, PDBFile * file, lString32 name, int startBlockIndex, int size )
         : _stream(stream), _file(file), _startBlock(startBlockIndex), _size(size), _name(name) {
     }
 };
@@ -324,7 +357,7 @@ public:
         // return region of base stream
         return LVStreamRef( new LVStreamFragment( _stream, _startBlock, _size ) );
     }
-    LVPDBRegionContainerItem( LVStreamRef stream, PDBFile * file, lString16 name, int startOffset, int size )
+    LVPDBRegionContainerItem( LVStreamRef stream, PDBFile * file, lString32 name, int startOffset, int size )
         : LVPDBContainerItem(stream, file, name, startOffset, size) {
     }
 };
@@ -340,7 +373,7 @@ public:
         _list.add(item);
     }
 
-    //virtual const LVContainerItemInfo * GetObjectInfo(const wchar_t * pname);
+    //virtual const LVContainerItemInfo * GetObjectInfo(const lChar32 * pname);
     virtual const LVContainerItemInfo * GetObjectInfo(int index) {
         if ( index>=0 && index<_list.length() )
             return _list[index];
@@ -353,11 +386,11 @@ public:
 		return LVERR_OK;
     }
 
-    virtual LVStreamRef OpenStream( const lChar16 * fname, lvopen_mode_t mode ) {
+    virtual LVStreamRef OpenStream( const lChar32 * fname, lvopen_mode_t mode ) {
         if ( mode!=LVOM_READ )
             return LVStreamRef();
         for ( int i=0; i<_list.length(); i++ ) {
-            //CRLog::trace("OpenStream(%s) : %s", LCSTR(lString16(fname)), LCSTR(lString16(_list[i]->GetName())) );
+            //CRLog::trace("OpenStream(%s) : %s", LCSTR(lString32(fname)), LCSTR(lString32(_list[i]->GetName())) );
             if ( !lStr_cmp(_list[i]->GetName(), fname) )
                 return _list[i]->openStream();
         }
@@ -412,6 +445,48 @@ private:
     lvpos_t _pos;
     lUInt16 _mobiExtraDataFlags;
     CRPropRef m_doc_props;
+
+    // c.f., lvtinydom.cpp's legacy ldomUnpack
+    bool zlibUnpack( const lUInt8 * compbuf, size_t compsize, lUInt8 * &dstbuf, lUInt32 & dstsize  ) {
+        lUInt8 tmp[UNPACK_BUF_SIZE]; // 256K buffer for uncompressed data
+        int ret;
+        z_stream z = { 0 };
+        z.zalloc = Z_NULL;
+        z.zfree = Z_NULL;
+        z.opaque = Z_NULL;
+        ret = inflateInit( &z );
+        if ( ret != Z_OK )
+            return false;
+        z.avail_in = compsize;
+        z.next_in = (unsigned char *)compbuf;
+        lUInt32 uncompressed_size = 0;
+        lUInt8 *uncompressed_buf = NULL;
+        do {
+            z.avail_out = UNPACK_BUF_SIZE;
+            z.next_out = tmp;
+            ret = inflate( &z, Z_SYNC_FLUSH );
+            if (ret != Z_OK && ret != Z_STREAM_END) { // some error occured while unpacking
+                inflateEnd(&z);
+                if (uncompressed_buf)
+                    free(uncompressed_buf);
+                dstbuf = NULL;
+                dstsize = 0;
+                // printf("inflate() error: %d (%d > %d)\n", ret, compsize, uncompressed_size);
+                return false;
+            }
+            lUInt32 have = UNPACK_BUF_SIZE - z.avail_out;
+            uncompressed_buf = cr_realloc(uncompressed_buf, uncompressed_size + have);
+            memcpy(uncompressed_buf + uncompressed_size, tmp, have );
+            uncompressed_size += have;
+            // printf("inflate() additional call needed (%d > %d)\n", compsize, uncompressed_size);
+        } while (ret != Z_STREAM_END);
+        inflateEnd(&z);
+        dstsize = uncompressed_size;
+        dstbuf = uncompressed_buf;
+        // printf("inflate() done %d > %d\n", compsize, uncompressed_size);
+        return true;
+    }
+
     //LVPDBContainer * _container;
     bool unpack( LVArray<lUInt8> & dst, LVArray<lUInt8> & src ) {
         int srclen = src.length();
@@ -458,20 +533,20 @@ private:
             }
         } else if ( _compression==10 ) {
             // zlib
-            /// unpack data from _compbuf to _buf
+            /// unpack data from src to dst
             lUInt8 * dstbuf;
             lUInt32 dstsize;
-            if ( !ldomUnpack( src.get(), src.size(), dstbuf, dstsize ) )
+            if ( !zlibUnpack( src.get(), src.size(), dstbuf, dstsize ) )
                 return false;
             dst.add(dstbuf, dstsize);
             free(dstbuf);
         } else if ( _compression==17480 ) {
             // zlib
             // TODO: shouldn't it be HUFFMAN unpacker?
-            /// unpack data from _compbuf to _buf
+            /// unpack data from src to dst
             lUInt8 * dstbuf;
             lUInt32 dstsize;
-            if ( !ldomUnpack( src.get(), src.size(), dstbuf, dstsize ) )
+            if ( !zlibUnpack( src.get(), src.size(), dstbuf, dstsize ) )
                 return false;
             dst.add(dstbuf, dstsize);
             free(dstbuf);
@@ -556,6 +631,8 @@ private:
             return false;
         LVArray<lUInt8> srcbuf;
         LVArray<lUInt8> * buf = _compression ? &srcbuf : dstbuf;
+        if ( buf->empty() )
+            buf->reserve(1); // ensure buf->_array is no more NULL for _stream->Read(dstbuf->get() above
         if (!readRecordNoUnpack(index, buf))
             return false;
 
@@ -632,11 +709,11 @@ public:
             if ( bytesRead>0 ) {
                 int pmlCount = 0;
                 int htmlCount = 0;
-                lString16 pmlChars("pXxCcriuovtnsblaUBSmqQI");
+                lString32 pmlChars("pXxCcriuovtnsblaUBSmqQI");
                 for ( int i=0; i<bytesRead-10; i++ ) {
                     const lUInt8 * p = buf.get() + i;
                     if ( p[0]=='\\' ) {
-                        if ( pmlChars.pos(lString16((const lChar8 *)p+1, 1)) >=0 )
+                        if ( pmlChars.pos(lString32((const lChar8 *)p+1, 1)) >=0 )
                             pmlCount++;
                     } else if (p[0]=='<') {
                         if ( pattern_cmp(p+1, "html") )
@@ -672,7 +749,7 @@ public:
         _format = UNKNOWN;
         stream->SetPos(0);
         lUInt32 fsize = stream->GetSize();
-        PDBHdr hdr;
+        PDBHdr hdr = { 0 };
         PDBRecordEntry entry;
         if ( !hdr.read(stream) )
             return false;
@@ -714,7 +791,7 @@ public:
         if ( _format==EREADER ) {
             if ( _records[0].size<sizeof(EReaderHeader) )
                 return false;
-            EReaderHeader preamble;
+            EReaderHeader preamble = { 0 };
             stream->SetPos(_records[0].offset);
             if ( !preamble.read(stream) )
                 return false; // invalid preamble
@@ -733,12 +810,11 @@ public:
                         stream->SetPos(_records[index].offset);
                         if ( stream->ReadByte()=='P' && stream->ReadByte()=='N' && stream->ReadByte()=='G' && stream->ReadByte()==' ' ) {
                             // header ok, adding item
-                            char name[33];
-                            memset(name, 0, 33);
+                            char name[33] = { 0 };
                             lvsize_t bytesRead = 0;
                             stream->Read(name, 32, &bytesRead);
                             if ( name[0] ) {
-                                lString16 fname = lString16(name);
+                                lString32 fname = lString32(name);
                                 container->addItem( new LVPDBRegionContainerItem( stream, this, fname, start, size ) );
                             }
                         }
@@ -751,7 +827,7 @@ public:
             if (!validateContent)
                 contentFormat = doc_format_pdb;
 
-            MobiPreamble preamble;
+            MobiPreamble preamble = {};
             stream->SetPos(_records[0].offset);
             if ( !preamble.read(stream, _mobiExtraDataFlags) )
                 return false; // invalid preamble
@@ -834,7 +910,7 @@ public:
                     if (buf[0]=='G' && buf[1]=='I' && buf[2]=='F')
                         fmt = "gif";
                     if (fmt) {
-                        lString16 name = lString16(MOBI_IMAGE_NAME_PREFIX) + fmt::decimal((int)(index-preamble.firstImageIndex));
+                        lString32 name = lString32(MOBI_IMAGE_NAME_PREFIX) + fmt::decimal((int) (index - preamble.firstImageIndex + 1));
                         //CRLog::debug("Adding image %s [%d] %s", LCSTR(name), _records[index].size, fmt);
                         container->addItem( new LVPDBRegionContainerItem( stream, this, name, _records[index].offset, _records[index].size ) );
                         if ((unsigned)index == preamble.firstImageIndex + coverOffset) {
@@ -847,7 +923,7 @@ public:
         } else if (_format==PALMDOC ) {
             if ( _records[0].size<sizeof(PalmDocPreamble) )
                 return false;
-            PalmDocPreamble preamble;
+            PalmDocPreamble preamble = { 0 };
             stream->SetPos(_records[0].offset);
             if ( !preamble.read(stream) )
                 return false; // invalid preamble
@@ -1161,7 +1237,7 @@ LVStreamRef GetPDBCoverpage(LVStreamRef stream)
     LVContainerRef cnt(container);
     container->setStream(stream);
     LVStreamRef coverStream;
-    lString16 coverName = pdb->getDocProps()->getStringDef(DOC_PROP_COVER_FILE);
+    lString32 coverName = pdb->getDocProps()->getStringDef(DOC_PROP_COVER_FILE);
     if (!coverName.empty()) {
         coverStream = cnt->OpenStream(coverName.c_str(), LVOM_READ);
     }
@@ -1210,7 +1286,7 @@ bool ImportPDBDocument( LVStreamRef & stream, ldomDocument * doc, LVDocViewCallb
                 return false;
             } else {
                 if (pdb->getFormat()==PDBFile::MOBI && isCorrectUtf8Text(stream))
-                    parser.SetCharset(L"utf-8");
+                    parser.SetCharset(U"utf-8");
                 if (!parser.Parse()) {
                     return false;
                 }
@@ -1255,10 +1331,10 @@ bool ImportPDBDocument( LVStreamRef & stream, ldomDocument * doc, LVDocViewCallb
         const LVContainerItemInfo * item = container->GetObjectInfo(i);
         if (item->IsContainer())
             continue;
-        lString16 fn = item->GetName();
+        lString32 fn = item->GetName();
         if (fn.empty())
-            fn = cs16("pdb_item_") + lString16::itoa(i);
-        fn = cs16("/tmp/") + fn;
+            fn = cs32("pdb_item_") + lString32::itoa(i);
+        fn = cs32("/tmp/") + fn;
         LVStreamRef in = container->OpenStream(item->GetName(), LVOM_READ);
         if (in.isNull())
             continue;

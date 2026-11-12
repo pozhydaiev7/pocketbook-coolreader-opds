@@ -12,7 +12,7 @@
 
 #include "scrkbd.h"
 
-lChar16 CRScreenKeyboard::digitsToChar( lChar16 digit1, lChar16 digit2 )
+lChar32 CRScreenKeyboard::digitsToChar( lChar32 digit1, lChar32 digit2 )
 {
     int row = digit1 - '1';
     int col = digit2=='0' ? 9: digit2 - '1';
@@ -20,19 +20,19 @@ lChar16 CRScreenKeyboard::digitsToChar( lChar16 digit1, lChar16 digit2 )
         return 0;
     if ( col < 0 || col >= _cols )
         return 0;
-    lString16 s = _keymap[ row ];
+    lString32 s = _keymap[ row ];
     if ( col < (int)s.length() )
         return s[col];
     return ' ';
 }
 
-bool CRScreenKeyboard::digitEntered( lChar16 c )
+bool CRScreenKeyboard::digitEntered( lChar32 c )
 {
     if ( _lastDigit==0 ) {
         _lastDigit = c;
         return false;
     }
-    lChar16 ch = digitsToChar( _lastDigit, c );
+    lChar32 ch = digitsToChar( _lastDigit, c );
     _lastDigit = 0;
     if ( !ch )
         return false;
@@ -47,7 +47,7 @@ void CRScreenKeyboard::setLayout( CRKeyboardLayoutRef layout )
     int maxcols = 0;
 	if ( !layout.isNull() ) {
         for ( int i=1; i<layout->vKeyboard->getItems().length(); i++ ) {
-			lString16 s = layout->vKeyboard->get( i );
+			lString32 s = layout->vKeyboard->get( i );
 			if ( !s.empty() )
 				_keymap.add( s );
 			if ( s.length() > maxcols )
@@ -71,14 +71,14 @@ void CRScreenKeyboard::setDefaultLayout()
     _rows = _keymap.length();
 }
 
-CRScreenKeyboard::CRScreenKeyboard(CRGUIWindowManager * wm, int id, const lString16 & caption, lString16 & buffer, lvRect & rc)
+CRScreenKeyboard::CRScreenKeyboard(CRGUIWindowManager * wm, int id, const lString32 & caption, lString32 & buffer, lvRect & rc)
 : CRGUIWindowBase( wm ), _buffer( buffer ), _value( buffer ), _title( caption ), _resultCmd(id), _lastDigit(0)
 {
     _passKeysToParent = false;
     _passCommandsToParent = false;
     _rect = rc;
     _fullscreen = false;
-    _skin = _wm->getSkin()->getMenuSkin( L"#vkeyboard" );
+    _skin = _wm->getSkin()->getMenuSkin( U"#vkeyboard" );
     //_skin = _wm->getSkin()->getWindowSkin( getSkinName().c_str() );
     setAccelerators( _wm->getAccTables().get("vkeyboard") );
     _cols = 10;
@@ -109,17 +109,17 @@ void CRScreenKeyboard::draw()
     int dy = kbdRect.height() / (_rows+1);
     for ( int y = 0; y<=_rows; y++ ) {
         for ( int x = 0; x<=_cols; x++ ) {
-            lString16 txt;
+            lString32 txt;
             bool header = true;
             if ( y==0 && x>0 ) {
-                txt = lString16::itoa( x<10 ? x : 0 );
+                txt = lString32::itoa( x<10 ? x : 0 );
             } else if ( x==0 && y>0 ) {
-                txt = lString16::itoa( y );
+                txt = lString32::itoa( y );
             } else if ( x>0 && y>0 ) {
                 header = false;
-                lString16 s = _keymap[ y - 1 ];
+                lString32 s = _keymap[ y - 1 ];
                 if ( x-1 < (int)s.length() )
-                    txt = lString16(&s[ x - 1 ], 1);
+                    txt = lString32(&s[ x - 1 ], 1);
                 else
                     txt = " ";
             }
@@ -144,7 +144,7 @@ void CRScreenKeyboard::draw()
     }
     // draw input area
     clientSkin->draw( *drawbuf, inputRect );
-    clientSkin->drawText(*drawbuf, inputRect, lString16(" ") << _value << "_");
+    clientSkin->drawText(*drawbuf, inputRect, lString32(" ") << _value << "_");
 }
 
 /// returns true if command is processed

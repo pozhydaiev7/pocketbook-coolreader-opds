@@ -31,14 +31,14 @@ namespace {
 const size_t OPDS_MAX_ENTRIES = OPDS_CMD_FORMAT - OPDS_CMD_ENTRY;
 
 // "Year: 2026" style lines that Flibusta appends to the description.
-bool isFieldLine(const lString16 & paragraph, int & colon)
+bool isFieldLine(const lString32 & paragraph, int & colon)
 {
-    colon = paragraph.pos(L": ");
+    colon = paragraph.pos(U": ");
     if (colon < 2 || colon > 30 || paragraph.length() > 120)
         return false;
     for (int i = 0; i < colon; i++) {
-        lChar16 ch = paragraph[i];
-        if (ch == L'.' || ch == L'!' || ch == L'?' || ch == L',')
+        lChar32 ch = paragraph[i];
+        if (ch == U'.' || ch == U'!' || ch == U'?' || ch == U',')
             return false;
     }
     return true;
@@ -76,34 +76,34 @@ void cardUrlKeyboardHandler(char * s)
 }
 
 // "flibusta.is/opds" -> "https://flibusta.is/opds"
-lString16 normalizeUrl(const lString16 & value)
+lString32 normalizeUrl(const lString32 & value)
 {
-    lString16 url = value;
+    lString32 url = value;
     url.trim();
     if (!url.empty() && url.pos("://") < 0)
-        url = lString16("https://") + url;
+        url = lString32("https://") + url;
     return url;
 }
 
 // host of the address without "www.", the name of a catalog added without one
-lString16 hostName(const lString16 & url)
+lString32 hostName(const lString32 & url)
 {
-    lString16 host = url;
+    lString32 host = url;
     int scheme = host.pos("://");
     if (scheme >= 0)
         host = host.substr(scheme + 3);
     int slash = host.pos("/");
     if (slash >= 0)
         host = host.substr(0, slash);
-    if (host.startsWith(lString16("www.")))
+    if (host.startsWith(lString32("www.")))
         host = host.substr(4);
     return host;
 }
 
 // first row of a screen: "< Back: <the screen it returns to>"
-lString16 backTo(const lString16 & where)
+lString32 backTo(const lString32 & where)
 {
-    return lString16(MARK_PREV) + lString16(_("Back")) + L": " + where;
+    return lString32(MARK_PREV) + lString32(_("Back")) + U": " + where;
 }
 
 // Connects Wi-Fi through the firmware when it is not connected (system dialog / last network).
@@ -288,12 +288,12 @@ OpdsBrowser & OpdsBrowser::instance()
 
 std::string OpdsBrowser::rootUrl()
 {
-    lString16 url;
+    lString32 url;
     if (_catalog >= 0 && _catalog < (int)_catalogs.size())
         url = _catalogs[_catalog].url;
     url.trim();
     if (url.empty())
-        url = lString16(OPDS_DEFAULT_URL);
+        url = lString32(OPDS_DEFAULT_URL);
     return std::string(UnicodeToUtf8(url).c_str());
 }
 
@@ -303,11 +303,11 @@ void OpdsBrowser::loadCatalogs()
     _catalogs.clear();
     char key[96];
     OpdsCatalog flibusta;
-    flibusta.name = lString16(OPDS_DEFAULT_NAME);
+    flibusta.name = lString32(OPDS_DEFAULT_NAME);
     snprintf(key, sizeof(key), "%s0.url", PROP_OPDS_CATALOG);
     flibusta.url = normalizeUrl(props->getStringDef(key, ""));
     if (flibusta.url.empty())
-        flibusta.url = lString16(OPDS_DEFAULT_URL);
+        flibusta.url = lString32(OPDS_DEFAULT_URL);
     _catalogs.push_back(flibusta);
     for (int n = 1; n <= OPDS_MAX_CATALOGS; n++) {
         snprintf(key, sizeof(key), "%s%d.url", PROP_OPDS_CATALOG, n);
@@ -328,7 +328,7 @@ void OpdsBrowser::loadCatalogs()
         // is the address of Flibusta when it is a Flibusta mirror, otherwise a catalog of the
         // list and the default one
         int def = 1;
-        lString16 old = normalizeUrl(props->getStringDef(PROP_OPDS_URL, ""));
+        lString32 old = normalizeUrl(props->getStringDef(PROP_OPDS_URL, ""));
         if (!old.empty() && hostName(old).pos("flibusta") >= 0) {
             _catalogs[0].url = old;
         } else if (!old.empty() && _catalogs.size() == 1) {
@@ -356,11 +356,11 @@ void OpdsBrowser::saveCatalogs()
         snprintf(key, sizeof(key), "%s%d.url", PROP_OPDS_CATALOG, n);
         if (!used && !props->hasProperty(key))
             break;
-        props->setString(key, used ? _catalogs[n].url : lString16::empty_str);
+        props->setString(key, used ? _catalogs[n].url : lString32::empty_str);
         snprintf(key, sizeof(key), "%s%d.name", PROP_OPDS_CATALOG, n);
-        props->setString(key, used ? _catalogs[n].name : lString16::empty_str);
+        props->setString(key, used ? _catalogs[n].name : lString32::empty_str);
     }
-    main_win->saveSettings(lString16::empty_str);
+    main_win->saveSettings(lString32::empty_str);
 }
 
 int OpdsBrowser::defaultCatalog()
@@ -372,7 +372,7 @@ int OpdsBrowser::defaultCatalog()
 void OpdsBrowser::setDefaultCatalog(int index)
 {
     main_win->getProps()->setInt(PROP_OPDS_DEFAULT, index + 1);
-    main_win->saveSettings(lString16::empty_str);
+    main_win->saveSettings(lString32::empty_str);
 }
 
 int OpdsBrowser::maxCatalogs()
@@ -425,28 +425,28 @@ void OpdsBrowser::showCatalogs(CRGUIWindowManager * wm, bool edit)
 {
     _catalogsEdit = edit;
     lvRect rc = wm->getScreen()->getRect();
-    OpdsMenu * menu = new OpdsMenu(wm, lString16(edit ? _("Edit catalogs") : _("OPDS catalogs")), rc, false);
+    OpdsMenu * menu = new OpdsMenu(wm, lString32(edit ? _("Edit catalogs") : _("OPDS catalogs")), rc, false);
     _catalogRows = menu->setupRows(true);
     if (edit) {
         menu->setCloseCommand(OPDS_CMD_CATALOGS);
-        menu->add(OPDS_CMD_CATALOGS, backTo(lString16(_("OPDS catalogs"))));
+        menu->add(OPDS_CMD_CATALOGS, backTo(lString32(_("OPDS catalogs"))));
     } else {
-        menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+        menu->add(OPDS_CMD_CLOSE, lString32(MARK_PREV) + lString32(_("Back to the book")));
     }
     int def = defaultCatalog();
     for (int i = 0; i < (int)_catalogs.size(); i++) {
-        lString16 sub = _catalogs[i].url;
+        lString32 sub = _catalogs[i].url;
         if (i == def)
-            sub = lString16(_("Default catalog")) + lString16(DOT) + sub;
+            sub = lString32(_("Default catalog")) + lString32(DOT) + sub;
         if (edit)
             menu->add(OPDS_CMD_CATALOG_EDIT + i, _catalogs[i].name, sub);
         else
-            menu->add(OPDS_CMD_CATALOG_OPEN + i, lString16(MARK_OPEN) + _catalogs[i].name, sub);
+            menu->add(OPDS_CMD_CATALOG_OPEN + i, lString32(MARK_OPEN) + _catalogs[i].name, sub);
     }
-    menu->add(OPDS_CMD_CATALOG_ADD, lString16(_("Add catalog...")));
+    menu->add(OPDS_CMD_CATALOG_ADD, lString32(_("Add catalog...")));
     if (!edit)
-        menu->add(OPDS_CMD_CATALOGS_EDIT, lString16(_("Edit catalogs...")),
-                  lString16(_("Name, address, default catalog")));
+        menu->add(OPDS_CMD_CATALOGS_EDIT, lString32(_("Edit catalogs...")),
+                  lString32(_("Name, address, default catalog")));
     activate(wm, menu);
 }
 
@@ -462,19 +462,19 @@ void OpdsBrowser::showCard(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, c.name, rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(OPDS_CMD_CATALOGS_EDIT);
-    menu->add(OPDS_CMD_CATALOGS_EDIT, backTo(lString16(_("Edit catalogs"))));
-    menu->add(OPDS_CMD_CATALOG_OPEN + _editCatalog, lString16(MARK_OPEN) + lString16(_("Open catalog")));
+    menu->add(OPDS_CMD_CATALOGS_EDIT, backTo(lString32(_("Edit catalogs"))));
+    menu->add(OPDS_CMD_CATALOG_OPEN + _editCatalog, lString32(MARK_OPEN) + lString32(_("Open catalog")));
     if (builtIn)
-        menu->add(OPDS_CMD_CATALOG_CARD, c.name, lString16(_("Built-in catalog: it cannot be renamed or deleted")));
+        menu->add(OPDS_CMD_CATALOG_CARD, c.name, lString32(_("Built-in catalog: it cannot be renamed or deleted")));
     else
-        menu->add(OPDS_CMD_CATALOG_NAME, lString16(_("Name...")), c.name);
-    menu->add(OPDS_CMD_CATALOG_URL, lString16(_("Address...")), c.url);
+        menu->add(OPDS_CMD_CATALOG_NAME, lString32(_("Name...")), c.name);
+    menu->add(OPDS_CMD_CATALOG_URL, lString32(_("Address...")), c.url);
     bool isDefault = defaultCatalog() == _editCatalog;
     menu->add(OPDS_CMD_CATALOG_DEFAULT,
-              lString16(isDefault ? "[x]  " : "[  ]  ") + lString16(_("Default catalog")),
-              lString16(_("The catalog icon of the touch menu opens it")));
+              lString32(isDefault ? "[x]  " : "[  ]  ") + lString32(_("Default catalog")),
+              lString32(_("The catalog icon of the touch menu opens it")));
     if (!builtIn)
-        menu->add(OPDS_CMD_CATALOG_DELETE, lString16(_("Delete catalog")));
+        menu->add(OPDS_CMD_CATALOG_DELETE, lString32(_("Delete catalog")));
     activate(wm, menu);
 }
 
@@ -486,15 +486,15 @@ void OpdsBrowser::showDeleteQuestion(CRGUIWindowManager * wm)
     }
     const OpdsCatalog & c = _catalogs[_editCatalog];
     lvRect rc = wm->getScreen()->getRect();
-    OpdsMenu * menu = new OpdsMenu(wm, lString16(_("Delete catalog")), rc, false);
+    OpdsMenu * menu = new OpdsMenu(wm, lString32(_("Delete catalog")), rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(OPDS_CMD_CATALOG_CARD);
     menu->add(OPDS_CMD_CATALOG_CARD, backTo(c.name));
-    menu->add(OPDS_CMD_CATALOG_DELETE_APPLY, lString16(_("Delete catalog")) + L" \"" + c.name + L"\"", c.url);
+    menu->add(OPDS_CMD_CATALOG_DELETE_APPLY, lString32(_("Delete catalog")) + U" \"" + c.name + U"\"", c.url);
     activate(wm, menu);
 }
 
-void OpdsBrowser::editText(const char * title, const lString16 & value, void (*handler)(char *))
+void OpdsBrowser::editText(const char * title, const lString32 & value, void (*handler)(char *))
 {
     lString8 text = UnicodeToUtf8(value);
     strncpy(keyBuffer, text.c_str(), sizeof(keyBuffer) - 1);
@@ -592,7 +592,7 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
     const opds::Feed & feed = _history.back();
     int & screen = _screens.back();
     lvRect rc = wm->getScreen()->getRect();
-    lString16 caption = u16(feed.title.empty() ? std::string("OPDS") : feed.title);
+    lString32 caption = u16(feed.title.empty() ? std::string("OPDS") : feed.title);
     OpdsMenu * menu = new OpdsMenu(wm, caption, rc, true);
     _rows = menu->setupRows(true);
 
@@ -613,42 +613,42 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
         menu->add(OPDS_CMD_BACK, backTo(u16(up.title.empty() ? std::string("OPDS") : up.title)));
     } else {
         menu->setCloseCommand(OPDS_CMD_CLOSE);
-        menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+        menu->add(OPDS_CMD_CLOSE, lString32(MARK_PREV) + lString32(_("Back to the book")));
     }
     if (screen == 0 && hasSearchRow())
-        menu->add(OPDS_CMD_SEARCH, lString16(_("Search...")));
+        menu->add(OPDS_CMD_SEARCH, lString32(_("Search...")));
 
     for (int i = first; i < last; i++) {
         const opds::Entry & e = feed.entries[i];
         if (e.isBook()) {
-            lString16 sub = u16(e.authorsText());
+            lString32 sub = u16(e.authorsText());
             if (!e.canDownload() && !e.unsupportedTypes.empty()) {
-                if (!sub.empty()) sub << L"  ";
-                sub << L"[" << u16(e.unsupportedTypes[0]) << L"]";
+                if (!sub.empty()) sub << U"  ";
+                sub << U"[" << u16(e.unsupportedTypes[0]) << U"]";
             }
             menu->add(OPDS_CMD_ENTRY + i, u16(e.title), sub);
         } else {
-            menu->add(OPDS_CMD_ENTRY + i, lString16(MARK_OPEN) + u16(e.title), u16(e.summary));
+            menu->add(OPDS_CMD_ENTRY + i, lString32(MARK_OPEN) + u16(e.title), u16(e.summary));
         }
     }
     // Empty rows keep the paging row at the bottom of the screen.
     for (int i = 1 + last - first + ((screen == 0 && hasSearchRow()) ? 1 : 0); i < _rows - 1; i++)
-        menu->addItem(new OpdsItem(menu, OPDS_CMD_FIRST + 9999, lString16::empty_str, lString16::empty_str));
+        menu->addItem(new OpdsItem(menu, OPDS_CMD_FIRST + 9999, lString32::empty_str, lString32::empty_str));
 
-    OpdsItem * pager = new OpdsItem(menu, OPDS_CMD_SERVICE, lString16::empty_str, lString16::empty_str, OpdsItem::PAGER);
+    OpdsItem * pager = new OpdsItem(menu, OPDS_CMD_SERVICE, lString32::empty_str, lString32::empty_str, OpdsItem::PAGER);
     if (screen > 0) {
-        pager->left = lString16(MARK_PREV) + lString16(_("Back"));
+        pager->left = lString32(MARK_PREV) + lString32(_("Back"));
         pager->leftCommand = OPDS_CMD_PREV;
     } else if (_history.size() > 1) {
-        pager->left = lString16(MARK_UP) + lString16(_("Back"));
+        pager->left = lString32(MARK_UP) + lString32(_("Back"));
         pager->leftCommand = OPDS_CMD_BACK;
     }
     bool more = last < total || !feed.nextHref.empty();
     if (more) {
-        pager->right = lString16(_("Next")) + lString16(MARK_NEXT);
+        pager->right = lString32(_("Next")) + lString32(MARK_NEXT);
         pager->rightCommand = OPDS_CMD_NEXT;
     }
-    pager->center = lString16(_("Page")) + L" " + lString16::itoa(screen + 1) + lString16(DOT) + lString16(_("Catalog menu"));
+    pager->center = lString32(_("Page")) + U" " + lString32::itoa(screen + 1) + lString32(DOT) + lString32(_("Catalog menu"));
     menu->addItem(pager);
     activate(wm, menu);
 }
@@ -657,20 +657,20 @@ void OpdsBrowser::showList(CRGUIWindowManager * wm)
 void OpdsBrowser::showService(CRGUIWindowManager * wm)
 {
     lvRect rc = wm->getScreen()->getRect();
-    OpdsMenu * menu = new OpdsMenu(wm, lString16(_("Catalog menu")), rc, false);
+    OpdsMenu * menu = new OpdsMenu(wm, lString32(_("Catalog menu")), rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(OPDS_CMD_SHOW_LIST);
-    menu->add(OPDS_CMD_SHOW_LIST, lString16(MARK_PREV) + lString16(_("Back to the list")));
+    menu->add(OPDS_CMD_SHOW_LIST, lString32(MARK_PREV) + lString32(_("Back to the list")));
     if (_history.size() > 1)
-        menu->add(OPDS_CMD_BACK, lString16(MARK_UP) + lString16(_("Back")));
+        menu->add(OPDS_CMD_BACK, lString32(MARK_UP) + lString32(_("Back")));
     if (!_history.empty() && !_history.back().searchTemplate.empty())
-        menu->add(OPDS_CMD_SEARCH, lString16(_("Search...")));
+        menu->add(OPDS_CMD_SEARCH, lString32(_("Search...")));
     if (_history.size() > 1)
-        menu->add(OPDS_CMD_HOME, lString16(_("Catalog start page")));
-    menu->add(OPDS_CMD_CATALOGS, lString16(_("Other catalog...")));
+        menu->add(OPDS_CMD_HOME, lString32(_("Catalog start page")));
+    menu->add(OPDS_CMD_CATALOGS, lString32(_("Other catalog...")));
     if (_catalog >= 0)
-        menu->add(OPDS_CMD_SET_URL, lString16(_("Catalog address...")), u16(rootUrl()));
-    menu->add(OPDS_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+        menu->add(OPDS_CMD_SET_URL, lString32(_("Catalog address...")), u16(rootUrl()));
+    menu->add(OPDS_CMD_CLOSE, lString32(MARK_PREV) + lString32(_("Back to the book")));
     activate(wm, menu);
 }
 
@@ -692,17 +692,17 @@ void OpdsBrowser::showBook(CRGUIWindowManager * wm, int index)
     int rows = menu->setupRows(true);
     menu->setCloseCommand(OPDS_CMD_SHOW_LIST);
 
-    menu->add(OPDS_CMD_SHOW_LIST, lString16(MARK_PREV) + lString16(_("Back to the list")));
+    menu->add(OPDS_CMD_SHOW_LIST, lString32(MARK_PREV) + lString32(_("Back to the list")));
     // Full title and author; a tap shows the description.
     menu->add(e->summary.empty() ? OPDS_CMD_SHOW_BOOK : OPDS_CMD_INFO, u16(e->title), u16(e->authorsText()));
     for (size_t k = 0; k < e->formats.size(); k++)
         menu->add(OPDS_CMD_FORMAT + (int)k,
-                  lString16(_("Download and open")) + L" " + u16(e->formats[k].label));
+                  lString32(_("Download and open")) + U" " + u16(e->formats[k].label));
     if (!e->canDownload())
-        menu->add(OPDS_CMD_SHOW_LIST, lString16(_("CoolReader cannot open this format")));
+        menu->add(OPDS_CMD_SHOW_LIST, lString32(_("CoolReader cannot open this format")));
     for (size_t k = 0; k < e->related.size() && menu->getItems().length() < rows; k++) {
         std::string t = e->related[k].title.empty() ? std::string("...") : e->related[k].title;
-        menu->add(OPDS_CMD_RELATED + (int)k, lString16(MARK_OPEN) + u16(t));
+        menu->add(OPDS_CMD_RELATED + (int)k, lString32(MARK_OPEN) + u16(t));
     }
     activate(wm, menu);
 }
@@ -711,12 +711,12 @@ namespace {
 
 // Wraps a paragraph into lines; the first line carries the label and the indent.
 void addParagraph(std::vector<InfoLine> & lines, LVFontRef font, LVFontRef labelFont,
-                  const lString16 & label, const lString16 & text, int width, int indent)
+                  const lString32 & label, const lString32 & text, int width, int indent)
 {
     int firstWidth = width - indent - (label.empty() ? 0 : textWidth(labelFont, label));
-    std::vector<lString16> parts = wrapText(font, text, firstWidth, width);
+    std::vector<lString32> parts = wrapText(font, text, firstWidth, width);
     if (parts.empty() && !label.empty())
-        parts.push_back(lString16::empty_str);
+        parts.push_back(lString32::empty_str);
     for (size_t i = 0; i < parts.size(); i++) {
         InfoLine line;
         line.font = font;
@@ -760,25 +760,25 @@ void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
 
     int width = menu->rowTextWidth();
     std::vector<InfoLine> lines;
-    addParagraph(lines, menu->titleFont, menu->labelFont, lString16::empty_str, u16(e->title), width, 0);
-    addParagraph(lines, menu->labelFont, menu->labelFont, lString16::empty_str, u16(e->authorsText()), width, 0);
+    addParagraph(lines, menu->titleFont, menu->labelFont, lString32::empty_str, u16(e->title), width, 0);
+    addParagraph(lines, menu->labelFont, menu->labelFont, lString32::empty_str, u16(e->authorsText()), width, 0);
     addGap(lines, menu->subFont);
 
     if (!e->categories.empty()) {
-        lString16 genres;
+        lString32 genres;
         for (size_t i = 0; i < e->categories.size(); i++) {
-            if (i > 0) genres << L", ";
+            if (i > 0) genres << U", ";
             genres << u16(e->categories[i]);
         }
-        addParagraph(lines, menu->subFont, menu->labelFont, lString16(_("Genre")) + L": ", genres, width, 0);
+        addParagraph(lines, menu->subFont, menu->labelFont, lString32(_("Genre")) + U": ", genres, width, 0);
     }
-    lString16 summary = u16(e->summary);
-    std::vector<lString16> paragraphs;
+    lString32 summary = u16(e->summary);
+    std::vector<lString32> paragraphs;
     for (int start = 0; start <= summary.length(); ) {
         int end = start;
-        while (end < summary.length() && summary[end] != L'\n')
+        while (end < summary.length() && summary[end] != U'\n')
             end++;
-        lString16 p = summary.substr(start, end - start);
+        lString32 p = summary.substr(start, end - start);
         p.trim();
         if (!p.empty())
             paragraphs.push_back(p);
@@ -794,7 +794,7 @@ void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
     for (size_t i = 0; i < paragraphs.size(); i++) {
         int colon;
         if (!isFieldLine(paragraphs[i], colon))
-            addParagraph(lines, menu->bodyFont, menu->labelFont, lString16::empty_str, paragraphs[i],
+            addParagraph(lines, menu->bodyFont, menu->labelFont, lString32::empty_str, paragraphs[i],
                          width, menu->bodyFont->getHeight());
     }
     while (!lines.empty() && lines.back().text.empty() && lines.back().label.empty())
@@ -808,7 +808,7 @@ void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
         last.text = fitText(last.font, last.text, width - last.indent);
     }
     for (size_t i = 0; i < lines.size(); i += 2) {
-        OpdsItem * item = new OpdsItem(menu, OPDS_CMD_SHOW_BOOK, lString16::empty_str, lString16::empty_str,
+        OpdsItem * item = new OpdsItem(menu, OPDS_CMD_SHOW_BOOK, lString32::empty_str, lString32::empty_str,
                                        OpdsItem::TEXT);
         item->first = lines[i];
         if (i + 1 < lines.size())
@@ -827,7 +827,7 @@ void OpdsBrowser::download(CRGUIWindowManager * wm, int formatIndex)
     }
     const opds::Acquisition & a = e->formats[formatIndex];
 
-    lString16 dir16 = main_win->getProps()->getStringDef(PROP_OPDS_DOWNLOAD_DIR, OPDS_DEFAULT_DIR);
+    lString32 dir16 = main_win->getProps()->getStringDef(PROP_OPDS_DOWNLOAD_DIR, OPDS_DEFAULT_DIR);
     LVCreateDirectory(dir16);
     std::string dir = UnicodeToUtf8(dir16).c_str();
     if (!dir.empty() && dir[dir.size() - 1] != '/')
@@ -937,7 +937,7 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_SET_URL_APPLY:
         {
-            lString16 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
+            lString32 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
             if (!url.empty() && _catalog >= 0 && _catalog < (int)_catalogs.size()) {
                 _catalogs[_catalog].url = url;
                 saveCatalogs();
@@ -965,11 +965,11 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
             showCatalogs(wm, _catalogsEdit);
             return true;
         }
-        editText(_("OPDS catalog address"), lString16("https://"), addUrlKeyboardHandler);
+        editText(_("OPDS catalog address"), lString32("https://"), addUrlKeyboardHandler);
         return true;
     case OPDS_CMD_CATALOG_ADD_URL_APPLY:
         _newUrl = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
-        if (_newUrl.empty() || _newUrl == lString16("https://")) {
+        if (_newUrl.empty() || _newUrl == lString32("https://")) {
             showCatalogs(wm, _catalogsEdit);
             return true;
         }
@@ -999,7 +999,7 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_CATALOG_NAME_APPLY:
         if (_editCatalog > 0 && _editCatalog < (int)_catalogs.size()) {
-            lString16 name = Utf8ToUnicode(lString8(keyBuffer));
+            lString32 name = Utf8ToUnicode(lString8(keyBuffer));
             name.trim();
             if (!name.empty()) {
                 _catalogs[_editCatalog].name = name;
@@ -1014,7 +1014,7 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_CATALOG_URL_APPLY:
         if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size()) {
-            lString16 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
+            lString32 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
             if (!url.empty()) {
                 _catalogs[_editCatalog].url = url;
                 saveCatalogs();

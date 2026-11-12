@@ -1,20 +1,37 @@
-/*******************************************************
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2011-2015 Vadim Lopatin <coolreader.org@gmail.com>
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *   Copyright (C) 2020,2021 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine
-
-   lvmemman.cpp:  memory manager implementation
-
-   (c) Vadim Lopatin, 2000-2006
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
+/**
+ * \file lvmemman.cpp
+ * \brief memory manager implementation
+ */
 
 #include <stdlib.h>
 #include "../include/lvmemman.h"
 #include "../include/lvref.h"
 #include "../include/lvtinydom.h"
+#include "../include/lvstreamutils.h"
+#include "../include/crlog.h"
+
 #ifdef _LINUX
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE
@@ -23,16 +40,21 @@
 #include <unistd.h>
 #endif
 
+#ifdef _DEBUG
+#include <stdexcept>
+#include <string>
+#endif
+
 static char file_to_remove_on_crash[2048] = "";
 
 void crSetFileToRemoveOnFatalError(const char * filename) {
-	strcpy(file_to_remove_on_crash, filename == NULL ? "" : filename);
+	strcpy(file_to_remove_on_crash, filename == NULL ? "" : filename); // NOLINT
 }
 
 #ifdef _LINUX
 static struct sigaction old_sa[NSIG];
 
-#if FOR_ANDROID == 1
+#ifdef ANDROID
 //#define ANDROID_BACKTRACE
 #endif
 
@@ -115,11 +137,7 @@ void crSetSignalHandler()
 	if (signals_are_set)
 		return;
 	signals_are_set = true;
-	struct sigaction handler; // = {0};
-	//size_t s = sizeof(handler);
-	//void * p = &handler;
-	//memset(p, 0, s);
-	memset(&handler, 0, sizeof(handler));
+	struct sigaction handler = { 0 };
 	handler.sa_sigaction = cr_sigaction;
 	handler.sa_flags = SA_RESETHAND;
 #define CATCHSIG(X) sigaction(X, &handler, &old_sa[X])
@@ -136,7 +154,13 @@ void crSetSignalHandler()
 /// default fatal error handler: uses exit()
 void lvDefFatalErrorHandler (int errorCode, const char * errorText )
 {
-    fprintf( stderr, "FATAL ERROR #%d: %s\n", errorCode, errorText );
+    char strbuff[10];
+    sprintf(strbuff, "%d", errorCode);
+    fprintf( stderr, "FATAL ERROR #%s: %s\n", strbuff, errorText );
+#ifdef _DEBUG
+    std::string errstr = std::string("FATAL ERROR #") + std::string(strbuff) + std::string(": ") + std::string(errorText);
+    throw std::runtime_error(errstr);
+#endif
     exit( errorCode );
 }
 

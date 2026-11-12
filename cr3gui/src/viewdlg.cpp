@@ -100,12 +100,12 @@ static const char * def_view_css =
 ""
 ;
 
-CRViewDialog::CRViewDialog(CRGUIWindowManager * wm, lString16 title, lString8 text, lvRect rect, bool showScroll, bool showFrame )
+CRViewDialog::CRViewDialog(CRGUIWindowManager * wm, lString32 title, lString8 text, lvRect rect, bool showScroll, bool showFrame )
     : CRDocViewWindow(wm), _text(text), _showScroll( showScroll ), _showFrame( showFrame ), _lastNavigationDirection(0)
 {
     _passKeysToParent = _passCommandsToParent = false;
     if ( _showFrame ) {
-        setSkinName( lString16("#dialog") );
+        setSkinName( lString32("#dialog") );
     }
     setAccelerators( _wm->getAccTables().get("browse") );
     _caption = title;
@@ -138,7 +138,7 @@ CRViewDialog::CRViewDialog(CRGUIWindowManager * wm, lString16 title, lString8 te
     getDocView()->setPageHeaderInfo( 0 ); // hide title bar
     if ( !text.empty() ) {
 		_stream = LVCreateStringStream( text );
-		getDocView()->LoadDocument(_stream);
+		getDocView()->LoadDocument(_stream, U"dialog.fb2");
     }
     setRect( rect );
 }
@@ -147,7 +147,7 @@ bool CRViewDialog::hasDictionaries()
 {
 
     const char * dict_path = DICTD_CONF;
-    if ( !LVDirectoryExists(lString16(dict_path)) )
+    if ( !LVDirectoryExists(lString32(dict_path)) )
         dict_path = DICTD_CONF_ALT;
     if ( _dict.isNull() )
         _dict = LVRef<CRDictionary>( new CRTinyDict( Utf8ToUnicode(lString8(dict_path)) ) );
@@ -161,7 +161,7 @@ bool CRViewDialog::hasDictionaries()
 	body << "<p>" << _("Dictionaries in standard unix .dict format are supported.") << "</p>";
 	body << "<p>" << _("For each dictionary, pair of files should be provided: data file (with .dict or .dict.dz extension, and index file with .index extension") << "</p>";
 	lString8 xml = CRViewDialog::makeFb2Xml( body );
-	CRViewDialog * dlg = new CRViewDialog( _wm, lString16(_("Dictionary")), xml, lvRect(), true, true );
+	CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("Dictionary")), xml, lvRect(), true, true );
 	_wm->activateWindow( dlg );
 	return false;
 }
@@ -173,13 +173,13 @@ void CRViewDialog::showGoToPageDialog()
     if ( toc && toc->getChildCount()>0 ) {
 #endif
         dlg = new CRTOCDialog( _wm,
-            lString16( _("Table of contents") ),
+            lString32( _("Table of contents") ),
             MCMD_GO_PAGE_APPLY,  _docview->getPageCount(), _docview );
 #if USE_SEPARATE_GO_TO_PAGE_DIALOG==1
     } else {
         dlg = new CRNumberEditDialog( _wm,
-            lString16( _("Enter page number") ),
-            lString16::empty_str,
+            lString32( _("Enter page number") ),
+            lString32::empty_str,
             MCMD_GO_PAGE_APPLY, 1, _docview->getPageCount() );
     }
 #endif
@@ -191,8 +191,8 @@ void CRViewDialog::showGoToPercentDialog()
 {
     CRNumberEditDialog * dlg;
     dlg = new CRNumberEditDialog( _wm,
-        lString16( _("Enter position percent") ),
-        lString16::empty_str,
+        lString32( _("Enter position percent") ),
+        lString32::empty_str,
         MCMD_GO_PERCENT_APPLY, 0, 100 );
     dlg->setAccelerators( getDialogAccelerators() );
     _wm->activateWindow( dlg );
@@ -218,13 +218,13 @@ void CRViewDialog::showSearchDialog()
     rc.bottom -= v_margin;
     rc.top += rc.height() / 2;
     _searchPattern.clear();
-    CRScreenKeyboard * dlg = new CRScreenKeyboard( _wm, MCMD_SEARCH_FINDFIRST, lString16(_("Search")), _searchPattern, rc );
+    CRScreenKeyboard * dlg = new CRScreenKeyboard( _wm, MCMD_SEARCH_FINDFIRST, lString32(_("Search")), _searchPattern, rc );
     _wm->activateWindow( dlg );
 }
 
 #define EXTERNAL_DICTIONARY_EXECUTABLE_NAME "edict_launcher"
 
-bool CRViewDialog::findInDictionary( lString16 pattern )
+bool CRViewDialog::findInDictionary( lString32 pattern )
 {
 #if USE_EXTERNAL_EDICT_DICTIONARY==1
     // external dictionary
@@ -249,7 +249,7 @@ bool CRViewDialog::findInDictionary( lString16 pattern )
 #endif
 }
 
-bool CRViewDialog::findText( lString16 pattern, int origin, int direction )
+bool CRViewDialog::findText( lString32 pattern, int origin, int direction )
 {
     if ( pattern.empty() )
         return false;
@@ -298,7 +298,7 @@ bool CRViewDialog::findText( lString16 pattern, int origin, int direction )
     return false;
 }
 
-int CRViewDialog::findPagesText( lString16 pattern, int origin, int direction )
+int CRViewDialog::findPagesText( lString32 pattern, int origin, int direction )
 {
     if ( pattern.empty() )
         return -1;
@@ -352,7 +352,7 @@ void CRViewDialog::showDictWithVKeyboard()
     rc.bottom -= v_margin;
     rc.top += rc.height() / 2;
     _searchPattern.clear();
-    CRScreenKeyboard * dlg = new CRScreenKeyboard( _wm, MCMD_DICT_FIND, lString16(_("Find in dictionary")), _searchPattern, rc );
+    CRScreenKeyboard * dlg = new CRScreenKeyboard( _wm, MCMD_DICT_FIND, lString32(_("Find in dictionary")), _searchPattern, rc );
     _wm->activateWindow( dlg );
 }
 
@@ -669,7 +669,7 @@ void CRViewDialog::showKeymapDialog()
 	txt << "</table>";
 	//============================================================
     txt = CRViewDialog::makeFb2Xml(txt);
-    CRViewDialog * dlg = new CRViewDialog( _wm, lString16(_("Keyboard layout")), txt, lvRect(), true, true );
+    CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("Keyboard layout")), txt, lvRect(), true, true );
     dlg->getDocView()->setVisiblePageCount(1);
     _wm->activateWindow( dlg );
     //TODO:

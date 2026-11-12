@@ -44,12 +44,12 @@ private:
         int units;       // width in quarters of a letter key
         lvRect rc;
     };
-    lString16 _title;
+    lString32 _title;
     char * _buffer;
     int _maxlen;
     void (*_handler)(char *);
     bool _inverted;
-    lString16 _text;
+    lString32 _text;
     bool _textSelected;  // the starting text is selected: the first letter replaces it
     int _layout;
     bool _symbols;
@@ -63,10 +63,10 @@ private:
     int _line;              // frame width
 
     void build();
-    void addRow(const lString16 & letters, int row, bool shiftRow, int rows, int keyHeight, int unitWidth,
+    void addRow(const lString32 & letters, int row, bool shiftRow, int rows, int keyHeight, int unitWidth,
                 int maxUnits, const lvRect & area, std::vector<Key> & keys);
     int keyAt(int x, int y) const;
-    lString16 label(const Key & key) const;
+    lString32 label(const Key & key) const;
     void drawTextField(LVDrawBuf & buf, bool invert);
     void drawKey(LVDrawBuf & buf, int index, bool invert);
     // redraws one key and/or the text field and updates only their rectangles of the screen:

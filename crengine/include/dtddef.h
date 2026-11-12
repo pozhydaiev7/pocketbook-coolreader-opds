@@ -1,30 +1,43 @@
-/** \file dtddef.h
-    \brief Document type definition helper structures and defs.
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2010 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2020 poire-z <poire-z@users.noreply.github.com>         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    Allows to use hardcoded document definition.
-
-    Defines a set of macros for element names, attribute names and namespaces.
-
-    See fb2def.h for example schema definition.
-
-    When included w/o XS_IMPLEMENT_SCHEME defined,
-    declares macros for element, attribute, and namespace enums.
-
-    When included with XS_IMPLEMENT_SCHEME defined,
-    defines macros for fb2_elem_table, fb2_attr_table and fb2_ns_table tables
-    which can be passed to document to define schema.
-
-    Please include it with XS_IMPLEMENT_SCHEME only into once in project.
-
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-
-*/
+/**
+ * \file dtddef.h
+ * \brief Document type definition helper structures and defs.
+ *
+ * Allows to use hardcoded document definition.
+ *
+ * Defines a set of macros for element names, attribute names and namespaces.
+ *
+ * See fb2def.h for example schema definition.
+ *
+ * When included w/o XS_IMPLEMENT_SCHEME defined,
+ * declares macros for element, attribute, and namespace enums.
+ *
+ * When included with XS_IMPLEMENT_SCHEME defined,
+ * defines macros for fb2_elem_table, fb2_attr_table and fb2_ns_table tables
+ * which can be passed to document to define schema.
+ *
+ * Please include it with XS_IMPLEMENT_SCHEME only once in project.
+ */
 
 #if !defined(__DTD_DEF_H_INCLUDED__) || defined(XS_IMPLEMENT_SCHEME)
 #include "lvtypes.h"
@@ -125,25 +138,25 @@ struct ns_def_t {
 #define XS_BEGIN_TAGS \
         static elem_def_t fb2_elem_table [] =  {
 #define XS_TAG1(itm) \
-        { el_ ## itm, #itm, {false, false, css_d_block, css_ws_normal} },
+        { el_ ## itm, #itm, {false, false, css_d_block, css_ws_inherit} },
 #define XS_TAG2(itm, name) \
-        { el_ ## itm, name, {false, false, css_d_block, css_ws_normal} },
+        { el_ ## itm, name, {false, false, css_d_block, css_ws_inherit} },
 #define XS_TAG1T(itm) \
-        { el_ ## itm, #itm, {true, false, css_d_block, css_ws_normal} },
+        { el_ ## itm, #itm, {true, false, css_d_block, css_ws_inherit} },
 #define XS_TAG1OBJ(itm) \
-        { el_ ## itm, #itm, {false, true, css_d_inline, css_ws_normal} },
+        { el_ ## itm, #itm, {false, true, css_d_inline, css_ws_inherit} },
 #define XS_TAG2T(itm, name) \
-        { el_ ## itm, name, {true, false, css_d_block, css_ws_normal} },
+        { el_ ## itm, name, {true, false, css_d_block, css_ws_inherit} },
 #define XS_TAG1I(itm) \
-        { el_ ## itm, #itm, {true, false, css_d_inline, css_ws_normal} },
+        { el_ ## itm, #itm, {true, false, css_d_inline, css_ws_inherit} },
 #define XS_TAG2I(itm, name) \
-        { el_ ## itm, name, {true, false, css_d_inline, css_ws_normal} },
+        { el_ ## itm, name, {true, false, css_d_inline, css_ws_inherit} },
 #define XS_TAG1D(itm, txt, disp, ws) \
         { el_ ## itm, #itm, {txt, false, disp, ws} },
 #define XS_TAG2D(itm, name, txt, false, disp, ws) \
         { el_ ## itm, name, {txt, false, disp, ws} },
 #define XS_END_TAGS \
-        { 0, NULL, {false, false, css_d_block, css_ws_normal} } \
+        { 0, NULL, {false, false, css_d_block, css_ws_inherit} } \
         };
 
 #undef  XS_BEGIN_ATTRS

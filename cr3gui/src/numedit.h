@@ -19,19 +19,19 @@
 class CRNumberEditDialog : public CRGUIWindowBase
 {
     protected:
-        lString16 _title;
-        lString16 _value;
+        lString32 _title;
+        lString32 _value;
         int _minvalue;
         int _maxvalue;
         int _resultCmd;
         CRMenuSkinRef _skin;
         virtual void draw();
     public:
-        CRNumberEditDialog( CRGUIWindowManager * wm, lString16 title, lString16 initialValue, int resultCmd, int minvalue, int maxvalue );
+        CRNumberEditDialog( CRGUIWindowManager * wm, lString32 title, lString32 initialValue, int resultCmd, int minvalue, int maxvalue );
         virtual ~CRNumberEditDialog()
         {
         }
-        bool digitEntered( lChar16 c );
+        bool digitEntered( lChar32 c );
         /// returns true if command is processed
         virtual bool onCommand( int command, int params );
 };

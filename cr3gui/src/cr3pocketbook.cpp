@@ -13,6 +13,7 @@
 #include "mainwnd.h"
 #include "selnavig.h"
 #include <cr3version.h>
+#include <lvxmlutils.h>
 #include "cr3pocketbook.h"
 #include <inkview.h>
 #include <regex.h>
@@ -102,10 +103,8 @@ int TM_lastDragPage = 0;
 // ibitmap *screenshot = NULL;
 ibitmap *standByImage = NULL;
 ibitmap *standByLockImage = NULL;
-lString16 pbSkinFileName;
-lString16 currentCacheDir;
-lString16 openedCacheFile;
-lString16 currentLang;
+lString32 pbSkinFileName;
+lString32 currentLang;
 int fw_major;
 int fw_minor;
 int touchPointing;
@@ -198,7 +197,7 @@ static inline bool pbPerfOn() { return CRLog::isInfoEnabled(); }
 // a catalog) was missing on the home screen until the library was visited.
 // AddLastOpen and FlushLastOpen are looked up at run time: a firmware without them must still
 // start the program.
-static void pbAddLastOpen(const lString16 & path)
+static void pbAddLastOpen(const lString32 & path)
 {
     void * lib = dlopen("libinkview.so", RTLD_LAZY);
     if (lib == NULL)
@@ -226,7 +225,7 @@ static void pbAddLastOpen(const lString16 & path)
 static void cache_timer();
 #endif
 
-int getdir(const char* dir, LVArray<lString16> &files) {
+int getdir(const char* dir, LVArray<lString32> &files) {
     CRLog::trace("getdir(): Open: %s", dir);
 
     DIR *dp;
@@ -237,7 +236,7 @@ int getdir(const char* dir, LVArray<lString16> &files) {
     }
 
     while( (dirp = readdir(dp)) != NULL ) {
-        files.add(lString16(dirp->d_name));
+        files.add(lString32(dirp->d_name));
     }
     closedir(dp);
 
@@ -327,7 +326,7 @@ public:
 class CRPocketBookGlobals
 {
 private :
-    lString16 _fileName;
+    lString32 _fileName;
     int _keepOrientation;
     lString8  _lang;
     lString8  _pbDictionary;
@@ -340,8 +339,8 @@ private :
 #endif /* PB_DB_STATE_SUPPORTED */
 public:
     CRPocketBookGlobals(char *fileName);
-    lString16 getFileName() { return _fileName ; }
-    void setFileName( lString16 fn) { _fileName = fn; }
+    lString32 getFileName() { return _fileName ; }
+    void setFileName( lString32 fn) { _fileName = fn; }
     int getKeepOrientation() { return _keepOrientation; }
     const char *getLang() { return _lang.c_str(); }
     const char *getDictionary() { return _pbDictionary.c_str(); }
@@ -381,7 +380,7 @@ public:
 CRPocketBookGlobals::CRPocketBookGlobals(char *fileName)
 {
     CRLog::trace("CRPocketBookGlobals(%s)", fileName);
-    _fileName = lString16(fileName);
+    _fileName = lString32(fileName);
     _ready_sent = false;
     _translateTimer = false;
     _saved_page = -1;
@@ -390,7 +389,7 @@ CRPocketBookGlobals::CRPocketBookGlobals(char *fileName)
     CRLog::trace("language=%s", _lang.c_str());
     if (_lang == "ua")
         _lang = "uk";
-    currentLang = lString16(_lang.c_str());
+    currentLang = lString32(_lang.c_str());
     _keepOrientation = ReadInt(gc, const_cast<char *>("keeporient"), 0);
     _pbDictionary = ReadString(gc, const_cast<char *>("dictionary"), const_cast<char *>(""));
     CloseConfig(gc);
@@ -398,9 +397,9 @@ CRPocketBookGlobals::CRPocketBookGlobals(char *fileName)
 
 bool CRPocketBookGlobals::createFile(char *fName)
 {
-    lString16 filename(Utf8ToUnicode(fName));
+    lString32 filename(Utf8ToUnicode(fName));
     if ( !LVFileExists(filename) ) {
-        lString16 path16 = LVExtractPath( filename );
+        lString32 path16 = LVExtractPath( filename );
         if (LVCreateDirectory( path16 )) {
             LVStreamRef stream = LVOpenFileStream( filename.c_str(), LVOM_WRITE );
             if ( stream.isNull() ) {
@@ -600,10 +599,10 @@ protected:
     }
 public:
     /// translate string by key, return default value if not found
-    virtual lString16 translateString( const char * key, const char * defValue )
+    virtual lString32 translateString( const char * key, const char * defValue )
     {
         CRLog::trace("Translate(%s)", key);
-        lString16 res;
+        lString32 res;
 
         if (key && key[0] == '@') {
             const char * res8 = GetLangText((char *)key);
@@ -663,8 +662,8 @@ public:
     {
         if (_orientation != storedOrientation)
             reconfigure(ScreenWidth(), ScreenHeight(), (cr_rotate_angle_t)storedOrientation);
-        const lChar16 * imgname =
-                ( _orientation &1 ) ? L"cr3_logo_screen_landscape.png" : L"cr3_logo_screen.png";
+        const lChar32 * imgname =
+                ( _orientation &1 ) ? U"cr3_logo_screen_landscape.png" : U"cr3_logo_screen.png";
         LVImageSourceRef img = getSkin()->getImage(imgname);
         if ( !img.isNull() ) {
             _screen->getCanvas()->Draw(img, 0, 0, _screen->getWidth(), _screen->getHeight());
@@ -813,7 +812,7 @@ void goToPageKeyboardHandler(char *s)
 {
     if (s  && *s) {
         int page = 0;
-        lString16(s).atoi(page);
+        lString32(s).atoi(page);
         pageSelector(page);
     }
     else {
@@ -1425,7 +1424,7 @@ public:
 
                 if( x >= textX-20 && x <= textX+textW+20 ) {
                     CRLog::trace("CRPocketBookQuickMenuWindow::onTouch(): progress text");
-                    lString16 pageTmp = lString16::itoa(TM_lastDragPage);
+                    lString32 pageTmp = lString32::itoa(TM_lastDragPage);
                     strcpy( key_buffer, UnicodeToUtf8(pageTmp).c_str() );
                     SelfCloseNoUpdate();
                     CRLog::trace("CRPocketBookQuickMenuWindow::onTouch(): OpenKeyboard(..., KBD_NUMERIC)");
@@ -1447,12 +1446,12 @@ public:
         CRLog::trace("CRPocketBookQuickMenuWindow::IconTapped(%d, %d)", iconKey, position);
 
         // Image name
-        lString16 path;
+        lString32 path;
         if( strcmp(touchMenuIcons[iconKey], "bookmarks") == 0 && main_win->getDocView()->currentPageIsBookmarked() ) {
-            path = lString16("icon_") + lString16(touchMenuIcons[iconKey]) + lString16("_alt_tap.png");
+            path = lString32("icon_") + lString32(touchMenuIcons[iconKey]) + lString32("_alt_tap.png");
         }
         else {
-            path = lString16("icon_") + lString16(touchMenuIcons[iconKey]) + lString16("_tap.png");
+            path = lString32("icon_") + lString32(touchMenuIcons[iconKey]) + lString32("_tap.png");
         }
         CRLog::trace("CRPocketBookQuickMenuWindow::IconTapped(): [%d] %s", iconKey, UnicodeToUtf8(path).c_str());
 
@@ -1543,12 +1542,12 @@ public:
 
 
             // Image name
-            lString16 path;
+            lString32 path;
             if( strcmp(touchMenuIcons[i], "bookmarks") == 0 && main_win->getDocView()->currentPageIsBookmarked() ) {
-                path = lString16("icon_") + lString16(touchMenuIcons[i]) + lString16("_alt.png");
+                path = lString32("icon_") + lString32(touchMenuIcons[i]) + lString32("_alt.png");
             }
             else {
-                path = lString16("icon_") + lString16(touchMenuIcons[i]) + lString16(".png");
+                path = lString32("icon_") + lString32(touchMenuIcons[i]) + lString32(".png");
             }
             CRLog::trace("CRPocketBookQuickMenuWindow::DrawTop(): [%d] %s", i, UnicodeToUtf8(path).c_str());
 
@@ -1689,7 +1688,7 @@ public:
             SetFont(pbCrFontAA, 0x00000000);
         }
 
-        lString16 progress = main_win->getDocView()->getPageHeaderPages(
+        lString32 progress = main_win->getDocView()->getPageHeaderPages(
             curPage-1,
             pageCount,
             showPagesTilChapterEnd()
@@ -1701,7 +1700,7 @@ public:
         DrawString( textX, textY, UnicodeToUtf8(progress).c_str() );
 
         // Draw chapter name
-        lString16 chapterName = main_win->getDocView()->getCurrentChapterName(curPage-1);
+        lString32 chapterName = main_win->getDocView()->getCurrentChapterName(curPage-1);
         textW = StringWidth( UnicodeToUtf8(chapterName).c_str() );
 
         // Make sure the string isn't going over the screen width
@@ -1983,8 +1982,8 @@ private:
     // settings of the open list of dictionaries: the choice is read from here when it closes
     // (getNewProps() makes a new copy on every call, so a choice written there can get lost)
     CRPropRef _dictMenuProps;
-    lString16 _word;
-    lString16 _searchPattern;
+    lString32 _word;
+    lString32 _searchPattern;
     bool _active;
     int _selectedIndex;
     int _itemsCount;
@@ -2003,8 +2002,8 @@ private:
     lString8 _newTranslation;
 private:
     void searchDictionary();
-    bool openDictionary(const lString16 & id);
-    bool translateMulti(const lString16 &w);
+    bool openDictionary(const lString32 & id);
+    bool translateMulti(const lString32 &w);
     bool getToolbarRect(lvRect & rc, int & slotWidth, int & imageHeight);
 protected:
     virtual void selectDictionary();
@@ -2015,7 +2014,7 @@ public:
     CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDialog *parent);
     virtual ~CRPbDictionaryView();
     virtual void draw();
-    virtual void translate(const lString16 &w);
+    virtual void translate(const lString32 &w);
     virtual lString8 createArticle(const char *word, const char *translation);
     lString8 createArticleBody(const char *translation);
     virtual bool onCommand( int command, int params );
@@ -2026,7 +2025,7 @@ public:
     //  return CRViewDialog::onTouchEvent( x, y, evType );
     //}
 
-    lString16 detectDictionaryRedirectFor(const char* translation);
+    lString32 detectDictionaryRedirectFor(const char* translation);
 
     void doActivate();
     void doDeactivate();
@@ -2061,10 +2060,10 @@ private:
     // copies: the next lookup may reuse the memory the dictionary returned
     lString8 _word;
     lString8 _translation;
-    lString16 _word16;
-    lString16 _translation16;
+    lString32 _word16;
+    lString32 _translation16;
 protected:
-    lString16 createItemValue(const char *_translation);
+    lString32 createItemValue(const char *_translation);
 public:
     CRPbDictionaryMenuItem(CRMenu * menu, int id, const lString8 & word, const lString8 & translation);
     virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected );
@@ -2137,7 +2136,7 @@ protected:
     bool _dictViewActive;
     bool _autoTranslate;
     bool _wordTranslated;
-    lString16 _selText;
+    lString32 _selText;
     lString8 _prompt;
 protected:
     virtual void draw();
@@ -2421,7 +2420,7 @@ private:
     bool m_skipEvent;
     bool m_saveForceSoft;
     bool m_bmFromSkin;
-    lString16 m_link;
+    lString32 m_link;
     void freeContents()
     {
         for (int i = 0; i < _tocLength; i++) {
@@ -2436,7 +2435,7 @@ private:
         LVPtrVector<CRFileHistRecord> & files = _docview->getHistory()->getRecords();
         if ( index >= 1 && index < files.length() ) {
             CRFileHistRecord * file = files.get( index );
-            lString16 fn = file->getFilePathName();
+            lString32 fn = file->getFilePathName();
             if ( LVFileExists(fn) ) {
                 // Actually book opened in openRecentBook() we are in truble if it will fail
                 pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
@@ -2450,14 +2449,14 @@ protected:
         const char *lang = pbGlobals->getLang();
 
         if ( lang && lang[0] ) {
-            lString16 imgName("cr3_pb_quickmenu_$1.png");
-            imgName.replaceParam(1, cs16(lang));
+            lString32 imgName("cr3_pb_quickmenu_$1.png");
+            imgName.replaceParam(1, cs32(lang));
             CRLog::debug("Quick menu image name: %s",UnicodeToLocal(imgName).c_str());
             LVImageSourceRef img = _wm->getSkin()->getImage(imgName);
             if ( !img.isNull())
                 return img;
         }
-        return _wm->getSkin()->getImage(L"cr3_pb_quickmenu.png");
+        return _wm->getSkin()->getImage(U"cr3_pb_quickmenu.png");
     }
 
     ibitmap * getQuickMenuBitmap() {
@@ -2479,7 +2478,7 @@ protected:
 
             if (_bm3x3 == NULL)
                 _bm3x3 = NewBitmap(128, 128);
-            CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString16("quickMenuItems"));
+            CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString32("quickMenuItems"));
             int count = 0;
             if ( !menuItems.isNull() && menuItems->length()>1 ) {
                 for (int i=0; i < menuItems->length(); i++) {
@@ -2529,7 +2528,7 @@ protected:
             CRPropRef newProps = getNewProps();
             newProps->setInt(PROP_POCKETBOOK_ORIENTATION, newOrientation);
             applySettings();
-            saveSettings(lString16::empty_str);
+            saveSettings(lString32::empty_str);
         }
         int dx = _wm->getScreen()->getWidth();
         int dy = _wm->getScreen()->getHeight();
@@ -2559,9 +2558,9 @@ protected:
     void draw()
     {
         if (m_goToPage != -1) {
-            CRRectSkinRef skin = _wm->getSkin()->getWindowSkin( L"#dialog" )->getClientSkin();
+            CRRectSkinRef skin = _wm->getSkin()->getWindowSkin( U"#dialog" )->getClientSkin();
             LVDrawBuf * buf = _wm->getScreen()->getCanvas().get();
-            lString16 text = lString16::itoa(m_goToPage + 1);
+            lString32 text = lString32::itoa(m_goToPage + 1);
             lvPoint text_size = skin->measureText(text);
             lvRect rc;
             rc.left = _wm->getScreen()->getWidth() - 65;
@@ -2632,8 +2631,8 @@ protected:
 
                 if( newFontSize != currentFontSize ) {
                     main_win->getDocView()->setFontSize(newFontSize);
-
-                    main_win->saveSettings(lString16::empty_str);
+                    main_win->getProps()->setInt(PROP_FONT_SIZE, main_win->getDocView()->getFontSize());
+                    main_win->saveSettings(lString32::empty_str);
                 }
                 else {
                     CRPocketBookWindowManager::instance->update(true);
@@ -2860,7 +2859,7 @@ protected:
     }
 public:
     static CRPocketBookDocView * instance;
-    CRPocketBookDocView( CRGUIWindowManager * wm, lString16 dataDir )
+    CRPocketBookDocView( CRGUIWindowManager * wm, lString32 dataDir )
         : V3DocViewWin( wm, dataDir ), _bm3x3(NULL), _toc(NULL), _tocLength(0), _dictDlg(NULL), _rotatetimerset(false),
         _lastturn(true), _gsUpright(0), _gsCandidate(-1), _gsCount(0), _gsEvents(false),
         _gsTicks(0), _gsLastX(0), _gsLastY(0), _gsLastZ(0), _gsLastReason(-1), _gsLastSensor(-100), _gsEnabledByUs(false), _gsFromFirmware(false), _pauseRotationTimer(false), m_goToPage(-1), _restore_globOrientation(false), m_skipEvent(false),
@@ -2870,7 +2869,7 @@ public:
     }
 
     // Opens a book downloaded from an OPDS catalog, the same way a recent book is switched to.
-    void openDownloadedBook(const lString16 & fn)
+    void openDownloadedBook(const lString32 & fn)
     {
         CRLog::info("openDownloadedBook(%s)", UnicodeToUtf8(fn).c_str());
 #ifdef BACKGROUND_CACHE_FILE_CREATION
@@ -2878,7 +2877,7 @@ public:
 #endif
         pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
         _docview->savePosition();
-        saveHistory(lString16::empty_str);
+        saveHistory(lString32::empty_str);
         pbGlobals->setFileName(fn);
         if (!loadDocument(fn)) {
             Message(ICON_WARNING, const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
@@ -2916,7 +2915,7 @@ public:
         V3DocViewWin::reconfigure(flags);
     }
 
-    void showProgress( lString16 filename, int progressPercent )
+    void showProgress( lString32 filename, int progressPercent )
     {
         CRGUIWindowBase *wnd = new CRGUIWindowBase(_wm);
         // this is to avoid flashing when updating progressbar
@@ -3098,30 +3097,12 @@ public:
             return true;
 
         case PB_CMD_CLEAR_CACHE:
-            if( ldomDocCache::enabled() && !openedCacheFile.empty() && !currentCacheDir.empty() ) {
-
-                // Get cache files
-                LVArray<lString16> files = LVArray<lString16>();
-                if( getdir(UnicodeToUtf8(currentCacheDir).c_str(), files) == 0 ) {
-
-                    lString16 skip = lString16("cr3cache.inx");
-                    lString16 delimiter = lString16("/");
-                    for( unsigned int i = 0; i < (unsigned int)files.length(); i++ ) {
-                        if( files[i] == openedCacheFile || files[i] == skip )
-                            continue;
-                        unlink(UnicodeToUtf8( currentCacheDir + delimiter + files[i] ).c_str());
-                    }
-
-                    // Message
-                    CRLog::trace("PB_CMD_CLEAR_CACHE: Cache cleared.");
-                    Message(ICON_INFORMATION, const_cast<char*>("CoolReader"),
-                        _("Cache cleared."), 2000);
-                }
-                else {
-                    CRLog::trace("PB_CMD_CLEAR_CACHE: Unable to list the directory contents!");
-                    Message(ICON_WARNING, const_cast<char*>("CoolReader"),
-                        _("Unable to list the directory contents!"), 2000);
-                }
+            // The engine clears its cache itself: it removes the cache files and writes the index.
+            // The open book is laid out again when it is opened next time.
+            if( ldomDocCache::enabled() && ldomDocCache::clear() ) {
+                CRLog::trace("PB_CMD_CLEAR_CACHE: Cache cleared.");
+                Message(ICON_INFORMATION, const_cast<char*>("CoolReader"),
+                    _("Cache cleared."), 2000);
             }
             else {
                 CRLog::trace("PB_CMD_CLEAR_CACHE: Unable to clear cache!");
@@ -3206,7 +3187,7 @@ public:
     CRPbDictionaryDialog *getDictDialog()
     {
         if (_dictDlg == NULL) {
-            lString16 filename("dict.css");
+            lString32 filename("dict.css");
             lString8 dictCss;
             if (_cssDir.length() > 0 && LVFileExists( _cssDir + filename ))
                 LVLoadStylesheetFile( _cssDir + filename, dictCss );
@@ -3286,7 +3267,7 @@ public:
                 _toc[index].level = 1;
                 _toc[index].position = page;
                 _toc[index].page = page;
-                _toc[index].text = strdup(UnicodeToUtf8(lString16(_("Start"))).c_str());
+                _toc[index].text = strdup(UnicodeToUtf8(lString32(_("Start"))).c_str());
                 prevPage = page;
 
                 // Content
@@ -3301,7 +3282,7 @@ public:
                     _toc[index].level = 1;
                     _toc[index].position = page;
                     _toc[index].page = page;
-                    _toc[index].text = strdup(UnicodeToUtf8(lString16(_("Section")) +L" " + lString16::itoa(index)).c_str());
+                    _toc[index].text = strdup(UnicodeToUtf8(lString32(_("Section")) +U" " + lString32::itoa(index)).c_str());
                     prevPage = page;
                 }
 
@@ -3311,7 +3292,7 @@ public:
                 _toc[index].level = 1;
                 _toc[index].position = page;
                 _toc[index].page = page;
-                _toc[index].text = strdup(UnicodeToUtf8(lString16(_("End"))).c_str());
+                _toc[index].text = strdup(UnicodeToUtf8(lString32(_("End"))).c_str());
 
                 // Set real TOC real length
                 _tocLength = index+1;
@@ -3734,7 +3715,7 @@ public:
         }
     }
     // times of the book parsing and of its layout, for the log
-    void OnLoadFileStart( lString16 filename )
+    void OnLoadFileStart( lString32 filename )
     {
         pbPerfLoadStart = pbPerfNow();
         V3DocViewWin::OnLoadFileStart( filename );
@@ -3777,15 +3758,15 @@ public:
             _restore_globOrientation = false;
         }
     }
-    void OnExternalLink( lString16 url, ldomNode * node )
+    void OnExternalLink( lString32 url, ldomNode * node )
     {
-        lString16 protocol;
-        lString16 path;
+        lString32 protocol;
+        lString32 path;
 
-        if ( url.split2(lString16(":"), protocol, path ) ) {
-            if (!protocol.compare(L"file") && path.startsWith(L"//") && path.length() > 5) {
-                lString16 anchor;
-                int p = path.pos(L"#");
+        if ( url.split2(lString32(":"), protocol, path ) ) {
+            if (!protocol.compare(U"file") && path.startsWith(U"//") && path.length() > 5) {
+                lString32 anchor;
+                int p = path.pos(U"#");
                 if (p > 2) {
                     anchor = path.substr(p + 1);
                     path = path.substr(2, p -2);
@@ -3844,15 +3825,15 @@ static void gsensor_timer()
 }
 
 CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDialog *parent)
-    : CRViewDialog(wm, lString16::empty_str, lString8::empty_str, lvRect(), false, true), _parent(parent),
+    : CRViewDialog(wm, lString32::empty_str, lString8::empty_str, lvRect(), false, true), _parent(parent),
     _dict(NULL), _selectedDicts(false), _active(false), _itemsCount(7), _touchUsed(true), _pressedIndex(0), _swipeX(-1), _swipeY(-1), _translateResult(0),
     _haveNewWord(false)
 {
-    setSkinName(lString16("#dict"));
+    setSkinName(lString32("#dict"));
     lvRect rect = _wm->getScreen()->getRect();
     CRWindowSkinRef skin = getSkin();
     if ( !skin.isNull() ) {
-        _toolBarImg = _wm->getSkin()->getImage(L"cr3_dict_tools.png");
+        _toolBarImg = _wm->getSkin()->getImage(U"cr3_dict_tools.png");
         CRRectSkinRef clientSkin = skin->getClientSkin();
         if ( !clientSkin.isNull() ) {
             getDocView()->setBackgroundColor(clientSkin->getBackgroundColor());
@@ -3869,35 +3850,35 @@ CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDi
     CRPropRef props = CRPocketBookDocView::instance->getProps();
     getDocView()->setVisiblePageCount(props->getIntDef(PROP_POCKETBOOK_DICT_PAGES, 1));
     PbDictManager & dicts = PbDictManager::instance();
-    lString16 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT, pbGlobals->getDictionary());
+    lString32 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT, pbGlobals->getDictionary());
     bool opened = !lastDict.empty() && openDictionary(lastDict);
     if (!opened && dicts.count() > 0 && dicts.find(lastDict) == NULL) {
         // nothing chosen yet, or the chosen dictionary was deleted: take the first one
         CRLog::trace("dictionary %s not found, the first one is used", UnicodeToUtf8(lastDict).c_str());
         if ((opened = openDictionary(dicts.get(0)->id()))) {
             props->setString(PROP_POCKETBOOK_DICT, _dict->id());
-            CRPocketBookDocView::instance->saveSettings(lString16());
+            CRPocketBookDocView::instance->saveSettings(lString32());
         }
     }
     if (opened) {
-        getDocView()->createDefaultDocument(lString16::empty_str, Utf8ToUnicode(TR("@Word_not_found")));
+        getDocView()->createDefaultDocument(lString32::empty_str, Utf8ToUnicode(TR("@Word_not_found")));
         return;
     }
     // a tap on the caption opens the list of dictionaries, so do not leave it empty
     _caption = Utf8ToUnicode(TR("@Dictionary"));
-    getDocView()->createDefaultDocument(lString16::empty_str, Utf8ToUnicode(TR("@Dic_error")));
+    getDocView()->createDefaultDocument(lString32::empty_str, Utf8ToUnicode(TR("@Dic_error")));
 }
 
 static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found);
-static lString16 pbSelectedDictsLabel(const char * name);
+static lString32 pbSelectedDictsLabel(const char * name);
 
 // Makes the dictionary with the id (or a plain .dic name saved by older versions) the window's one.
 // "Selected dictionaries": lookups go through the checked dictionaries (none checked: no lookups,
 // the window says so); the first of them that opens gives the word list until a lookup picks another one.
-bool CRPbDictionaryView::openDictionary(const lString16 & id)
+bool CRPbDictionaryView::openDictionary(const lString32 & id)
 {
     PbDictManager & dicts = PbDictManager::instance();
-    _selectedDicts = id == lString16(PB_DICT_ID_SELECTED);
+    _selectedDicts = id == lString32(PB_DICT_ID_SELECTED);
     if (_selectedDicts) {
         LVPtrVector<PbDictSource, false> found;
         pbSearchDicts(found);
@@ -4008,11 +3989,11 @@ void CRPbDictionaryView::drawTitleBar()
     }
     lvRect textRect = titleRc;
     textRect.left += imgWidth;
-    lString16 caption = _caption;
+    lString32 caption = _caption;
     // "1/4": the article is longer than the window, a swipe or a tap turns its pages
     if (!isArticleListActive() && getDocView()->getPageCount() > 1)
-        caption << "  " << lString16::itoa(getDocView()->getCurPage() + 1) << "/"
-                << lString16::itoa(getDocView()->getPageCount());
+        caption << "  " << lString32::itoa(getDocView()->getCurPage() + 1) << "/"
+                << lString32::itoa(getDocView()->getPageCount());
     titleSkin->drawText( buf, textRect, caption );
     if (_pressedIndex > 0 && slotWidth > 0)
     {
@@ -4063,8 +4044,8 @@ static bool pbNightMode()
 void CRPbDictionaryView::draw()
 {
     int antialiasingMode = fontMan->GetAntialiasMode();
-    if (antialiasingMode == 1)
-        fontMan->SetAntialiasMode(0);
+    if (antialiasingMode == font_aa_big)
+        fontMan->SetAntialiasMode(font_aa_none);
     if (isArticleListActive()) {
         // In night mode the whole window is inverted after drawing, so redraw all list rows
         if (pbNightMode())
@@ -4074,24 +4055,24 @@ void CRPbDictionaryView::draw()
         CRViewDialog::draw();
         _dirty = false;
     }
-    if (antialiasingMode == 1)
-        fontMan->SetAntialiasMode(1);
+    if (antialiasingMode == font_aa_big)
+        fontMan->SetAntialiasMode(font_aa_big);
 }
 
 // Ids of the dictionaries chosen for the search in several dictionaries
 // (plain .dic names saved by the previous beta become "dic:" ids)
-static void pbGetMultiDicts(lString16Collection & names)
+static void pbGetMultiDicts(lString32Collection & names)
 {
     names.clear();
-    lString16 value = CRPocketBookDocView::instance->getProps()->getStringDef(PROP_POCKETBOOK_DICT_MULTI, "");
+    lString32 value = CRPocketBookDocView::instance->getProps()->getStringDef(PROP_POCKETBOOK_DICT_MULTI, "");
     if (!value.empty())
-        names.split(value, lString16("|"));
+        names.split(value, lString32("|"));
     for (int i = 0; i < names.length(); i++)
         names[i] = PbDictManager::normalizeId(names[i]);
 }
 
 // Checked dictionaries that are still on the device
-static int pbCountMultiDicts(const lString16Collection & names)
+static int pbCountMultiDicts(const lString32Collection & names)
 {
     int count = 0;
     for (int i = 0; i < names.length(); i++)
@@ -4105,7 +4086,7 @@ static int pbCountMultiDicts(const lString16Collection & names)
 static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found)
 {
     PbDictManager & dicts = PbDictManager::instance();
-    lString16Collection names;
+    lString32Collection names;
     pbGetMultiDicts(names);
     found.clear();
     for (int i = 0; i < names.length(); i++) {
@@ -4116,16 +4097,16 @@ static void pbSearchDicts(LVPtrVector<PbDictSource, false> & found)
 }
 
 // "Selected dictionaries (3)"; with nothing checked "(none)"
-static lString16 pbSelectedDictsLabel(const char * name)
+static lString32 pbSelectedDictsLabel(const char * name)
 {
-    lString16Collection names;
+    lString32Collection names;
     pbGetMultiDicts(names);
-    lString16 label = lString16(name);
+    lString32 label = lString32(name);
     int checked = pbCountMultiDicts(names);
     if (checked > 0)
-        label << " (" << lString16::itoa(checked) << ")";
+        label << " (" << lString32::itoa(checked) << ")";
     else
-        label << " (" << lString16(_("none")) << ")";
+        label << " (" << lString32(_("none")) << ")";
     return label;
 }
 
@@ -4133,16 +4114,16 @@ static lString16 pbSelectedDictsLabel(const char * name)
 class CRPbMultiDictItem : public CRMenuItem
 {
 private:
-    lString16 _dictName; // dictionary id
-    lString16 _dictLabel;
+    lString32 _dictName; // dictionary id
+    lString32 _dictLabel;
     bool _checked;
     void updateLabel()
     {
-        setLabel((_checked ? lString16("[x]  ") : lString16("[  ]  ")) + _dictLabel);
+        setLabel((_checked ? lString32("[x]  ") : lString32("[  ]  ")) + _dictLabel);
     }
 public:
     CRPbMultiDictItem(CRMenu * menu, int id, PbDictSource * dict, bool checked)
-        : CRMenuItem(menu, id, lString16::empty_str, LVImageSourceRef(), LVFontRef()),
+        : CRMenuItem(menu, id, lString32::empty_str, LVImageSourceRef(), LVFontRef()),
           _dictName(dict->id()), _dictLabel(dict->label()), _checked(checked),
           _selectedRow(NULL), _selectedMenu(NULL)
     {
@@ -4150,7 +4131,7 @@ public:
     }
     virtual int onSelect()
     {
-        lString16Collection names;
+        lString32Collection names;
         pbGetMultiDicts(names);
         if (!_checked && pbCountMultiDicts(names) >= PB_DICT_SELECTED_MAX) {
             // each dictionary adds to the lookup time (the text names PB_DICT_SELECTED_MAX)
@@ -4160,7 +4141,7 @@ public:
         }
         _checked = !_checked;
         updateLabel();
-        lString16 value;
+        lString32 value;
         bool added = false;
         for (int i = 0; i < names.length(); i++) {
             if (names[i] == _dictName) {
@@ -4179,7 +4160,7 @@ public:
         }
         // straight into the settings: getNewProps() would replace the copy the dictionary list uses
         CRPocketBookDocView::instance->getProps()->setString(PROP_POCKETBOOK_DICT_MULTI, value);
-        CRPocketBookDocView::instance->saveSettings(lString16());
+        CRPocketBookDocView::instance->saveSettings(lString32());
         _menu->setDirty();
         // the count in "Selected dictionaries (N)" of the list under this one
         if (_selectedRow != NULL && _selectedMenu != NULL) {
@@ -4202,7 +4183,7 @@ private:
     CRMenuItem * _selectedRow; // "Selected dictionaries (N)" of the same list
 public:
     CRPbMultiDictOpenItem(CRMenu * menu, CRGUIWindowManager * wm, CRMenuItem * selectedRow)
-        : CRMenuItem(menu, -1, lString16(_("Check dictionaries...")), LVImageSourceRef(), LVFontRef()),
+        : CRMenuItem(menu, -1, lString32(_("Check dictionaries...")), LVImageSourceRef(), LVFontRef()),
           _wm(wm), _selectedRow(selectedRow)
     {
     }
@@ -4210,11 +4191,11 @@ public:
     {
         LVFontRef valueFont(fontMan->GetFont( VALUE_FONT_SIZE, 400, true, css_ff_sans_serif, lString8("Liberation Sans")));
         CRMenu * multiMenu = new CRMenu(_wm, NULL, PB_CMD_SELECT_DICT,
-                                        lString16(_("Check dictionaries...")),
+                                        lString32(_("Check dictionaries...")),
                                         LVImageSourceRef(), LVFontRef(), valueFont);
         multiMenu->setAccelerators(_wm->getAccTables().get("menu"));
-        multiMenu->setSkinName(lString16("#settings"));
-        lString16Collection names;
+        multiMenu->setSkinName(lString32("#settings"));
+        lString32Collection names;
         pbGetMultiDicts(names);
         PbDictManager & dicts = PbDictManager::instance();
         for (int i = 0; i < dicts.count(); i++) {
@@ -4243,16 +4224,16 @@ void CRPbDictionaryView::selectDictionary()
     _dictMenuProps->setString(PROP_POCKETBOOK_DICT,
                               PbDictManager::normalizeId(_dictMenuProps->getStringDef(PROP_POCKETBOOK_DICT, "")));
     CRMenu * dictsMenu = new CRMenu(_wm, NULL, PB_CMD_SELECT_DICT,
-                                    lString16(""), LVImageSourceRef(), LVFontRef(), valueFont,
+                                    lString32(""), LVImageSourceRef(), LVFontRef(), valueFont,
                                     _dictMenuProps, PROP_POCKETBOOK_DICT);
     dictsMenu->setAccelerators(_wm->getAccTables().get("menu"));
-    dictsMenu->setSkinName(lString16("#settings"));
+    dictsMenu->setSkinName(lString32("#settings"));
     PbDictManager & dicts = PbDictManager::instance();
     if (dicts.count() > 1) {
         // "Selected dictionaries (3)": lookups in the checked dictionaries together
-        lString16 selected = pbSelectedDictsLabel(_("Selected dictionaries"));
+        lString32 selected = pbSelectedDictsLabel(_("Selected dictionaries"));
         CRMenuItem * selectedRow = new CRMenuItem(dictsMenu, dicts.count(), selected, LVImageSourceRef(), LVFontRef(),
-                                                  lString16(PB_DICT_ID_SELECTED).c_str());
+                                                  lString32(PB_DICT_ID_SELECTED).c_str());
         dictsMenu->addItem(selectedRow);
         dictsMenu->addItem(new CRPbMultiDictOpenItem(dictsMenu, _wm, selectedRow));
     }
@@ -4280,17 +4261,17 @@ void CRPbDictionaryView::onDictionarySelect()
     // the choice made in the list of dictionaries (the checkbox list closes with the same command)
     if (!_dictMenuProps.isNull())
         props->setString(PROP_POCKETBOOK_DICT, _dictMenuProps->getStringDef(PROP_POCKETBOOK_DICT, ""));
-    lString16 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT);
+    lString32 lastDict = props->getStringDef(PROP_POCKETBOOK_DICT);
     CRLog::trace("CRPbDictionaryView::onDictionarySelect(%s)", UnicodeToUtf8(lastDict).c_str());
     // "Selected dictionaries" is opened again: the checked dictionaries may have changed
-    if (_selectedDicts || lastDict == lString16(PB_DICT_ID_SELECTED) || _dict == NULL ||
+    if (_selectedDicts || lastDict == lString32(PB_DICT_ID_SELECTED) || _dict == NULL ||
         _dict->id() != PbDictManager::normalizeId(lastDict) || !_dict->isOpen()) {
         if (openDictionary(lastDict))
-            CRPocketBookDocView::instance->saveSettings(lString16());
+            CRPocketBookDocView::instance->saveSettings(lString32());
         else
             _caption = Utf8ToUnicode(TR("@Dictionary"));
     }
-    lString16 word = _word;
+    lString32 word = _word;
     _word.clear();
     _parent->setDocDirty();
     _selectedIndex = PB_DICT_DEACTIVATE;
@@ -4326,7 +4307,7 @@ void CRPbDictionaryView::searchDictionary()
 {
     _searchPattern.clear();
 
-    strcpy(key_buffer, UnicodeToUtf8(lString16(_word)).c_str());
+    strcpy(key_buffer, UnicodeToUtf8(lString32(_word)).c_str());
     // The keyboard of CoolReader: it follows the night mode. Without a touch screen it cannot be
     // used, the firmware keyboard is opened as before; it can also be chosen in the settings.
     if (pbDictCrKeyboard()) {
@@ -4338,19 +4319,19 @@ void CRPbDictionaryView::searchDictionary()
 }
 
 void CRPbDictionaryView::launchDictBrowser(const char *urlBase) {
-    lString16 lang = main_win->getBookLanguage();
+    lString32 lang = main_win->getBookLanguage();
     CRLog::trace("launchDictBrowser(): main_win->getBookLanguage() = %s", UnicodeToUtf8(lang).c_str());
     if( lang.empty() ) {
         lang = currentLang;
         CRLog::trace("launchDictBrowser(): currentLang = %s", UnicodeToUtf8(lang).c_str());
     }
     if( lang.empty() ) {
-        lang = lString16("en");
+        lang = lString32("en");
         CRLog::trace("launchDictBrowser(): default to en");
     }
 
-    lString16 url = lString16(urlBase);
-    url.replace(lString16("[LANG]"), lang);
+    lString32 url = lString32(urlBase);
+    url.replace(lString32("[LANG]"), lang);
     launchBrowser( url + _word );
 }
 
@@ -4653,22 +4634,22 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
 
 // Makes HTML from a dictionary article loadable as FB2 XML: <br> becomes <br/>,
 // <font color=x> becomes <span style="color:x">. Other tags are kept as they are.
-static lString16 pbDictNormalizeHtml(const lString16 & src)
+static lString32 pbDictNormalizeHtml(const lString32 & src)
 {
     if (src.pos("<") < 0)
         return src;
-    lString16 dst;
+    lString32 dst;
     int i = 0;
     while (i < src.length()) {
-        lChar16 ch = src[i];
+        lChar32 ch = src[i];
         int end = (ch == '<') ? src.pos(">", i) : -1;
         if (end < 0) {
             dst << ch;
             i++;
             continue;
         }
-        lString16 tag = src.substr(i + 1, end - i - 1);
-        lString16 lower = tag;
+        lString32 tag = src.substr(i + 1, end - i - 1);
+        lString32 lower = tag;
         lower.lowercase();
         lower.trim();
         if (lower == "br" || lower == "br/" || lower == "br /") {
@@ -4676,7 +4657,7 @@ static lString16 pbDictNormalizeHtml(const lString16 & src)
         } else if (lower == "/font") {
             dst << "</span>";
         } else if (lower.startsWith("font")) {
-            lString16 color;
+            lString32 color;
             int p = lower.pos("color");
             if (p >= 0) {
                 p = lower.pos("=", p);
@@ -4703,12 +4684,12 @@ static lString16 pbDictNormalizeHtml(const lString16 & src)
 }
 
 // Length of an apostrophe at position i: ' or &#x27; &#39; &apos;, 0 when there is none
-static int pbDictApostropheAt(const lString16 & s, int i)
+static int pbDictApostropheAt(const lString32 & s, int i)
 {
     static const char * forms[] = { "'", "&#x27;", "&#39;", "&apos;", NULL };
     for (int f = 0; forms[f]; f++) {
         int n = 0;
-        while (forms[f][n] && i + n < s.length() && s[i + n] == (lChar16)forms[f][n])
+        while (forms[f][n] && i + n < s.length() && s[i + n] == (lChar32)forms[f][n])
             n++;
         if (!forms[f][n])
             return n;
@@ -4718,11 +4699,11 @@ static int pbDictApostropheAt(const lString16 & s, int i)
 
 // Drops the Lingvo DSL stress marks [']и[/'] that some converted .dic files keep
 // in the article text (the apostrophe may be written as a character entity).
-static lString16 pbDictStripStressMarks(const lString16 & src)
+static lString32 pbDictStripStressMarks(const lString32 & src)
 {
     if (src.pos("[") < 0)
         return src;
-    lString16 dst;
+    lString32 dst;
     int i = 0;
     while (i < src.length()) {
         if (src[i] == '[') {
@@ -4755,14 +4736,14 @@ lString8 CRPbDictionaryView::createArticleBody(const char *translation)
     lString8 article;
 
     if (translation != NULL) {
-        lString16 src = pbDictNormalizeHtml(pbDictStripStressMarks(Utf8ToUnicode(translation))), dst;
+        lString32 src = pbDictNormalizeHtml(pbDictStripStressMarks(Utf8ToUnicode(translation))), dst;
         //article << "<section style=\"text-align: left; text-indent: 0; font-size: 70%\">";
         article << "<section>";
         article << "<p>";
         int offset = 0, count = 0;
         const lChar8 *closeTag = NULL;
         for (int i = 0; i < src.length(); i++) {
-            lChar16 currentChar = src[i];
+            lChar32 currentChar = src[i];
             if (currentChar == 1 || currentChar == 2 || currentChar == 3 ||
                 currentChar == '\n') {
                 if (count > 0) {
@@ -4808,10 +4789,10 @@ lString8 CRPbDictionaryView::createArticleBody(const char *translation)
 }
 
 #define CR_PB_DICT_REDIRECT_PREFIXES "to|of|see|from"
-lString16 CRPbDictionaryView::detectDictionaryRedirectFor(const char* translation) {
+lString32 CRPbDictionaryView::detectDictionaryRedirectFor(const char* translation) {
 
-    if( _dict == NULL || _dict->id() != PbDictManager::normalizeId(lString16("Webster's 1913 Dictionary")) ) {
-        return lString16("");
+    if( _dict == NULL || _dict->id() != PbDictManager::normalizeId(lString32("Webster's 1913 Dictionary")) ) {
+        return lString32("");
     }
 
     regex_t pregx;
@@ -4831,20 +4812,20 @@ lString16 CRPbDictionaryView::detectDictionaryRedirectFor(const char* translatio
                 if( i > 0 && pmatch[--i].rm_so!=-1 ) {
                     memset(tmpvalue, 0, 256);
                     strncpy(tmpvalue, &translation[pmatch[i].rm_so], pmatch[i].rm_eo-pmatch[i].rm_so);
-                    return lString16(tmpvalue);
+                    return lString32(tmpvalue);
                 }
             }
         }
     }
 
-    return lString16("");
+    return lString32("");
 }
 
-static lString8 pbXmlText(const lString16 & text)
+static lString8 pbXmlText(const lString32 & text)
 {
-    lString16 s;
+    lString32 s;
     for (int i = 0; i < text.length(); i++) {
-        lChar16 ch = text[i];
+        lChar32 ch = text[i];
         if (ch == '&')
             s << "&amp;";
         else if (ch == '<')
@@ -4858,7 +4839,7 @@ static lString8 pbXmlText(const lString16 & text)
 }
 
 // Length of the common beginning of two words
-static int pbCommonPrefix(const lString16 & a, const lString16 & b)
+static int pbCommonPrefix(const lString32 & a, const lString32 & b)
 {
     int n = 0;
     while (n < a.length() && n < b.length() && a[n] == b[n])
@@ -4873,7 +4854,7 @@ static int pbCommonPrefix(const lString16 & a, const lString16 & b)
 // the word list of the dictionary whose nearest word shares the longest beginning with the word
 // is shown: for a Russian word that is a dictionary from Russian, without guessing directions.
 // Returns false when "Selected dictionaries" is not chosen.
-bool CRPbDictionaryView::translateMulti(const lString16 &w)
+bool CRPbDictionaryView::translateMulti(const lString32 &w)
 {
     if (!_selectedDicts)
         return false;
@@ -4884,14 +4865,14 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
     _translateResult = 0;
     _selectedIndex = PB_DICT_DEACTIVATE;
     if (found.length() == 0) {
-        body << "<p>" << pbXmlText(lString16(_("No dictionaries are selected for the search."))) << "</p>";
-        body << "<p>" << pbXmlText(lString16(_("Tap the dictionary name above and check them under \"Check dictionaries...\"."))) << "</p>";
+        body << "<p>" << pbXmlText(lString32(_("No dictionaries are selected for the search."))) << "</p>";
+        body << "<p>" << pbXmlText(lString32(_("Tap the dictionary name above and check them under \"Check dictionaries...\"."))) << "</p>";
         setTranslation(CRViewDialog::makeFb2Xml(body));
         setDirty();
         return true;
     }
 
-    lString16 wanted = w;
+    lString32 wanted = w;
     wanted.lowercase();
     lString8 parts;
     PbDictSource * first = NULL;
@@ -4904,8 +4885,8 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
         int rc = dict->lookup(w, word, translation);
         if (rc == 0)
             continue;
-        lString16 got = Utf8ToUnicode(word);
-        lString16 gotLower = got;
+        lString32 got = Utf8ToUnicode(word);
+        lString32 gotLower = got;
         gotLower.lowercase();
         // StarDict reports a word form found through its synonyms as the word itself
         bool exact = gotLower == wanted || (rc == 2 && dict->type() != PB_DICT_TYPE_INKVIEW);
@@ -4917,7 +4898,7 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
             }
             continue;
         }
-        lString16 subtitle = dict->title();
+        lString32 subtitle = dict->title();
         if (gotLower != wanted)
             subtitle << Utf8ToUnicode(lString8(" \xE2\x80\x94 ")) << got; // " - dictionary word"
         if (first != NULL)
@@ -4954,13 +4935,13 @@ bool CRPbDictionaryView::translateMulti(const lString16 &w)
     return true;
 }
 
-void CRPbDictionaryView::translate(const lString16 &w)
+void CRPbDictionaryView::translate(const lString32 &w)
 {
     getDocView()->setFontSize( pbCrFontSize );
 
     lString8 body;
 
-    lString16 s16 = w;
+    lString32 s16 = w;
     if (s16 == _word) {
         CRLog::trace("CRPbDictionaryView::translate() - the same word");
         return;
@@ -4983,8 +4964,8 @@ void CRPbDictionaryView::translate(const lString16 &w)
             // exact search: the word itself in any letter case; StarDict and XDXF report a word
             // form found through the synonyms as found (2), the firmware .dic may return the
             // article of the nearest word, so its word is compared
-            lString16 got = Utf8ToUnicode(word);
-            lString16 wanted = s16;
+            lString32 got = Utf8ToUnicode(word);
+            lString32 wanted = s16;
             got.lowercase();
             wanted.lowercase();
             bool exact = got == wanted || (_translateResult == 2 && _dict->type() != PB_DICT_TYPE_INKVIEW);
@@ -4995,9 +4976,9 @@ void CRPbDictionaryView::translate(const lString16 &w)
         if (_translateResult != 0) {
 
             // Check if it's a translation redirection
-            lString16 redirect = detectDictionaryRedirectFor(translation.c_str());
+            lString32 redirect = detectDictionaryRedirectFor(translation.c_str());
             if( !redirect.empty() ) {
-                lString16 tmp = redirect;
+                lString32 tmp = redirect;
                 tmp.lowercase();
                 s16.lowercase();
 
@@ -5037,7 +5018,7 @@ void CRPbDictionaryView::translate(const lString16 &w)
 void CRPbDictionaryView::setTranslation(lString8 translation)
 {
     _stream = LVCreateStringStream( translation );
-    getDocView()->LoadFb2Document(_stream);
+    getDocView()->LoadDocument(_stream, U"dictionary.fb2");
 }
 
 void CRPbDictionaryView::reconfigure( int flags )
@@ -5078,13 +5059,13 @@ int CRPbDictionaryView::getDesiredHeight()
 
 // Plain one-line text of a dictionary translation for the word list:
 // drops the inkview style marks (1, 2, 3), DSL stress marks and HTML tags, decodes character entities.
-static lString16 pbDictPlainText(const lString16 & text)
+static lString32 pbDictPlainText(const lString32 & text)
 {
-    lString16 src = pbDictStripStressMarks(text);
-    lString16 dst;
+    lString32 src = pbDictStripStressMarks(text);
+    lString32 dst;
     bool inTag = false;
     for (int i = 0; i < src.length(); i++) {
-        lChar16 currentChar = src[i];
+        lChar32 currentChar = src[i];
         if (inTag) {
             if (currentChar == '>')
                 inTag = false;
@@ -5105,16 +5086,16 @@ static lString16 pbDictPlainText(const lString16 & text)
     return dst;
 }
 
-lString16 CRPbDictionaryMenuItem::createItemValue(const char * translation)
+lString32 CRPbDictionaryMenuItem::createItemValue(const char * translation)
 {
-    lString16 dst = pbDictPlainText(Utf8ToUnicode(translation));
+    lString32 dst = pbDictPlainText(Utf8ToUnicode(translation));
     if (dst.length() > 256)
         dst = dst.substr(0, 256);
     return dst;
 }
 
 CRPbDictionaryMenuItem::CRPbDictionaryMenuItem(CRMenu * menu, int id, const lString8 & word, const lString8 & translation)
-    : CRMenuItem(menu, id, lString16::empty_str, LVImageSourceRef(), LVFontRef() ), _word( word ), _translation(translation)
+    : CRMenuItem(menu, id, lString32::empty_str, LVImageSourceRef(), LVFontRef() ), _word( word ), _translation(translation)
 {
     _word16 = pbDictPlainText(Utf8ToUnicode(_word));
     _translation16 = createItemValue(_translation.c_str());
@@ -5130,7 +5111,7 @@ void CRPbDictionaryMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef s
     int imgWidth = DrawIcon( buf, rc, itemBorders );
     lvRect textRect = rc;
     textRect.left += imgWidth;
-    lString16 word = _word16 + " ";
+    lString32 word = _word16 + " ";
     lvPoint sz = skin->measureTextItem(word);
     textRect.right = textRect.left + sz.x;
     skin->drawText( buf, textRect, word);
@@ -5152,10 +5133,10 @@ void CRPbDictionaryMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef s
 
 
 CRPbDictionaryMenu::CRPbDictionaryMenu(CRGUIWindowManager * wm, CRPbDictionaryView *parent)
-    : CRMenu(wm, NULL, 0, lString16::empty_str, LVImageSourceRef(), LVFontRef(), LVFontRef() ), _parent(parent)
+    : CRMenu(wm, NULL, 0, lString32::empty_str, LVImageSourceRef(), LVFontRef(), LVFontRef() ), _parent(parent)
 {
     _fullscreen = false;
-    setSkinName(lString16("#dict-list"));
+    setSkinName(lString32("#dict-list"));
 }
 
 static int dictMenuSeparatorHeight(CRMenuSkinRef skin)
@@ -5502,11 +5483,11 @@ void CRPbDictionaryDialog::onWordSelection(bool translate)
             if (_prompt.empty()) {
                 int key = 0;
                 int keyFlags = 0;
-                lString16 prompt_msg = lString16(_("Press $1 to translate"));
+                lString32 prompt_msg = lString32(_("Press $1 to translate"));
                 if (_acceleratorTable->findCommandKey(MCMD_OK, 0, key, keyFlags))
-                    prompt_msg.replaceParam(1, lString16(getKeyName(key, keyFlags)));
+                    prompt_msg.replaceParam(1, lString32(getKeyName(key, keyFlags)));
                 else
-                    prompt_msg.replaceParam(1, lString16::empty_str);
+                    prompt_msg.replaceParam(1, lString32::empty_str);
                 lString8 body;
                 body << "<p>" << UnicodeToUtf8(prompt_msg) << "</p";
                 _prompt = CRViewDialog::makeFb2Xml(body);
@@ -5626,14 +5607,14 @@ public:
     {
     }
 
-    virtual lString16 getStringDef( const char * sectionName, const char * propName,
+    virtual lString32 getStringDef( const char * sectionName, const char * propName,
                                    const char * defValue = NULL )
     {
         const lString8 name(sectionName);
         CRPropRef section = m_sections.get(name);
 
         if (section.isNull())
-            return lString16( defValue );
+            return lString32( defValue );
         return section->getStringDef( propName, defValue );
     }
 
@@ -5786,7 +5767,7 @@ void toggleInvertDisplay() {
     CRLog::trace("toggleInvertDisplay(): %d", currentMode);
 
     props->setInt(PROP_DISPLAY_INVERSE, currentMode);
-    CRPocketBookDocView::instance->saveSettings(lString16());
+    CRPocketBookDocView::instance->saveSettings(lString32());
     CRPocketBookDocView::instance->applySettings();
 
     lUInt32 back = main_win->getDocView()->getBackgroundColor();
@@ -5842,7 +5823,7 @@ void toggleStatusLine() {
     CRLog::trace("toggleStatusBar(): %d", currentMode);
 
     props->setInt(PROP_STATUS_LINE, currentMode);
-    CRPocketBookDocView::instance->saveSettings(lString16());
+    CRPocketBookDocView::instance->saveSettings(lString32());
     CRPocketBookDocView::instance->applySettings();
 
     main_win->getDocView()->setStatusMode(
@@ -5911,10 +5892,10 @@ bool isBrowserScriptSupported() {
 }
 #endif
 
-lString16 lastClock;
+lString32 lastClock;
 void startStatusUpdateThread(int ms);
 void statusUpdateThread() {
-    lString16 currentClock = main_win->getDocView()->getTimeString();
+    lString32 currentClock = main_win->getDocView()->getTimeString();
     int ms = 1000;
     if( currentClock != lastClock ) {
 
@@ -5991,7 +5972,7 @@ void pbLaunchWaitBinary(const char *binary) {
     pbLaunchWaitBinary(binary, "");
 }
 
-void launchBrowser(lString16 url) {
+void launchBrowser(lString32 url) {
 
 #ifdef POCKETBOOK_PRO_FW5
     if( isBrowserScriptSupported() ) {
@@ -6011,7 +5992,7 @@ void launchBrowser(lString16 url) {
 
 int InitDoc(const char *exename, char *fileName)
 {
-    static const lChar16 * css_file_name = L"fb2.css"; // fb2
+    static const lChar32 * css_file_name = U"fb2.css"; // fb2
 
 #ifdef __i386__
     CRLog::setStdoutLogger();
@@ -6033,8 +6014,8 @@ int InitDoc(const char *exename, char *fileName)
         if ( lang && lang[0] ) {
             // set translator
             CRLog::info("Current language is %s, looking for translation file", lang);
-            lString16 mofilename = USERDATA"/share/cr3/i18n/" + lString16(lang) + ".mo";
-            lString16 mofilename2 = USERDATA2"/share/cr3/i18n/" + lString16(lang) + ".mo";
+            lString32 mofilename = USERDATA"/share/cr3/i18n/" + lString32(lang) + ".mo";
+            lString32 mofilename2 = USERDATA2"/share/cr3/i18n/" + lString32(lang) + ".mo";
             CRMoFileTranslator * t = new CRMoFileTranslator();
             if ( t->openMoFile( mofilename2 ) || t->openMoFile( mofilename ) ) {
                 CRLog::info("translation file %s.mo found", lang);
@@ -6044,45 +6025,45 @@ int InitDoc(const char *exename, char *fileName)
                 delete t;
             }
             sprintf( manual_file, USERDATA"/share/cr3/manual/cr3-manual-%s.fb2", lang );
-            if ( !LVFileExists( lString16(manual_file).c_str() ) )
+            if ( !LVFileExists( lString32(manual_file).c_str() ) )
                 sprintf( manual_file, USERDATA2"/share/cr3/manual/cr3-manual-%s.fb2", lang );
         }
     }
 
-    const lChar16 * ini_fname = L"cr3.ini";
+    const lChar32 * ini_fname = U"cr3.ini";
 #ifdef SEPARATE_INI_FILES
     if ( strstr(fileName, ".txt")!=NULL || strstr(fileName, ".tcr")!=NULL) {
-        ini_fname = L"cr3-txt.ini";
-        css_file_name = L"txt.css";
+        ini_fname = U"cr3-txt.ini";
+        css_file_name = U"txt.css";
     } else if ( strstr(fileName, ".rtf")!=NULL ) {
-        ini_fname = L"cr3-rtf.ini";
-        css_file_name = L"rtf.css";
+        ini_fname = U"cr3-rtf.ini";
+        css_file_name = U"rtf.css";
     } else if ( strstr(fileName, ".htm")!=NULL ) {
-        ini_fname = L"cr3-htm.ini";
-        css_file_name = L"htm.css";
+        ini_fname = U"cr3-htm.ini";
+        css_file_name = U"htm.css";
     } else if ( strstr(fileName, ".epub")!=NULL ) {
-        ini_fname = L"cr3-epub.ini";
-        css_file_name = L"epub.css";
+        ini_fname = U"cr3-epub.ini";
+        css_file_name = U"epub.css";
     } else if ( strstr(fileName, ".doc")!=NULL ) {
-        ini_fname = L"cr3-doc.ini";
-        css_file_name = L"doc.css";
+        ini_fname = U"cr3-doc.ini";
+        css_file_name = U"doc.css";
     } else if ( strstr(fileName, ".chm")!=NULL ) {
-        ini_fname = L"cr3-chm.ini";
-        css_file_name = L"chm.css";
+        ini_fname = U"cr3-chm.ini";
+        css_file_name = U"chm.css";
     } else if ( strstr(fileName, ".pdb")!=NULL ) {
-        ini_fname = L"cr3-txt.ini";
-        css_file_name = L"txt.css";
+        ini_fname = U"cr3-txt.ini";
+        css_file_name = U"txt.css";
     } else {
-        ini_fname = L"cr3-fb2.ini";
-        css_file_name = L"fb2.css";
+        ini_fname = U"cr3-fb2.ini";
+        css_file_name = U"fb2.css";
     }
 #endif
 
-    lString16Collection fontDirs;
-    fontDirs.add(lString16(L""USERFONTDIR));
-    fontDirs.add(lString16(L""SYSTEMFONTDIR));
-    fontDirs.add(lString16(L""USERDATA"/share/cr3/fonts"));
-    fontDirs.add(lString16(L""USERDATA2"/fonts"));
+    lString32Collection fontDirs;
+    fontDirs.add(lString32(U""USERFONTDIR));
+    fontDirs.add(lString32(U""SYSTEMFONTDIR));
+    fontDirs.add(lString32(U""USERDATA"/share/cr3/fonts"));
+    fontDirs.add(lString32(U""USERDATA2"/fonts"));
     CRLog::info("INIT...");
     perfT[1] = pbPerfNow();
     if (!InitCREngine(exename, fontDirs))
@@ -6090,32 +6071,32 @@ int InitDoc(const char *exename, char *fileName)
     perfT[2] = pbPerfNow();
 
     {
-        lString16 filename16(fileName);
-        lString16 dir = LVExtractPath(filename16);
+        lString32 filename16(fileName);
+        lString32 dir = LVExtractPath(filename16);
 
         CRLog::trace("choosing init file...");
-        static const lChar16 * dirs[] = {
+        static const lChar32 * dirs[] = {
             dir.c_str(),
-            L""CONFIGPATH"/cr3/",
-            L""USERDATA2"/share/cr3/",
-            L""USERDATA"/share/cr3/",
-            L""CONFIGPATH"/cr3/",
+            U""CONFIGPATH"/cr3/",
+            U""USERDATA2"/share/cr3/",
+            U""USERDATA"/share/cr3/",
+            U""CONFIGPATH"/cr3/",
             NULL
         };
-        lString16 ini;
+        lString32 ini;
         CRPropRef props = LVCreatePropsContainer();
         int bpp = 0;
 
-        int fb2Pos = filename16.pos(lString16(L".fb2"));
+        int fb2Pos = filename16.pos(lString32(U".fb2"));
         if (fb2Pos < 0)
             ini = dir + LVExtractFilenameWithoutExtension(filename16);
         else
             ini = filename16.substr(0, fb2Pos);
-        ini.append((lChar16 *)L"_cr3.ini");
+        ini.append((lChar32 *)U"_cr3.ini");
         LVStreamRef stream = LVOpenFileStream( ini.c_str(), LVOM_READ );
         if ( stream.isNull() || !props->loadFromStream( stream.get())) {
             for (int i = 0; dirs[i]; i++ ) {
-                ini = lString16(dirs[i]) + ini_fname;
+                ini = lString32(dirs[i]) + ini_fname;
                 CRLog::debug("Try %s file", UnicodeToUtf8(ini).c_str());
                 LVStreamRef stream = LVOpenFileStream( ini.c_str(), LVOM_READ );
                 if ( !stream.isNull() ) {
@@ -6147,7 +6128,7 @@ int InitDoc(const char *exename, char *fileName)
         if ( devices.loadFromFile(USERDATA"/share/cr3/devices.ini") ) {
             lString8 kbdType = lString8::itoa(getPB_keyboardType());
 
-            lString16 keymapFile = devices.getStringDef("keyboard", kbdType.c_str());
+            lString32 keymapFile = devices.getStringDef("keyboard", kbdType.c_str());
             if( !keymapFile.empty() ) {
                 CRLog::info("Keymap file specified in the device config: %s",
                             UnicodeToUtf8(keymapFile).c_str());
@@ -6155,7 +6136,7 @@ int InitDoc(const char *exename, char *fileName)
             }
             lString8 displayType = lString8::itoa(getPB_screenType());
 
-            lString16 skinFile = devices.getStringDef("screen", displayType.c_str());
+            lString32 skinFile = devices.getStringDef("screen", displayType.c_str());
             if ( !skinFile.empty() ) {
                 CRLog::info("Skin file specified in the device config: %s",
                             UnicodeToUtf8(skinFile).c_str());
@@ -6172,7 +6153,7 @@ int InitDoc(const char *exename, char *fileName)
             NULL,
         };
 
-        lString16 keymapFile = props->getStringDef(PROP_KEYMAP_FILE, "keymaps.ini");
+        lString32 keymapFile = props->getStringDef(PROP_KEYMAP_FILE, "keymaps.ini");
         int extPos = keymapFile.pos(".");
         if ( -1==extPos )
             keymapFile.append(".ini");
@@ -6183,16 +6164,16 @@ int InitDoc(const char *exename, char *fileName)
             return 0;
         }
         loadPocketBookKeyMaps(*wm);
-        HyphMan::initDictionaries(lString16(USERDATA"/share/cr3/hyph/"));
+        HyphMan::initDictionaries(lString32(USERDATA"/share/cr3/hyph/"));
 
         perfT[3] = pbPerfNow();
         bool skinSet = false;
         CRSkinList &skins = wm->getSkinList();
-        skins.openDirectory(NULL, lString16(USERDATA"/share/cr3/skins"));
-        skins.openDirectory("flash", lString16(FLASHDIR"/cr3/skins"));
-        skins.openDirectory("SD", lString16(USERDATA2"/share/cr3/skins"));
+        skins.openDirectory(NULL, lString32(USERDATA"/share/cr3/skins"));
+        skins.openDirectory("flash", lString32(FLASHDIR"/cr3/skins"));
+        skins.openDirectory("SD", lString32(USERDATA2"/share/cr3/skins"));
         if ( skins.length() > 0 ) {
-            lString16 skinName;
+            lString32 skinName;
 
             CRLog::trace("There are some skins - try to select");
             if (props->getString(PROP_SKIN_FILE, skinName)) {
@@ -6202,31 +6183,31 @@ int InitDoc(const char *exename, char *fileName)
             if (!skinSet) {
                 CRLog::info("Try to load default skin");
 
-                lString16 defaultSkin;
+                lString32 defaultSkin;
 
                 #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
                     // the pb631fw5 skin is drawn for 1072x1448, pb700fw5 for 1264x1680, pb740fw5 for 1404x1872
                     int maxPx = max(ScreenWidth(),ScreenHeight());
                     if( maxPx >= 1872 )
-                        defaultSkin = L"pb740fw5";
+                        defaultSkin = U"pb740fw5";
                     else if( maxPx >= 1680 )
-                        defaultSkin = L"pb700fw5";
+                        defaultSkin = U"pb700fw5";
                     else if( maxPx > 1024 )
-                        defaultSkin = L"pb631fw5";
+                        defaultSkin = U"pb631fw5";
                     else if( maxPx > 800 )
-                        defaultSkin = L"pb626fw5";
+                        defaultSkin = U"pb626fw5";
                     else
-                        defaultSkin = L"pb62x";
+                        defaultSkin = U"pb62x";
                 #else
-                    defaultSkin = L"default";
+                    defaultSkin = U"default";
                 #endif
 
                 skinSet = wm->setSkin(defaultSkin);
             }
         }
-        if (!skinSet && !wm->loadSkin(lString16(CONFIGPATH"/cr3/skin"))) {
-            if (!wm->loadSkin(lString16(USERDATA2"/share/cr3/skin"))) {
-                if (!wm->loadSkin(lString16(USERDATA"/share/cr3/skin"))) {
+        if (!skinSet && !wm->loadSkin(lString32(CONFIGPATH"/cr3/skin"))) {
+            if (!wm->loadSkin(lString32(USERDATA2"/share/cr3/skin"))) {
+                if (!wm->loadSkin(lString32(USERDATA"/share/cr3/skin"))) {
                     CRLog::error("Error loading skin");
                     delete wm;
                     ShutdownCREngine();
@@ -6237,28 +6218,28 @@ int InitDoc(const char *exename, char *fileName)
 
         perfT[4] = pbPerfNow();
         CRLog::trace("init cache...");
-        ldomDocCache::init(lString16(STATEPATH"/cr3/.cache"), PB_CR3_CACHE_SIZE);
+        ldomDocCache::init(lString32(STATEPATH"/cr3/.cache"), PB_CR3_CACHE_SIZE);
         if (!ldomDocCache::enabled())
-            ldomDocCache::init(lString16(USERDATA2"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
+            ldomDocCache::init(lString32(USERDATA2"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
         if (!ldomDocCache::enabled())
-            ldomDocCache::init(lString16(USERDATA"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
+            ldomDocCache::init(lString32(USERDATA"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
 
         perfT[5] = pbPerfNow();
         CRLog::trace("creating main window...");
-        main_win = new CRPocketBookDocView(wm, lString16(USERDATA"/share/cr3"));
+        main_win = new CRPocketBookDocView(wm, lString32(USERDATA"/share/cr3"));
         CRLog::trace("setting colors...");
         main_win->getDocView()->setBackgroundColor(0xFFFFFF);
         main_win->getDocView()->setTextColor(0x000000);
         main_win->getDocView()->setFontSize( 20 );
         if (manual_file[0])
-            main_win->setHelpFile( lString16( manual_file ) );
-        if (!main_win->loadDefaultCover(lString16(CONFIGPATH"/cr3/cr3_def_cover.png")))
-            if (!main_win->loadDefaultCover(lString16(USERDATA2"/share/cr3/cr3_def_cover.png")))
-                main_win->loadDefaultCover(lString16(USERDATA"/share/cr3/cr3_def_cover.png"));
-        if ( !main_win->loadCSS(lString16(CONFIGPATH"/cr3/")   + lString16(css_file_name) ) )
-            if ( !main_win->loadCSS(  lString16(USERDATA"/share/cr3/" ) + lString16(css_file_name) ) )
-                main_win->loadCSS( lString16(USERDATA2"/share/cr3/" ) + lString16(css_file_name) );
-        main_win->setBookmarkDir(lString16(FLASHDIR"/cr3_notes/"));
+            main_win->setHelpFile( lString32( manual_file ) );
+        if (!main_win->loadDefaultCover(lString32(CONFIGPATH"/cr3/cr3_def_cover.png")))
+            if (!main_win->loadDefaultCover(lString32(USERDATA2"/share/cr3/cr3_def_cover.png")))
+                main_win->loadDefaultCover(lString32(USERDATA"/share/cr3/cr3_def_cover.png"));
+        if ( !main_win->loadCSS(lString32(CONFIGPATH"/cr3/")   + lString32(css_file_name) ) )
+            if ( !main_win->loadCSS(  lString32(USERDATA"/share/cr3/" ) + lString32(css_file_name) ) )
+                main_win->loadCSS( lString32(USERDATA2"/share/cr3/" ) + lString32(css_file_name) );
+        main_win->setBookmarkDir(lString32(FLASHDIR"/cr3_notes/"));
         CRLog::debug("Loading settings...");
         main_win->loadSettings( ini );
         // PocketBook settings that are not in cr3.ini yet get the value the code uses for them,
@@ -6277,15 +6258,15 @@ int InitDoc(const char *exename, char *fileName)
             SetOrientation(cr_oriantations[orient]);
         }
         perfT[6] = pbPerfNow();
-        PbStatsView::init(lString16(STATEPATH"/cr3"));
-        if ( !main_win->loadHistory(lString16(STATEPATH"/cr3/.cr3hist")) )
+        PbStatsView::init(lString32(STATEPATH"/cr3"));
+        if ( !main_win->loadHistory(lString32(STATEPATH"/cr3/.cr3hist")) )
             CRLog::error("Cannot read history file");
         perfT[7] = pbPerfNow();
         LVDocView * _docview = main_win->getDocView();
-        _docview->setBatteryState(GetBatteryPower());
+        _docview->setBatteryState(CR_BATTERY_STATE_DISCHARGING, CR_BATTERY_CHARGER_NO, GetBatteryPower());
         wm->activateWindow( main_win );
         wm->restoreOrientation(orient);
-        if ( !main_win->loadDocument( lString16(fileName) ) ) {
+        if ( !main_win->loadDocument( lString32(fileName) ) ) {
             printf("Cannot open book file %s\n", fileName);
             delete wm;
             return 0;
@@ -6413,18 +6394,19 @@ CRGUITouchEventType getTouchEventType(int inkview_evt)
     return CRTOUCH_MOVE;
 }
 
-lString16 getPbModelNumber() {
+lString32 getPbModelNumber() {
     CRLog::trace("getPbModelNumber()");
-    lString16 model = lString16(GetDeviceModel());
-    model.replace(lString16(" "), lString16(""));
-    model.replace(lString16("PocketBook"), lString16(""));
-    model.replace(lString16("PB"), lString16(""));
+    lString32 model = lString32(GetDeviceModel());
+    model.replace(lString32(" "), lString32(""));
+    model.replace(lString32("PocketBook"), lString32(""));
+    model.replace(lString32("PB"), lString32(""));
     CRLog::trace("getPbModelNumber(): %s", UnicodeToUtf8(model).c_str());
     return model;
 }
 
 #ifdef POCKETBOOK_PRO
 void SetSaveStateTimer(){
+    if (exiting || !CRPocketBookDocView::instance) return;
     exiting = true;
     CRPocketBookDocView::instance->closing();
     exiting = false;
@@ -6605,6 +6587,8 @@ void exitStandByMode() {
 }
 void restartStandByTimer() {
 
+    // CloseApp can synchronously destroy the document during an input event.
+    if (exiting || !CRPocketBookDocView::instance) return;
     CRPropRef props = CRPocketBookDocView::instance->getProps();
     int delay = props->getIntDef(PROP_DISPLAY_STANDBY, 5);
 
@@ -6810,7 +6794,7 @@ int main_handler(int type, int par1, int par2)
                 if( access( libCachePath.c_str(), F_OK ) != -1 ) {
 
                     // Load image
-                    LVImageSourceRef cachedFile = LVCreateFileCopyImageSource( lString16(libCachePath.c_str()) );
+                    LVImageSourceRef cachedFile = LVCreateFileCopyImageSource( lString32(libCachePath.c_str()) );
 
                     // Stretch image
                     if( !cachedFile.isNull() ) {
@@ -6847,15 +6831,16 @@ int main_handler(int type, int par1, int par2)
 
                 LVGrayDrawBuf tmpBufCover( ScreenWidth(), ScreenHeight(), GetHardwareDepth() );
 
-                lString16 authors = main_win->getDocView()->getAuthors();
-                lString16 title = main_win->getDocView()->getTitle();
-                lString16 series = main_win->getDocView()->getSeries();
+                lString32 authors = main_win->getDocView()->getAuthors();
+                lString32 title = main_win->getDocView()->getTitle();
+                lString32 series = main_win->getDocView()->getSeries();
                 if (title.empty())
                     title = _("Untitled");
 
                 LVDrawBookCover(
                     tmpBufCover,
                     main_win->getDocView()->getCoverPageImage(),
+                    true,
                     lString8(DEFAULTFONT),
                     title,
                     authors,
@@ -6901,7 +6886,7 @@ int main_handler(int type, int par1, int par2)
             }
 
             // Load standby lock image
-            LVImageSourceRef standByLockImageTmp = CRPocketBookWindowManager::instance->getSkin()->getImage(L"standby.png");
+            LVImageSourceRef standByLockImageTmp = CRPocketBookWindowManager::instance->getSkin()->getImage(U"standby.png");
             if( !standByLockImageTmp.isNull() ) {
                 standByLockImage = LVImageSourceRef_to_ibitmab(standByLockImageTmp);
             }
@@ -6922,6 +6907,9 @@ int main_handler(int type, int par1, int par2)
     case EVT_EXIT:
         exiting = true;
         stopStandByTimer();
+#ifdef POCKETBOOK_PRO
+        ClearTimer(SetSaveStateTimer);
+#endif
         if (CRPocketBookWindowManager::instance->getWindowCount() != 0)
             CRPocketBookWindowManager::instance->closeAllWindows();
         ShutdownCREngine();
@@ -7034,7 +7022,7 @@ void drawTemporaryZoom() {
     FillArea(ScreenWidth()/2/2, 0, ScreenWidth()/2, 50, 0x00FFFFFF);
 
     SetFont(pbCrFont, 0x00000000);
-    DrawString(ScreenWidth()/2-30, 10, UnicodeToUtf8(lString16::itoa(zoom)).c_str());
+    DrawString(ScreenWidth()/2-30, 10, UnicodeToUtf8(lString32::itoa(zoom)).c_str());
     PartialUpdateBW(ScreenWidth()/2/2-1, 0, ScreenWidth()/2+2, 51);
 
     // return;
@@ -7069,20 +7057,20 @@ void drawTemporaryZoom() {
 
     // int y = 10;
 
-    // DrawString(10, y, UnicodeToUtf8(L"finger1.start.x = " + lString16::itoa(int(finger1.start.x))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger1.start.y = " + lString16::itoa(int(finger1.start.y))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger2.start.x = " + lString16::itoa(int(finger2.start.x))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger2.start.y = " + lString16::itoa(int(finger2.start.y))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger1.current.x = " + lString16::itoa(int(finger1.current.x))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger1.current.y = " + lString16::itoa(int(finger1.current.y))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger2.current.x = " + lString16::itoa(int(finger2.current.x))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"finger2.current.y = " + lString16::itoa(int(finger2.current.y))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"distance = " + lString16::itoa(int(distance))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"absDistance = " + lString16::itoa(int(absDistance))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"zoomX = " + lString16::itoa(int(zoomX))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"zoomY = " + lString16::itoa(int(zoomY))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"zoomXoffset = " + lString16::itoa(int(zoomXoffset))).c_str()); y += 30;
-    // DrawString(10, y, UnicodeToUtf8(L"zoomYoffset = " + lString16::itoa(int(zoomYoffset))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger1.start.x = " + lString32::itoa(int(finger1.start.x))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger1.start.y = " + lString32::itoa(int(finger1.start.y))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger2.start.x = " + lString32::itoa(int(finger2.start.x))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger2.start.y = " + lString32::itoa(int(finger2.start.y))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger1.current.x = " + lString32::itoa(int(finger1.current.x))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger1.current.y = " + lString32::itoa(int(finger1.current.y))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger2.current.x = " + lString32::itoa(int(finger2.current.x))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"finger2.current.y = " + lString32::itoa(int(finger2.current.y))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"distance = " + lString32::itoa(int(distance))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"absDistance = " + lString32::itoa(int(absDistance))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"zoomX = " + lString32::itoa(int(zoomX))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"zoomY = " + lString32::itoa(int(zoomY))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"zoomXoffset = " + lString32::itoa(int(zoomXoffset))).c_str()); y += 30;
+    // DrawString(10, y, UnicodeToUtf8(U"zoomYoffset = " + lString32::itoa(int(zoomYoffset))).c_str()); y += 30;
 
     // // Update screen
     // PartialUpdateBW(0, 0, ScreenWidth(), ScreenHeight());
@@ -7304,16 +7292,16 @@ int pbScaledSize(int size) {
 
 bool isTouchFw5Skin() {
     return
-        pbSkinFileName == lString16("pb626fw5.cr3skin") ||
-        pbSkinFileName == lString16("pb631fw5.cr3skin") ||
-        pbSkinFileName == lString16("pb740fw5.cr3skin") ||
-        pbSkinFileName == lString16("pb700fw5.cr3skin") ||
-        pbSkinFileName == lString16("pbXfw5.cr3skin") ||
-        pbSkinFileName == lString16("pb617fw5.cr3skin") ||
-        pbSkinFileName == lString16("pb618fw5.cr3skin");
+        pbSkinFileName == lString32("pb626fw5.cr3skin") ||
+        pbSkinFileName == lString32("pb631fw5.cr3skin") ||
+        pbSkinFileName == lString32("pb740fw5.cr3skin") ||
+        pbSkinFileName == lString32("pb700fw5.cr3skin") ||
+        pbSkinFileName == lString32("pbXfw5.cr3skin") ||
+        pbSkinFileName == lString32("pb617fw5.cr3skin") ||
+        pbSkinFileName == lString32("pb618fw5.cr3skin");
 }
 
-void pbOpenDownloadedBook(const lString16 & path) {
+void pbOpenDownloadedBook(const lString32 & path) {
     if (CRPocketBookDocView::instance)
         CRPocketBookDocView::instance->openDownloadedBook(path);
 }

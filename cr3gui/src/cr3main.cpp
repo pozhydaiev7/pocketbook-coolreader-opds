@@ -161,10 +161,10 @@ void ShutdownCREngine()
 }
 
 #if (USE_FREETYPE==1)
-bool getDirectoryFonts( lString16Collection & pathList, lString16Collection & ext, lString16Collection & fonts, bool absPath )
+bool getDirectoryFonts( lString32Collection & pathList, lString32Collection & ext, lString32Collection & fonts, bool absPath )
 {
     int foundCount = 0;
-    lString16 path;
+    lString32 path;
     for ( int di=0; di<pathList.length();di++ ) {
         path = pathList[di];
         LVContainerRef dir = LVOpenDirectory(path.c_str());
@@ -172,12 +172,12 @@ bool getDirectoryFonts( lString16Collection & pathList, lString16Collection & ex
             CRLog::trace("Checking directory %s", UnicodeToUtf8(path).c_str() );
             for ( int i=0; i < dir->GetObjectCount(); i++ ) {
                 const LVContainerItemInfo * item = dir->GetObjectInfo(i);
-                lString16 fileName = item->GetName();
+                lString32 fileName = item->GetName();
                 lString8 fn = UnicodeToLocal(fileName);
                     //printf(" test(%s) ", fn.c_str() );
                 if ( !item->IsContainer() ) {
                     bool found = false;
-                    lString16 lc = fileName;
+                    lString32 lc = fileName;
                     lc.lowercase();
                     for ( int j=0; j<ext.length(); j++ ) {
                         if ( lc.endsWith(ext[j]) ) {
@@ -187,7 +187,7 @@ bool getDirectoryFonts( lString16Collection & pathList, lString16Collection & ex
                     }
                     if ( !found )
                         continue;
-                    lString16 fn;
+                    lString32 fn;
                     if ( absPath ) {
                         fn = path;
                         if ( !fn.empty() && fn[fn.length()-1]!=PATH_SEPARATOR_CHAR)
@@ -204,16 +204,16 @@ bool getDirectoryFonts( lString16Collection & pathList, lString16Collection & ex
 }
 #endif
 
-bool InitCREngine( const char * exename, lString16Collection & fontDirs )
+bool InitCREngine( const char * exename, lString32Collection & fontDirs )
 {
     CRLog::trace("InitCREngine(%s)", exename);
 
     crSetSignalHandler();
     for ( int k=0; k<fontDirs.length(); k++ )
         CRLog::trace(" fontDir: %s", LCSTR(fontDirs[k]));
-    lString16 appname( exename );
+    lString32 appname( exename );
     int lastSlash=-1;
-    lChar16 slashChar = '/';
+    lChar32 slashChar = '/';
     for ( int p=0; p<(int)appname.length(); p++ ) {
         if ( appname[p]=='\\' ) {
             slashChar = '\\';
@@ -224,11 +224,11 @@ bool InitCREngine( const char * exename, lString16Collection & fontDirs )
         }
     }
 
-    lString16 appPath;
+    lString32 appPath;
     if ( lastSlash>=0 )
         appPath = appname.substr( 0, lastSlash+1 );
 
-    lString16 fontDir = appPath + "fonts";
+    lString32 fontDir = appPath + "fonts";
     fontDir << slashChar;
     lString8 fontDir8 = UnicodeToLocal(fontDir);
     //const char * fontDir8s = fontDir8.c_str();
@@ -239,7 +239,7 @@ bool InitCREngine( const char * exename, lString16Collection & fontDirs )
     // fonts are in files font1.lbf, font2.lbf, ... font32.lbf
     if (!fontMan->GetFontCount()) {
 
-    lString16Collection fontExt;
+    lString32Collection fontExt;
     #if (USE_FREETYPE==1)
         fontExt.add(".ttf");
         fontExt.add(".otf");
@@ -249,7 +249,7 @@ bool InitCREngine( const char * exename, lString16Collection & fontDirs )
         fontExt.add(".lbf");
     #endif
     #if (USE_FREETYPE==1)
-        lString16Collection fonts;
+        lString32Collection fonts;
         fontDirs.add( fontDir );
     #ifdef _LINUX
     #ifndef LBOOK
@@ -264,9 +264,9 @@ bool InitCREngine( const char * exename, lString16Collection & fontDirs )
         fontDirs.add("/usr/share/crengine/fonts");
         fontDirs.add("/usr/share/fonts/truetype/freefont");
         fontDirs.add("/root/fonts/truetype");
-        //fontDirs.add( lString16(L"/usr/share/fonts/truetype/msttcorefonts") );
+        //fontDirs.add( lString32(U"/usr/share/fonts/truetype/msttcorefonts") );
         for ( int fi=0; msfonts[fi]; fi++ )
-            fonts.add( lString16("/usr/share/fonts/truetype/msttcorefonts/") + lString16(msfonts[fi]) );
+            fonts.add( lString32("/usr/share/fonts/truetype/msttcorefonts/") + lString32(msfonts[fi]) );
     #endif
     #endif
         getDirectoryFonts( fontDirs, fontExt, fonts, true );
@@ -327,14 +327,14 @@ void InitCREngineLog( const char * cfgfile )
         //CRLog::setLogLevel( CRLog::LL_TRACE );
         return;
     }
-    lString16 logfname(
+    lString32 logfname(
 #ifdef __arm__
                                                "/dev/null"
 #else
                                                "stdout"
 #endif
             );
-    lString16 loglevelstr("INFO");
+    lString32 loglevelstr("INFO");
 	bool autoFlush = false;
     CRPropRef logprops = LVCreatePropsContainer();
     {

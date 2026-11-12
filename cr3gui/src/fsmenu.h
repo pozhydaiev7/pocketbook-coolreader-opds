@@ -18,7 +18,7 @@
 class CRFullScreenMenu : public CRMenu
 {
 public:
-    CRFullScreenMenu(CRGUIWindowManager * wm, int id, const lString16 & caption, int numItems, lvRect & rc);
+    CRFullScreenMenu(CRGUIWindowManager * wm, int id, const lString32 & caption, int numItems, lvRect & rc);
 
     virtual const lvRect & getRect();
 
@@ -26,9 +26,9 @@ public:
 
     virtual lvPoint getSize();
 
-    virtual lString16 getItemNumberKeysName();
+    virtual lString32 getItemNumberKeysName();
 
-    virtual lString16 getCommandKeyName( int cmd, int param=0 );
+    virtual lString32 getCommandKeyName( int cmd, int param=0 );
 
     //virtual void Draw( LVDrawBuf & buf, int x, int y );
 

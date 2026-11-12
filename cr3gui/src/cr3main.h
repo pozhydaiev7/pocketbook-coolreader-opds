@@ -22,10 +22,10 @@ bool initHyph(const char * fname);
 void ShutdownCREngine();
 
 #if (USE_FREETYPE==1)
-bool getDirectoryFonts( lString16Collection & pathList, lString16 ext, lString16Collection & fonts, bool absPath );
+bool getDirectoryFonts( lString32Collection & pathList, lString32 ext, lString32Collection & fonts, bool absPath );
 #endif
 
-bool InitCREngine( const char * exename, lString16Collection & fontPathList );
+bool InitCREngine( const char * exename, lString32Collection & fontPathList );
 
 void InitCREngineLog( const char * cfgfile );
 

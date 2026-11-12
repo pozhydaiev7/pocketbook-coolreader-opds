@@ -36,7 +36,7 @@ void PbTocList::open(CRGUIWindowManager * wm, const tocentry * toc, int length, 
 void PbTocList::show(CRGUIWindowManager * wm)
 {
     lvRect rc = wm->getScreen()->getRect();
-    OpdsMenu * menu = new OpdsMenu(wm, lString16(_("Contents")), rc, false);
+    OpdsMenu * menu = new OpdsMenu(wm, lString32(_("Contents")), rc, false);
     menu->setPlainRows();
     int rows = menu->setupRows(false);
     menu->setCloseCommand(PB_TOC_LIST_CMD_CLOSE);
@@ -55,34 +55,34 @@ void PbTocList::show(CRGUIWindowManager * wm)
     if (_screen >= screens)
         _screen = screens - 1;
 
-    menu->add(PB_TOC_LIST_CMD_CLOSE, lString16(MARK_PREV) + lString16(_("Back to the book")));
+    menu->add(PB_TOC_LIST_CMD_CLOSE, lString32(MARK_PREV) + lString32(_("Back to the book")));
     int levelIndent = menu->subFont->getHeight();
     int first = _screen * _perScreen;
     int shown = 0;
     for (int i = first; i < total && i < first + _perScreen; i++, shown++) {
         const Entry & e = _entries[i];
-        lString16 title = e.text;
+        lString32 title = e.text;
         if (i == _current)
-            title = lString16(L"> ") + title; // chapter of the current page
-        OpdsItem * item = new OpdsItem(menu, PB_TOC_SAFE_CMD_RANGE + e.page, title, lString16::empty_str);
+            title = lString32(U"> ") + title; // chapter of the current page
+        OpdsItem * item = new OpdsItem(menu, PB_TOC_SAFE_CMD_RANGE + e.page, title, lString32::empty_str);
         item->indent = (e.level > 1 ? e.level - 1 : 0) * levelIndent;
-        item->aside = lString16::itoa(e.page);
+        item->aside = lString32::itoa(e.page);
         menu->addItem(item);
     }
     if (screens > 1) {
         for (int i = shown; i < _perScreen; i++)
-            menu->addItem(new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString16::empty_str, lString16::empty_str));
-        OpdsItem * pager = new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString16::empty_str, lString16::empty_str,
+            menu->addItem(new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString32::empty_str, lString32::empty_str));
+        OpdsItem * pager = new OpdsItem(menu, PB_TOC_LIST_CMD_FILLER, lString32::empty_str, lString32::empty_str,
                                         OpdsItem::PAGER);
         if (_screen > 0) {
-            pager->left = lString16(MARK_PREV) + lString16(_("Back"));
+            pager->left = lString32(MARK_PREV) + lString32(_("Back"));
             pager->leftCommand = PB_TOC_LIST_CMD_PREV;
         }
         if (_screen + 1 < screens) {
-            pager->right = lString16(_("Next")) + lString16(MARK_NEXT);
+            pager->right = lString32(_("Next")) + lString32(MARK_NEXT);
             pager->rightCommand = PB_TOC_LIST_CMD_NEXT;
         }
-        pager->center = lString16(_("Page")) + L" " + lString16::itoa(_screen + 1) + L"/" + lString16::itoa(screens);
+        pager->center = lString32(_("Page")) + U" " + lString32::itoa(_screen + 1) + U"/" + lString32::itoa(screens);
         pager->centerCommand = 0;
         menu->addItem(pager);
     }

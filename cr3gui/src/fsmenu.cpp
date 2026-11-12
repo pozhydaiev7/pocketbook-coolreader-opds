@@ -15,7 +15,7 @@
 #include "fsmenu.h"
 
 
-CRFullScreenMenu::CRFullScreenMenu(CRGUIWindowManager * wm, int id, const lString16 & caption, int numItems, lvRect & rc)
+CRFullScreenMenu::CRFullScreenMenu(CRGUIWindowManager * wm, int id, const lString32 & caption, int numItems, lvRect & rc)
     : CRMenu( wm, NULL, id, caption, LVImageSourceRef(), LVFontRef(), LVFontRef() )
 {
     _rect = rc;
@@ -23,24 +23,24 @@ CRFullScreenMenu::CRFullScreenMenu(CRGUIWindowManager * wm, int id, const lStrin
     _fullscreen = true;
 }
 
-lString16 CRFullScreenMenu::getCommandKeyName( int cmd, int param )
+lString32 CRFullScreenMenu::getCommandKeyName( int cmd, int param )
 {
     int k, f;
     bool found = _acceleratorTable->findCommandKey( cmd, param, k, f );
     if ( !found )
-        return lString16::empty_str;
-    return lString16(getKeyName( k, f ));
+        return lString32::empty_str;
+    return lString32(getKeyName( k, f ));
 }
 
-lString16 CRFullScreenMenu::getItemNumberKeysName()
+lString32 CRFullScreenMenu::getItemNumberKeysName()
 {
     int k9, f9;
-    lString16 selKeyName;
+    lString32 selKeyName;
     bool hasKey9 = _acceleratorTable->findCommandKey( MCMD_SELECT_9, 0, k9, f9 );
     if ( hasKey9 )
-        selKeyName = lString16(_("1..9"));
+        selKeyName = lString32(_("1..9"));
     else
-        selKeyName = lString16(_("1..8"));
+        selKeyName = lString32(_("1..8"));
     return selKeyName;
 }
 

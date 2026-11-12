@@ -49,7 +49,7 @@ void CRSelNavigationDialog::moveBy( int delta )
     _mainwin->setDirty();
 }
 
-CRSelNavigationDialog::CRSelNavigationDialog(  CRGUIWindowManager * wm, CRViewDialog * mainwin, lString16 pattern )
+CRSelNavigationDialog::CRSelNavigationDialog(  CRGUIWindowManager * wm, CRViewDialog * mainwin, lString32 pattern )
 : BackgroundFitWindow(  wm, mainwin ), _mainwin(mainwin), _pattern(pattern)
 {
     _rect = _wm->getScreen()->getRect();

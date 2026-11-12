@@ -1,17 +1,30 @@
-/** \file lvarray.h
-    \brief value array template
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2012 Vadim Lopatin <coolreader.org@gmail.com>      *
+ *   Copyright (C) 2021 Aleksey Chernov <valexlin@gmail.com>               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-    Implements array of values.
-
-    CoolReader Engine
-
-    (c) Vadim Lopatin, 2000-2006
-    This source code is distributed under the terms of
-    GNU General Public License.
-
-    See LICENSE file for details.
-
-*/
+/**
+ * \file lvarray.h
+ * \brief value array template
+ *
+ * Implements array of values
+ */
 
 #ifndef __LVARRAY_H_INCLUDED__
 #define __LVARRAY_H_INCLUDED__
@@ -225,6 +238,16 @@ public:
         _array[pos] = item;
         _count++;
     }
+
+    /// returns index of specified value, -1 if not found
+    int indexOf(int value) const {
+        for ( int i=0; i<_count; i++ ) {
+            if ( _array[i] == value )
+                return i;
+        }
+        return -1;
+    }
+
     /// returns array pointer
     T * ptr() const { return _array; }
     /// destructor

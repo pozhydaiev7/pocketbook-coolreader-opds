@@ -26,7 +26,7 @@ public:
 };
 
 CRRecentBookMenuItem::CRRecentBookMenuItem( CRMenu * menu, int index, CRFileHistRecord * book )
-: CRMenuItem(menu, index, lString16::empty_str, LVImageSourceRef(), LVFontRef() ), _book( book )
+: CRMenuItem(menu, index, lString32::empty_str, LVImageSourceRef(), LVFontRef() ), _book( book )
 {
 }
 
@@ -45,9 +45,9 @@ void CRRecentBookMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef ski
     lvRect textRect = rc;
     textRect.left += imgWidth;
 
-    lString16 author = _book->getAuthor();
-    lString16 title = _book->getTitle();
-    lString16 series = _book->getSeries();
+    lString32 author = _book->getAuthor();
+    lString32 title = _book->getTitle();
+    lString32 series = _book->getSeries();
     if ( title.empty() )
         title = _book->getFileName();
     else if ( !series.empty() )
@@ -112,7 +112,7 @@ void CRRecentBooksMenu::handleContextMenu(int index)
 #endif
 
 CRRecentBooksMenu::CRRecentBooksMenu(CRGUIWindowManager * wm, LVDocView * docview, int numItems, lvRect & rc)
-    : CRFullScreenMenu( wm, MCMD_BOOKMARK_LIST, lString16(_("Open recent book")), numItems, rc )
+    : CRFullScreenMenu( wm, MCMD_BOOKMARK_LIST, lString32(_("Open recent book")), numItems, rc )
 {
     docview->savePosition(); // to move current file to top
     LVPtrVector<CRFileHistRecord> & files = docview->getHistory()->getRecords();
@@ -129,8 +129,8 @@ CRRecentBooksMenu::CRRecentBooksMenu(CRGUIWindowManager * wm, LVDocView * docvie
     if ( acc.isNull() )
         acc = _wm->getAccTables().get("menu");
     setAccelerators( acc );
-    setSkinName(lString16("#recent-books"), lString16("#bookmarks"));
-    lString16 pattern(_("$1 - open book\n$2, $3 - close"));
+    setSkinName(lString32("#recent-books"), lString32("#bookmarks"));
+    lString32 pattern(_("$1 - open book\n$2, $3 - close"));
 #ifdef CR_POCKETBOOK
 	pattern.replaceParam(1, getCommandKeyName( MCMD_SELECT ));
 #else    

@@ -65,8 +65,8 @@ enum OpdsCommands {
 
 // One catalog of the list
 struct OpdsCatalog {
-    lString16 name;
-    lString16 url;
+    lString32 name;
+    lString32 url;
 };
 
 class OpdsBrowser
@@ -103,7 +103,7 @@ private:
     int _catalog;                     // index of the open catalog, -1 when none
     int _editCatalog;                 // index of the catalog of the card
     bool _catalogsEdit;               // the list of catalogs was shown to edit them
-    lString16 _newUrl;                // address of the catalog being added
+    lString32 _newUrl;                // address of the catalog being added
     int _catalogRows;                 // rows of the screen of the catalog list
 
     std::string rootUrl();
@@ -121,7 +121,7 @@ private:
     void showCatalogs(CRGUIWindowManager * wm, bool edit);
     void showCard(CRGUIWindowManager * wm);
     void showDeleteQuestion(CRGUIWindowManager * wm);
-    void editText(const char * title, const lString16 & value, void (*handler)(char *));
+    void editText(const char * title, const lString32 & value, void (*handler)(char *));
     bool fetch(const std::string & url, opds::Feed & feed);
     bool load(const std::string & url, bool push);
     bool loadMore();

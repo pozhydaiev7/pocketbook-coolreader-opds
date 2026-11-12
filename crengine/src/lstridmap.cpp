@@ -1,22 +1,38 @@
-/*******************************************************
+/***************************************************************************
+ *   CoolReader engine                                                     *
+ *   Copyright (C) 2007-2009,2012 Vadim Lopatin <coolreader.org@gmail.com> *
+ *   Copyright (C) 2018,2020 poire-z <poire-z@users.noreply.github.com>    *
+ *   Copyright (C) 2020 Konstantin Potapov <pkbo@users.sourceforge.net>    *
+ *   Copyright (C) 2018,2020 Aleksey Chernov <valexlin@gmail.com>          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU General Public License           *
+ *   as published by the Free Software Foundation; either version 2        *
+ *   of the License, or (at your option) any later version.                *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the Free Software           *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            *
+ *   MA 02110-1301, USA.                                                   *
+ ***************************************************************************/
 
-   CoolReader Engine DOM Tree 
+/**
+ * \file lstridmap.cpp
+ * \brief Name to Id map
+ */
 
-   LDOMNodeIdMap.cpp:  Name to Id map
-
-   (c) Vadim Lopatin, 2000-2006
-   This source code is distributed under the terms of
-   GNU General Public License
-   See LICENSE file for details
-
-*******************************************************/
-
+#include "../include/lvmemman.h"
 #include "../include/lstridmap.h"
 #include "../include/dtddef.h"
 #include "../include/lvtinydom.h"
 #include <string.h>
 
-LDOMNameIdMapItem::LDOMNameIdMapItem(lUInt16 _id, const lString16 & _value, const css_elem_def_props_t * _data)
+LDOMNameIdMapItem::LDOMNameIdMapItem(lUInt16 _id, const lString32 & _value, const css_elem_def_props_t * _data)
     : id(_id), value(_value)
 {
 	if ( _data ) {
@@ -67,7 +83,7 @@ LDOMNameIdMapItem * LDOMNameIdMapItem::deserialize( SerialBuf & buf )
 	if ( !buf.checkMagic( id_map_item_magic ) )
         return NULL;
 	lUInt16 id;
-	lString16 value;
+	lString32 value;
 	lUInt8 flgData;
     buf >> id >> value >> flgData;
     if ( id>=MAX_TYPE_ID )
@@ -77,7 +93,7 @@ LDOMNameIdMapItem * LDOMNameIdMapItem::deserialize( SerialBuf & buf )
         lUInt8 display;
         lUInt8 white_space;
         buf >> display >> white_space >> props.allow_text >> props.is_object;
-        if ( display > css_d_none || white_space > css_ws_nowrap )
+        if ( display > css_d_none || white_space > css_ws_break_spaces )
             return NULL;
         props.display = (css_display_t)display;
         props.white_space = (css_white_space_t)white_space;
@@ -152,10 +168,8 @@ LDOMNameIdMap::LDOMNameIdMap(lUInt16 maxId)
 {
     m_size = maxId+1;
     m_count = 0;
-    m_by_id   = new LDOMNameIdMapItem * [m_size];
-    memset( m_by_id, 0, sizeof(LDOMNameIdMapItem *)*m_size );  
-    m_by_name = new LDOMNameIdMapItem * [m_size];
-    memset( m_by_name, 0, sizeof(LDOMNameIdMapItem *)*m_size );  
+    m_by_id   = new LDOMNameIdMapItem * [m_size]();
+    m_by_name = new LDOMNameIdMapItem * [m_size]();
     m_sorted = true;
     m_changed = false;
 }
@@ -203,7 +217,7 @@ void LDOMNameIdMap::Sort()
     m_sorted = true;
 }
 
-const LDOMNameIdMapItem * LDOMNameIdMap::findItem( const lChar16 * name )
+const LDOMNameIdMapItem * LDOMNameIdMap::findItem( const lChar32 * name )
 {
     if (m_count==0 || !name || !*name)
         return NULL;
@@ -265,8 +279,8 @@ void LDOMNameIdMap::AddItem( LDOMNameIdMapItem * item )
     {
         // reallocate storage
         lUInt16 newsize = item->id+16;
-        m_by_id = (LDOMNameIdMapItem **)realloc( m_by_id, sizeof(LDOMNameIdMapItem *)*newsize );
-        m_by_name = (LDOMNameIdMapItem **)realloc( m_by_name, sizeof(LDOMNameIdMapItem *)*newsize );
+        m_by_id = cr_realloc( m_by_id, newsize );
+        m_by_name = cr_realloc( m_by_name, newsize );
         for (lUInt16 i = m_size; i<newsize; i++)
         {
             m_by_id[i] = NULL;
@@ -288,7 +302,7 @@ void LDOMNameIdMap::AddItem( LDOMNameIdMapItem * item )
     }
 }
 
-void LDOMNameIdMap::AddItem( lUInt16 id, const lString16 & value, const css_elem_def_props_t * data )
+void LDOMNameIdMap::AddItem( lUInt16 id, const lString32 & value, const css_elem_def_props_t * data )
 {
     if (id==0)
         return;
@@ -320,3 +334,15 @@ void LDOMNameIdMap::dumpUnknownItems( FILE * f, int start_id )
     }
 }
 
+lString32 LDOMNameIdMap::getUnknownItems( int start_id )
+{
+    lString32 items;
+    for (int i=start_id; i<m_size; i++) {
+        if (m_by_id[i] != NULL) {
+            if ( !items.empty() )
+                items << " ";
+            items << m_by_id[i]->value;
+        }
+    }
+    return items;
+}

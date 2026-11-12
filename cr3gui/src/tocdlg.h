@@ -28,11 +28,11 @@ class CRTOCDialog : public CRNumberEditDialog
 
         virtual void draw();
     public:
-        CRTOCDialog( CRGUIWindowManager * wm, lString16 title, int resultCmd, int pageCount, LVDocView * docview );
+        CRTOCDialog( CRGUIWindowManager * wm, lString32 title, int resultCmd, int pageCount, LVDocView * docview );
         virtual ~CRTOCDialog()
         {
         }
-        bool digitEntered( lChar16 c );
+        bool digitEntered( lChar32 c );
         int getCurItemIndex();
 
         /// returns true if command is processed

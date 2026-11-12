@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "bundled": [
+    {
+      "name": "FreeType",
+      "directory": "freetype",
+      "version": "2.15.0",
+      "source": "https://download.savannah.gnu.org/releases/freetype/freetype-2.15.0.tar.xz",
+      "sha256": "93cd47eb719c325107f2d3cf087d06299e944c3b48a40b55537302304dea1dd5",
+      "licenses": [
+        "docs/FTL.TXT",
+        "docs/GPLv2.TXT"
+      ]
+    },
+    {
+      "name": "libjpeg-turbo",
+      "directory": "libjpeg",
+      "version": "3.2.0",
+      "source": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.2.0/libjpeg-turbo-3.2.0.tar.gz",
+      "sha256": "6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e",
+      "licenses": [
+        "LICENSE.md",
+        "README.ijg"
+      ]
+    },
+    {
+      "name": "libpng",
+      "directory": "libpng",
+      "version": "1.6.59",
+      "source": "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.59/libpng-1.6.59.tar.xz",
+      "sha256": "d80dd2a38a37f803cb9b6ac7b14bd6e74ddc3b654780a8380bdf93523fdb4389",
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "zlib",
+      "directory": "zlib",
+      "version": "1.3.2",
+      "source": "https://zlib.net/zlib-1.3.2.tar.xz",
+      "sha256": "d7a0654783a4da529d1bb793b7ad9c3318020af77667bcae35f95d0e42a792f3",
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "curl",
+      "directory": "curl",
+      "version": "8.23.0",
+      "source": "https://github.com/curl/curl/releases/download/curl-8_23_0/curl-8.23.0.tar.xz",
+      "sha256": "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5",
+      "licenses": [
+        "COPYING"
+      ]
+    },
+    {
+      "name": "CHMLib",
+      "directory": "chmlib",
+      "version": "0.40",
+      "source": "https://github.com/jedwing/CHMLib",
+      "local_changes": "CoolReader external stream I/O integration",
+      "licenses": [
+        "COPYING"
+      ]
+    },
+    {
+      "name": "Antiword",
+      "directory": "antiword",
+      "version": "0.37",
+      "source": "https://github.com/grobian/antiword",
+      "local_changes": "CR3_ANTIWORD_PATCH and external stream I/O integration",
+      "licenses": [
+        "Docs/COPYING"
+      ]
+    },
+    {
+      "name": "QImageScale",
+      "directory": "qimagescale",
+      "version": "CoolReader-dcc2d4c",
+      "source": "https://github.com/buggins/coolreader/tree/dcc2d4c88b7ee66b8ee1223833c1a72cad3cdbc5/thirdparty_unman/qimagescale",
+      "upstream_archive_sha256": "391c63ed55b6014edf7312d6d2ea323a5c95404253a0232f5d00ea2849aa0731",
+      "licenses": [
+        "QIMAGETRANSFORM_LICENSE.txt",
+        "LICENSE.GPL2",
+        "NOTICE.txt"
+      ]
+    }
+  ],
+  "firmware": [
+    "InkView",
+    "OpenSSL",
+    "bzip2 1.0.8",
+    "glibc",
+    "libstdc++"
+  ],
+  "project_code": [
+    "tinydict"
+  ]
+}

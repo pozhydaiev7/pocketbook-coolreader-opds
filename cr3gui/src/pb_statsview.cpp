@@ -19,64 +19,64 @@ using namespace opdsui;
 
 namespace {
 
-lString16 tr(const char * s)
+lString32 tr(const char * s)
 {
-    return lString16(_(s));
+    return lString32(_(s));
 }
 
-lString16 num(long long n)
+lString32 num(long long n)
 {
     char buf[32];
     snprintf(buf, sizeof(buf), "%lld", n);
-    return lString16(buf);
+    return lString32(buf);
 }
 
-lString16 dateText(long long t)
+lString32 dateText(long long t)
 {
     return u16(pbStatsDateText(pbStatsDay(t)));
 }
 
-lString16 dayText(int day)
+lString32 dayText(int day)
 {
     return u16(pbStatsDateText(day));
 }
 
-lString16 rangeText(int fromDay, int toDay)
+lString32 rangeText(int fromDay, int toDay)
 {
-    lString16 s = dayText(fromDay);
+    lString32 s = dayText(fromDay);
     if (toDay != fromDay)
-        s << L" \x2013 " << dayText(toDay);
+        s << U" \x2013 " << dayText(toDay);
     return s;
 }
 
-lString16 timeText(long long seconds)
+lString32 timeText(long long seconds)
 {
     return u16(pbStatsTimeText(seconds));
 }
 
 // "2 d. 03:04:05": whole days of 24 hours, then the rest
-lString16 durationText(long long seconds)
+lString32 durationText(long long seconds)
 {
-    lString16 s;
+    lString32 s;
     long long days = seconds / 86400;
     if (days > 0)
-        s << num(days) << L" " << tr("d.") << L" ";
+        s << num(days) << U" " << tr("d.") << U" ";
     s << timeText(seconds % 86400);
     return s;
 }
 
 // Rounded average; 0 when there are no days
-lString16 average(long long total, int days)
+lString32 average(long long total, int days)
 {
     return num(days > 0 ? (total + days / 2) / days : 0);
 }
 
-int countWords(const lString16 & text)
+int countWords(const lString32 & text)
 {
     int words = 0;
     bool inWord = false;
     for (int i = 0; i < text.length(); i++) {
-        lChar16 ch = text[i];
+        lChar32 ch = text[i];
         bool letter = (lGetCharProps(ch) & (CH_PROP_ALPHA | CH_PROP_DIGIT)) != 0;
         if (letter && !inWord)
             words++;
@@ -88,7 +88,7 @@ int countWords(const lString16 & text)
     return words;
 }
 
-std::string utf8(const lString16 & s)
+std::string utf8(const lString32 & s)
 {
     return std::string(UnicodeToUtf8(s).c_str());
 }
@@ -97,17 +97,17 @@ std::string utf8(const lString16 & s)
 std::string bookKey(LVDocView * doc)
 {
     CRPropRef props = doc->getDocProps();
-    lString16 crc = props->getStringDef(DOC_PROP_FILE_CRC32, "");
-    lString16 size = props->getStringDef(DOC_PROP_FILE_SIZE, "");
+    lString32 crc = props->getStringDef(DOC_PROP_FILE_CRC32, "");
+    lString32 size = props->getStringDef(DOC_PROP_FILE_SIZE, "");
     if (crc.empty() || crc == "0")
         return utf8(props->getStringDef(DOC_PROP_FILE_NAME, ""));
-    // lString16 concatenation: std::string operator+ would be exported to libinkview (see pb_stats.h)
-    return utf8(crc + L"-" + size);
+    // lString32 concatenation: std::string operator+ would be exported to libinkview (see pb_stats.h)
+    return utf8(crc + U"-" + size);
 }
 
 std::string bookTitle(LVDocView * doc)
 {
-    lString16 title = doc->getTitle();
+    lString32 title = doc->getTitle();
     title.trim();
     if (title.empty())
         title = doc->getDocProps()->getStringDef(DOC_PROP_FILE_NAME, "");
@@ -129,7 +129,7 @@ void periodKeyboardHandler(char * s)
     executeCommand((s && *s) ? PB_STATS_CMD_PERIOD_APPLY : PB_STATS_CMD_MENU, 0);
 }
 
-PbStatsView::Line line(const lString16 & label, const lString16 & text)
+PbStatsView::Line line(const lString32 & label, const lString32 & text)
 {
     PbStatsView::Line l;
     l.label = label;
@@ -137,7 +137,7 @@ PbStatsView::Line line(const lString16 & label, const lString16 & text)
     return l;
 }
 
-PbStatsView::Line heading(const lString16 & label)
+PbStatsView::Line heading(const lString32 & label)
 {
     PbStatsView::Line l;
     l.text = label;
@@ -150,22 +150,22 @@ PbStatsView::Line heading(const lString16 & label)
 void addFillers(OpdsMenu * menu, int count)
 {
     for (int i = 0; i < count; i++)
-        menu->addItem(new OpdsItem(menu, PB_STATS_CMD_LAST, lString16::empty_str, lString16::empty_str));
+        menu->addItem(new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str));
 }
 
 void addPager(OpdsMenu * menu, int screen, int screens)
 {
-    OpdsItem * pager = new OpdsItem(menu, PB_STATS_CMD_LAST, lString16::empty_str, lString16::empty_str,
+    OpdsItem * pager = new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str,
                                     OpdsItem::PAGER);
     if (screen > 0) {
-        pager->left = lString16(MARK_PREV) + tr("Back");
+        pager->left = lString32(MARK_PREV) + tr("Back");
         pager->leftCommand = PB_STATS_CMD_PREV;
     }
     if (screen + 1 < screens) {
-        pager->right = tr("Next") + lString16(MARK_NEXT);
+        pager->right = tr("Next") + lString32(MARK_NEXT);
         pager->rightCommand = PB_STATS_CMD_NEXT;
     }
-    pager->center = tr("Page") + L" " + num(screen + 1) + L"/" + num(screens);
+    pager->center = tr("Page") + U" " + num(screen + 1) + U"/" + num(screens);
     pager->centerCommand = 0;
     menu->addItem(pager);
 }
@@ -174,12 +174,12 @@ void addPager(OpdsMenu * menu, int screen, int screens)
 
 // ------------------------------------------------------------ book window side
 
-void PbStatsView::init(const lString16 & stateDir)
+void PbStatsView::init(const lString32 & stateDir)
 {
     LVCreateDirectory(stateDir);
-    lString16 path = stateDir;
+    lString32 path = stateDir;
     if (!path.endsWith("/"))
-        path << L"/";
+        path << U"/";
     path << PB_STATS_FILE_NAME;
     PbStatsRecorder::instance().setFile(utf8(path));
     CRLog::info("Reading statistics: %s", UnicodeToUtf8(path).c_str());
@@ -258,7 +258,7 @@ void PbStatsView::showMenu(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, tr("Reading statistics"), rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(PB_STATS_CMD_CLOSE);
-    menu->add(PB_STATS_CMD_CLOSE, lString16(MARK_PREV) + tr("Back to the book"));
+    menu->add(PB_STATS_CMD_CLOSE, lString32(MARK_PREV) + tr("Back to the book"));
     if (!_thisBookKey.empty())
         menu->add(PB_STATS_CMD_THIS_BOOK, tr("This book"), u16(_thisBookTitle));
     menu->add(PB_STATS_CMD_TODAY, tr("Today"), dayText(today));
@@ -291,14 +291,14 @@ void PbStatsView::showBooks(CRGUIWindowManager * wm)
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
     menu->setCloseCommand(PB_STATS_CMD_MENU);
 
-    menu->add(PB_STATS_CMD_MENU, lString16(MARK_PREV) + tr("Reading statistics"));
+    menu->add(PB_STATS_CMD_MENU, lString32(MARK_PREV) + tr("Reading statistics"));
     int first = _booksScreen * perScreen;
     int shown = 0;
     for (int i = first; i < total && i < first + perScreen; i++, shown++) {
         const PbStatsBook & b = _log.books[_bookIndexes[i]];
-        lString16 sub;
+        lString32 sub;
         if (!b.author.empty())
-            sub << u16(b.author) << lString16(DOT);
+            sub << u16(b.author) << lString32(DOT);
         sub << durationText(_bookSeconds[i]);
         menu->add(PB_STATS_CMD_BOOK + _bookIndexes[i], u16(b.title.empty() ? b.key : b.title), sub);
     }
@@ -340,13 +340,13 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
     menu->setCloseCommand(PB_STATS_CMD_BACK);
 
-    menu->add(PB_STATS_CMD_BACK, lString16(MARK_PREV) +
+    menu->add(PB_STATS_CMD_BACK, lString32(MARK_PREV) +
               (_reportBack == PB_STATS_CMD_BOOKS ? tr("All books") : tr("Reading statistics")));
     int indent = menu->subFont->getHeight();
     int first = _screen * perScreen;
     int shown = 0;
     for (int i = first; i < total && i < first + perScreen; i++, shown++) {
-        OpdsItem * item = new OpdsItem(menu, PB_STATS_CMD_LAST, lString16::empty_str, lString16::empty_str,
+        OpdsItem * item = new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str,
                                        OpdsItem::TEXT);
         for (int k = 0; k < 2; k++) {
             int index = k == 0 ? packed[i].first : packed[i].second;
@@ -378,32 +378,32 @@ void PbStatsView::bookReport(int bookIndex, int back)
     _report.clear();
     _screen = 0;
 
-    Line title = line(lString16::empty_str, u16(b.title.empty() ? b.key : b.title));
+    Line title = line(lString32::empty_str, u16(b.title.empty() ? b.key : b.title));
     title.title = true;
     title.newRow = true;
     _report.push_back(title);
-    _report.push_back(line(lString16::empty_str, u16(b.author)));
+    _report.push_back(line(lString32::empty_str, u16(b.author)));
 
-    _report.push_back(line(tr("Reading started: "), r.started ? dateText(r.started) : lString16(L"\x2014")));
-    _report.push_back(line(tr("Reading finished: "), r.finished ? dateText(r.finished) : lString16(L"\x2014")));
+    _report.push_back(line(tr("Reading started: "), r.started ? dateText(r.started) : lString32(U"\x2014")));
+    _report.push_back(line(tr("Reading finished: "), r.finished ? dateText(r.finished) : lString32(U"\x2014")));
     _report.push_back(line(tr("Reading days: "), num((long long)r.days.size())));
     char buf[128];
     snprintf(buf, sizeof(buf), _("%d of %d pages (%d%%)"), r.pagesRead, r.pagesTotal, r.percent());
-    _report.push_back(line(tr("Read: "), lString16(buf)));
+    _report.push_back(line(tr("Read: "), lString32(buf)));
     _report.push_back(line(tr("Total reading time: "), timeText(r.seconds)));
     _report.push_back(line(tr("Time to finish (estimate): "),
-                           r.finished ? lString16(L"\x2014") : timeText(r.secondsToFinish())));
+                           r.finished ? lString32(U"\x2014") : timeText(r.secondsToFinish())));
     _report.push_back(line(tr("Average time per page: "), timeText(r.secondsPerPage())));
     _report.push_back(line(tr("Average reading time per day: "), timeText(r.secondsPerDay())));
 
     if (!r.days.empty()) {
         _report.push_back(heading(tr("Reading days")));
         for (size_t i = 0; i < r.days.size(); i++)
-            _report.push_back(line(lString16::empty_str, dayText(r.days[i]) + L" \x2014 " + timeText(r.daySeconds[i])));
+            _report.push_back(line(lString32::empty_str, dayText(r.days[i]) + U" \x2014 " + timeText(r.daySeconds[i])));
     }
 }
 
-void PbStatsView::periodReport(const lString16 & caption, int fromDay, int toDay)
+void PbStatsView::periodReport(const lString32 & caption, int fromDay, int toDay)
 {
     int today = pbStatsDay((long long)time(NULL));
     PbStatsPeriodReport r = PbStatsReports::period(_log, fromDay, toDay, today);
@@ -412,11 +412,11 @@ void PbStatsView::periodReport(const lString16 & caption, int fromDay, int toDay
     _report.clear();
     _screen = 0;
 
-    Line title = line(lString16::empty_str, rangeText(r.fromDay, r.toDay));
+    Line title = line(lString32::empty_str, rangeText(r.fromDay, r.toDay));
     title.title = true;
     title.newRow = true;
     _report.push_back(title);
-    _report.push_back(line(tr("Reading days: "), num(r.readingDays()) + L" / " + num(r.periodDays)));
+    _report.push_back(line(tr("Reading days: "), num(r.readingDays()) + U" / " + num(r.periodDays)));
 
     _report.push_back(line(tr("Pages read: "), num(r.pages)));
     _report.push_back(line(tr("Pages per reading day: "), average(r.pages, r.readingDays())));
@@ -431,20 +431,20 @@ void PbStatsView::periodReport(const lString16 & caption, int fromDay, int toDay
     if (!r.days.empty()) {
         _report.push_back(heading(tr("Reading time by days")));
         for (size_t i = 0; i < r.days.size(); i++)
-            _report.push_back(line(lString16::empty_str, dayText(r.days[i]) + L" \x2014 " + timeText(r.daySeconds[i])));
+            _report.push_back(line(lString32::empty_str, dayText(r.days[i]) + U" \x2014 " + timeText(r.daySeconds[i])));
     }
     if (!r.bookIndexes.empty()) {
         _report.push_back(heading(tr("Books")));
         for (size_t i = 0; i < r.bookIndexes.size(); i++) {
             const PbStatsBook & b = _log.books[r.bookIndexes[i]];
-            lString16 name;
+            lString32 name;
             if (!b.author.empty())
-                name << u16(b.author) << lString16(DASH);
+                name << u16(b.author) << lString32(DASH);
             name << u16(b.title.empty() ? b.key : b.title);
-            Line book = line(lString16::empty_str, name);
+            Line book = line(lString32::empty_str, name);
             book.newRow = true;
             _report.push_back(book);
-            Line time = line(lString16::empty_str, durationText(r.bookSeconds[i]));
+            Line time = line(lString32::empty_str, durationText(r.bookSeconds[i]));
             time.indent = 1;
             _report.push_back(time);
         }
