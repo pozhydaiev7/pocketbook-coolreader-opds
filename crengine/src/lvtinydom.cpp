@@ -3321,6 +3321,10 @@ int ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback, 
 
     if ( !checkRenderContext() ) {
         CRLog::info("rendering context is changed - full render required...");
+        // the styles are made anew before the blocks are formatted: the frontend shows its
+        // wait icon from this moment, not from the first OnFormatProgress()
+        if ( callback )
+            callback->OnFormatStart();
         CRLog::trace("init format data...");
         //CRLog::trace("validate 1...");
         //validateDocument();
@@ -3358,6 +3362,8 @@ int ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback, 
         _rendered = false;
     }
     if ( !_rendered ) {
+        if ( callback )
+            callback->OnFormatStart();
         pages->clear();
         if ( showCover )
             pages->add( new LVRendPageInfo( _page_height ) );

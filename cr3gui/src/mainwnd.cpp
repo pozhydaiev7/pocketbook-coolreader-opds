@@ -21,6 +21,7 @@
 #ifndef _WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #endif
 
 #include "mainwnd.h"
@@ -51,6 +52,22 @@
 
 #define SECONDS_BEFORE_PROGRESS_BAR 2
 
+// Layout of the open book (settings, font size, rotation): the wait icon is shown at once when
+// the last layout of the book took LAYOUT_ICON_MIN_MS or, its time not known, the book has
+// LAYOUT_ICON_MIN_PAGES pages; a shorter one would only add the time of drawing the icon.
+// A layout that started without the icon gets it after LAYOUT_ICON_LATE_MS. Input made during
+// a layout of LAYOUT_INPUT_STALE_MS or with the icon is reported as stale (onLayoutWaitEnd).
+#define LAYOUT_ICON_MIN_MS 700
+#define LAYOUT_ICON_MIN_PAGES 150
+#define LAYOUT_ICON_LATE_MS 2000
+#define LAYOUT_INPUT_STALE_MS 500
+
+static long long layoutClockMs()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
 
 // uncomment to trace document mem usage during load or format progress
 //#define TRACE_DOC_MEM_STATS 1
@@ -73,7 +90,8 @@ static LVImageSourceRef batteryIcon( const char ** xpm )
 }
 
 V3DocViewWin::V3DocViewWin( CRGUIWindowManager * wm, lString16 dataDir )
-: CRViewDialog ( wm, lString16::empty_str, lString8::empty_str, lvRect(), false, false ), _dataDir(dataDir), _loadFileStart(0)
+: CRViewDialog ( wm, lString16::empty_str, lString8::empty_str, lvRect(), false, false ), _dataDir(dataDir), _loadFileStart(0),
+  _loadingFile(false), _layoutOfLoad(false), _layoutStart(0), _layoutWork(false), _layoutIcon(false), _lastLayoutMs(-1), _lastPageCount(0)
 {
     CRLog::trace("V3DocViewWin()");
     LVArray<int> sizes( cr_font_sizes, sizeof(cr_font_sizes)/sizeof(int) );
@@ -367,6 +385,74 @@ V3DocViewWin::V3DocViewWin( CRGUIWindowManager * wm, lString16 dataDir )
 void V3DocViewWin::OnLoadFileStart( lString16 filename )
 {
     _loadFileStart = time((time_t)0);
+    _lastLayoutMs = -1;
+    _lastPageCount = 0;
+}
+
+/// LVDocView::Render() is entered: the layout is checked and, when the settings changed, made again
+void V3DocViewWin::OnRenderStart()
+{
+    _layoutStart = 0;
+    _layoutOfLoad = _loadFileStart != 0;
+    if ( _layoutOfLoad )
+        return; // a book is being loaded: the loading progress covers its first layout
+    _layoutStart = layoutClockMs();
+    _layoutWork = false;
+    _layoutIcon = false;
+}
+
+/// The engine found that the book has to be laid out again: the wait icon
+void V3DocViewWin::layoutWorkStarted()
+{
+    if ( _layoutStart == 0 || _layoutWork )
+        return;
+    _layoutWork = true;
+    if ( _lastLayoutMs >= LAYOUT_ICON_MIN_MS || ( _lastLayoutMs < 0 && _lastPageCount >= LAYOUT_ICON_MIN_PAGES ) ) {
+        CRLog::info("layout: wait icon (last layout %d ms, %d pages)", _lastLayoutMs, _lastPageCount);
+        _layoutIcon = true;
+        _wm->showWaitIcon( PROGRESS_ICON_FILE );
+    }
+}
+
+/// The engine reports the progress of a layout. One that started without the icon and takes
+/// long gets it, once. No gauge: redrawn during the layout it made the e-ink screen blink.
+void V3DocViewWin::layoutProgress()
+{
+    if ( _layoutStart == 0 )
+        return;
+    layoutWorkStarted();
+    if ( _layoutIcon || layoutClockMs() - _layoutStart < LAYOUT_ICON_LATE_MS )
+        return;
+    _layoutIcon = true;
+    _wm->showWaitIcon( PROGRESS_ICON_FILE );
+}
+
+/// LVDocView::Render() is done
+void V3DocViewWin::OnRenderEnd()
+{
+    if ( _layoutOfLoad ) {
+        _layoutOfLoad = false;
+        // the first layout of a loaded book (not the preview of its first pages made while it is read)
+        if ( !_loadingFile ) {
+            _loadFileStart = 0;
+            _lastPageCount = _docview->getPageCount();
+        }
+        return;
+    }
+    if ( _layoutStart == 0 )
+        return;
+    int ms = (int)(layoutClockMs() - _layoutStart);
+    _layoutStart = 0;
+    if ( !_layoutWork )
+        return; // the layout was up to date
+    _lastLayoutMs = ms;
+    _lastPageCount = _docview->getPageCount();
+    CRLog::info("layout: %d ms, %d pages%s", ms, _lastPageCount, _layoutIcon ? ", wait icon shown" : "");
+    if ( _layoutIcon || ms >= LAYOUT_INPUT_STALE_MS ) {
+        setDirty(); // the page is drawn over the icon
+        onLayoutWaitEnd();
+    }
+    _layoutIcon = false;
 }
 
 /// format detection finished
@@ -440,18 +526,22 @@ void V3DocViewWin::OnLoadFileProgress( int percent )
 }
 
 /// document formatting started
+// The engine reports every layout, not only the one of a book being loaded. _loadFileStart is
+// set while a book is loaded and is 0 after its first layout: the layout of a rotation or of a
+// settings change shows no loading progress, it has the wait icon of its own (layoutWorkStarted).
 void V3DocViewWin::OnFormatStart()
 {
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
         showProgress(PROGRESS_ICON_FILE, 60);
+    layoutWorkStarted();
 }
 
 /// document formatting finished
 void V3DocViewWin::OnFormatEnd()
 {
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR )
         showProgress(PROGRESS_ICON_FILE, 100);
     // Background cache file saving is disabled when _docview->updateCache(infinite) is called here.
     // To implement background cache file saving, schedule on Idle state following task:
@@ -466,12 +556,13 @@ void V3DocViewWin::OnFormatProgress( int percent )
 {
     CRLog::trace("OnFormatProgress(%d)", percent);
     time_t t = time((time_t)0);
-    if ( t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR ) {
+    if ( _loadFileStart != 0 && t - _loadFileStart >= SECONDS_BEFORE_PROGRESS_BAR ) {
         showProgress(PROGRESS_ICON_FILE, 60+percent*4/10);
 #ifdef TRACE_DOC_MEM_STATS
         _docview->getDocument()->dumpStatistics();
 #endif
     }
+    layoutProgress();
 }
 
 /// file load finiished with error
@@ -572,12 +663,22 @@ void V3DocViewWin::closing()
 bool V3DocViewWin::loadDocument( lString16 filename )
 {
     _fileName = filename;
-    if ( !_docview->LoadDocument( filename.c_str() ) ) {
+    _loadingFile = true;
+    bool loaded = _docview->LoadDocument( filename.c_str() );
+    _loadingFile = false;
+    if ( !loaded ) {
     	CRLog::error("V3DocViewWin::loadDocument( %s ) - failed!", UnicodeToUtf8(filename).c_str() );
+        _loadFileStart = 0;
         return false;
     }
     //_docview->swapToCache();
     _docview->restorePosition();
+    // laid out already, with the loading progress: what follows is a layout of an open book.
+    // Otherwise the first layout is made for the first drawing (OnRenderEnd).
+    if ( _docview->IsRendered() ) {
+        _loadFileStart = 0;
+        _lastPageCount = _docview->getPageCount();
+    }
     return true;
 }
 

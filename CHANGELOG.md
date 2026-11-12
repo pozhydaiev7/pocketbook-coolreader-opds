@@ -2,7 +2,7 @@
 
 ## 0.0.6-17-66-opds (not released)
 
-Speed review. Test builds: `0.0.6-17-66-opds-perf0` (stage timing only), `-beta1` (timing and the changes outside of the engine) `-beta2` (the engine changes), `-beta3` (the direct copy to the screen), `-beta4` (the speed changes below) and `-beta5` (the keyboard as the firmware one, the word list of the dictionary window, the screens of the lists turned with the arrows of the title, the rotation by the G-sensor, the terms of the Ukrainian translation; the same changes as in `0.0.6-17-67-opds-alpha5` of the branch `engine-3.2.59`).
+Speed review. Test builds: `0.0.6-17-66-opds-perf0` (stage timing only), `-beta1` (timing and the changes outside of the engine) `-beta2` (the engine changes), `-beta3` (the direct copy to the screen), `-beta4` (the speed changes below) and `-beta5` (the keyboard as the firmware one, the word list of the dictionary window, the screens of the lists turned with the arrows of the title, the rotation by the G-sensor, the terms of the Ukrainian translation; the same changes as in `0.0.6-17-67-opds-alpha5` of the branch `engine-3.2.59`), `-beta6` (the wait icon of a layout and the input made during it, as in `-alpha6` there).
 
 Measured on InkPad 4 (743G), median of the page turns in the log: 145 ms with `-beta2` (text 43, `Stretch()` 88), 65 ms with `-beta3` (text 43, copy to the canvas 7.5).
 
@@ -32,6 +32,12 @@ The engine changes were checked on a PC: the engine was built for Linux before a
 
 ### Fixed
 
+- **Layout of the open book with a late sign of work** (`V3DocViewWin::OnRenderStart`, `layoutWorkStarted`, `layoutProgress`, `OnRenderEnd`, `cr3gui/src/mainwnd.cpp`; `LVDocView::Render`, `crengine/src/lvdocview.cpp`; `ldomDocument::render`, `crengine/src/lvtinydom.cpp`). After a change of the font, its size, the spacing or the margins, and after a rotation, the book is laid out again; a big book takes many seconds. The wait icon came only with the first progress report, after the styles were made anew, and the taps made meanwhile all worked when the layout was over. Checked on InkPad 4 with `0.0.6-17-67-opds-alpha6`; this build was not run on a device:
+  - the wait icon is drawn when the engine starts to lay the book out again (`OnFormatStart` is called before the styles are dropped), if the last layout of this book took 0.7 s or more, or, before the first one, the book has 150 pages or more. A shorter layout gets no icon: drawing it would take longer than the layout;
+  - a layout that started without the icon and goes on for 2 s gets it then. There is no progress gauge: redrawn during the layout it made the screen blink (tried in the first `-beta6` build); the progress of the book loading is no longer shown for a layout of the open book either;
+  - taps and key presses made during a layout with the icon, or one of 0.5 s and longer, are dropped (`pbStaleInput`, `main_handler`, `cr3gui/src/cr3pocketbook.cpp`): the firmware gives them when the layout is over, and those that come within half a second after the event that made the layout are not acted on, up to their release. The power key is not dropped;
+  - `LVDocViewCallback` has `OnRenderStart()` and `OnRenderEnd()`, called by `LVDocView::Render()` around the check and the layout;
+  - the log (INFO) has the time and the page count of every layout and the number of the dropped events.
 - **A book downloaded from a catalog was missing on the home screen** right after exit, until the library was visited. The firmware adds a book to its list of the last opened books (`system/state/lastopen.txt`) only when it starts the reader for that book. CoolReader calls `AddLastOpen` and `FlushLastOpen` now when it opens a downloaded book itself (looked up at run time).
 - `LVFreeTypeFace::measureText` wrote the flags of all characters after the fit point to one cell of the output array. No caller reads those cells today, so nothing changes on the screen.
 - **Keyboard of CoolReader** (`cr3gui/src/pb_keyboard.cpp`): the keys were smaller than the keys of the firmware keyboard (13 in a row) and some letters had other places; Shift did not give the capital Ukrainian letters І, Ї, Є, Ґ and the Russian Ё. The layouts are the touch layouts of the firmware keyboard now, 11 keys in a row, with the capital letters listed on the Shift page; the page of digits and signs is gone, they are in the layouts.

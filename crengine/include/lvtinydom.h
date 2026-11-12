@@ -179,6 +179,10 @@ public:
     virtual void OnFormatEnd() { }
     /// format progress, called with values 0..100
     virtual void OnFormatProgress(int /*percent*/) { }
+    /// LVDocView::Render() is entered: the layout is checked and made again when the settings changed
+    virtual void OnRenderStart() { }
+    /// LVDocView::Render() is done: the document is laid out, its pages may be asked for
+    virtual void OnRenderEnd() { }
     /// format progress, called with values 0..100
     virtual void OnExportProgress(int /*percent*/) { }
     /// file load finiished with error
