@@ -121,6 +121,17 @@ protected:
     void convertFontWeight();
     time_t _loadFileStart;
     lString32 _fileName;
+    // Layout of the open book after a change of the settings, of the font size or a rotation:
+    // the wait icon and the input made meanwhile
+    bool _loadingFile;        // LVDocView::LoadDocument() is running
+    bool _layoutOfLoad;       // the layout being made belongs to the loading of a book
+    long long _layoutStart;   // ms, 0 when no such layout is checked or made
+    bool _layoutWork;         // the engine lays the book out again, not only checks it
+    bool _layoutIcon;         // the wait icon is on the screen
+    int _lastLayoutMs;        // time the last layout of this book took, -1 not known
+    int _lastPageCount;       // pages of the book after the last layout, 0 not known
+    void layoutWorkStarted();
+    void layoutProgress();
 public:
     lString32 getBookmarkDir() { return _bookmarkDir; }
     lString32 getBookLanguage();
@@ -154,6 +165,16 @@ public:
 	virtual void OnFormatEnd();
 	/// format progress, called with values 0..100
 	virtual void OnFormatProgress( int percent );
+	/// node style update started
+	virtual void OnNodeStylesUpdateStart();
+	/// node style update progress, called with values 0..100
+	virtual void OnNodeStylesUpdateProgress( int percent );
+	/// LVDocView::Render() is entered
+	virtual void OnRenderStart();
+	/// LVDocView::Render() is done
+	virtual void OnRenderEnd();
+	/// a layout that showed the wait icon, or took long, is finished: the input made meanwhile is stale
+	virtual void onLayoutWaitEnd() { }
 	/// file load finiished with error
 	virtual void OnLoadFileError( lString32 message );
     /// Override to handle external links

@@ -165,6 +165,79 @@ static long long pbPerfNow()
     gettimeofday(&tv, NULL);
     return (long long)tv.tv_sec * 1000000 + tv.tv_usec;
 }
+
+// Input made while the book was laid out again (the wait icon was on the screen). The firmware
+// keeps the taps and the key presses of that time and gives them all when the layout is over:
+// a tap repeated in impatience worked several times. A touch or a key press that comes before
+// pbStaleInputUntil was made during the layout: it is dropped, with its events up to the release.
+static long long pbStaleInputUntil = 0; // moment of pbPerfNow()
+static bool pbLayoutWaitEnded = false;  // such a layout ended in the event being handled
+static bool pbStaleTouch = false;       // the touch being dropped is not released yet
+static int pbStaleKey = -1;             // the key being dropped is not released yet
+static int pbStaleDropped = 0;          // events dropped, for the log
+
+static void pbLayoutWaitEnd()
+{
+    // The page is still to be drawn and sent to the screen in the event being handled;
+    // main_handler() sets the exact moment when it is done with that event.
+    pbStaleInputUntil = pbPerfNow() + 1500000;
+    pbLayoutWaitEnded = true;
+}
+
+// true: the input event was made during a layout and is not acted on
+static bool pbStaleInput(int type, int par1)
+{
+    bool fresh = pbPerfNow() >= pbStaleInputUntil;
+    bool drop = false;
+    switch (type) {
+    case EVT_POINTERDOWN:
+        pbStaleTouch = !fresh;
+        drop = pbStaleTouch;
+        break;
+    case EVT_POINTERUP:
+        drop = pbStaleTouch;
+        pbStaleTouch = false;
+        break;
+    case EVT_POINTERMOVE:
+    case EVT_POINTERLONG:
+    case EVT_POINTERHOLD:
+#ifdef EVT_POINTERDRAG
+    case EVT_POINTERDRAG:
+#endif
+#if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
+    case EVT_MTSYNC:
+#endif
+        drop = pbStaleTouch;
+        break;
+    case EVT_KEYPRESS:
+        if (par1 == KEY_POWER)
+            return false;
+        if (!fresh)
+            pbStaleKey = par1;
+        else if (pbStaleKey == par1)
+            pbStaleKey = -1;
+        drop = !fresh;
+        break;
+    case EVT_KEYREPEAT:
+        drop = pbStaleKey == par1;
+        break;
+    case EVT_KEYRELEASE:
+        drop = pbStaleKey == par1;
+        if (drop)
+            pbStaleKey = -1;
+        break;
+    default:
+        return false;
+    }
+    if (drop) {
+        pbStaleDropped++;
+    } else if (pbStaleDropped > 0) {
+        CRLog::info("layout: %d input events made during it were dropped", pbStaleDropped);
+        pbStaleDropped = 0;
+    }
+    return drop;
+}
+
 struct PbPerf {
     long long draw;     // page image: text layout and drawing
     long long stats;    // reading statistics
@@ -3502,6 +3575,12 @@ public:
         syncCanvas();
     }
 
+    // A layout with the wait icon, or a long one, is over: what was tapped meanwhile is dropped
+    virtual void onLayoutWaitEnd()
+    {
+        pbLayoutWaitEnd();
+    }
+
     // The firmware reports rotations: the sensor is no longer read by CoolReader.
     // false: the device was not turned since the last report. With "Rotate" = 360 such an event
     // is not followed, or it would undo an orientation chosen by hand; in the other modes every
@@ -6734,6 +6813,9 @@ int main_handler(int type, int par1, int par2)
             break;
     }
 
+    if (pbStaleInput(type, par1))
+        return 0;
+
     bool process_events = false;
     int ret = 0;
     pbPerf.reset();
@@ -7083,6 +7165,12 @@ int main_handler(int type, int par1, int par2)
         CRPocketBookWindowManager::instance->processPostedEvents();
     if (pbPerf.updates > 0 && pbPerfOn())
         pbPerfLog(getEventName(type), perfStart);
+    if (pbLayoutWaitEnded) {
+        // The event that made the layout is done and the page is on its way to the screen:
+        // what the firmware gives in the next half a second was made during the layout.
+        pbLayoutWaitEnded = false;
+        pbStaleInputUntil = pbPerfNow() + 500000;
+    }
     return ret;
 }
 

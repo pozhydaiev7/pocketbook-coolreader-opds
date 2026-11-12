@@ -56,6 +56,10 @@ public:
     virtual void OnFormatProgress(int /*percent*/) { }
     /// document fully loaded and rendered (follows OnFormatEnd(), or OnLoadFileEnd() when loaded from cache)
     virtual void OnDocumentReady() { }
+    /// LVDocView::Render() is entered: the layout is checked and made again when the settings changed
+    virtual void OnRenderStart() { }
+    /// LVDocView::Render() is done: the document is laid out, its pages may be asked for
+    virtual void OnRenderEnd() { }
     /// format progress, called with values 0..100
     virtual void OnExportProgress(int /*percent*/) { }
     /// Override to handle external links
