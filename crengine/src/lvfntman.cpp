@@ -604,18 +604,20 @@ static LVFontGlyphCacheItem * newItem( LVFontLocalGlyphCache * local_cache, lCha
 void LVFontLocalGlyphCache::clear()
 {
     FONT_LOCAL_GLYPH_CACHE_GUARD
-    while ( head ) {
-        LVFontGlyphCacheItem * ptr = head;
-        remove( ptr );
-        global_cache->remove( ptr );
-        LVFontGlyphCacheItem::freeItem( ptr );
+    for ( int i=0; i<GLYPHCACHE_TABLE_SZ; i++ ) {
+        while ( table[i] ) {
+            LVFontGlyphCacheItem * ptr = table[i];
+            remove( ptr );
+            global_cache->remove( ptr );
+            LVFontGlyphCacheItem::freeItem( ptr );
+        }
     }
 }
 
 LVFontGlyphCacheItem * LVFontLocalGlyphCache::get( lUInt16 ch )
 {
     FONT_LOCAL_GLYPH_CACHE_GUARD
-    LVFontGlyphCacheItem * ptr = head;
+    LVFontGlyphCacheItem * ptr = table[ch & (GLYPHCACHE_TABLE_SZ - 1)];
     for ( ; ptr; ptr = ptr->next_local ) {
         if ( ptr->ch == ch ) {
             global_cache->refresh( ptr );
@@ -629,24 +631,22 @@ void LVFontLocalGlyphCache::put( LVFontGlyphCacheItem * item )
 {
     FONT_LOCAL_GLYPH_CACHE_GUARD
     global_cache->put( item );
-    item->next_local = head;
-    if ( head )
-        head->prev_local = item;
-    if ( !tail )
-        tail = item;
-    head = item;
+    // to the head of the list of its character code
+    int index = item->ch & (GLYPHCACHE_TABLE_SZ - 1);
+    item->prev_local = NULL;
+    item->next_local = table[index];
+    if ( table[index] )
+        table[index]->prev_local = item;
+    table[index] = item;
 }
 
 /// remove from list, but don't delete
 void LVFontLocalGlyphCache::remove( LVFontGlyphCacheItem * item )
 {
     FONT_LOCAL_GLYPH_CACHE_GUARD
-    if ( item==head )
-        head = item->next_local;
-    if ( item==tail )
-        tail = item->prev_local;
-    if ( !head || !tail )
-        return;
+    int index = item->ch & (GLYPHCACHE_TABLE_SZ - 1);
+    if ( item==table[index] )
+        table[index] = item->next_local;
     if ( item->prev_local )
         item->prev_local->next_local = item->next_local;
     if ( item->next_local )
@@ -771,6 +771,20 @@ protected:
     int            _weight;
     int            _italic;
     LVFontGlyphWidthCache _wcache;
+    // Results of getGlyphInfo() by character code, for the glyphs of this font itself (not of
+    // the fallback font or of a replacement character). Cleared with _wcache.
+    enum { GLYPH_INFO_CACHE_SIZE = 256 };
+    struct GlyphInfoCacheItem {
+        lUInt16 code;
+        bool valid;
+        glyph_info_t info;
+    };
+    GlyphInfoCacheItem _infoCache[GLYPH_INFO_CACHE_SIZE];
+    void clearGlyphInfoCache()
+    {
+        for ( int i=0; i<GLYPH_INFO_CACHE_SIZE; i++ )
+            _infoCache[i].valid = false;
+    }
     LVFontLocalGlyphCache _glyph_cache;
     bool          _drawMonochrome;
     bool          _allowKerning;
@@ -820,6 +834,7 @@ public:
         _hintingMode = fontMan->GetHintingMode();
         _embolding = fontMan->GetEmbolding();
         _tracking = fontMan->GetTracking();
+        clearGlyphInfoCache();
     }
 
     virtual ~LVFreeTypeFace()
@@ -848,6 +863,7 @@ public:
         _hintingMode = mode;
         _glyph_cache.clear();
         _wcache.clear();
+        clearGlyphInfoCache();
     }
     /// returns current hinting mode
     virtual hinting_mode_t  getHintingMode() const { return _hintingMode; }
@@ -859,6 +875,7 @@ public:
         _embolding = embolding;
         _glyph_cache.clear();
         _wcache.clear();
+        clearGlyphInfoCache();
     }
 
     /// returns current embolding
@@ -871,6 +888,7 @@ public:
         _tracking = tracking;
         _glyph_cache.clear();
         _wcache.clear();
+        clearGlyphInfoCache();
     }
 
     virtual int getTracking() const { return _tracking; }
@@ -885,6 +903,7 @@ public:
         _drawMonochrome = drawBitmap;
         _glyph_cache.clear();
         _wcache.clear();
+        clearGlyphInfoCache();
     }
 
     bool loadFromBuffer(LVByteArrayRef buf, int index, int size, css_font_family_t fontFamily, bool monochrome, bool italicize )
@@ -1046,6 +1065,13 @@ public:
     {
         //FONT_GUARD
         int glyph_index = getCharIndex( code, 0 );
+        // the glyph of this font for the character itself: its metrics do not depend on def_char
+        bool ownGlyph = glyph_index!=0;
+        GlyphInfoCacheItem & cached = _infoCache[code & (GLYPH_INFO_CACHE_SIZE - 1)];
+        if ( ownGlyph && cached.valid && cached.code==code ) {
+            *glyph = cached.info;
+            return true;
+        }
         if ( glyph_index==0 ) {
             LVFont * fallback = getFallbackFont();
             if ( !fallback ) {
@@ -1080,6 +1106,11 @@ public:
         if ((myabs(_slot->metrics.horiAdvance) + tempTracking) < 0)
             tempTracking = 0;
         glyph->width = (lUInt8)((myabs(_slot->metrics.horiAdvance) + tempTracking) >> 6);
+        if ( ownGlyph ) {
+            cached.code = code;
+            cached.info = *glyph;
+            cached.valid = true;
+        }
         return true;
     }
 /*
@@ -1194,7 +1225,7 @@ public:
 
         // fill props for rest of chars
         for ( int ii=nchars; ii<len; ii++ ) {
-            flags[nchars] = GET_CHAR_FLAGS( text[ii] );
+            flags[ii] = GET_CHAR_FLAGS( text[ii] );
         }
 
         //maxFit = nchars;
@@ -1439,9 +1470,12 @@ public:
                 ch = UNICODE_SOFT_HYPHEN_CODE;
                 isHyphen = 0;
             }
-            FT_UInt ch_glyph_index = getCharIndex( ch, def_char );
+            // the glyph index is used by the kerning only: not looked up without it
+            FT_UInt ch_glyph_index = 0;
             int kerning = 0;
 #if (ALLOW_KERNING==1)
+            if ( use_kerning )
+                ch_glyph_index = getCharIndex( ch, def_char );
             if ( use_kerning && previous>0 && ch_glyph_index>0 ) {
                 FT_Vector delta;
                 error = FT_Get_Kerning( _face,          /* handle to face object */
@@ -1456,7 +1490,6 @@ public:
 
 
             LVFontGlyphCacheItem * item = getGlyph(ch, def_char);
-                    _glyph_cache.get( ch );
             if ( !item )
                 continue;
             if ( (item && !isHyphen) || i>=len-1 ) { // avoid soft hyphens inside text string
@@ -1509,6 +1542,7 @@ public:
         if ( _face )
             FT_Done_Face( _face );
         _face = NULL;
+        clearGlyphInfoCache();
     }
 
 };

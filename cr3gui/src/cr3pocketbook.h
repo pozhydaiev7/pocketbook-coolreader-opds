@@ -89,6 +89,8 @@ enum CRPbCommands {
 // word lookup: 0 the article of the word or the list of the nearest words, 1 exact: only the article
 // of the word (any letter case, word forms of StarDict), otherwise "word not found"
 #define PROP_POCKETBOOK_DICT_EXACT "cr3.pocketbook.dict.exact"
+// 0 turns off the direct copy of the page to the screen canvas (no menu item, cr3.ini only)
+#define PROP_POCKETBOOK_DIRECT_BLIT "cr3.pocketbook.direct.blit"
 // dictionaries searched together, names separated by '|'; fewer than two means one dictionary
 #define PROP_POCKETBOOK_DICT_MULTI "cr3.pocketbook.dict.multi"
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
@@ -97,8 +99,8 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.6-17-65-opds"
-#define CR_PB_BUILD_DATE "2026-11-10"
+#define CR_PB_VERSION "0.0.6-17-66-opds-beta4"
+#define CR_PB_BUILD_DATE "2026-11-12"
 
 #define PB_ROTATE_MODE_360 0
 #define PB_ROTATE_MODE_180 1

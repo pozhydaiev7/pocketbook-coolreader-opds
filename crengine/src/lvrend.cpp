@@ -1643,14 +1643,10 @@ void DrawDocument( LVDrawBuf & drawbuf, ldomNode * enode, int x0, int y0, int dx
         RenderRectAccessor fmt( enode );
         doc_x += fmt.getX();
         doc_y += fmt.getY();
-        int em = enode->getFont()->getSize();
         int width = fmt.getWidth();
         int height = fmt.getHeight();
-        bool draw_padding_bg = true; //( enode->getRendMethod()==erm_final );
-        int padding_left = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[0], width, em ) + DEBUG_TREE_DRAW;
-        int padding_right = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[1], width, em ) + DEBUG_TREE_DRAW;
-        int padding_top = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[2], width, em ) + DEBUG_TREE_DRAW;
-        //int padding_bottom = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[3], width, em ) + DEBUG_TREE_DRAW;
+        // A block outside of the page is skipped here, before its font and style are asked
+        // for: a chapter of thousands of paragraphs has them all as children of one block.
         if ( (doc_y + height <= 0 || doc_y > 0 + dy)
             && (
                enode->getRendMethod()!=erm_table_row
@@ -1659,6 +1655,12 @@ void DrawDocument( LVDrawBuf & drawbuf, ldomNode * enode, int x0, int y0, int dx
         {
             return; // out of range
         }
+        int em = enode->getFont()->getSize();
+        bool draw_padding_bg = true; //( enode->getRendMethod()==erm_final );
+        int padding_left = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[0], width, em ) + DEBUG_TREE_DRAW;
+        int padding_right = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[1], width, em ) + DEBUG_TREE_DRAW;
+        int padding_top = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[2], width, em ) + DEBUG_TREE_DRAW;
+        //int padding_bottom = !draw_padding_bg ? 0 : lengthToPx( enode->getStyle()->padding[3], width, em ) + DEBUG_TREE_DRAW;
         css_length_t bg = enode->getStyle()->background_color;
         lUInt32 oldColor = 0;
         if ( bg.type==css_val_color ) {

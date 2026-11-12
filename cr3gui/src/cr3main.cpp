@@ -339,6 +339,12 @@ void InitCREngineLog( const char * cfgfile )
     CRPropRef logprops = LVCreatePropsContainer();
     {
         LVStreamRef cfg = LVOpenFileStream( cfgfile, LVOM_READ );
+#ifdef __arm__
+        // no crlog.ini on the device: no log at all. A log of the INFO level written to /dev/null
+        // formatted every message for nothing.
+        if ( cfg.isNull() )
+            return;
+#endif
         if ( !cfg.isNull() ) {
             logprops->loadFromStream( cfg.get() );
             logfname = logprops->getStringDef( PROP_LOG_FILENAME,
@@ -359,6 +365,7 @@ void InitCREngineLog( const char * cfgfile )
         }
     }
     CRLog::log_level level = CRLog::LL_INFO;
+    loglevelstr.uppercase(); // "info" and "INFO" mean the same
     if (loglevelstr == "OFF") {
         level = CRLog::LL_FATAL;
         logfname.clear();

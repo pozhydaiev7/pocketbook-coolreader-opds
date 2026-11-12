@@ -59,17 +59,24 @@ public:
     void clear();
 };
 
+/// number of lists the glyphs of one font are kept in; must be a power of 2
+#define GLYPHCACHE_TABLE_SZ 256
+
 class LVFontLocalGlyphCache
 {
 private:
-    LVFontGlyphCacheItem * head;
-    LVFontGlyphCacheItem * tail;
+    // The glyphs of the font, in GLYPHCACHE_TABLE_SZ lists chosen by the low bits of the
+    // character code. It was one list of all glyphs: every drawn character walked through
+    // half of it.
+    LVFontGlyphCacheItem * table[GLYPHCACHE_TABLE_SZ];
     LVFontGlobalGlyphCache * global_cache;
-    int size;
 public:
     LVFontLocalGlyphCache( LVFontGlobalGlyphCache * globalCache )
-        : head(NULL), tail(NULL), global_cache( globalCache )
-    { }
+        : global_cache( globalCache )
+    {
+        for ( int i=0; i<GLYPHCACHE_TABLE_SZ; i++ )
+            table[i] = NULL;
+    }
     ~LVFontLocalGlyphCache()
     {
         clear();

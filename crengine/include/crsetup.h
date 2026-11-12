@@ -43,7 +43,12 @@
 #define USE_LIBPNG                           1
 #define USE_GIF                              1
 #define USE_FREETYPE                         1
+#ifdef POCKETBOOK_PRO_FW5
+// 300 dpi screens: a glyph of the text takes about 1 KB, 128 KB kept too few of them
+#define GLYPH_CACHE_SIZE                     0x200000
+#else
 #define GLYPH_CACHE_SIZE                     0x20000
+#endif
 #define ZIP_STREAM_BUFFER_SIZE               0x80000
 #define FILE_STREAM_BUFFER_SIZE              0x40000
 #endif

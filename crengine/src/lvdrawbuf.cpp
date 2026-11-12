@@ -1966,16 +1966,17 @@ void LVGrayDrawBuf::DrawTo( LVDrawBuf * buf, int x, int y, int options, lUInt32 
             }
             else
             {
-                lUInt8 * dst = buf->GetScanLine(y+yy) + x;
-                for (int xx=0; xx<_dx; xx++)
-                {
-                    if ( x+xx >= clip.left && x+xx < clip.right )
-                    {
-                        *dst = *src;
-                    }
-                    dst++;
-                    src++;
-                }
+                // One byte per pixel: the part of the row inside the clip rectangle is copied
+                // at once. It was a loop with two clip tests for every pixel, and the whole
+                // page goes through here twice at every page turn.
+                int x0 = clip.left - x;
+                if ( x0 < 0 )
+                    x0 = 0;
+                int x1 = clip.right - x;
+                if ( x1 > _dx )
+                    x1 = _dx;
+                if ( x1 > x0 )
+                    memcpy( buf->GetScanLine(y+yy) + x + x0, src + x0, x1 - x0 );
             }
         }
     }

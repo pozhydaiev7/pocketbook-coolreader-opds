@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.0.6-17-66-opds (not released)
+
+Speed review. Test builds: `0.0.6-17-66-opds-perf0` (stage timing only), `-beta1` (timing and the changes outside of the engine) `-beta2` (the engine changes), `-beta3` (the direct copy to the screen) and `-beta4` (all changes below).
+
+Measured on InkPad 4 (743G), median of the page turns in the log: 145 ms with `-beta2` (text 43, `Stretch()` 88), 65 ms with `-beta3` (text 43, copy to the canvas 7.5).
+
+The engine changes were checked on a PC: the engine was built for Linux before and after them, and 720 pages of three books in four configurations came out the same bit for bit, together with the position found for a tap and the text of the page.
+
+### Changed
+
+- **Skin caches** (`crengine/src/crskin.cpp`): 64 images and 32 skin items instead of 8. The touch menu draws 9 icons, so with 8 places every icon was read from the skin archive and decoded from PNG again each time the menu opened.
+- **Reading statistics** are counted when the page has gone to the screen (`CRPocketBookScreen::flush`), not before it: the word count and the write to `cr3stats.txt` no longer delay the page. The records are the same.
+- **Document buffers:** `DOC_BUFFER_SIZE` of the pro5 build is `0xA00000` (10 MB, the default of the engine) instead of 4 MB, so fewer chunks of a big book are packed and unpacked while it is read. Cache files stay compatible.
+- **Glyph cache** of the pro5 build is 2 MB instead of 128 KB (`crengine/include/crsetup.h`).
+- **Log:** without `crlog.ini` no log is created (it was written to `/dev/null` at the INFO level). `crengine.log.level` is read in any letter case.
+- A tap looks for the text node under the finger only for the dictionary, a link and a long tap.
+- The standby timer asks for the touch panel once, not on every event.
+- **Page buffer copy** (`LVGrayDrawBuf::DrawTo`, `crengine/src/lvdrawbuf.cpp`): a row of a byte-per-pixel buffer is copied at once inside the clip rectangle. It was a loop with two clip tests for every pixel, run over the whole page twice at every page turn.
+- **Text drawing** (`LVFreeTypeFace::DrawTextString`, `crengine/src/lvfntman.cpp`): the glyph index is looked up only when kerning is on; the second lookup of the glyph cache, whose result was thrown away, is removed.
+- **Glyph cache of a font** (`LVFontLocalGlyphCache`): 256 short lists chosen by the character code instead of one list of all glyphs.
+- **Page drawing** (`DrawDocument`, `crengine/src/lvrend.cpp`): a block outside of the page is skipped before its font and style are asked for. A chapter of thousands of paragraphs has them all as children of one block.
+- **Cache of formatted paragraphs:** 128 instead of 32 (`crengine/src/lvtinydom.cpp`).
+- **Glyph metrics** (`LVFreeTypeFace::getGlyphInfo`): the result is kept by the character code. The layout of italic text asked for the metrics of the same glyphs at every line start and end, and each request loaded and hinted the glyph again. The layout of a book with italics is about a third faster on the PC bench.
+- **Page to the screen** (`CRPocketBookScreen::draw`, `cr3gui/src/cr3pocketbook.cpp`): the rows of the page are written to the screen canvas of the firmware directly, instead of the firmware call `Stretch()`. On InkPad 4 that call took 88 ms of the 145 ms a page turn is processed, twice the time of drawing the text.
+  - The direct way is taken only when the canvas has one byte per pixel and the size of the page, and only after it has given the same bytes as `Stretch()` twice on this canvas. A canvas of another kind (a color screen, another firmware, an orientation the firmware turns itself) or one different byte leaves `Stretch()`, as before.
+  - `cr3.pocketbook.direct.blit=0` in `cr3.ini` turns the direct way off.
+  - The touch menu moves the page up on the canvas the same way, after one check against `BitmapFromScreen()` + `DrawBitmap()`, which took 90 ms of the 135 ms the menu needs to open.
+  - The last pixel column of the screen is drawn now: `Draw4Bits()` left it black on a screen of an even width.
+- **Background writing of the cache file** of a new book: slices of 150 ms with pauses of 450 ms instead of 500 and 1500. The share of time is the same, a tap waits a third of the former time at most.
+
+### Fixed
+
+- **A book downloaded from a catalog was missing on the home screen** right after exit, until the library was visited. The firmware adds a book to its list of the last opened books (`system/state/lastopen.txt`) only when it starts the reader for that book. CoolReader calls `AddLastOpen` and `FlushLastOpen` now when it opens a downloaded book itself (looked up at run time).
+- `LVFreeTypeFace::measureText` wrote the flags of all characters after the fit point to one cell of the output array. No caller reads those cells today, so nothing changes on the screen.
+
+### Added
+
+- **Stage timing in the log** (`perf:` lines of the INFO level, written only with `crlog.ini`):
+  - one line per event that reached the screen: page draw, statistics, battery, buffer compare, copy to the screen, screen update call;
+  - the stages of the start: fonts, skin, settings, history, book;
+  - book parsing and layout, every slice of the background cache writing;
+  - the touch menu.
+
 ## 0.0.6-17-65-opds — 2026-11-10
 
 Tested on InkPad 4 (743G) with firmware 6.11.1683, as the beta builds `0.0.6-17-65-opds-beta1` to `-beta7`.

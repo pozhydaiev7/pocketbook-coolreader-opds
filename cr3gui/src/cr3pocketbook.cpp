@@ -33,6 +33,7 @@
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
+#include <sys/time.h>
 #include <bookstate.h>
 #endif
 
@@ -156,6 +157,71 @@ static void gsensor_timer();
 static int (*pbGetGSensorOrientation)() = NULL;
 static int (*pbIsGSensorEnabled)() = NULL;
 static void (*pbSetGSensorEnabled)(int) = NULL;
+
+// Timing of the stages of a screen update, for the log: one "perf:" line of the INFO level per
+// event that reached the screen. Written only when crlog.ini turns the log on.
+static long long pbPerfNow()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (long long)tv.tv_sec * 1000000 + tv.tv_usec;
+}
+struct PbPerf {
+    long long draw;     // page image: text layout and drawing
+    long long stats;    // reading statistics
+    long long battery;  // battery state request
+    long long compare;  // search of the changed lines, copy to the front buffer
+    long long blit;     // copy to the screen buffer of the firmware
+    long long eink;     // FullUpdate, SoftUpdate or PartialUpdate call
+    long long start;    // the event came
+    long long toScreen; // from the event to the first screen update call
+    int updates;        // screen updates made
+    const char * mode;  // the last update call
+    void reset()
+    {
+        draw = stats = battery = compare = blit = eink = toScreen = 0;
+        updates = 0;
+        mode = "";
+        start = pbPerfNow();
+    }
+};
+static PbPerf pbPerf;
+static long long pbPerfProcessStart = 0;
+static long long pbPerfLoadStart = 0;
+static long long pbPerfFormatStart = 0;
+static inline bool pbPerfOn() { return CRLog::isInfoEnabled(); }
+// microseconds as milliseconds, for "%.1f"
+#define PB_PERF_MS(us) ((double)(us) / 1000.0)
+// Tells the firmware that another book is open now. The home screen shows the list of the last
+// opened books of the firmware (system/state/lastopen.txt); the firmware adds a book to it when
+// it starts the reader for that book, so a book opened from inside CoolReader (a download from
+// a catalog) was missing on the home screen until the library was visited.
+// AddLastOpen and FlushLastOpen are looked up at run time: a firmware without them must still
+// start the program.
+static void pbAddLastOpen(const lString16 & path)
+{
+    void * lib = dlopen("libinkview.so", RTLD_LAZY);
+    if (lib == NULL)
+        return;
+    void (*addLastOpen)(const char *) = NULL;
+    void (*flushLastOpen)() = NULL;
+    *(void **)(&addLastOpen) = dlsym(lib, "AddLastOpen");
+    *(void **)(&flushLastOpen) = dlsym(lib, "FlushLastOpen");
+    if (addLastOpen != NULL) {
+        addLastOpen(UnicodeToLocal(path).c_str());
+        if (flushLastOpen != NULL)
+            flushLastOpen();
+    }
+    CRLog::info("last opened books of the firmware: AddLastOpen %s, FlushLastOpen %s",
+                addLastOpen != NULL ? "called" : "not in libinkview", flushLastOpen != NULL ? "called" : "not in libinkview");
+}
+
+// The cache file of a new book is written in the background, in slices: the program does not
+// answer a tap while a slice runs. 150 ms of writing and 450 ms of pause take the same share
+// of the time as the former 500 and 1500, with a third of the longest delay of a tap.
+#define PB_CACHE_FIRST_MS 1500
+#define PB_CACHE_SLICE_MS 150
+#define PB_CACHE_PAUSE_MS 450
 #ifdef BACKGROUND_CACHE_FILE_CREATION
 static void cache_timer();
 #endif
@@ -387,8 +453,19 @@ private:
     CRGUIWindowBase *m_mainWindow;
     int m_bpp;
     lUInt8 *_buf4bpp;
+    // Direct copy to the screen canvas of the firmware, see draw()
+    int _directState;            // 0 not checked yet, 1 checked and in use, -1 not usable
+    int _directChecks;           // checks passed so far
+    unsigned char * _directAddr; // the canvas the checks were made for
+    int _directScanline;
+    int _directOrientation;
+    int _shiftState;             // shiftCanvasUp(): 0 not checked yet, 1 direct, -1 firmware calls
+    void drawStretch(int x, int y, int w, int h);
+    bool directUsable(icanvas * & cv);
+    void checkDirect(icanvas * cv, int x, int y, int w, int h);
 public:
     static CRPocketBookScreen * instance;
+    bool shiftCanvasUp(int dy);
 protected:
     virtual void update( const lvRect & rc2, bool full );
 public:
@@ -404,6 +481,12 @@ public:
         :  CRGUIScreenBase( width, height, true ), _forceSoft(false), _update_gray(false), m_bpp(bpp)
     {
         instance = this;
+        _directState = 0;
+        _directChecks = 0;
+        _directAddr = NULL;
+        _directScanline = 0;
+        _directOrientation = -1;
+        _shiftState = 0;
         if (m_bpp == 4) {
             if (width > height)
                 _buf4bpp = new lUInt8[ (width + 1)/2 * width ];
@@ -607,8 +690,10 @@ public:
     }
 
     bool getBatteryStatus(int & percent, bool & charging) {
+        long long perfT0 = pbPerfNow();
         charging = IsCharging() > 0; // TODO: find out values returned by the IsCharging() function.
         percent = GetBatteryPower(); // It seems that the GetBatteryPower() returns what needed here
+        pbPerf.battery += pbPerfNow() - perfT0;
         return true;
     }
 
@@ -656,9 +741,9 @@ public:
         return CRGUIWindowManager::onKeyPressed(key, flags);
     }
 #ifdef BACKGROUND_CACHE_FILE_CREATION
-    void scheduleCacheSwap()
+    void scheduleCacheSwap(int ms = PB_CACHE_FIRST_MS)
     {
-        SetHardTimer(const_cast<char *>("UpdateCacheTimer"), cache_timer, 1500);
+        SetHardTimer(const_cast<char *>("UpdateCacheTimer"), cache_timer, ms);
     }
     void cancelCacheSwap()
     {
@@ -674,11 +759,19 @@ V3DocViewWin * main_win = NULL;
 #ifdef BACKGROUND_CACHE_FILE_CREATION
 void CRPocketBookWindowManager::updateCache()
 {
-    CRTimerUtil timeout(500);
-    if (m_incommand || !_events.empty() ||
-        main_win != getTopVisibleWindow() ||
-        CR_TIMEOUT == main_win->getDocView()->updateCache(timeout))
+    // not now: a command runs, events wait or another window is on top
+    if (m_incommand || !_events.empty() || main_win != getTopVisibleWindow()) {
         scheduleCacheSwap();
+        return;
+    }
+    CRTimerUtil timeout(PB_CACHE_SLICE_MS);
+    long long perfT0 = pbPerfNow();
+    bool more = CR_TIMEOUT == main_win->getDocView()->updateCache(timeout);
+    if (pbPerfOn())
+        CRLog::info("perf: cache file slice %.1f ms, %s", PB_PERF_MS(pbPerfNow() - perfT0),
+                    more ? "more to write" : "done");
+    if (more)
+        scheduleCacheSwap(PB_CACHE_PAUSE_MS);
 }
 
 static void cache_timer()
@@ -786,7 +879,28 @@ ibitmap* LVImageSourceRef_to_ibitmab(LVImageSourceRef &img) {
     return NULL;
 }
 
-void CRPocketBookScreen::draw(int x, int y, int w, int h)
+// The front buffer goes to the screen canvas of the firmware. The firmware call for that,
+// Stretch(), takes about 90 ms for a page of 1404 x 1872: twice the time of drawing the text.
+// When the canvas has one byte per pixel and the size of the front buffer, its rows are written
+// directly. The direct way is taken only after it has given the same bytes as Stretch()
+// PB_DIRECT_CHECKS times on this canvas. A canvas of another kind (a color screen, another
+// firmware, an orientation the firmware turns itself) or one different byte leaves Stretch().
+// "cr3.pocketbook.direct.blit=0" in cr3.ini turns the direct way off.
+#define PB_DIRECT_CHECKS 2
+// a check counts when the area has at least this many pixels that differ from its first one
+#define PB_DIRECT_MIN_DETAIL 2000
+
+// the byte of the canvas for a byte of the front buffer
+static inline lUInt8 pbCanvasGray(lUInt8 v, int bpp)
+{
+    if (bpp == 4) {
+        v &= 0xF0;
+        return (lUInt8)(v | (v >> 4));
+    }
+    return v;
+}
+
+void CRPocketBookScreen::drawStretch(int x, int y, int w, int h)
 {
     if (m_bpp == 4) {
         Draw4Bits(*_front, _buf4bpp, x, y, w, h);
@@ -795,8 +909,160 @@ void CRPocketBookScreen::draw(int x, int y, int w, int h)
         Stretch(_front->GetScanLine(y), m_bpp, w, h, _front->GetRowSize(), x, y, w, h, 0);
 }
 
+// true when the canvas can take the rows of the front buffer as they are
+bool CRPocketBookScreen::directUsable(icanvas * & cv)
+{
+    if (m_bpp != 4 && m_bpp != 8)
+        return false;
+    if (main_win == NULL || main_win->getProps()->getIntDef(PROP_POCKETBOOK_DIRECT_BLIT, 1) == 0)
+        return false;
+    cv = GetCanvas();
+    if (cv == NULL || cv->addr == NULL || cv->depth != 8 || cv->width != _front->GetWidth() ||
+            cv->height != _front->GetHeight() || cv->scanline < cv->width)
+        return false;
+    int orientation = GetOrientation();
+    if (cv->addr != _directAddr || cv->scanline != _directScanline || orientation != _directOrientation) {
+        // another canvas: checked again
+        if (_directAddr != NULL)
+            CRLog::info("direct blit: the canvas changed, it is checked again");
+        _directAddr = cv->addr;
+        _directScanline = cv->scanline;
+        _directOrientation = orientation;
+        _directState = 0;
+        _directChecks = 0;
+        _shiftState = 0;
+    }
+    return true;
+}
+
+// Moves the picture on the canvas dy rows up, as BitmapFromScreen() + DrawBitmap() do for the
+// touch menu: those two take 90 ms on 1404 x 1872. Done on the canvas directly once the direct
+// copy of the page is in use and the firmware calls have given the same bytes on this canvas.
+// Returns false when the caller has to use the firmware calls.
+bool CRPocketBookScreen::shiftCanvasUp(int dy)
+{
+    icanvas * cv = NULL;
+    if (!directUsable(cv) || _directState != 1 || _shiftState < 0 || dy <= 0 || dy >= cv->height)
+        return false;
+    int rows = cv->height - dy;
+    if (_shiftState == 1) {
+        for (int yy = 0; yy < rows; yy++)
+            memcpy(cv->addr + yy * cv->scanline, cv->addr + (yy + dy) * cv->scanline, cv->width);
+        return true;
+    }
+    // not checked yet: the firmware makes the shift, its result is compared with the rows before it
+    unsigned char * before = (unsigned char *)malloc(cv->width * cv->height);
+    if (before == NULL)
+        return false;
+    int detail = 0;
+    for (int yy = 0; yy < cv->height; yy++) {
+        const unsigned char * row = cv->addr + yy * cv->scanline;
+        memcpy(before + yy * cv->width, row, cv->width);
+        for (int i = 0; i < cv->width; i++)
+            if (row[i] != before[0])
+                detail++;
+    }
+    ibitmap * bkg = BitmapFromScreen(0, dy, cv->width, rows);
+    DrawBitmap(0, 0, bkg);
+    free(bkg);
+    bool same = true;
+    for (int yy = 0; yy < cv->height && same; yy++) {
+        // the rows moved up, the last dy rows stay as they were
+        const unsigned char * expected = before + (yy < rows ? yy + dy : yy) * cv->width;
+        same = memcmp(cv->addr + yy * cv->scanline, expected, cv->width) == 0;
+    }
+    free(before);
+    if (!same) {
+        _shiftState = -1;
+        CRLog::info("canvas shift off: the firmware calls give other bytes");
+    } else if (detail >= PB_DIRECT_MIN_DETAIL) {
+        _shiftState = 1;
+        CRLog::info("canvas shift on: checked on canvas %d x %d", cv->width, cv->height);
+    }
+    return true;
+}
+
+// compares what Stretch() has put on the canvas with the bytes the direct way would write
+void CRPocketBookScreen::checkDirect(icanvas * cv, int x, int y, int w, int h)
+{
+    // The last column is left out: Draw4Bits() does not fill the last pixel of a row of an
+    // even width, so Stretch() shows it black.
+    int cols = w - 1;
+    if (cols <= 0 || h <= 0)
+        return;
+    lUInt8 first = _front->GetScanLine(y)[x];
+    int detail = 0;
+    for (int yy = y; yy < y + h; yy++) {
+        const lUInt8 * src = _front->GetScanLine(yy) + x;
+        const unsigned char * dst = cv->addr + yy * cv->scanline + x;
+        for (int i = 0; i < cols; i++) {
+            if (src[i] != first)
+                detail++;
+            if (dst[i] != pbCanvasGray(src[i], m_bpp)) {
+                _directState = -1;
+                CRLog::info("direct blit off: the canvas has %d at %d,%d where %d was expected (buffer %d bpp, "
+                            "canvas %d x %d, scanline %d)", dst[i], x + i, yy, pbCanvasGray(src[i], m_bpp), m_bpp,
+                            cv->width, cv->height, cv->scanline);
+                return;
+            }
+        }
+    }
+    if (detail >= PB_DIRECT_MIN_DETAIL && ++_directChecks >= PB_DIRECT_CHECKS) {
+        _directState = 1;
+        CRLog::info("direct blit on: %d checks passed (buffer %d bpp, canvas %d x %d, scanline %d, orientation %d)",
+                    _directChecks, m_bpp, cv->width, cv->height, cv->scanline, _directOrientation);
+    }
+}
+
+void CRPocketBookScreen::draw(int x, int y, int w, int h)
+{
+    icanvas * cv = NULL;
+    if (!directUsable(cv) || _directState < 0 || x < 0 || y < 0 || w <= 0 || h <= 0 ||
+            x + w > _front->GetWidth() || y + h > _front->GetHeight()) {
+        drawStretch(x, y, w, h);
+        return;
+    }
+    if (_directState == 0) {
+        // not checked yet: the firmware draws, its bytes are compared with the direct ones
+        drawStretch(x, y, w, h);
+        checkDirect(cv, x, y, w, h);
+        return;
+    }
+    for (int yy = y; yy < y + h; yy++) {
+        const lUInt8 * src = _front->GetScanLine(yy) + x;
+        unsigned char * dst = cv->addr + yy * cv->scanline + x;
+        if (m_bpp == 8) {
+            memcpy(dst, src, w);
+        } else {
+            for (int i = 0; i < w; i++) {
+                lUInt8 v = src[i] & 0xF0;
+                dst[i] = (unsigned char)(v | (v >> 4));
+            }
+        }
+    }
+}
+
+// Reading statistics of the page just drawn. Counted when the page has gone to the screen, at
+// every exit of CRPocketBookScreen::flush(): the word count and the write to the log do not
+// delay the page.
+static bool pbStatsPagePending = false;
+struct PbStatsAfterFlush {
+    ~PbStatsAfterFlush()
+    {
+        if (!pbStatsPagePending)
+            return;
+        pbStatsPagePending = false;
+        long long perfT0 = pbPerfNow();
+        if (main_win != NULL)
+            PbStatsView::pageShown(main_win->getDocView());
+        pbPerf.stats += pbPerfNow() - perfT0;
+    }
+};
+
 void CRPocketBookScreen::flush( bool full )
 {
+    PbStatsAfterFlush statsAfterFlush;
+    long long perfT0 = pbPerfNow();
     if ( _updateRect.isEmpty() && !full && !getTurboUpdateEnabled() ) {
         CRLog::trace("CRGUIScreenBase::flush() - update rectangle is empty");
         return;
@@ -863,6 +1129,7 @@ void CRPocketBookScreen::flush( bool full )
         if (!_front.isNull())
             _canvas->DrawTo( _front.get(), 0, 0, 0, NULL );
     }
+    pbPerf.compare += pbPerfNow() - perfT0;
     update( _updateRect, full );
     _updateRect.clear();
 }
@@ -887,27 +1154,41 @@ void CRPocketBookScreen::update( const lvRect & rc2, bool full )
     else if (!_forceSoft)
         full = false;
 
+    long long perfT0 = pbPerfNow();
+    long long perfT1;
     if ( full || forceFullUpdates ) {
         draw(0, 0, _front->GetWidth(), _front->GetHeight());
+        perfT1 = pbPerfNow();
         FullUpdate();
+        pbPerf.mode = "FullUpdate";
         resetFullUpdateCounter();
     } else {
         draw(0, rc.top, _front->GetWidth(), rc.height());
+        perfT1 = pbPerfNow();
         if (!isDocWnd && rc.height() < 300) {
             if (_update_gray && !forcePartialBwUpdates) {
                 PartialUpdate(rc.left, rc.top, rc.right, rc.bottom);
+                pbPerf.mode = "PartialUpdate";
                 CRLog::trace("PartialUpdate(%d, %d, %d, %d)", rc.left, rc.top, rc.right, rc.bottom);
             } else {
                 PartialUpdateBW(rc.left, rc.top, rc.right, rc.bottom);
+                pbPerf.mode = "PartialUpdateBW";
                 CRLog::trace("PartialUpdateBW(%d, %d, %d, %d)", rc.left, rc.top, rc.right, rc.bottom);
             }
         } else if( !forcePartialBwUpdates ) {
             SoftUpdate();
+            pbPerf.mode = "SoftUpdate";
         }
         else {
             PartialUpdateBW(0, 0, ScreenWidth(), ScreenHeight());
+            pbPerf.mode = "PartialUpdateBW";
         }
     }
+    if (pbPerf.updates == 0)
+        pbPerf.toScreen = perfT1 - pbPerf.start;
+    pbPerf.blit += perfT1 - perfT0;
+    pbPerf.eink += pbPerfNow() - perfT1;
+    pbPerf.updates++;
 }
 
 class CRPocketBookInkViewWindow : public CRGUIWindowBase
@@ -1479,6 +1760,7 @@ public:
 
     virtual void OpenTouchMenu() {
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu()");
+        long long perfT0 = pbPerfNow();
 
         isTouchMenuVisible = true;
         TM_lastDragPage = -1;
@@ -1490,12 +1772,16 @@ public:
         // Activate system panel
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): Activate system panel");
         showSystemPanel(false);
+        long long perfPanel = pbPerfNow();
 
         // Offset the background
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): Offset the background");
-        ibitmap * bkg = BitmapFromScreen(0, PanelHeight(), ScreenWidth(), ScreenHeight()-PanelHeight());
-        DrawBitmap(0, 0, bkg);
-        free(bkg);
+        if (!CRPocketBookScreen::instance->shiftCanvasUp(PanelHeight())) {
+            ibitmap * bkg = BitmapFromScreen(0, PanelHeight(), ScreenWidth(), ScreenHeight()-PanelHeight());
+            DrawBitmap(0, 0, bkg);
+            free(bkg);
+        }
+        long long perfShift = pbPerfNow();
 
         // Draw side lines
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): Draw side lines");
@@ -1520,13 +1806,21 @@ public:
 
         // Draw
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): Draw");
+        long long perfT1 = pbPerfNow();
         DrawTop(false);
+        long long perfT2 = pbPerfNow();
         DrawBottom(false, -1, -1);
+        long long perfT3 = pbPerfNow();
 
         // Update screen
         CRLog::trace("CRPocketBookQuickMenuWindow::OpenTouchMenu(): PartialUpdate(0, 0, %d);",
             ScreenWidth(), ScreenHeight());
         PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
+        if (pbPerfOn())
+            CRLog::info("perf: touch menu: total %.1f ms: system panel %.1f, page shift %.1f, icons %.1f, "
+                        "bottom %.1f, PartialUpdate %.1f", PB_PERF_MS(pbPerfNow() - perfT0),
+                        PB_PERF_MS(perfPanel - perfT0), PB_PERF_MS(perfShift - perfPanel),
+                        PB_PERF_MS(perfT2 - perfT1), PB_PERF_MS(perfT3 - perfT2), PB_PERF_MS(pbPerfNow() - perfT3));
     }
 
     virtual bool TouchMenuCanBeUsed() {
@@ -2280,10 +2574,12 @@ protected:
             buf->Rect(rc, _docview->getTextColor());
             skin->drawText(*buf, rc, text);
         } else {
+            long long perfT0 = pbPerfNow();
             V3DocViewWin::draw();
-            // times the page for the reading statistics
+            pbPerf.draw += pbPerfNow() - perfT0;
+            // the page is timed for the reading statistics when it has gone to the screen
             if (!isStandByMode)
-                PbStatsView::pageShown(_docview);
+                pbStatsPagePending = true;
         }
     }
 
@@ -2372,7 +2668,10 @@ protected:
                 int command = 0, param = 0;
                 getCommandForTapZone(tapZone, getProps(), CRTOUCH_DOWN_LONG == evType, command, param);
 
-                ldomXPointer p = _docview->getNodeByPoint( pt );
+                // the text node under the finger is used by the dictionary, a link and a long tap only
+                ldomXPointer p;
+                if (command == MCMD_DICT || command == MCMD_GO_LINK || CRTOUCH_DOWN_LONG == evType)
+                    p = _docview->getNodeByPoint( pt );
                 if ( !p.isNull() ) {
                     if (command == MCMD_DICT) {
                         lvPoint wordPoint = p.toPoint();
@@ -2583,6 +2882,8 @@ public:
         pbGlobals->setFileName(fn);
         if (!loadDocument(fn)) {
             Message(ICON_WARNING, const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
+        } else {
+            pbAddLastOpen(fn);
         }
         _wm->update(true);
     }
@@ -3237,7 +3538,10 @@ public:
         int fromFirmware = -1;
         _gsFromFirmware = false;
         if (pbGetGSensorOrientation != NULL) {
+            long long perfT0 = pbPerfNow();
             int sensor = pbGetGSensorOrientation();
+            if (_gsTicks < 3 && pbPerfOn())
+                CRLog::info("perf: GetGSensorOrientation call %.2f ms", PB_PERF_MS(pbPerfNow() - perfT0));
             if (sensor != _gsLastSensor) {
                 CRLog::info("G-sensor read %d: firmware orientation %d, screen orientation %d, enabled %d",
                             _gsTicks, sensor, cur, pbIsGSensorEnabled != NULL ? pbIsGSensorEnabled() : -1);
@@ -3429,8 +3733,21 @@ public:
             }
         }
     }
+    // times of the book parsing and of its layout, for the log
+    void OnLoadFileStart( lString16 filename )
+    {
+        pbPerfLoadStart = pbPerfNow();
+        V3DocViewWin::OnLoadFileStart( filename );
+    }
+    void OnLoadFileEnd()
+    {
+        V3DocViewWin::OnLoadFileEnd();
+        if (pbPerfOn())
+            CRLog::info("perf: book file read and parsed in %.1f ms", PB_PERF_MS(pbPerfNow() - pbPerfLoadStart));
+    }
     void OnFormatStart()
     {
+        pbPerfFormatStart = pbPerfNow();
 #ifdef BACKGROUND_CACHE_FILE_CREATION
         CRPocketBookWindowManager::instance->cancelCacheSwap();
 #endif
@@ -3447,6 +3764,11 @@ public:
     void OnFormatEnd()
     {
         V3DocViewWin::OnFormatEnd();
+        // the engine reports the start of the layout only when a book is loaded
+        if (pbPerfOn() && pbPerfFormatStart != 0)
+            CRLog::info("perf: book layout %.1f ms, %d pages", PB_PERF_MS(pbPerfNow() - pbPerfFormatStart),
+                        _docview->getPageCount());
+        pbPerfFormatStart = 0;
 #ifdef BACKGROUND_CACHE_FILE_CREATION
         CRPocketBookWindowManager::instance->scheduleCacheSwap();
 #endif
@@ -5699,6 +6021,9 @@ int InitDoc(const char *exename, char *fileName)
 #endif
 
     CRLog::trace("InitDoc()");
+    // times of the start stages, see the "perf: start" line
+    long long perfT[9];
+    perfT[0] = pbPerfNow();
 
     pbGlobals = new CRPocketBookGlobals(fileName);
     char manual_file[512] = USERDATA"/share/c3/manual/cr3-manual-en.fb2";
@@ -5759,8 +6084,10 @@ int InitDoc(const char *exename, char *fileName)
     fontDirs.add(lString16(L""USERDATA"/share/cr3/fonts"));
     fontDirs.add(lString16(L""USERDATA2"/fonts"));
     CRLog::info("INIT...");
+    perfT[1] = pbPerfNow();
     if (!InitCREngine(exename, fontDirs))
         return 0;
+    perfT[2] = pbPerfNow();
 
     {
         lString16 filename16(fileName);
@@ -5858,6 +6185,7 @@ int InitDoc(const char *exename, char *fileName)
         loadPocketBookKeyMaps(*wm);
         HyphMan::initDictionaries(lString16(USERDATA"/share/cr3/hyph/"));
 
+        perfT[3] = pbPerfNow();
         bool skinSet = false;
         CRSkinList &skins = wm->getSkinList();
         skins.openDirectory(NULL, lString16(USERDATA"/share/cr3/skins"));
@@ -5907,6 +6235,7 @@ int InitDoc(const char *exename, char *fileName)
             }
         }
 
+        perfT[4] = pbPerfNow();
         CRLog::trace("init cache...");
         ldomDocCache::init(lString16(STATEPATH"/cr3/.cache"), PB_CR3_CACHE_SIZE);
         if (!ldomDocCache::enabled())
@@ -5914,6 +6243,7 @@ int InitDoc(const char *exename, char *fileName)
         if (!ldomDocCache::enabled())
             ldomDocCache::init(lString16(USERDATA"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
 
+        perfT[5] = pbPerfNow();
         CRLog::trace("creating main window...");
         main_win = new CRPocketBookDocView(wm, lString16(USERDATA"/share/cr3"));
         CRLog::trace("setting colors...");
@@ -5946,9 +6276,11 @@ int InitDoc(const char *exename, char *fileName)
                                                      pocketbook_orientations[GetOrientation()]);
             SetOrientation(cr_oriantations[orient]);
         }
+        perfT[6] = pbPerfNow();
         PbStatsView::init(lString16(STATEPATH"/cr3"));
         if ( !main_win->loadHistory(lString16(STATEPATH"/cr3/.cr3hist")) )
             CRLog::error("Cannot read history file");
+        perfT[7] = pbPerfNow();
         LVDocView * _docview = main_win->getDocView();
         _docview->setBatteryState(GetBatteryPower());
         wm->activateWindow( main_win );
@@ -5957,6 +6289,19 @@ int InitDoc(const char *exename, char *fileName)
             printf("Cannot open book file %s\n", fileName);
             delete wm;
             return 0;
+        }
+        perfT[8] = pbPerfNow();
+        if (pbPerfOn()) {
+            CRFileHistRecord * perfRec = _docview->getCurrentFileHistRecord();
+            CRLog::info("perf: start: before init %.1f ms, language %.1f, fonts %.1f (%d fonts), keymaps and "
+                        "hyphenation %.1f, skin %.1f, cache %.1f, window and settings %.1f, history %.1f, "
+                        "book %.1f; screen %d x %d, depth %d (hardware %d), pages %d, bookmarks %d",
+                        PB_PERF_MS(perfT[0] - pbPerfProcessStart), PB_PERF_MS(perfT[1] - perfT[0]),
+                        PB_PERF_MS(perfT[2] - perfT[1]), fontMan->GetFontCount(), PB_PERF_MS(perfT[3] - perfT[2]),
+                        PB_PERF_MS(perfT[4] - perfT[3]), PB_PERF_MS(perfT[5] - perfT[4]),
+                        PB_PERF_MS(perfT[6] - perfT[5]), PB_PERF_MS(perfT[7] - perfT[6]),
+                        PB_PERF_MS(perfT[8] - perfT[7]), ScreenWidth(), ScreenHeight(), bpp, GetHardwareDepth(),
+                        _docview->getPageCount(), perfRec != NULL ? perfRec->getBookmarks().length() : 0);
         }
         CRPocketBookDocView::instance->startGSensorPolling();
 
@@ -6263,7 +6608,11 @@ void restartStandByTimer() {
     CRPropRef props = CRPocketBookDocView::instance->getProps();
     int delay = props->getIntDef(PROP_DISPLAY_STANDBY, 5);
 
-    if( delay < 1 || !(QueryTouchpanel() != 0) )
+    // called on every event: the touch panel does not appear or vanish while the program runs
+    static int touchPanel = -1;
+    if( touchPanel < 0 )
+        touchPanel = QueryTouchpanel() != 0 ? 1 : 0;
+    if( delay < 1 || !touchPanel )
         return;
 
     stopStandByTimer();
@@ -6271,6 +6620,20 @@ void restartStandByTimer() {
 }
 void stopStandByTimer() {
     ClearTimer(enterStandByMode);
+}
+
+// One line of the log for an event that reached the screen: where its time went
+static void pbPerfLog(const char * what, long long start)
+{
+    long long total = pbPerfNow() - start;
+    long long other = total - pbPerf.draw - pbPerf.stats - pbPerf.battery - pbPerf.compare - pbPerf.blit -
+            pbPerf.eink;
+    CRLog::info("perf: %s: total %.1f ms, to screen %.1f: page draw %.1f, stats %.1f, battery %.1f, compare %.1f, "
+                "blit %.1f, %s %.1f, other %.1f; updates %d, page %d", what, PB_PERF_MS(total),
+                PB_PERF_MS(pbPerf.toScreen), PB_PERF_MS(pbPerf.draw),
+                PB_PERF_MS(pbPerf.stats), PB_PERF_MS(pbPerf.battery), PB_PERF_MS(pbPerf.compare),
+                PB_PERF_MS(pbPerf.blit), pbPerf.mode, PB_PERF_MS(pbPerf.eink), PB_PERF_MS(other), pbPerf.updates,
+                main_win != NULL ? main_win->getDocView()->getCurPage() + 1 : 0);
 }
 
 static bool need_save_cover = false;
@@ -6307,6 +6670,8 @@ int main_handler(int type, int par1, int par2)
 
     bool process_events = false;
     int ret = 0;
+    pbPerf.reset();
+    long long perfStart = pbPerf.start;
     if (CRLog::LL_TRACE == CRLog::getLogLevel()) {
         CRLog::trace("main_handler(%s, %d, %d)", getEventName(type), par1, par2);
     }
@@ -6319,6 +6684,7 @@ int main_handler(int type, int par1, int par2)
         // CRLog::trace("COVER_OFF_SAVE");
         // CRLog::trace(USERLOGOPATH"/bookcover");
         if (need_save_cover) {
+            long long perfCover = pbPerfNow();
 
             // Check if it's a fresh cr3 update
             if( access( PB_FRESH_UPDATE_MARKER, F_OK ) != -1 ) {
@@ -6541,6 +6907,9 @@ int main_handler(int type, int par1, int par2)
             }
 
             need_save_cover = false;
+            if (pbPerfOn())
+                CRLog::info("perf: first show: cover for the power-off logo and the rest %.1f ms",
+                            PB_PERF_MS(pbPerfNow() - perfCover));
         }
         restartStandByTimer();
         break;
@@ -6641,6 +7010,8 @@ int main_handler(int type, int par1, int par2)
     }
     if (process_events)
         CRPocketBookWindowManager::instance->processPostedEvents();
+    if (pbPerf.updates > 0 && pbPerfOn())
+        pbPerfLog(getEventName(type), perfStart);
     return ret;
 }
 
@@ -6987,6 +7358,7 @@ void getInkviewFeatures() {
 
 int main(int argc, char **argv)
 {
+    pbPerfProcessStart = pbPerfNow();
     forcePartialBwUpdates = false;
     forcePartialUpdates = false;
     forceFullUpdates = false;

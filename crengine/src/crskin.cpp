@@ -302,7 +302,9 @@ public:
         _imageCache.clear();
     }
     /// constructor does nothing
-    CRSkinImpl()  : _imageCache(8), _rectCache(8), _scrollCache(1), _windowCache(8), _menuCache(8), _pageCache(8), _toolbarCache(2), _iconCache(8) { }
+    // Cache sizes: the touch menu of PocketBook alone draws 9 icons. With 8 places every icon
+    // was read from the skin archive and decoded from PNG again each time the menu opened.
+    CRSkinImpl()  : _imageCache(64), _rectCache(32), _scrollCache(1), _windowCache(32), _menuCache(32), _pageCache(32), _toolbarCache(2), _iconCache(32) { }
     virtual ~CRSkinImpl(){ }
     // open from container
     virtual bool open( LVContainerRef container );

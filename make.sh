@@ -185,6 +185,7 @@ if [ "$1" = "" -o "$1" = "pro5" ]; then
         -D BACKGROUND_CACHE_FILE_CREATION=1 \
         -D POCKETBOOK_PRO=1 \
         -D POCKETBOOK_PRO_FW5=1 \
+        -D DOC_BUFFER_SIZE=0xA00000 \
         -D CR3_PNG=1 \
         -D CR3_JPEG=1 \
         -D WITH_BZip2=OFF \
