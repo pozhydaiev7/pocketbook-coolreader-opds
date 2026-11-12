@@ -75,6 +75,9 @@ code, pre {
     $pre.all
 }
 
+/* CREngine collects page-bottom notes from explicitly marked containers. */
+body[name="notes"] section, body[name="comments"] section { -cr-hint: footnote-inpage; }
+
 body[name="notes"] { $footnote.all }
 body[name="notes"] section title { display: run-in; text-align: left; page-break-before: auto; page-break-inside: auto; page-break-after: auto; }
 body[name="notes"] section title p { display: inline; $footnote-title.all }

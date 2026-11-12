@@ -635,6 +635,7 @@ bool V3DocViewWin::loadSettings( lString32 filename )
         return false;
     }
     if ( _props->loadFromStream( stream.get() ) ) {
+        convertFontWeight();
         _props->setIntDef(PROP_FILE_PROPS_FONT_SIZE, 26);
         _docview->propsUpdateDefaults( _props );
         initTapDefaultActions(_props);
@@ -651,6 +652,37 @@ bool V3DocViewWin::loadSettings( lString32 filename )
     _wm->getScreen()->setTurboUpdateEnabled(_props->getIntDef(PROP_DISPLAY_TURBO_UPDATE_MODE, 0));
     //setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
     return false;
+}
+
+// CREngine 3.2 has one setting for the weight of the text, the base font weight (400 regular,
+// 700 bold). The builds with the old engine had two: Normal/Bold and the font embolding, a
+// stroke widening in 1/8 of a pixel. Settings saved by them are converted once:
+// Bold gives 700; an embolding of e/8 px at the font size s gives 400 + e*800/s, because the
+// engine widens a stroke by s*(weight - 400)/6400 px.
+void V3DocViewWin::convertFontWeight()
+{
+    if ( _props->hasProperty( PROP_FONT_BASE_WEIGHT ) )
+        return;
+    int weight = 400;
+    if ( _props->getBoolDef( PROP_FONT_WEIGHT_EMBOLDEN, false ) ) {
+        weight = 700;
+    } else {
+        int embolding = _props->getIntDef( PROP_FONT_EMBOLDING, 0 );
+        int size = _props->getIntDef( PROP_FONT_SIZE, 0 );
+        if ( embolding != 0 && size > 0 )
+            weight = 400 + embolding * 800 / size;
+    }
+    // the nearest weight of the Font weight menu
+    static const int weights[] = { 300, 400, 425, 450, 475, 500, 525, 550, 600, 650, 700, 800, 900 };
+    int best = 400;
+    for ( unsigned i = 0; i < sizeof(weights)/sizeof(weights[0]); i++ ) {
+        if ( abs( weights[i] - weight ) < abs( best - weight ) )
+            best = weights[i];
+    }
+    CRLog::info("font weight %d from the saved settings (bold %d, embolding %d, font size %d)", best,
+                _props->getBoolDef( PROP_FONT_WEIGHT_EMBOLDEN, false ) ? 1 : 0,
+                _props->getIntDef( PROP_FONT_EMBOLDING, 0 ), _props->getIntDef( PROP_FONT_SIZE, 0 ));
+    _props->setInt( PROP_FONT_BASE_WEIGHT, best );
 }
 
 void V3DocViewWin::reportSaveResult(bool saved, bool history)

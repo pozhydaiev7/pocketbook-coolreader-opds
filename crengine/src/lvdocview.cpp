@@ -6857,13 +6857,9 @@ CRPropRef LVDocView::propsApply(CRPropRef props) {
                 REQUEST_RENDER("Setting shaping mode");
             }
         } else if (name == PROP_FONT_WEIGHT_EMBOLDEN) {
-            // Preserve the existing PocketBook Normal/Bold preference.
-            int weight = props->getBoolDef(PROP_FONT_WEIGHT_EMBOLDEN, false) ? 700 : 400;
-            m_props->setInt(PROP_FONT_BASE_WEIGHT, weight);
-            if (LVRendGetBaseFontWeight() != weight) {
-                LVRendSetBaseFontWeight(weight);
-                REQUEST_RENDER("propsApply - PocketBook font weight")
-            }
+            // The PocketBook frontend sets PROP_FONT_BASE_WEIGHT itself and converts the saved
+            // Normal/Bold value when it loads the settings: this key must not set the weight
+            // back to 400 or 700 when all properties are applied.
         } else if (name == PROP_FONT_BASE_WEIGHT) {
             // replaces PROP_FONT_WEIGHT_EMBOLDEN
             int v = props->getIntDef(PROP_FONT_BASE_WEIGHT, 400);

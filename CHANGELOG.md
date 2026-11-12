@@ -2,7 +2,7 @@
 
 ## 0.0.6-17-67-opds (branch `engine-3.2.59`, not released)
 
-The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test build: `0.0.6-17-67-opds-alpha1`. Not tested on a device yet.
+The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test builds: `0.0.6-17-67-opds-alpha1`, `-alpha2` (the font weight setting, the footnote hint in the packaged `fb2.css`).
 
 The engine with its PocketBook port, the bundled libraries and the reliability changes of the frontend are taken from [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader) at `8f592d51` (commits `9d969bb7`, `01403eee`, `3ab28e48`, `7a20f240`, `ebecbb7f`, `2c1e56da`, `dc91e9cd`) and two later fixes (`98fef7e0`, `f6a54727`). Not taken: its OTA update, dictionary downloads, settings menus, device table and its private curl.
 
@@ -19,7 +19,9 @@ The engine with its PocketBook port, the bundled libraries and the reliability c
 - **Frontend strings:** `lString16`, `lChar16`, `L""` are `lString32`, `lChar32`, `U""`, as in the engine (47 files of `cr3gui/src`). Battery state, links, cover drawing, anti-aliasing and document loading calls follow the new engine.
 - **Settings and reading history** are written through a temporary file and renamed, with a `.bak` copy of the previous file (`LVWriteFileAtomic`). A failed write shows one warning. The font size changed by a gesture is saved in the settings.
 - **Clear cache** command: the cache is cleared by the engine (`ldomDocCache::clear()`), the cache file of the open book included. The new engine does not tell the frontend the cache folder and the file of the open book.
-- **Font embolding** (*Font settings*) is removed: the engine has no such rasterizer setting. *Bold* remains. The saved value is kept in `cr3.ini`.
+- **Font weight** (*Font settings*) is one item with the weights 300 to 900 (`font.face.base.weight` of the engine; 400 is *Normal*, 700 is *Bold*) instead of *Normal/Bold* and *Font embolding*. The old engine widened the strokes by a number of pixels, the new one by the weight.
+  - Saved settings are converted once when they are loaded (`V3DocViewWin::convertFontWeight`): *Bold* gives 700, an embolding of e/8 px at the font size s gives 400 + e·800/s, the nearest weight of the menu is taken. An embolding of 0.75 at the size 48 becomes 500.
+  - The saved `font.embolding` and `font.face.weight.embolden` stay in `cr3.ini` for the builds with the old engine.
 - **Speed of the new engine**, checked on the PC bench (`C:\Temp\cr3-opds-build\bench-ng`): 720 pages of three books in four configurations are the same bit for bit before and after these changes.
   - **Page buffer copy** (`LVGrayDrawBuf::DrawTo`): the row copy of 0.0.6-17-66 and the full-copy shortcut. 3000 page drawings with their copies: 5255 ms before, 2173 ms after.
   - **Glyph cache:** found by a hash of the character code (`USE_GLYPHCACHE_HASHTABLE`), 2 MB (`GLYPH_CACHE_SIZE`); the list fixes of the global cache.

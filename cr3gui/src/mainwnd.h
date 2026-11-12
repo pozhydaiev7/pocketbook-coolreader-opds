@@ -118,6 +118,7 @@ protected:
     bool _settingsSaveFailed;
     bool _historySaveFailed;
     void reportSaveResult(bool saved, bool history);
+    void convertFontWeight();
     time_t _loadFileStart;
     lString32 _fileName;
 public:

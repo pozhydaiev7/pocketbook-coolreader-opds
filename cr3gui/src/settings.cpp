@@ -1172,9 +1172,29 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {NULL, NULL},
     };
 
+    // the status line font: normal or bold
     item_def_t embolden_mode[] = {
         {_("Normal"), "0"},
         {_("Bold"), "1"},
+        {NULL, NULL},
+    };
+
+    // the base font weight of the engine: 400 is the regular face of the font, 700 its bold
+    // face; the weights between them are made by thickening the outlines of the glyphs
+    item_def_t font_weights[] = {
+        {"300", "300"},
+        {_("Normal"), "400"},
+        {"425", "425"},
+        {"450", "450"},
+        {"475", "475"},
+        {"500", "500"},
+        {"525", "525"},
+        {"550", "550"},
+        {"600", "600"},
+        {"650", "650"},
+        {_("Bold"), "700"},
+        {"800", "800"},
+        {"900", "900"},
         {NULL, NULL},
     };
 
@@ -1536,7 +1556,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     fontSettingsMenu->setAccelerators( _menuAccelerators );
 
     createSettingsMenuItem(fontSettingsMenu, mm_Embolden, _("Font weight"), "cr3_option_font_weight",
-                           valueFont, PROP_FONT_WEIGHT_EMBOLDEN, embolden_mode);
+                           valueFont, PROP_FONT_BASE_WEIGHT, font_weights);
     createSettingsMenuItem(fontSettingsMenu, mm_FontAntiAliasing, _("Font antialiasing"),
                            "cr3_option_font_antialiasing", valueFont,
                            PROP_FONT_ANTIALIASING, antialiasing_modes);
@@ -1544,8 +1564,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                            valueFont, PROP_FONT_HINTING, font_hinting);
     createSettingsMenuItem(fontSettingsMenu, mm_Kerning, _("Font kerning"), "cr3_option_font_kerning",
                            valueFont, PROP_FONT_KERNING_ENABLED, on_off_option);
-    // Legacy font.embolding has no adjustable rasterizer backend in CREngine
-    // 3.2. Keep the saved key for rollback; Normal/Bold remains available.
+    // The font embolding of the old engine is the Font weight item above now
+    // (V3DocViewWin::convertFontWeight converts the saved value).
     createSettingsMenuItem(fontSettingsMenu, mm_Tracking, _("Tracking"), "cr3_option_font_tracking",
                            valueFont, PROP_FONT_TRACKING, tracking);
     createSettingsMenuItem(fontSettingsMenu, mm_fontGamma, _("Font Gamma"), "cr3_option_font_gamma",
