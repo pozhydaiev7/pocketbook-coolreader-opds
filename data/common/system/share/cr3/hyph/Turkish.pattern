@@ -9,7 +9,9 @@
 % developed by P. A. MacKay for the Ottoman Texts Project.
 % Slightly modified by H. Turgut Uyar.
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Turkish" lang="tr"
+    lefthyphenmin="2" righthyphenmin="2">
 	<pattern>2a1</pattern>
 	<pattern>2e1</pattern>
 	<pattern>2ı1</pattern>

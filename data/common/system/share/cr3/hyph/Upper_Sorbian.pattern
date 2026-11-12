@@ -83,7 +83,9 @@
 % ź - zacute
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Upper Sorbian" lang="hsb"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>8ě</pattern>
     <pattern>8ń5</pattern>
     <pattern>ń6č3</pattern>
@@ -1390,16 +1392,16 @@
     <pattern>y3ž2o</pattern>
     <pattern>y3ž2u</pattern>
     <pattern>y2ž1</pattern>
-    <pattern>.a8b7itu1r</pattern>
-    <pattern>.a8b7itu8r1n</pattern>
+    <pattern> a8b7itu1r</pattern>
+    <pattern> a8b7itu8r1n</pattern>
     <pattern>b1b</pattern>
     <pattern>b1ce</pattern>
     <pattern>b1cy</pattern>
     <pattern>b1ć</pattern>
     <pattern>b1č</pattern>
     <pattern>b1d</pattern>
-    <pattern>.bjez1</pattern>
-    <pattern>.bje1z2e</pattern>
+    <pattern> bjez1</pattern>
+    <pattern> bje1z2e</pattern>
     <pattern>b2j</pattern>
     <pattern>b1h</pattern>
     <pattern>b1k</pattern>
@@ -1416,7 +1418,7 @@
     <pattern>1co</pattern>
     <pattern>1cu</pattern>
     <pattern>c2h</pattern>
-    <pattern>.ch2c</pattern>
+    <pattern> ch2c</pattern>
     <pattern>ch1ć</pattern>
     <pattern>ch1n</pattern>
     <pattern>č1n</pattern>
@@ -1426,16 +1428,16 @@
     <pattern>oł1d2nj</pattern>
     <pattern>do1s1po</pattern>
     <pattern>do1z2na</pattern>
-    <pattern>do2z3na.</pattern>
-    <pattern>nje1do3z4na.</pattern>
+    <pattern>do2z3na </pattern>
+    <pattern>nje1do3z4na </pattern>
     <pattern>im1ple</pattern>
     <pattern>1h2d</pattern>
     <pattern>1h2lad</pattern>
     <pattern>2h1ny</pattern>
-    <pattern>2h1nu.</pattern>
+    <pattern>2h1nu </pattern>
     <pattern>2h1nje</pattern>
     <pattern>1h2romad</pattern>
-    <pattern>.nje1z2hromad</pattern>
+    <pattern> nje1z2hromad</pattern>
     <pattern>1ka</pattern>
     <pattern>k1c</pattern>
     <pattern>1ku</pattern>
@@ -1448,40 +1450,40 @@
     <pattern>ko8n7urb</pattern>
     <pattern>k1s</pattern>
     <pattern>k1t</pattern>
-    <pattern>k2tu.</pattern>
+    <pattern>k2tu </pattern>
     <pattern>kuz1ł</pattern>
     <pattern>kuz1l</pattern>
-    <pattern>2k2st.</pattern>
+    <pattern>2k2st </pattern>
     <pattern>3ł2ha</pattern>
-    <pattern>.bo4ł3h</pattern>
-    <pattern>.do4ł3h</pattern>
-    <pattern>.do4ł3ho3</pattern>
-    <pattern>.po4ł3h</pattern>
+    <pattern> bo4ł3h</pattern>
+    <pattern> do4ł3h</pattern>
+    <pattern> do4ł3ho3</pattern>
+    <pattern> po4ł3h</pattern>
     <pattern>l1n</pattern>
     <pattern>3ł2ž</pattern>
-    <pattern>.do4łž1n</pattern>
-    <pattern>.po4ł3ž</pattern>
+    <pattern> do4łž1n</pattern>
+    <pattern> po4ł3ž</pattern>
     <pattern>l1g</pattern>
     <pattern>l1z</pattern>
     <pattern>m1n</pattern>
-    <pattern>3m2ru.</pattern>
+    <pattern>3m2ru </pattern>
     <pattern>3m2rje</pattern>
     <pattern>3m2rě</pattern>
     <pattern>m1s</pattern>
     <pattern>mys1l</pattern>
     <pattern>na1</pattern>
-    <pattern>.na4d1</pattern>
-    <pattern>.nje1na4d1</pattern>
-    <pattern>.na4d2eń</pattern>
-    <pattern>.nje1na4d2eń</pattern>
-    <pattern>.na4d2eš</pattern>
-    <pattern>.nje1na4d2eš</pattern>
+    <pattern> na4d1</pattern>
+    <pattern> nje1na4d1</pattern>
+    <pattern> na4d2eń</pattern>
+    <pattern> nje1na4d2eń</pattern>
+    <pattern> na4d2eš</pattern>
+    <pattern> nje1na4d2eš</pattern>
     <pattern>2n1d</pattern>
-    <pattern>1ni.</pattern>
+    <pattern>1ni </pattern>
     <pattern>n4j</pattern>
-    <pattern>1nja.</pattern>
-    <pattern>1nje.</pattern>
-    <pattern>.nje1</pattern>
+    <pattern>1nja </pattern>
+    <pattern>1nje </pattern>
+    <pattern> nje1</pattern>
     <pattern>n1t</pattern>
     <pattern>n2t1n</pattern>
     <pattern>nuh1l</pattern>
@@ -1512,7 +1514,7 @@
     <pattern>r1č</pattern>
     <pattern>r1d</pattern>
     <pattern>r1f</pattern>
-    <pattern>r2dź.</pattern>
+    <pattern>r2dź </pattern>
     <pattern>r4j</pattern>
     <pattern>r1m</pattern>
     <pattern>r1n</pattern>
@@ -1528,34 +1530,34 @@
     <pattern>plu2s3ka</pattern>
     <pattern>ći2s3ka</pattern>
     <pattern>wrje2s3ka</pattern>
-    <pattern>1s2k2i.</pattern>
-    <pattern>1s2k2a.</pattern>
-    <pattern>1s2k2e.</pattern>
-    <pattern>1s2k2eho.</pattern>
-    <pattern>1s2k2eje.</pattern>
-    <pattern>1s2k2ej.</pattern>
-    <pattern>1s2k2aj.</pattern>
-    <pattern>1s2k2emu.</pattern>
-    <pattern>1s2k2u.</pattern>
-    <pattern>1s2k2im.</pattern>
-    <pattern>1s2k2imaj.</pattern>
-    <pattern>1s2k2eju.</pattern>
-    <pattern>1s2k2imi.</pattern>
-    <pattern>1s2k2i2ch.</pattern>
-    <pattern>1s2c2y.</pattern>
-    <pattern>1s2c2e.</pattern>
+    <pattern>1s2k2i </pattern>
+    <pattern>1s2k2a </pattern>
+    <pattern>1s2k2e </pattern>
+    <pattern>1s2k2eho </pattern>
+    <pattern>1s2k2eje </pattern>
+    <pattern>1s2k2ej </pattern>
+    <pattern>1s2k2aj </pattern>
+    <pattern>1s2k2emu </pattern>
+    <pattern>1s2k2u </pattern>
+    <pattern>1s2k2im </pattern>
+    <pattern>1s2k2imaj </pattern>
+    <pattern>1s2k2eju </pattern>
+    <pattern>1s2k2imi </pattern>
+    <pattern>1s2k2i2ch </pattern>
+    <pattern>1s2c2y </pattern>
+    <pattern>1s2c2e </pattern>
     <pattern>s1n</pattern>
     <pattern>s2tat1n</pattern>
     <pattern>4st1n</pattern>
     <pattern>2n1stw</pattern>
-    <pattern>1š2to.</pattern>
-    <pattern>1š2li.</pattern>
-    <pattern>1š2łe.</pattern>
-    <pattern>1š2ła.</pattern>
-    <pattern>1š2łoj.</pattern>
-    <pattern>1š2oł.</pattern>
-    <pattern>1š2łaj.</pattern>
-    <pattern>1š2łej.</pattern>
+    <pattern>1š2to </pattern>
+    <pattern>1š2li </pattern>
+    <pattern>1š2łe </pattern>
+    <pattern>1š2ła </pattern>
+    <pattern>1š2łoj </pattern>
+    <pattern>1š2oł </pattern>
+    <pattern>1š2łaj </pattern>
+    <pattern>1š2łej </pattern>
     <pattern>š1</pattern>
     <pattern>1š8a</pattern>
     <pattern>1š8e</pattern>
@@ -1571,32 +1573,32 @@
     <pattern>t1n</pattern>
     <pattern>t1p</pattern>
     <pattern>w4j</pattern>
-    <pattern>.wje1le3</pattern>
+    <pattern> wje1le3</pattern>
     <pattern>w4n1st</pattern>
-    <pattern>.wo4b2e</pattern>
+    <pattern> wo4b2e</pattern>
     <pattern>wo4b3jas1n</pattern>
     <pattern>wo4b3jeć</pattern>
     <pattern>wo4b3jed1n</pattern>
     <pattern>wo4b3jě</pattern>
     <pattern>wo4b3jim</pattern>
-    <pattern>.nje1wo4b2e1</pattern>
-    <pattern>.wo4te3</pattern>
-    <pattern>.njewo4te3</pattern>
+    <pattern> nje1wo4b2e1</pattern>
+    <pattern> wo4te3</pattern>
+    <pattern> njewo4te3</pattern>
     <pattern>wo1zna</pattern>
-    <pattern>.wu1</pattern>
+    <pattern> wu1</pattern>
     <pattern>wu1s2nu</pattern>
     <pattern>wu1s2n2j2e</pattern>
     <pattern>wu1s2ny</pattern>
-    <pattern>.za1</pattern>
-    <pattern>.za2ń</pattern>
-    <pattern>.za2w1k</pattern>
-    <pattern>.za2w3da</pattern>
+    <pattern> za1</pattern>
+    <pattern> za2ń</pattern>
+    <pattern> za2w1k</pattern>
+    <pattern> za2w3da</pattern>
     <pattern>ze1z2na</pattern>
     <pattern>z1nak</pattern>
-    <pattern>iz1na.</pattern>
-    <pattern>iz1ny.</pattern>
-    <pattern>iz1nu.</pattern>
-    <pattern>iz1nje.</pattern>
+    <pattern>iz1na </pattern>
+    <pattern>iz1ny </pattern>
+    <pattern>iz1nu </pattern>
+    <pattern>iz1nje </pattern>
     <pattern>iz1no</pattern>
     <pattern>2z1p</pattern>
     <pattern>2z1s</pattern>

@@ -22,6 +22,11 @@ extern const char * const DOT;       // "  ·  "
 extern const char * const DASH;      // " — "
 extern const lChar32 ELLIPSIS;
 
+// Mark of the current row (the chapter of the open page in the contents): a filled triangle
+// pointing right, drawn in the middle of the row at x. size is the height of the font of the row.
+// Returns the width taken together with the gap before the text.
+int drawRowMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color);
+
 lString32 u16(const std::string & s);
 
 // Cuts text to fit maxWidth, ending with an ellipsis.
@@ -70,6 +75,8 @@ public:
     // (a page number), in the font of the second line.
     int indent;
     lString32 aside;
+    // Regular row: the triangle mark of the current row before the title
+    bool mark;
 
 private:
     void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline);

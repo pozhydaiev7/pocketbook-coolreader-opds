@@ -20,17 +20,19 @@
 % http://linux.thai.net/svn/software/thailatex/trunk
 %
 -->
-<HyphenationDescription>
-    <pattern>.ชี5วั</pattern>
-    <pattern>.ทัศนู5</pattern>
-    <pattern>.ที่3</pattern>
-    <pattern>.บท1</pattern>
-    <pattern>.รง4</pattern>
-    <pattern>.ราย3</pattern>
-    <pattern>.ลำ3</pattern>
-    <pattern>.สน5ท</pattern>
-    <pattern>.สู3ต</pattern>
-    <pattern>.ใบ3</pattern>
+<HyphenationDescription
+    title="Thai" lang="th"
+    lefthyphenmin="2" righthyphenmin="3">
+    <pattern> ชี5วั</pattern>
+    <pattern> ทัศนู5</pattern>
+    <pattern> ที่3</pattern>
+    <pattern> บท1</pattern>
+    <pattern> รง4</pattern>
+    <pattern> ราย3</pattern>
+    <pattern> ลำ3</pattern>
+    <pattern> สน5ท</pattern>
+    <pattern> สู3ต</pattern>
+    <pattern> ใบ3</pattern>
     <pattern>2ก1ก</pattern>
     <pattern>ก4กม</pattern>
     <pattern>กก4ส</pattern>
@@ -584,7 +586,7 @@
     <pattern>ตา5มอ</pattern>
     <pattern>ตา5มะ</pattern>
     <pattern>ตา5ฬี</pattern>
-    <pattern>3ติก.</pattern>
+    <pattern>3ติก </pattern>
     <pattern>ติ5จู</pattern>
     <pattern>ติ5ช่</pattern>
     <pattern>ติ5ทิ</pattern>
@@ -600,7 +602,7 @@
     <pattern>ตี5ตื</pattern>
     <pattern>ตี5รว</pattern>
     <pattern>ตี5ลั</pattern>
-    <pattern>3ตี้.</pattern>
+    <pattern>3ตี้ </pattern>
     <pattern>ตุ5ตถ</pattern>
     <pattern>ตุ5ทส</pattern>
     <pattern>ตุ5ป่</pattern>
@@ -1155,7 +1157,7 @@
     <pattern>มิ5แพ</pattern>
     <pattern>มี5ขม</pattern>
     <pattern>3มืด</pattern>
-    <pattern>1มือ.</pattern>
+    <pattern>1มือ </pattern>
     <pattern>มุ5ทะ</pattern>
     <pattern>มุ5ทั</pattern>
     <pattern>มุ5ทิ</pattern>
@@ -3299,228 +3301,228 @@
     <pattern>์1เ</pattern>
     <pattern>์1แ</pattern>
     <pattern>์1โ</pattern>
-    <pattern>.ก6</pattern>
-    <pattern>.ข6</pattern>
-    <pattern>.ฃ6</pattern>
-    <pattern>.ค6</pattern>
-    <pattern>.ฅ6</pattern>
-    <pattern>.ฆ6</pattern>
-    <pattern>.ง6</pattern>
-    <pattern>.จ6</pattern>
-    <pattern>.ฉ6</pattern>
-    <pattern>.ช6</pattern>
-    <pattern>.ซ6</pattern>
-    <pattern>.ฌ6</pattern>
-    <pattern>.ญ6</pattern>
-    <pattern>.ฎ6</pattern>
-    <pattern>.ฏ6</pattern>
-    <pattern>.ฐ6</pattern>
-    <pattern>.ฑ6</pattern>
-    <pattern>.ฒ6</pattern>
-    <pattern>.ณ6</pattern>
-    <pattern>.ด6</pattern>
-    <pattern>.ต6</pattern>
-    <pattern>.ถ6</pattern>
-    <pattern>.ท6</pattern>
-    <pattern>.ธ6</pattern>
-    <pattern>.น6</pattern>
-    <pattern>.บ6</pattern>
-    <pattern>.ป6</pattern>
-    <pattern>.ผ6</pattern>
-    <pattern>.ฝ6</pattern>
-    <pattern>.พ6</pattern>
-    <pattern>.ฟ6</pattern>
-    <pattern>.ภ6</pattern>
-    <pattern>.ม6</pattern>
-    <pattern>.ย6</pattern>
-    <pattern>.ร6</pattern>
-    <pattern>.ฤ6</pattern>
-    <pattern>.ล6</pattern>
-    <pattern>.ฦ6</pattern>
-    <pattern>.ว6</pattern>
-    <pattern>.ศ6</pattern>
-    <pattern>.ษ6</pattern>
-    <pattern>.ส6</pattern>
-    <pattern>.ห6</pattern>
-    <pattern>.ฬ6</pattern>
-    <pattern>.อ6</pattern>
-    <pattern>.ฮ6</pattern>
-    <pattern>6ก.</pattern>
-    <pattern>6ข.</pattern>
-    <pattern>6ฃ.</pattern>
-    <pattern>6ค.</pattern>
-    <pattern>6ฅ.</pattern>
-    <pattern>6ฆ.</pattern>
-    <pattern>6ง.</pattern>
-    <pattern>6จ.</pattern>
-    <pattern>6ฉ.</pattern>
-    <pattern>6ช.</pattern>
-    <pattern>6ซ.</pattern>
-    <pattern>6ฌ.</pattern>
-    <pattern>6ญ.</pattern>
-    <pattern>6ฎ.</pattern>
-    <pattern>6ฏ.</pattern>
-    <pattern>6ฐ.</pattern>
-    <pattern>6ฑ.</pattern>
-    <pattern>6ฒ.</pattern>
-    <pattern>6ณ.</pattern>
-    <pattern>6ด.</pattern>
-    <pattern>6ต.</pattern>
-    <pattern>6ถ.</pattern>
-    <pattern>6ท.</pattern>
-    <pattern>6ธ.</pattern>
-    <pattern>6น.</pattern>
-    <pattern>6บ.</pattern>
-    <pattern>6ป.</pattern>
-    <pattern>6ผ.</pattern>
-    <pattern>6ฝ.</pattern>
-    <pattern>6พ.</pattern>
-    <pattern>6ฟ.</pattern>
-    <pattern>6ภ.</pattern>
-    <pattern>6ม.</pattern>
-    <pattern>6ย.</pattern>
-    <pattern>6ร.</pattern>
-    <pattern>6ล.</pattern>
-    <pattern>6ว.</pattern>
-    <pattern>6ศ.</pattern>
-    <pattern>6ษ.</pattern>
-    <pattern>6ส.</pattern>
-    <pattern>6ห.</pattern>
-    <pattern>6ฬ.</pattern>
-    <pattern>6อ.</pattern>
-    <pattern>6ฮ.</pattern>
-    <pattern>6ก์.</pattern>
-    <pattern>6ข์.</pattern>
-    <pattern>6ฃ์.</pattern>
-    <pattern>6ค์.</pattern>
-    <pattern>6ฅ์.</pattern>
-    <pattern>6ฆ์.</pattern>
-    <pattern>6ง์.</pattern>
-    <pattern>6จ์.</pattern>
-    <pattern>6ฉ์.</pattern>
-    <pattern>6ช์.</pattern>
-    <pattern>6ซ์.</pattern>
-    <pattern>6ฌ์.</pattern>
-    <pattern>6ญ์.</pattern>
-    <pattern>6ฎ์.</pattern>
-    <pattern>6ฏ์.</pattern>
-    <pattern>6ฐ์.</pattern>
-    <pattern>6ฑ์.</pattern>
-    <pattern>6ฒ์.</pattern>
-    <pattern>6ณ์.</pattern>
-    <pattern>6ด์.</pattern>
-    <pattern>6ต์.</pattern>
-    <pattern>6ถ์.</pattern>
-    <pattern>6ท์.</pattern>
-    <pattern>6ธ์.</pattern>
-    <pattern>6น์.</pattern>
-    <pattern>6บ์.</pattern>
-    <pattern>6ป์.</pattern>
-    <pattern>6ผ์.</pattern>
-    <pattern>6ฝ์.</pattern>
-    <pattern>6พ์.</pattern>
-    <pattern>6ฟ์.</pattern>
-    <pattern>6ภ์.</pattern>
-    <pattern>6ม์.</pattern>
-    <pattern>6ย์.</pattern>
-    <pattern>6ร์.</pattern>
-    <pattern>6ล์.</pattern>
-    <pattern>6ว์.</pattern>
-    <pattern>6ศ์.</pattern>
-    <pattern>6ษ์.</pattern>
-    <pattern>6ส์.</pattern>
-    <pattern>6ห์.</pattern>
-    <pattern>6ฬ์.</pattern>
-    <pattern>6อ์.</pattern>
-    <pattern>6ฮ์.</pattern>
-    <pattern>6กิ์.</pattern>
-    <pattern>6ขิ์.</pattern>
-    <pattern>6ฃิ์.</pattern>
-    <pattern>6คิ์.</pattern>
-    <pattern>6ฅิ์.</pattern>
-    <pattern>6ฆิ์.</pattern>
-    <pattern>6งิ์.</pattern>
-    <pattern>6จิ์.</pattern>
-    <pattern>6ฉิ์.</pattern>
-    <pattern>6ชิ์.</pattern>
-    <pattern>6ซิ์.</pattern>
-    <pattern>6ฌิ์.</pattern>
-    <pattern>6ญิ์.</pattern>
-    <pattern>6ฎิ์.</pattern>
-    <pattern>6ฏิ์.</pattern>
-    <pattern>6ฐิ์.</pattern>
-    <pattern>6ฑิ์.</pattern>
-    <pattern>6ฒิ์.</pattern>
-    <pattern>6ณิ์.</pattern>
-    <pattern>6ดิ์.</pattern>
-    <pattern>6ติ์.</pattern>
-    <pattern>6ถิ์.</pattern>
-    <pattern>6ทิ์.</pattern>
-    <pattern>6ธิ์.</pattern>
-    <pattern>6นิ์.</pattern>
-    <pattern>6บิ์.</pattern>
-    <pattern>6ปิ์.</pattern>
-    <pattern>6ผิ์.</pattern>
-    <pattern>6ฝิ์.</pattern>
-    <pattern>6พิ์.</pattern>
-    <pattern>6ฟิ์.</pattern>
-    <pattern>6ภิ์.</pattern>
-    <pattern>6มิ์.</pattern>
-    <pattern>6ยิ์.</pattern>
-    <pattern>6ริ์.</pattern>
-    <pattern>6ลิ์.</pattern>
-    <pattern>6วิ์.</pattern>
-    <pattern>6ศิ์.</pattern>
-    <pattern>6ษิ์.</pattern>
-    <pattern>6สิ์.</pattern>
-    <pattern>6หิ์.</pattern>
-    <pattern>6ฬิ์.</pattern>
-    <pattern>6อิ์.</pattern>
-    <pattern>6ฮิ์.</pattern>
-    <pattern>6กุ์.</pattern>
-    <pattern>6ขุ์.</pattern>
-    <pattern>6ฃุ์.</pattern>
-    <pattern>6คุ์.</pattern>
-    <pattern>6ฅุ์.</pattern>
-    <pattern>6ฆุ์.</pattern>
-    <pattern>6งุ์.</pattern>
-    <pattern>6จุ์.</pattern>
-    <pattern>6ฉุ์.</pattern>
-    <pattern>6ชุ์.</pattern>
-    <pattern>6ซุ์.</pattern>
-    <pattern>6ฌุ์.</pattern>
-    <pattern>6ญุ์.</pattern>
-    <pattern>6ฎุ์.</pattern>
-    <pattern>6ฏุ์.</pattern>
-    <pattern>6ฐุ์.</pattern>
-    <pattern>6ฑุ์.</pattern>
-    <pattern>6ฒุ์.</pattern>
-    <pattern>6ณุ์.</pattern>
-    <pattern>6ดุ์.</pattern>
-    <pattern>6ตุ์.</pattern>
-    <pattern>6ถุ์.</pattern>
-    <pattern>6ทุ์.</pattern>
-    <pattern>6ธุ์.</pattern>
-    <pattern>6นุ์.</pattern>
-    <pattern>6บุ์.</pattern>
-    <pattern>6ปุ์.</pattern>
-    <pattern>6ผุ์.</pattern>
-    <pattern>6ฝุ์.</pattern>
-    <pattern>6พุ์.</pattern>
-    <pattern>6ฟุ์.</pattern>
-    <pattern>6ภุ์.</pattern>
-    <pattern>6มุ์.</pattern>
-    <pattern>6ยุ์.</pattern>
-    <pattern>6รุ์.</pattern>
-    <pattern>6ลุ์.</pattern>
-    <pattern>6วุ์.</pattern>
-    <pattern>6ศุ์.</pattern>
-    <pattern>6ษุ์.</pattern>
-    <pattern>6สุ์.</pattern>
-    <pattern>6หุ์.</pattern>
-    <pattern>6ฬุ์.</pattern>
-    <pattern>6อุ์.</pattern>
-    <pattern>6ฮุ์.</pattern>
+    <pattern> ก6</pattern>
+    <pattern> ข6</pattern>
+    <pattern> ฃ6</pattern>
+    <pattern> ค6</pattern>
+    <pattern> ฅ6</pattern>
+    <pattern> ฆ6</pattern>
+    <pattern> ง6</pattern>
+    <pattern> จ6</pattern>
+    <pattern> ฉ6</pattern>
+    <pattern> ช6</pattern>
+    <pattern> ซ6</pattern>
+    <pattern> ฌ6</pattern>
+    <pattern> ญ6</pattern>
+    <pattern> ฎ6</pattern>
+    <pattern> ฏ6</pattern>
+    <pattern> ฐ6</pattern>
+    <pattern> ฑ6</pattern>
+    <pattern> ฒ6</pattern>
+    <pattern> ณ6</pattern>
+    <pattern> ด6</pattern>
+    <pattern> ต6</pattern>
+    <pattern> ถ6</pattern>
+    <pattern> ท6</pattern>
+    <pattern> ธ6</pattern>
+    <pattern> น6</pattern>
+    <pattern> บ6</pattern>
+    <pattern> ป6</pattern>
+    <pattern> ผ6</pattern>
+    <pattern> ฝ6</pattern>
+    <pattern> พ6</pattern>
+    <pattern> ฟ6</pattern>
+    <pattern> ภ6</pattern>
+    <pattern> ม6</pattern>
+    <pattern> ย6</pattern>
+    <pattern> ร6</pattern>
+    <pattern> ฤ6</pattern>
+    <pattern> ล6</pattern>
+    <pattern> ฦ6</pattern>
+    <pattern> ว6</pattern>
+    <pattern> ศ6</pattern>
+    <pattern> ษ6</pattern>
+    <pattern> ส6</pattern>
+    <pattern> ห6</pattern>
+    <pattern> ฬ6</pattern>
+    <pattern> อ6</pattern>
+    <pattern> ฮ6</pattern>
+    <pattern>6ก </pattern>
+    <pattern>6ข </pattern>
+    <pattern>6ฃ </pattern>
+    <pattern>6ค </pattern>
+    <pattern>6ฅ </pattern>
+    <pattern>6ฆ </pattern>
+    <pattern>6ง </pattern>
+    <pattern>6จ </pattern>
+    <pattern>6ฉ </pattern>
+    <pattern>6ช </pattern>
+    <pattern>6ซ </pattern>
+    <pattern>6ฌ </pattern>
+    <pattern>6ญ </pattern>
+    <pattern>6ฎ </pattern>
+    <pattern>6ฏ </pattern>
+    <pattern>6ฐ </pattern>
+    <pattern>6ฑ </pattern>
+    <pattern>6ฒ </pattern>
+    <pattern>6ณ </pattern>
+    <pattern>6ด </pattern>
+    <pattern>6ต </pattern>
+    <pattern>6ถ </pattern>
+    <pattern>6ท </pattern>
+    <pattern>6ธ </pattern>
+    <pattern>6น </pattern>
+    <pattern>6บ </pattern>
+    <pattern>6ป </pattern>
+    <pattern>6ผ </pattern>
+    <pattern>6ฝ </pattern>
+    <pattern>6พ </pattern>
+    <pattern>6ฟ </pattern>
+    <pattern>6ภ </pattern>
+    <pattern>6ม </pattern>
+    <pattern>6ย </pattern>
+    <pattern>6ร </pattern>
+    <pattern>6ล </pattern>
+    <pattern>6ว </pattern>
+    <pattern>6ศ </pattern>
+    <pattern>6ษ </pattern>
+    <pattern>6ส </pattern>
+    <pattern>6ห </pattern>
+    <pattern>6ฬ </pattern>
+    <pattern>6อ </pattern>
+    <pattern>6ฮ </pattern>
+    <pattern>6ก์ </pattern>
+    <pattern>6ข์ </pattern>
+    <pattern>6ฃ์ </pattern>
+    <pattern>6ค์ </pattern>
+    <pattern>6ฅ์ </pattern>
+    <pattern>6ฆ์ </pattern>
+    <pattern>6ง์ </pattern>
+    <pattern>6จ์ </pattern>
+    <pattern>6ฉ์ </pattern>
+    <pattern>6ช์ </pattern>
+    <pattern>6ซ์ </pattern>
+    <pattern>6ฌ์ </pattern>
+    <pattern>6ญ์ </pattern>
+    <pattern>6ฎ์ </pattern>
+    <pattern>6ฏ์ </pattern>
+    <pattern>6ฐ์ </pattern>
+    <pattern>6ฑ์ </pattern>
+    <pattern>6ฒ์ </pattern>
+    <pattern>6ณ์ </pattern>
+    <pattern>6ด์ </pattern>
+    <pattern>6ต์ </pattern>
+    <pattern>6ถ์ </pattern>
+    <pattern>6ท์ </pattern>
+    <pattern>6ธ์ </pattern>
+    <pattern>6น์ </pattern>
+    <pattern>6บ์ </pattern>
+    <pattern>6ป์ </pattern>
+    <pattern>6ผ์ </pattern>
+    <pattern>6ฝ์ </pattern>
+    <pattern>6พ์ </pattern>
+    <pattern>6ฟ์ </pattern>
+    <pattern>6ภ์ </pattern>
+    <pattern>6ม์ </pattern>
+    <pattern>6ย์ </pattern>
+    <pattern>6ร์ </pattern>
+    <pattern>6ล์ </pattern>
+    <pattern>6ว์ </pattern>
+    <pattern>6ศ์ </pattern>
+    <pattern>6ษ์ </pattern>
+    <pattern>6ส์ </pattern>
+    <pattern>6ห์ </pattern>
+    <pattern>6ฬ์ </pattern>
+    <pattern>6อ์ </pattern>
+    <pattern>6ฮ์ </pattern>
+    <pattern>6กิ์ </pattern>
+    <pattern>6ขิ์ </pattern>
+    <pattern>6ฃิ์ </pattern>
+    <pattern>6คิ์ </pattern>
+    <pattern>6ฅิ์ </pattern>
+    <pattern>6ฆิ์ </pattern>
+    <pattern>6งิ์ </pattern>
+    <pattern>6จิ์ </pattern>
+    <pattern>6ฉิ์ </pattern>
+    <pattern>6ชิ์ </pattern>
+    <pattern>6ซิ์ </pattern>
+    <pattern>6ฌิ์ </pattern>
+    <pattern>6ญิ์ </pattern>
+    <pattern>6ฎิ์ </pattern>
+    <pattern>6ฏิ์ </pattern>
+    <pattern>6ฐิ์ </pattern>
+    <pattern>6ฑิ์ </pattern>
+    <pattern>6ฒิ์ </pattern>
+    <pattern>6ณิ์ </pattern>
+    <pattern>6ดิ์ </pattern>
+    <pattern>6ติ์ </pattern>
+    <pattern>6ถิ์ </pattern>
+    <pattern>6ทิ์ </pattern>
+    <pattern>6ธิ์ </pattern>
+    <pattern>6นิ์ </pattern>
+    <pattern>6บิ์ </pattern>
+    <pattern>6ปิ์ </pattern>
+    <pattern>6ผิ์ </pattern>
+    <pattern>6ฝิ์ </pattern>
+    <pattern>6พิ์ </pattern>
+    <pattern>6ฟิ์ </pattern>
+    <pattern>6ภิ์ </pattern>
+    <pattern>6มิ์ </pattern>
+    <pattern>6ยิ์ </pattern>
+    <pattern>6ริ์ </pattern>
+    <pattern>6ลิ์ </pattern>
+    <pattern>6วิ์ </pattern>
+    <pattern>6ศิ์ </pattern>
+    <pattern>6ษิ์ </pattern>
+    <pattern>6สิ์ </pattern>
+    <pattern>6หิ์ </pattern>
+    <pattern>6ฬิ์ </pattern>
+    <pattern>6อิ์ </pattern>
+    <pattern>6ฮิ์ </pattern>
+    <pattern>6กุ์ </pattern>
+    <pattern>6ขุ์ </pattern>
+    <pattern>6ฃุ์ </pattern>
+    <pattern>6คุ์ </pattern>
+    <pattern>6ฅุ์ </pattern>
+    <pattern>6ฆุ์ </pattern>
+    <pattern>6งุ์ </pattern>
+    <pattern>6จุ์ </pattern>
+    <pattern>6ฉุ์ </pattern>
+    <pattern>6ชุ์ </pattern>
+    <pattern>6ซุ์ </pattern>
+    <pattern>6ฌุ์ </pattern>
+    <pattern>6ญุ์ </pattern>
+    <pattern>6ฎุ์ </pattern>
+    <pattern>6ฏุ์ </pattern>
+    <pattern>6ฐุ์ </pattern>
+    <pattern>6ฑุ์ </pattern>
+    <pattern>6ฒุ์ </pattern>
+    <pattern>6ณุ์ </pattern>
+    <pattern>6ดุ์ </pattern>
+    <pattern>6ตุ์ </pattern>
+    <pattern>6ถุ์ </pattern>
+    <pattern>6ทุ์ </pattern>
+    <pattern>6ธุ์ </pattern>
+    <pattern>6นุ์ </pattern>
+    <pattern>6บุ์ </pattern>
+    <pattern>6ปุ์ </pattern>
+    <pattern>6ผุ์ </pattern>
+    <pattern>6ฝุ์ </pattern>
+    <pattern>6พุ์ </pattern>
+    <pattern>6ฟุ์ </pattern>
+    <pattern>6ภุ์ </pattern>
+    <pattern>6มุ์ </pattern>
+    <pattern>6ยุ์ </pattern>
+    <pattern>6รุ์ </pattern>
+    <pattern>6ลุ์ </pattern>
+    <pattern>6วุ์ </pattern>
+    <pattern>6ศุ์ </pattern>
+    <pattern>6ษุ์ </pattern>
+    <pattern>6สุ์ </pattern>
+    <pattern>6หุ์ </pattern>
+    <pattern>6ฬุ์ </pattern>
+    <pattern>6อุ์ </pattern>
+    <pattern>6ฮุ์ </pattern>
     <pattern>6ะ</pattern>
     <pattern>6า</pattern>
     <pattern>6ๅ</pattern>
@@ -3587,7 +3589,7 @@
     <pattern>เ6ฬ</pattern>
     <pattern>เ6อ</pattern>
     <pattern>เ6ฮ</pattern>
-    <pattern>ช6วา.</pattern>
+    <pattern>ช6วา </pattern>
     <pattern>ช6ไ</pattern>
     <pattern>ธ6ไน</pattern>
     <pattern>ม6ไห</pattern>
@@ -3607,9 +3609,9 @@
     <pattern>ล7ชน</pattern>
     <pattern>ัต5ถุ</pattern>
     <pattern>ัต6ถุ์</pattern>
-    <pattern>6ตร.</pattern>
-    <pattern>ธา6ตุ.</pattern>
-    <pattern>บุ6ตร.</pattern>
+    <pattern>6ตร </pattern>
+    <pattern>ธา6ตุ </pattern>
+    <pattern>บุ6ตร </pattern>
     <pattern>ค6รู</pattern>
     <pattern>ฮิบ6รู</pattern>
     <pattern>ฮีบ6รู</pattern>
@@ -3618,14 +3620,14 @@
     <pattern>เส7ภา</pattern>
     <pattern>โส7ภา</pattern>
     <pattern>ผ6วา</pattern>
-    <pattern>น6คร.</pattern>
-    <pattern>.เห6ยง</pattern>
+    <pattern>น6คร </pattern>
+    <pattern> เห6ยง</pattern>
     <pattern>เปี่6</pattern>
     <pattern>เขี้6</pattern>
     <pattern>ม6ณี</pattern>
     <pattern>คาม7ณี</pattern>
-    <pattern>.รม7ณี</pattern>
-    <pattern>.รัม7ณี</pattern>
+    <pattern> รม7ณี</pattern>
+    <pattern> รัม7ณี</pattern>
     <pattern>หม7ณี</pattern>
     <pattern>ง6วด</pattern>
     <pattern>ง6วน</pattern>
@@ -3636,11 +3638,11 @@
     <pattern>พ6ญา</pattern>
     <pattern>จุ6รณ</pattern>
     <pattern>ฤ6ชา</pattern>
-    <pattern>.ฤ6ทัย</pattern>
+    <pattern> ฤ6ทัย</pattern>
     <pattern>พรร6ดิ</pattern>
     <pattern>สวา6ดิ</pattern>
-    <pattern>อ6ริ.</pattern>
-    <pattern>จน6ที.</pattern>
+    <pattern>อ6ริ </pattern>
+    <pattern>จน6ที </pattern>
     <pattern>ธค6ยา</pattern>
     <pattern>นิม6นา</pattern>
     <pattern>ย์ม6นา</pattern>
@@ -3703,18 +3705,18 @@
     <pattern>ไพ7รำ</pattern>
     <pattern>น7ยำ</pattern>
     <pattern>ม7ยำ</pattern>
-    <pattern>5งง.</pattern>
+    <pattern>5งง </pattern>
     <pattern>ห6งง</pattern>
     <pattern>น7งก</pattern>
-    <pattern>5ชน.</pattern>
+    <pattern>5ชน </pattern>
     <pattern>เ6ชน</pattern>
     <pattern>โ6ชน</pattern>
-    <pattern>5กร.</pattern>
+    <pattern>5กร </pattern>
     <pattern>ั6กร</pattern>
     <pattern>า7นะ</pattern>
     <pattern>ถ7ระ</pattern>
-    <pattern>า7ยก.</pattern>
-    <pattern>า7ยน.</pattern>
+    <pattern>า7ยก </pattern>
+    <pattern>า7ยน </pattern>
     <pattern>า7ฐี</pattern>
     <pattern>า7นี</pattern>
     <pattern>า7วี</pattern>
@@ -3727,14 +3729,14 @@
     <pattern>รร7มะ</pattern>
     <pattern>ต5ถี</pattern>
     <pattern>ุต6ถี</pattern>
-    <pattern>5บท.</pattern>
+    <pattern>5บท </pattern>
     <pattern>ส6บท</pattern>
-    <pattern>5บถ.</pattern>
+    <pattern>5บถ </pattern>
     <pattern>ข6บถ</pattern>
     <pattern>ส6บถ</pattern>
     <pattern>7ฟู</pattern>
     <pattern>7ษุ</pattern>
-    <pattern>5ตะ.</pattern>
+    <pattern>5ตะ </pattern>
     <pattern>ค6ตะ</pattern>
     <pattern>ร6ตะ</pattern>
     <pattern>สร7ตะ</pattern>
@@ -3742,13 +3744,13 @@
     <pattern>มิ7ผ</pattern>
     <pattern>า7กิ</pattern>
     <pattern>า7กล</pattern>
-    <pattern>ิ7กล.</pattern>
+    <pattern>ิ7กล </pattern>
     <pattern>์7กล</pattern>
     <pattern>5นำ</pattern>
     <pattern>ห6นำ</pattern>
     <pattern>รี7ผ</pattern>
     <pattern>7ณุ</pattern>
-    <pattern>5นี.</pattern>
+    <pattern>5นี </pattern>
     <pattern>ห6นี</pattern>
     <pattern>ฉ6นี</pattern>
     <pattern>าร6นี</pattern>
@@ -3784,56 +3786,56 @@
     <pattern>ี7รี</pattern>
     <pattern>ู7รี</pattern>
     <pattern>หา7รี</pattern>
-    <pattern>ม7รี.</pattern>
-    <pattern>น5รี.</pattern>
-    <pattern>เต7รี.</pattern>
-    <pattern>ช7รี.</pattern>
+    <pattern>ม7รี </pattern>
+    <pattern>น5รี </pattern>
+    <pattern>เต7รี </pattern>
+    <pattern>ช7รี </pattern>
     <pattern>ถ7รี</pattern>
     <pattern>ภ7รี</pattern>
     <pattern>ภม7รี</pattern>
     <pattern>โม7รี</pattern>
     <pattern>ภุม7ร</pattern>
-    <pattern>พ7รี.</pattern>
+    <pattern>พ7รี </pattern>
     <pattern>เว7รี</pattern>
     <pattern>5ผล</pattern>
-    <pattern>5ดล.</pattern>
-    <pattern>5รส.</pattern>
+    <pattern>5ดล </pattern>
+    <pattern>5รส </pattern>
     <pattern>ก6รส</pattern>
     <pattern>จ6รส</pattern>
     <pattern>โค6รส</pattern>
     <pattern>ท6รส</pattern>
     <pattern>พ6รส</pattern>
     <pattern>ด6รส</pattern>
-    <pattern>5คน.</pattern>
+    <pattern>5คน </pattern>
     <pattern>ณ7หา</pattern>
     <pattern>ฤๅ5</pattern>
     <pattern>ฤา5</pattern>
-    <pattern>.ยี่7</pattern>
+    <pattern> ยี่7</pattern>
     <pattern>า7วะ</pattern>
     <pattern>เท7พี</pattern>
     <pattern>เท7วี</pattern>
     <pattern>บรร7จ</pattern>
     <pattern>บรร7ถ</pattern>
     <pattern>บรร7พต</pattern>
-    <pattern>5ทก.</pattern>
-    <pattern>5ดร.</pattern>
-    <pattern>น7ทร.</pattern>
-    <pattern>า7ทร.</pattern>
-    <pattern>โค7ทร.</pattern>
-    <pattern>โล7ทร.</pattern>
-    <pattern>โส7ทร.</pattern>
-    <pattern>7อู.</pattern>
-    <pattern>5พล.</pattern>
+    <pattern>5ทก </pattern>
+    <pattern>5ดร </pattern>
+    <pattern>น7ทร </pattern>
+    <pattern>า7ทร </pattern>
+    <pattern>โค7ทร </pattern>
+    <pattern>โล7ทร </pattern>
+    <pattern>โส7ทร </pattern>
+    <pattern>7อู </pattern>
+    <pattern>5พล </pattern>
     <pattern>ไพร่7</pattern>
-    <pattern>5ศก.</pattern>
+    <pattern>5ศก </pattern>
     <pattern>อัฐ5</pattern>
     <pattern>อัฐ6ม</pattern>
     <pattern>อัฐ7มี</pattern>
     <pattern>ี7วี</pattern>
     <pattern>ู7วี</pattern>
-    <pattern>ถ7วี.</pattern>
-    <pattern>ส7วี.</pattern>
-    <pattern>ฏ7วี.</pattern>
+    <pattern>ถ7วี </pattern>
+    <pattern>ส7วี </pattern>
+    <pattern>ฏ7วี </pattern>
     <pattern>น7ตี</pattern>
     <pattern>ร7ตี</pattern>
     <pattern>อ7ตี</pattern>
@@ -3872,13 +3874,13 @@
     <pattern>ิช7กะ</pattern>
     <pattern>ศต7กะ</pattern>
     <pattern>มล7กะ</pattern>
-    <pattern>7ทุ.</pattern>
+    <pattern>7ทุ </pattern>
     <pattern>โซ6ร</pattern>
     <pattern>ธ6นู</pattern>
-    <pattern>ัส7ดุ.</pattern>
+    <pattern>ัส7ดุ </pattern>
     <pattern>ร7คต</pattern>
     <pattern>ดง7คต</pattern>
-    <pattern>5กง.</pattern>
+    <pattern>5กง </pattern>
     <pattern>เ6กง</pattern>
     <pattern>7ฎก</pattern>
     <pattern>ณ7มี</pattern>
@@ -3910,8 +3912,8 @@
     <pattern>นัก7</pattern>
     <pattern>กุณ5</pattern>
     <pattern>กุณ6ฑ์</pattern>
-    <pattern>7ซี.</pattern>
-    <pattern>5ที.</pattern>
+    <pattern>7ซี </pattern>
+    <pattern>5ที </pattern>
     <pattern>จน6ที</pattern>
     <pattern>ี7รา</pattern>
     <pattern>ู7รา</pattern>
@@ -3919,12 +3921,12 @@
     <pattern>ิต7รา</pattern>
     <pattern>ม7รา</pattern>
     <pattern>ย7รา</pattern>
-    <pattern>.มก7รา</pattern>
+    <pattern> มก7รา</pattern>
     <pattern>รบ7รา</pattern>
     <pattern>ลิก7รา</pattern>
-    <pattern>เห7รา.</pattern>
-    <pattern>7กฎ.</pattern>
-    <pattern>7กฏ.</pattern>
+    <pattern>เห7รา </pattern>
+    <pattern>7กฎ </pattern>
+    <pattern>7กฏ </pattern>
     <pattern>5หะ</pattern>
     <pattern>ค6หะ</pattern>
     <pattern>นิค7หะ</pattern>
@@ -3949,7 +3951,7 @@
     <pattern>5ฐะ</pattern>
     <pattern>ส6ฐะ</pattern>
     <pattern>7ธะ</pattern>
-    <pattern>5พี.</pattern>
+    <pattern>5พี </pattern>
     <pattern>ร6พี</pattern>
     <pattern>ทร7พี</pattern>
     <pattern>ปฐ7วี</pattern>
@@ -3962,26 +3964,26 @@
     <pattern>ช5ระ</pattern>
     <pattern>ิต7ระ</pattern>
     <pattern>ทห7ระ</pattern>
-    <pattern>ท7ระ.</pattern>
-    <pattern>ุก5ระ.</pattern>
+    <pattern>ท7ระ </pattern>
+    <pattern>ุก5ระ </pattern>
     <pattern>สว7ระ</pattern>
     <pattern>ัส7ระ</pattern>
     <pattern>ิส7ระ</pattern>
     <pattern>เป7ระ</pattern>
-    <pattern>อ7ยา.</pattern>
+    <pattern>อ7ยา </pattern>
     <pattern>เก7ยา</pattern>
     <pattern>รร7ยา</pattern>
     <pattern>สา7วก</pattern>
     <pattern>ิ7ธิ</pattern>
-    <pattern>ุท7ธิ.</pattern>
-    <pattern>ิท5ธิ.</pattern>
-    <pattern>.สิท6ธิ.</pattern>
-    <pattern>บุริมสิท6ธิ.</pattern>
-    <pattern>ไกรสิท6ธิ.</pattern>
+    <pattern>ุท7ธิ </pattern>
+    <pattern>ิท5ธิ </pattern>
+    <pattern> สิท6ธิ </pattern>
+    <pattern>บุริมสิท6ธิ </pattern>
+    <pattern>ไกรสิท6ธิ </pattern>
     <pattern>ป7ธิ</pattern>
     <pattern>ขัดสมา6ธิ</pattern>
-    <pattern>พยา6ธิ.</pattern>
-    <pattern>5ษี.</pattern>
+    <pattern>พยา6ธิ </pattern>
+    <pattern>5ษี </pattern>
     <pattern>ด6นู</pattern>
     <pattern>ิ7วะ</pattern>
     <pattern>ี7วะ</pattern>
@@ -3995,7 +3997,7 @@
     <pattern>ไศ7วะ</pattern>
     <pattern>7ถะ</pattern>
     <pattern>7ษะ</pattern>
-    <pattern>5พร.</pattern>
+    <pattern>5พร </pattern>
     <pattern>5ผง</pattern>
     <pattern>5ธี</pattern>
     <pattern>า7ชะ</pattern>
@@ -4011,9 +4013,9 @@
     <pattern>5ฮา</pattern>
     <pattern>5ญี</pattern>
     <pattern>5ผา</pattern>
-    <pattern>5หิ.</pattern>
+    <pattern>5หิ </pattern>
     <pattern>สิน7ธพ</pattern>
-    <pattern>สิน7ธุ.</pattern>
+    <pattern>สิน7ธุ </pattern>
     <pattern>สิน7ธู</pattern>
     <pattern>5ชู</pattern>
     <pattern>5ศะ</pattern>
@@ -4022,81 +4024,81 @@
     <pattern>ู7ละ</pattern>
     <pattern>ย7ละ</pattern>
     <pattern>ด7ละ</pattern>
-    <pattern>.วส7ละ</pattern>
+    <pattern> วส7ละ</pattern>
     <pattern>อเจ7ล</pattern>
     <pattern>เต7ละ</pattern>
     <pattern>่7ละ</pattern>
     <pattern>น7ทะ</pattern>
     <pattern>ท7ทะ</pattern>
     <pattern>ส7ทะ</pattern>
-    <pattern>น7ตุ.</pattern>
+    <pattern>น7ตุ </pattern>
     <pattern>รร6ตุ</pattern>
     <pattern>มา7ตฤ</pattern>
     <pattern>ิ7รพ</pattern>
-    <pattern>า7รพ.</pattern>
+    <pattern>า7รพ </pattern>
     <pattern>ไก7รพ</pattern>
-    <pattern>5ศุ.</pattern>
+    <pattern>5ศุ </pattern>
     <pattern>า7ถา</pattern>
     <pattern>า7สพ</pattern>
     <pattern>พ7สพ</pattern>
     <pattern>ุ7ขี</pattern>
-    <pattern>7สอ.</pattern>
+    <pattern>7สอ </pattern>
     <pattern>า7ดะ</pattern>
-    <pattern>5บะ.</pattern>
-    <pattern>5ยี.</pattern>
+    <pattern>5บะ </pattern>
+    <pattern>5ยี </pattern>
     <pattern>ห6ยี</pattern>
-    <pattern>5กี.</pattern>
-    <pattern>5หก.</pattern>
-    <pattern>ง7อร.</pattern>
-    <pattern>ม7อร.</pattern>
+    <pattern>5กี </pattern>
+    <pattern>5หก </pattern>
+    <pattern>ง7อร </pattern>
+    <pattern>ม7อร </pattern>
     <pattern>ี7วร</pattern>
-    <pattern>ส7วร.</pattern>
+    <pattern>ส7วร </pattern>
     <pattern>พู7นท</pattern>
-    <pattern>5จร.</pattern>
-    <pattern>โ6จร.</pattern>
-    <pattern>7ศพ.</pattern>
+    <pattern>5จร </pattern>
+    <pattern>โ6จร </pattern>
+    <pattern>7ศพ </pattern>
     <pattern>โป7ลี</pattern>
-    <pattern>7ภพ.</pattern>
-    <pattern>7นพ.</pattern>
-    <pattern>7ณพ.</pattern>
-    <pattern>า7รก.</pattern>
+    <pattern>7ภพ </pattern>
+    <pattern>7นพ </pattern>
+    <pattern>7ณพ </pattern>
+    <pattern>า7รก </pattern>
     <pattern>ทก7รก</pattern>
-    <pattern>ย7รก.</pattern>
-    <pattern>ยว7รก.</pattern>
-    <pattern>5มล.</pattern>
-    <pattern>ุ5บล.</pattern>
-    <pattern>โล7บล.</pattern>
-    <pattern>5ชล.</pattern>
-    <pattern>5ชก.</pattern>
+    <pattern>ย7รก </pattern>
+    <pattern>ยว7รก </pattern>
+    <pattern>5มล </pattern>
+    <pattern>ุ5บล </pattern>
+    <pattern>โล7บล </pattern>
+    <pattern>5ชล </pattern>
+    <pattern>5ชก </pattern>
     <pattern>7โพ</pattern>
     <pattern>5ณู</pattern>
-    <pattern>7ปี.</pattern>
-    <pattern>า7บี.</pattern>
-    <pattern>5ฏะ.</pattern>
+    <pattern>7ปี </pattern>
+    <pattern>า7บี </pattern>
+    <pattern>5ฏะ </pattern>
     <pattern>า7ฬี</pattern>
-    <pattern>5ปะ.</pattern>
+    <pattern>5ปะ </pattern>
     <pattern>ฉ6ปะ</pattern>
     <pattern>ส6ปะ</pattern>
     <pattern>ู7ลู</pattern>
-    <pattern>5ตู.</pattern>
-    <pattern>5ยู.</pattern>
-    <pattern>7ฆี.</pattern>
+    <pattern>5ตู </pattern>
+    <pattern>5ยู </pattern>
+    <pattern>7ฆี </pattern>
     <pattern>ิ7จี</pattern>
     <pattern>ี7จี</pattern>
     <pattern>ุ7จี</pattern>
     <pattern>ู7จี</pattern>
     <pattern>เว7จี</pattern>
-    <pattern>5ศี.</pattern>
-    <pattern>5มน.</pattern>
-    <pattern>5ยอ.</pattern>
-    <pattern>ผ6ยอ.</pattern>
-    <pattern>5สง.</pattern>
-    <pattern>7สร.</pattern>
-    <pattern>5ดก.</pattern>
+    <pattern>5ศี </pattern>
+    <pattern>5มน </pattern>
+    <pattern>5ยอ </pattern>
+    <pattern>ผ6ยอ </pattern>
+    <pattern>5สง </pattern>
+    <pattern>7สร </pattern>
+    <pattern>5ดก </pattern>
     <pattern>ส6ดก</pattern>
-    <pattern>7โก.</pattern>
+    <pattern>7โก </pattern>
     <pattern>ก7ฝ</pattern>
-    <pattern>า7มก.</pattern>
+    <pattern>า7มก </pattern>
     <pattern>5ซอ</pattern>
     <pattern>า7ขะ</pattern>
     <pattern>ู7ขะ</pattern>
@@ -4107,68 +4109,68 @@
     <pattern>ิ7ลก</pattern>
     <pattern>ุ7ฎี</pattern>
     <pattern>ศา5ข</pattern>
-    <pattern>5สา.</pattern>
+    <pattern>5สา </pattern>
     <pattern>ั6สา</pattern>
     <pattern>7ซู</pattern>
-    <pattern>5ษก.</pattern>
+    <pattern>5ษก </pattern>
     <pattern>ษ7ฐี</pattern>
-    <pattern>5ดม.</pattern>
+    <pattern>5ดม </pattern>
     <pattern>ส6ดม</pattern>
-    <pattern>ด7ลม.</pattern>
-    <pattern>ส7ลม.</pattern>
-    <pattern>ว7ลม.</pattern>
-    <pattern>ี7ลม.</pattern>
-    <pattern>5ศล.</pattern>
+    <pattern>ด7ลม </pattern>
+    <pattern>ส7ลม </pattern>
+    <pattern>ว7ลม </pattern>
+    <pattern>ี7ลม </pattern>
+    <pattern>5ศล </pattern>
     <pattern>นิ7ยต</pattern>
     <pattern>7งู</pattern>
-    <pattern>5จะ.</pattern>
-    <pattern>า7สก.</pattern>
+    <pattern>5จะ </pattern>
+    <pattern>า7สก </pattern>
     <pattern>โป7สก</pattern>
-    <pattern>5ยศ.</pattern>
-    <pattern>5ธก.</pattern>
-    <pattern>5กบ.</pattern>
-    <pattern>7คู.</pattern>
-    <pattern>ส5มา.</pattern>
-    <pattern>5แล.</pattern>
-    <pattern>5พก.</pattern>
+    <pattern>5ยศ </pattern>
+    <pattern>5ธก </pattern>
+    <pattern>5กบ </pattern>
+    <pattern>7คู </pattern>
+    <pattern>ส5มา </pattern>
+    <pattern>5แล </pattern>
+    <pattern>5พก </pattern>
     <pattern>โส7ภ</pattern>
-    <pattern>รร6ดิ.</pattern>
-    <pattern>า7วก.</pattern>
-    <pattern>น7นร.</pattern>
-    <pattern>5จอ.</pattern>
-    <pattern>5จบ.</pattern>
-    <pattern>5คบ.</pattern>
-    <pattern>5ฉล.</pattern>
+    <pattern>รร6ดิ </pattern>
+    <pattern>า7วก </pattern>
+    <pattern>น7นร </pattern>
+    <pattern>5จอ </pattern>
+    <pattern>5จบ </pattern>
+    <pattern>5คบ </pattern>
+    <pattern>5ฉล </pattern>
     <pattern>ม7รม</pattern>
     <pattern>อบ7รม</pattern>
-    <pattern>ิ7รม.</pattern>
-    <pattern>ี7รม.</pattern>
-    <pattern>5ซน.</pattern>
-    <pattern>5ดอ.</pattern>
-    <pattern>5กิ.</pattern>
+    <pattern>ิ7รม </pattern>
+    <pattern>ี7รม </pattern>
+    <pattern>5ซน </pattern>
+    <pattern>5ดอ </pattern>
+    <pattern>5กิ </pattern>
     <pattern>ซู7ซุ</pattern>
     <pattern>ซู7ฮก</pattern>
-    <pattern>5บส.</pattern>
-    <pattern>น7รน.</pattern>
+    <pattern>5บส </pattern>
+    <pattern>น7รน </pattern>
     <pattern>ตก7ลง</pattern>
     <pattern>ม7ตน</pattern>
     <pattern>ตัว7ตน</pattern>
     <pattern>ี7วง</pattern>
-    <pattern>ศ7วง.</pattern>
+    <pattern>ศ7วง </pattern>
     <pattern>แตร7วง</pattern>
     <pattern>แวด7วง</pattern>
     <pattern>า7ฑู</pattern>
-    <pattern>5หด.</pattern>
+    <pattern>5หด </pattern>
     <pattern>อบ7นบ</pattern>
-    <pattern>นา7คร.</pattern>
+    <pattern>นา7คร </pattern>
     <pattern>ี7ฑา</pattern>
     <pattern>ู7ดู</pattern>
-    <pattern>า7รภ.</pattern>
+    <pattern>า7รภ </pattern>
     <pattern>า7ฝ</pattern>
-    <pattern>ล7รบ.</pattern>
-    <pattern>ว7รบ.</pattern>
-    <pattern>อ7รบ.</pattern>
-    <pattern>า7รณ.</pattern>
+    <pattern>ล7รบ </pattern>
+    <pattern>ว7รบ </pattern>
+    <pattern>อ7รบ </pattern>
+    <pattern>า7รณ </pattern>
     <pattern>น7ยง</pattern>
     <pattern>ม7ยง</pattern>
     <pattern>ุ7ยง</pattern>
@@ -4176,10 +4178,10 @@
     <pattern>ิ7ยน</pattern>
     <pattern>หา7พน</pattern>
     <pattern>า7งิ</pattern>
-    <pattern>ช7รถ.</pattern>
-    <pattern>น7รถ.</pattern>
-    <pattern>ส7รถ.</pattern>
-    <pattern>ัน7ธร.</pattern>
+    <pattern>ช7รถ </pattern>
+    <pattern>น7รถ </pattern>
+    <pattern>ส7รถ </pattern>
+    <pattern>ัน7ธร </pattern>
     <pattern>มณ7ฑก</pattern>
     <pattern>มณ7โฑ</pattern>
     <pattern>มร7กต</pattern>
@@ -4188,126 +4190,126 @@
     <pattern>โล่ง7อก</pattern>
     <pattern>ยืด7อก</pattern>
     <pattern>ห7ห</pattern>
-    <pattern>5ทด.</pattern>
-    <pattern>ว7นม.</pattern>
-    <pattern>ทพ7นม.</pattern>
+    <pattern>5ทด </pattern>
+    <pattern>ว7นม </pattern>
+    <pattern>ทพ7นม </pattern>
     <pattern>โค7นม</pattern>
-    <pattern>ษ7ฎร.</pattern>
+    <pattern>ษ7ฎร </pattern>
     <pattern>ิ7ปุ</pattern>
     <pattern>ิ7ปู</pattern>
-    <pattern>ี7รอ.</pattern>
+    <pattern>ี7รอ </pattern>
     <pattern>ย7ลำ</pattern>
     <pattern>อ7ลำ</pattern>
     <pattern>้7ลำ</pattern>
-    <pattern>น7ทม.</pattern>
-    <pattern>ป7ทม.</pattern>
+    <pattern>น7ทม </pattern>
+    <pattern>ป7ทม </pattern>
     <pattern>วก7วน</pattern>
     <pattern>อล7วน</pattern>
-    <pattern>ิ7จล.</pattern>
+    <pattern>ิ7จล </pattern>
     <pattern>ช7ญะ</pattern>
     <pattern>ี7ข</pattern>
     <pattern>ศีล7</pattern>
-    <pattern>5ธม.</pattern>
+    <pattern>5ธม </pattern>
     <pattern>สม7รด</pattern>
     <pattern>สัก7วา</pattern>
     <pattern>สัป7ด</pattern>
     <pattern>สัป7ท</pattern>
-    <pattern>า7สม.</pattern>
-    <pattern>อ7สม.</pattern>
-    <pattern>า7นล.</pattern>
+    <pattern>า7สม </pattern>
+    <pattern>อ7สม </pattern>
+    <pattern>า7นล </pattern>
     <pattern>ี7รุ</pattern>
     <pattern>ู7รุ</pattern>
     <pattern>เน7รุ</pattern>
     <pattern>ง7หล</pattern>
     <pattern>สีห7นุ</pattern>
-    <pattern>5ภร.</pattern>
-    <pattern>5จด.</pattern>
-    <pattern>บ7ยก.</pattern>
+    <pattern>5ภร </pattern>
+    <pattern>5จด </pattern>
+    <pattern>บ7ยก </pattern>
     <pattern>ดิ7ศร</pattern>
     <pattern>ร7ศร</pattern>
     <pattern>อพ7ยพ</pattern>
-    <pattern>ร7ชร.</pattern>
+    <pattern>ร7ชร </pattern>
     <pattern>รส7กา</pattern>
     <pattern>ลส7กา</pattern>
     <pattern>อาจ7อง</pattern>
     <pattern>ี7มู</pattern>
     <pattern>อึง7อล</pattern>
     <pattern>ุ7ชุ</pattern>
-    <pattern>ุ7สภ.</pattern>
+    <pattern>ุ7สภ </pattern>
     <pattern>เก7ชา</pattern>
     <pattern>เก7ศา</pattern>
-    <pattern>ช7ตก.</pattern>
-    <pattern>บ7ตก.</pattern>
+    <pattern>ช7ตก </pattern>
+    <pattern>บ7ตก </pattern>
     <pattern>เข7ฬะ</pattern>
     <pattern>ห7ณี</pattern>
-    <pattern>อ7ปน.</pattern>
-    <pattern>ย7ชม.</pattern>
+    <pattern>อ7ปน </pattern>
+    <pattern>ย7ชม </pattern>
     <pattern>เบื้อง7</pattern>
     <pattern>5คะ</pattern>
-    <pattern>ง7ออ.</pattern>
-    <pattern>อ7ออ.</pattern>
+    <pattern>ง7ออ </pattern>
+    <pattern>อ7ออ </pattern>
     <pattern>เรือ7ธ</pattern>
     <pattern>เรือ7บ</pattern>
     <pattern>เลี้ยว7</pattern>
-    <pattern>5กก.</pattern>
+    <pattern>5กก </pattern>
     <pattern>เ6กก</pattern>
-    <pattern>อ7ขอ.</pattern>
-    <pattern>า7กอ.</pattern>
+    <pattern>อ7ขอ </pattern>
+    <pattern>า7กอ </pattern>
     <pattern>แด7วู</pattern>
-    <pattern>บ7ยล.</pattern>
+    <pattern>บ7ยล </pattern>
     <pattern>โฉ7เก</pattern>
     <pattern>โด7มร</pattern>
     <pattern>โต7มร</pattern>
     <pattern>7โผ</pattern>
     <pattern>โท7โส</pattern>
-    <pattern>้7ปด.</pattern>
-    <pattern>7คี.</pattern>
-    <pattern>โย7นก.</pattern>
+    <pattern>้7ปด </pattern>
+    <pattern>7คี </pattern>
+    <pattern>โย7นก </pattern>
     <pattern>โส7มม</pattern>
-    <pattern>7ฬส.</pattern>
+    <pattern>7ฬส </pattern>
     <pattern>ต7ถิ</pattern>
     <pattern>7โฮ</pattern>
     <pattern>ใจ7</pattern>
     <pattern>5ฟง</pattern>
     <pattern>ไช7โย</pattern>
-    <pattern>5พต.</pattern>
+    <pattern>5พต </pattern>
     <pattern>กรร7กศ</pattern>
-    <pattern>ล7บก.</pattern>
-    <pattern>ศ7ยป.</pattern>
-    <pattern>า7นน.</pattern>
+    <pattern>ล7บก </pattern>
+    <pattern>ศ7ยป </pattern>
+    <pattern>า7นน </pattern>
     <pattern>ุ7ฎา</pattern>
     <pattern>ู7ฏา</pattern>
-    <pattern>า7มอ.</pattern>
+    <pattern>า7มอ </pattern>
     <pattern>ท7โท</pattern>
     <pattern>ุ7ทส</pattern>
     <pattern>จ่า7ร</pattern>
     <pattern>ฬ7หี</pattern>
     <pattern>า7ฒะ</pattern>
     <pattern>ธต7รฐ</pattern>
-    <pattern>ท7คล.</pattern>
-    <pattern>ต7ถร.</pattern>
+    <pattern>ท7คล </pattern>
+    <pattern>ต7ถร </pattern>
     <pattern>ิ7ฐิ</pattern>
     <pattern>ป7ผะ</pattern>
-    <pattern>พฤ7ษภ.</pattern>
+    <pattern>พฤ7ษภ </pattern>
     <pattern>ิ7ธุ</pattern>
-    <pattern>า7ฬก.</pattern>
+    <pattern>า7ฬก </pattern>
     <pattern>ห7สิ</pattern>
-    <pattern>ฏ7ฏิ.</pattern>
-    <pattern>ษ7ฏิ.</pattern>
+    <pattern>ฏ7ฏิ </pattern>
+    <pattern>ษ7ฏิ </pattern>
     <pattern>ศิษ7ฎิ</pattern>
     <pattern>ษ7ฏี</pattern>
-    <pattern>5ษส.</pattern>
+    <pattern>5ษส </pattern>
     <pattern>ิ7ปิ</pattern>
-    <pattern>ู7ริ.</pattern>
+    <pattern>ู7ริ </pattern>
     <pattern>ฑ7ฑุ</pattern>
     <pattern>ษ7ฏุ</pattern>
     <pattern>า7ตา</pattern>
     <pattern>ว7ตก</pattern>
     <pattern>ง7ตก</pattern>
-    <pattern>เก6ตุ.</pattern>
+    <pattern>เก6ตุ </pattern>
     <pattern>ส7ตุ</pattern>
     <pattern>ลิ7บง</pattern>
     <pattern>ฮ7โ</pattern>
-    <pattern>7อุ.</pattern>
+    <pattern>7อุ </pattern>
     <pattern>ิศ7รา</pattern>
 </HyphenationDescription>

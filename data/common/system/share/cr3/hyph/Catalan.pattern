@@ -124,7 +124,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Catalan" lang="ca"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>1ba</pattern>
     <pattern>1be</pattern>
     <pattern>1bi</pattern>
@@ -847,30 +849,30 @@
     <pattern>ü1u2ò</pattern>
     <pattern>ü1u2i</pattern>
     <pattern>ü1u2u</pattern>
-    <pattern>.hi2a</pattern>
-    <pattern>.hi2e</pattern>
-    <pattern>.hi2o</pattern>
-    <pattern>.hi2u</pattern>
-    <pattern>.hu2a</pattern>
-    <pattern>.hu2e</pattern>
-    <pattern>.hu2i</pattern>
-    <pattern>.hu2o</pattern>
-    <pattern>.i2è</pattern>
-    <pattern>.i2ò</pattern>
-    <pattern>.u2è</pattern>
-    <pattern>.u2ò</pattern>
-    <pattern>.hi2é</pattern>
-    <pattern>.hi2ó</pattern>
-    <pattern>.hi2ú</pattern>
-    <pattern>.hi2à</pattern>
-    <pattern>.hi2è</pattern>
-    <pattern>.hi2ò</pattern>
-    <pattern>.hu2é</pattern>
-    <pattern>.hu2í</pattern>
-    <pattern>.hu2ó</pattern>
-    <pattern>.hu2à</pattern>
-    <pattern>.hu2è</pattern>
-    <pattern>.hu2ò</pattern>
+    <pattern> hi2a</pattern>
+    <pattern> hi2e</pattern>
+    <pattern> hi2o</pattern>
+    <pattern> hi2u</pattern>
+    <pattern> hu2a</pattern>
+    <pattern> hu2e</pattern>
+    <pattern> hu2i</pattern>
+    <pattern> hu2o</pattern>
+    <pattern> i2è</pattern>
+    <pattern> i2ò</pattern>
+    <pattern> u2è</pattern>
+    <pattern> u2ò</pattern>
+    <pattern> hi2é</pattern>
+    <pattern> hi2ó</pattern>
+    <pattern> hi2ú</pattern>
+    <pattern> hi2à</pattern>
+    <pattern> hi2è</pattern>
+    <pattern> hi2ò</pattern>
+    <pattern> hu2é</pattern>
+    <pattern> hu2í</pattern>
+    <pattern> hu2ó</pattern>
+    <pattern> hu2à</pattern>
+    <pattern> hu2è</pattern>
+    <pattern> hu2ò</pattern>
     <pattern>gu2a</pattern>
     <pattern>gu2e</pattern>
     <pattern>gu2i</pattern>
@@ -901,64 +903,64 @@
     <pattern>qü2í</pattern>
     <pattern>qü2è</pattern>
     <pattern>qü2i</pattern>
-    <pattern>a1isme.</pattern>
-    <pattern>e1isme.</pattern>
-    <pattern>i1isme.</pattern>
-    <pattern>o1isme.</pattern>
-    <pattern>u1isme.</pattern>
-    <pattern>a1ista.</pattern>
-    <pattern>e1ista.</pattern>
-    <pattern>i1ista.</pattern>
-    <pattern>o1ista.</pattern>
-    <pattern>u1ista.</pattern>
-    <pattern>a1um.</pattern>
-    <pattern>e1um.</pattern>
-    <pattern>i1um.</pattern>
-    <pattern>o1um.</pattern>
-    <pattern>u1um.</pattern>
-    <pattern>.antihi2</pattern>
-    <pattern>.be2n</pattern>
-    <pattern>.be2s</pattern>
-    <pattern>.bi2s</pattern>
-    <pattern>.ca2p</pattern>
-    <pattern>.ce2l</pattern>
-    <pattern>.cla2r</pattern>
-    <pattern>.co2ll</pattern>
-    <pattern>.co2n</pattern>
-    <pattern>.co2r</pattern>
-    <pattern>.de2s</pattern>
-    <pattern>.di2s</pattern>
-    <pattern>.en3a</pattern>
-    <pattern>.hipe2r</pattern>
-    <pattern>.hiperm2n</pattern>
-    <pattern>.in3ac</pattern>
-    <pattern>.in3ad</pattern>
-    <pattern>.in3ap</pattern>
-    <pattern>.in3es</pattern>
-    <pattern>.in3o</pattern>
-    <pattern>.inte2r</pattern>
-    <pattern>.ma2l</pattern>
-    <pattern>.mal1t2hus</pattern>
-    <pattern>.pa2n</pattern>
-    <pattern>.pe2r</pattern>
-    <pattern>.pe3ri</pattern>
-    <pattern>.pos2t</pattern>
-    <pattern>.psa2l</pattern>
-    <pattern>.rebe2s</pattern>
-    <pattern>.re2d</pattern>
-    <pattern>.su2b</pattern>
-    <pattern>.sub3o</pattern>
-    <pattern>.subde2s</pattern>
-    <pattern>.supe2r</pattern>
-    <pattern>.tran2s</pattern>
+    <pattern>a1isme </pattern>
+    <pattern>e1isme </pattern>
+    <pattern>i1isme </pattern>
+    <pattern>o1isme </pattern>
+    <pattern>u1isme </pattern>
+    <pattern>a1ista </pattern>
+    <pattern>e1ista </pattern>
+    <pattern>i1ista </pattern>
+    <pattern>o1ista </pattern>
+    <pattern>u1ista </pattern>
+    <pattern>a1um </pattern>
+    <pattern>e1um </pattern>
+    <pattern>i1um </pattern>
+    <pattern>o1um </pattern>
+    <pattern>u1um </pattern>
+    <pattern> antihi2</pattern>
+    <pattern> be2n</pattern>
+    <pattern> be2s</pattern>
+    <pattern> bi2s</pattern>
+    <pattern> ca2p</pattern>
+    <pattern> ce2l</pattern>
+    <pattern> cla2r</pattern>
+    <pattern> co2ll</pattern>
+    <pattern> co2n</pattern>
+    <pattern> co2r</pattern>
+    <pattern> de2s</pattern>
+    <pattern> di2s</pattern>
+    <pattern> en3a</pattern>
+    <pattern> hipe2r</pattern>
+    <pattern> hiperm2n</pattern>
+    <pattern> in3ac</pattern>
+    <pattern> in3ad</pattern>
+    <pattern> in3ap</pattern>
+    <pattern> in3es</pattern>
+    <pattern> in3o</pattern>
+    <pattern> inte2r</pattern>
+    <pattern> ma2l</pattern>
+    <pattern> mal1t2hus</pattern>
+    <pattern> pa2n</pattern>
+    <pattern> pe2r</pattern>
+    <pattern> pe3ri</pattern>
+    <pattern> pos2t</pattern>
+    <pattern> psa2l</pattern>
+    <pattern> rebe2s</pattern>
+    <pattern> re2d</pattern>
+    <pattern> su2b</pattern>
+    <pattern> sub3o</pattern>
+    <pattern> subde2s</pattern>
+    <pattern> supe2r</pattern>
+    <pattern> tran2s</pattern>
     <pattern>g2no</pattern>
     <pattern>p2si</pattern>
     <pattern>p2se</pattern>
     <pattern>p2neu</pattern>
     <pattern>g2nò</pattern>
     <pattern>p2sí</pattern>
-    <pattern>.ch2</pattern>
-    <pattern>.th2</pattern>
+    <pattern> ch2</pattern>
+    <pattern> th2</pattern>
     <pattern>ein1s2tein</pattern>
     <pattern>ru1t2herford</pattern>
     <pattern>ni2etz1sc2he</pattern>

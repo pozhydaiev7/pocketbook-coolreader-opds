@@ -21,7 +21,9 @@
 % appear in Armenian, but they would be hyphenated according to the rules.
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Armenian" lang="hy"
+    lefthyphenmin="1" righthyphenmin="2">
     <pattern>և1ա</pattern>
     <pattern>և1ե</pattern>
     <pattern>և1է</pattern>

@@ -41,7 +41,9 @@
 % \message{UTF-8 hyphenation patterns for Ancient Greek}
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Ancient Greek" lang="grc"
+    lefthyphenmin="1" righthyphenmin="1">
     <pattern>α1</pattern>
     <pattern>ε1</pattern>
     <pattern>η1</pattern>
@@ -321,25 +323,25 @@
     <pattern>ο3υί</pattern>
     <pattern>ο3υί</pattern>
     <pattern>ο3υῖ</pattern>
-    <pattern>4β.</pattern>
-    <pattern>4γ.</pattern>
-    <pattern>4δ.</pattern>
-    <pattern>4ζ.</pattern>
-    <pattern>4θ.</pattern>
-    <pattern>4κ.</pattern>
-    <pattern>4λ.</pattern>
-    <pattern>4μ.</pattern>
-    <pattern>4ν.</pattern>
-    <pattern>4ξ.</pattern>
-    <pattern>4π.</pattern>
-    <pattern>4ρ.</pattern>
-    <pattern>4σ.</pattern>
-    <pattern>4ϲ.</pattern>
-    <pattern>4ς.</pattern>
-    <pattern>4τ.</pattern>
-    <pattern>4φ.</pattern>
-    <pattern>4χ.</pattern>
-    <pattern>4ψ.</pattern>
+    <pattern>4β </pattern>
+    <pattern>4γ </pattern>
+    <pattern>4δ </pattern>
+    <pattern>4ζ </pattern>
+    <pattern>4θ </pattern>
+    <pattern>4κ </pattern>
+    <pattern>4λ </pattern>
+    <pattern>4μ </pattern>
+    <pattern>4ν </pattern>
+    <pattern>4ξ </pattern>
+    <pattern>4π </pattern>
+    <pattern>4ρ </pattern>
+    <pattern>4σ </pattern>
+    <pattern>4ϲ </pattern>
+    <pattern>4ς </pattern>
+    <pattern>4τ </pattern>
+    <pattern>4φ </pattern>
+    <pattern>4χ </pattern>
+    <pattern>4ψ </pattern>
     <pattern>4'</pattern>
     <pattern>4ʼ</pattern>
     <pattern>4᾿</pattern>
@@ -397,24 +399,24 @@
     <pattern>4ψ'</pattern>
     <pattern>4ψʼ</pattern>
     <pattern>4ψ᾿</pattern>
-    <pattern>.β4</pattern>
-    <pattern>.γ4</pattern>
-    <pattern>.δ4</pattern>
-    <pattern>.ζ4</pattern>
-    <pattern>.θ4</pattern>
-    <pattern>.κ4</pattern>
-    <pattern>.λ4</pattern>
-    <pattern>.μ4</pattern>
-    <pattern>.ν4</pattern>
-    <pattern>.ξ4</pattern>
-    <pattern>.π4</pattern>
-    <pattern>.ρ4</pattern>
-    <pattern>.σ4</pattern>
-    <pattern>.ϲ4</pattern>
-    <pattern>.τ4</pattern>
-    <pattern>.φ4</pattern>
-    <pattern>.χ4</pattern>
-    <pattern>.ψ4</pattern>
+    <pattern> β4</pattern>
+    <pattern> γ4</pattern>
+    <pattern> δ4</pattern>
+    <pattern> ζ4</pattern>
+    <pattern> θ4</pattern>
+    <pattern> κ4</pattern>
+    <pattern> λ4</pattern>
+    <pattern> μ4</pattern>
+    <pattern> ν4</pattern>
+    <pattern> ξ4</pattern>
+    <pattern> π4</pattern>
+    <pattern> ρ4</pattern>
+    <pattern> σ4</pattern>
+    <pattern> ϲ4</pattern>
+    <pattern> τ4</pattern>
+    <pattern> φ4</pattern>
+    <pattern> χ4</pattern>
+    <pattern> ψ4</pattern>
     <pattern>2β1β</pattern>
     <pattern>2γ1γ</pattern>
     <pattern>2δ1δ</pattern>
@@ -559,8 +561,8 @@
     <pattern>2ν1ρ</pattern>
     <pattern>2ν1σ</pattern>
     <pattern>2ν1ϲ</pattern>
-    <pattern>2νς.</pattern>
-    <pattern>2νϲ.</pattern>
+    <pattern>2νς </pattern>
+    <pattern>2νϲ </pattern>
     <pattern>2ν1τ</pattern>
     <pattern>2ν1φ</pattern>
     <pattern>2ν1χ</pattern>
@@ -1009,31 +1011,31 @@
     <pattern>ἀμφι2σ1ώ</pattern>
     <pattern>ἀμφι2ϲ1ώ</pattern>
     <pattern>ἀμφι2ϲ1ώ</pattern>
-    <pattern>ἀ2ν1αγής.</pattern>
-    <pattern>ἀ2ν1αγής.</pattern>
-    <pattern>ἀ2ν1αγήϲ.</pattern>
-    <pattern>ἀ2ν1αγήϲ.</pattern>
-    <pattern>ἀ2ν1αγὴς.</pattern>
-    <pattern>ἀ2ν1αγὴϲ.</pattern>
-    <pattern>ἀ2ν1αγήσ.</pattern>
-    <pattern>ἀ2ν1αγήσ.</pattern>
-    <pattern>ἀ2ν1αγὴσ.</pattern>
+    <pattern>ἀ2ν1αγής </pattern>
+    <pattern>ἀ2ν1αγής </pattern>
+    <pattern>ἀ2ν1αγήϲ </pattern>
+    <pattern>ἀ2ν1αγήϲ </pattern>
+    <pattern>ἀ2ν1αγὴς </pattern>
+    <pattern>ἀ2ν1αγὴϲ </pattern>
+    <pattern>ἀ2ν1αγήσ </pattern>
+    <pattern>ἀ2ν1αγήσ </pattern>
+    <pattern>ἀ2ν1αγὴσ </pattern>
     <pattern>ἀ2ν1αγο</pattern>
-    <pattern>ἀ2ν1αγεῖ.</pattern>
-    <pattern>ἀ2ν1αγῆ.</pattern>
-    <pattern>ἀ2ν1αγές.</pattern>
-    <pattern>ἀ2ν1αγές.</pattern>
-    <pattern>ἀ2ν1αγέϲ.</pattern>
-    <pattern>ἀ2ν1αγέϲ.</pattern>
-    <pattern>ἀ2ν1αγὲς.</pattern>
-    <pattern>ἀ2ν1αγὲϲ.</pattern>
-    <pattern>ἀ2ν1αγέσ.</pattern>
-    <pattern>ἀ2ν1αγέσ.</pattern>
-    <pattern>ἀ2ν1αγὲσ.</pattern>
-    <pattern>ἀ2ν1αγεῖς.</pattern>
-    <pattern>ἀ2ν1αγεῖϲ.</pattern>
-    <pattern>ἀ2ν1αγεῖσ.</pattern>
-    <pattern>ἀ2ν1αγῶν.</pattern>
+    <pattern>ἀ2ν1αγεῖ </pattern>
+    <pattern>ἀ2ν1αγῆ </pattern>
+    <pattern>ἀ2ν1αγές </pattern>
+    <pattern>ἀ2ν1αγές </pattern>
+    <pattern>ἀ2ν1αγέϲ </pattern>
+    <pattern>ἀ2ν1αγέϲ </pattern>
+    <pattern>ἀ2ν1αγὲς </pattern>
+    <pattern>ἀ2ν1αγὲϲ </pattern>
+    <pattern>ἀ2ν1αγέσ </pattern>
+    <pattern>ἀ2ν1αγέσ </pattern>
+    <pattern>ἀ2ν1αγὲσ </pattern>
+    <pattern>ἀ2ν1αγεῖς </pattern>
+    <pattern>ἀ2ν1αγεῖϲ </pattern>
+    <pattern>ἀ2ν1αγεῖσ </pattern>
+    <pattern>ἀ2ν1αγῶν </pattern>
     <pattern>ἀ2ν1αγέσι</pattern>
     <pattern>ἀ2ν1αγέσι</pattern>
     <pattern>ἀ2ν1αγέϲι</pattern>
@@ -1166,13 +1168,13 @@
     <pattern>ἄ2ν1αλο</pattern>
     <pattern>ἀ2ν1άλου</pattern>
     <pattern>ἀ2ν1άλου</pattern>
-    <pattern>ἀ2ν1άλῳ.</pattern>
-    <pattern>ἀ2ν1άλῳ.</pattern>
-    <pattern>ἄ2ν1αλε.</pattern>
+    <pattern>ἀ2ν1άλῳ </pattern>
+    <pattern>ἀ2ν1άλῳ </pattern>
+    <pattern>ἄ2ν1αλε </pattern>
     <pattern>ἀ2ν1άλοι</pattern>
     <pattern>ἀ2ν1άλοι</pattern>
-    <pattern>ἀ2ν1άλων.</pattern>
-    <pattern>ἀ2ν1άλων.</pattern>
+    <pattern>ἀ2ν1άλων </pattern>
+    <pattern>ἀ2ν1άλων </pattern>
     <pattern>ἄ2ν1αλτ</pattern>
     <pattern>ἀ2ν1άλτ</pattern>
     <pattern>ἀ2ν1άλτ</pattern>
@@ -1200,15 +1202,15 @@
     <pattern>ἀ2ν1ανθ</pattern>
     <pattern>ἀ3ν2ανθέ</pattern>
     <pattern>ἀ3ν2ανθέ</pattern>
-    <pattern>ἀ4ν3ανθές.</pattern>
-    <pattern>ἀ4ν3ανθές.</pattern>
-    <pattern>ἀ4ν3ανθέϲ.</pattern>
-    <pattern>ἀ4ν3ανθέϲ.</pattern>
-    <pattern>ἀ4ν3ανθὲς.</pattern>
-    <pattern>ἀ4ν3ανθὲϲ.</pattern>
-    <pattern>ἀ4ν3ανθέσ.</pattern>
-    <pattern>ἀ4ν3ανθέσ.</pattern>
-    <pattern>ἀ4ν3ανθὲσ.</pattern>
+    <pattern>ἀ4ν3ανθές </pattern>
+    <pattern>ἀ4ν3ανθές </pattern>
+    <pattern>ἀ4ν3ανθέϲ </pattern>
+    <pattern>ἀ4ν3ανθέϲ </pattern>
+    <pattern>ἀ4ν3ανθὲς </pattern>
+    <pattern>ἀ4ν3ανθὲϲ </pattern>
+    <pattern>ἀ4ν3ανθέσ </pattern>
+    <pattern>ἀ4ν3ανθέσ </pattern>
+    <pattern>ἀ4ν3ανθὲσ </pattern>
     <pattern>ἀ4ν3ανθέσι</pattern>
     <pattern>ἀ4ν3ανθέσι</pattern>
     <pattern>ἀ4ν3ανθέϲι</pattern>
@@ -1380,28 +1382,28 @@
     <pattern>ἀ3ν2αστείχ</pattern>
     <pattern>ἀ3ν2αϲτείχ</pattern>
     <pattern>ἀ3ν2αϲτείχ</pattern>
-    <pattern>ἀ2ν1ατεὶ.</pattern>
-    <pattern>ἀ2ν1ατεί.</pattern>
-    <pattern>ἀ2ν1ατεί.</pattern>
-    <pattern>ἀ2ν1ατὶ.</pattern>
-    <pattern>ἀ2ν1ατί.</pattern>
-    <pattern>ἀ2ν1ατί.</pattern>
-    <pattern>ἄ2ν1ατος.</pattern>
-    <pattern>ἄ2ν1ατοϲ.</pattern>
-    <pattern>ἄ2ν1ατοσ.</pattern>
-    <pattern>ἀ2ν1άτου.</pattern>
-    <pattern>ἀ2ν1άτου.</pattern>
+    <pattern>ἀ2ν1ατεὶ </pattern>
+    <pattern>ἀ2ν1ατεί </pattern>
+    <pattern>ἀ2ν1ατεί </pattern>
+    <pattern>ἀ2ν1ατὶ </pattern>
+    <pattern>ἀ2ν1ατί </pattern>
+    <pattern>ἀ2ν1ατί </pattern>
+    <pattern>ἄ2ν1ατος </pattern>
+    <pattern>ἄ2ν1ατοϲ </pattern>
+    <pattern>ἄ2ν1ατοσ </pattern>
+    <pattern>ἀ2ν1άτου </pattern>
+    <pattern>ἀ2ν1άτου </pattern>
     <pattern>ἀ2ν1άτω</pattern>
     <pattern>ἀ2ν1άτω</pattern>
-    <pattern>ἄ2ν1ατον.</pattern>
+    <pattern>ἄ2ν1ατον </pattern>
     <pattern>ἄ2ν1ατε</pattern>
-    <pattern>ἄ2ν1ατοι.</pattern>
-    <pattern>ἀ2ν1άτοις.</pattern>
-    <pattern>ἀ2ν1άτοις.</pattern>
-    <pattern>ἀ2ν1άτοιϲ.</pattern>
-    <pattern>ἀ2ν1άτοιϲ.</pattern>
-    <pattern>ἀ2ν1άτοισ.</pattern>
-    <pattern>ἀ2ν1άτοισ.</pattern>
+    <pattern>ἄ2ν1ατοι </pattern>
+    <pattern>ἀ2ν1άτοις </pattern>
+    <pattern>ἀ2ν1άτοις </pattern>
+    <pattern>ἀ2ν1άτοιϲ </pattern>
+    <pattern>ἀ2ν1άτοιϲ </pattern>
+    <pattern>ἀ2ν1άτοισ </pattern>
+    <pattern>ἀ2ν1άτοισ </pattern>
     <pattern>ἀ2ν1άττ</pattern>
     <pattern>ἀ2ν1άττ</pattern>
     <pattern>ἀ2ν1αττ</pattern>
@@ -1434,7 +1436,7 @@
     <pattern>ἀ2ν1αφῆ</pattern>
     <pattern>ἀ2ν1αφεῖ</pattern>
     <pattern>ἀ2ν1αφοῖ</pattern>
-    <pattern>ἀ2ν1εφῶν.</pattern>
+    <pattern>ἀ2ν1εφῶν </pattern>
     <pattern>ἀ2ν1αφέ</pattern>
     <pattern>ἀ2ν1αφέ</pattern>
     <pattern>ἀ2ν1αφὲ</pattern>
@@ -1545,15 +1547,15 @@
     <pattern>ἀ2ν1εκ</pattern>
     <pattern>ἀ3ν2έκα</pattern>
     <pattern>ἀ3ν2έκα</pattern>
-    <pattern>ἀ3ν2εκάς.</pattern>
-    <pattern>ἀ3ν2εκάς.</pattern>
-    <pattern>ἀ3ν2εκάϲ.</pattern>
-    <pattern>ἀ3ν2εκάϲ.</pattern>
-    <pattern>ἀ3ν2εκὰς.</pattern>
-    <pattern>ἀ3ν2εκὰϲ.</pattern>
-    <pattern>ἀ3ν2εκάσ.</pattern>
-    <pattern>ἀ3ν2εκάσ.</pattern>
-    <pattern>ἀ3ν2εκὰσ.</pattern>
+    <pattern>ἀ3ν2εκάς </pattern>
+    <pattern>ἀ3ν2εκάς </pattern>
+    <pattern>ἀ3ν2εκάϲ </pattern>
+    <pattern>ἀ3ν2εκάϲ </pattern>
+    <pattern>ἀ3ν2εκὰς </pattern>
+    <pattern>ἀ3ν2εκὰϲ </pattern>
+    <pattern>ἀ3ν2εκάσ </pattern>
+    <pattern>ἀ3ν2εκάσ </pattern>
+    <pattern>ἀ3ν2εκὰσ </pattern>
     <pattern>ἀ3ν2εκτ</pattern>
     <pattern>ἀ4ν3έ2κ1τιτ</pattern>
     <pattern>ἀ4ν3έ2κ1τιτ</pattern>
@@ -1591,15 +1593,15 @@
     <pattern>ἀ2ν1ελκὴ</pattern>
     <pattern>ἀ2ν1ελκο</pattern>
     <pattern>ἀ2ν1ελκῆ</pattern>
-    <pattern>ἀ2ν1ελκές.</pattern>
-    <pattern>ἀ2ν1ελκές.</pattern>
-    <pattern>ἀ2ν1ελκέϲ.</pattern>
-    <pattern>ἀ2ν1ελκέϲ.</pattern>
-    <pattern>ἀ2ν1ελκὲς.</pattern>
-    <pattern>ἀ2ν1ελκὲϲ.</pattern>
-    <pattern>ἀ2ν1ελκέσ.</pattern>
-    <pattern>ἀ2ν1ελκέσ.</pattern>
-    <pattern>ἀ2ν1ελκὲσ.</pattern>
+    <pattern>ἀ2ν1ελκές </pattern>
+    <pattern>ἀ2ν1ελκές </pattern>
+    <pattern>ἀ2ν1ελκέϲ </pattern>
+    <pattern>ἀ2ν1ελκέϲ </pattern>
+    <pattern>ἀ2ν1ελκὲς </pattern>
+    <pattern>ἀ2ν1ελκὲϲ </pattern>
+    <pattern>ἀ2ν1ελκέσ </pattern>
+    <pattern>ἀ2ν1ελκέσ </pattern>
+    <pattern>ἀ2ν1ελκὲσ </pattern>
     <pattern>ἀ2ν1ελκε</pattern>
     <pattern>ἀ2ν1ελκῶ</pattern>
     <pattern>ἀ2ν1ελκέσ</pattern>
@@ -1643,12 +1645,12 @@
     <pattern>ἀ3ν2ένει</pattern>
     <pattern>ἀ3ν2ενή</pattern>
     <pattern>ἀ3ν2ενή</pattern>
-    <pattern>ἀ3ν2έντες.</pattern>
-    <pattern>ἀ3ν2έντες.</pattern>
-    <pattern>ἀ3ν2έντεϲ.</pattern>
-    <pattern>ἀ3ν2έντεϲ.</pattern>
-    <pattern>ἀ3ν2έντεσ.</pattern>
-    <pattern>ἀ3ν2έντεσ.</pattern>
+    <pattern>ἀ3ν2έντες </pattern>
+    <pattern>ἀ3ν2έντες </pattern>
+    <pattern>ἀ3ν2έντεϲ </pattern>
+    <pattern>ἀ3ν2έντεϲ </pattern>
+    <pattern>ἀ3ν2έντεσ </pattern>
+    <pattern>ἀ3ν2έντεσ </pattern>
     <pattern>ἀ2ν1ε2ξ1</pattern>
     <pattern>ἀ3ν2ε3ξ2ίκα</pattern>
     <pattern>ἀ3ν2ε3ξ2ίκα</pattern>
@@ -1784,20 +1786,20 @@
     <pattern>ἀ2ν1ηλάκ</pattern>
     <pattern>ἀ2ν1ηλάκ</pattern>
     <pattern>ἀ2ν1ηλακ</pattern>
-    <pattern>ἀ2ν1ήλατος.</pattern>
-    <pattern>ἀ2ν1ήλατος.</pattern>
-    <pattern>ἀ2ν1ήλατοϲ.</pattern>
-    <pattern>ἀ2ν1ήλατοϲ.</pattern>
-    <pattern>ἀ2ν1ήλατοσ.</pattern>
-    <pattern>ἀ2ν1ήλατοσ.</pattern>
+    <pattern>ἀ2ν1ήλατος </pattern>
+    <pattern>ἀ2ν1ήλατος </pattern>
+    <pattern>ἀ2ν1ήλατοϲ </pattern>
+    <pattern>ἀ2ν1ήλατοϲ </pattern>
+    <pattern>ἀ2ν1ήλατοσ </pattern>
+    <pattern>ἀ2ν1ήλατοσ </pattern>
     <pattern>ἀ2ν1ηλάτου</pattern>
     <pattern>ἀ2ν1ηλάτου</pattern>
     <pattern>ἀ2ν1ηλάτω</pattern>
     <pattern>ἀ2ν1ηλάτω</pattern>
-    <pattern>ἀ2ν1ήλατον.</pattern>
-    <pattern>ἀ2ν1ήλατον.</pattern>
-    <pattern>ἀ2ν1ήλατε.</pattern>
-    <pattern>ἀ2ν1ήλατε.</pattern>
+    <pattern>ἀ2ν1ήλατον </pattern>
+    <pattern>ἀ2ν1ήλατον </pattern>
+    <pattern>ἀ2ν1ήλατε </pattern>
+    <pattern>ἀ2ν1ήλατε </pattern>
     <pattern>ἀ2ν1ηλάτοι</pattern>
     <pattern>ἀ2ν1ηλάτοι</pattern>
     <pattern>ἀ2ν1ήλατοι</pattern>
@@ -2058,28 +2060,28 @@
     <pattern>ἀ2ν1ομό</pattern>
     <pattern>ἀ2ν1ομο</pattern>
     <pattern>ἀ3ν2ομοθ</pattern>
-    <pattern>ἀ3ν2όμου.</pattern>
-    <pattern>ἀ3ν2όμου.</pattern>
-    <pattern>ἀ3ν2όμῳ.</pattern>
-    <pattern>ἀ3ν2όμῳ.</pattern>
-    <pattern>ἀ3ν2όμω.</pattern>
-    <pattern>ἀ3ν2όμω.</pattern>
-    <pattern>ἀ2ν2όμοιν.</pattern>
-    <pattern>ἀ2ν2όμοιν.</pattern>
-    <pattern>ἀ3ν2όμων.</pattern>
-    <pattern>ἀ3ν2όμων.</pattern>
-    <pattern>ἀ3ν2όμοις.</pattern>
-    <pattern>ἀ3ν2όμοις.</pattern>
-    <pattern>ἀ3ν2όμοιϲ.</pattern>
-    <pattern>ἀ3ν2όμοιϲ.</pattern>
-    <pattern>ἀ3ν2όμοισ.</pattern>
-    <pattern>ἀ3ν2όμοισ.</pattern>
-    <pattern>ἀ3ν2όμους.</pattern>
-    <pattern>ἀ3ν2όμους.</pattern>
-    <pattern>ἀ3ν2όμουϲ.</pattern>
-    <pattern>ἀ3ν2όμουϲ.</pattern>
-    <pattern>ἀ3ν2όμουσ.</pattern>
-    <pattern>ἀ3ν2όμουσ.</pattern>
+    <pattern>ἀ3ν2όμου </pattern>
+    <pattern>ἀ3ν2όμου </pattern>
+    <pattern>ἀ3ν2όμῳ </pattern>
+    <pattern>ἀ3ν2όμῳ </pattern>
+    <pattern>ἀ3ν2όμω </pattern>
+    <pattern>ἀ3ν2όμω </pattern>
+    <pattern>ἀ2ν2όμοιν </pattern>
+    <pattern>ἀ2ν2όμοιν </pattern>
+    <pattern>ἀ3ν2όμων </pattern>
+    <pattern>ἀ3ν2όμων </pattern>
+    <pattern>ἀ3ν2όμοις </pattern>
+    <pattern>ἀ3ν2όμοις </pattern>
+    <pattern>ἀ3ν2όμοιϲ </pattern>
+    <pattern>ἀ3ν2όμοιϲ </pattern>
+    <pattern>ἀ3ν2όμοισ </pattern>
+    <pattern>ἀ3ν2όμοισ </pattern>
+    <pattern>ἀ3ν2όμους </pattern>
+    <pattern>ἀ3ν2όμους </pattern>
+    <pattern>ἀ3ν2όμουϲ </pattern>
+    <pattern>ἀ3ν2όμουϲ </pattern>
+    <pattern>ἀ3ν2όμουσ </pattern>
+    <pattern>ἀ3ν2όμουσ </pattern>
     <pattern>ἀ2ν1όν</pattern>
     <pattern>ἀ2ν1όν</pattern>
     <pattern>ἀ2ν1ον</pattern>
@@ -2275,131 +2277,131 @@
     <pattern>αὐτε2ξ1</pattern>
     <pattern>ἀω2σ1φ</pattern>
     <pattern>ἀω2ϲ1φ</pattern>
-    <pattern>.γερα2σ1φ</pattern>
-    <pattern>.γερα2ϲ1φ</pattern>
-    <pattern>.δα2σ1π</pattern>
-    <pattern>.δα2ϲ1π</pattern>
-    <pattern>.διαμφι2σ1β</pattern>
-    <pattern>.διαμφι2ϲ1β</pattern>
-    <pattern>.διέ2κ1ρο</pattern>
-    <pattern>.διέ2κ1ρο</pattern>
-    <pattern>.διε2κ1ρό</pattern>
-    <pattern>.διε2κ1ρό</pattern>
-    <pattern>.διέ2ξ1</pattern>
-    <pattern>.διέ2ξ1</pattern>
-    <pattern>.διε2ξ1</pattern>
-    <pattern>.δικα2σ1π</pattern>
-    <pattern>.δικα2ϲ1π</pattern>
-    <pattern>.διό2σ1κ</pattern>
-    <pattern>.διό2σ1κ</pattern>
-    <pattern>.διό2ϲ1κ</pattern>
-    <pattern>.διό2ϲ1κ</pattern>
-    <pattern>.διο2σ1κ</pattern>
-    <pattern>.διο2ϲ1κ</pattern>
-    <pattern>.διό2σ1π</pattern>
-    <pattern>.διό2σ1π</pattern>
-    <pattern>.διό2ϲ1π</pattern>
-    <pattern>.διό2ϲ1π</pattern>
-    <pattern>.διο2σ1π</pattern>
-    <pattern>.διο2ϲ1π</pattern>
-    <pattern>.δί2σ1α</pattern>
-    <pattern>.δί2σ1α</pattern>
-    <pattern>.δί2ϲ1α</pattern>
-    <pattern>.δί2ϲ1α</pattern>
-    <pattern>.δι2σ1ά</pattern>
-    <pattern>.δι2σ1ά</pattern>
-    <pattern>.δι2ϲ1ά</pattern>
-    <pattern>.δι2ϲ1ά</pattern>
-    <pattern>.δί2σ1η</pattern>
-    <pattern>.δί2σ1η</pattern>
-    <pattern>.δί2ϲ1η</pattern>
-    <pattern>.δί2ϲ1η</pattern>
-    <pattern>.δι2σ1ή</pattern>
-    <pattern>.δι2σ1ή</pattern>
-    <pattern>.δι2ϲ1ή</pattern>
-    <pattern>.δι2ϲ1ή</pattern>
-    <pattern>.δί2σ1ε</pattern>
-    <pattern>.δί2σ1ε</pattern>
-    <pattern>.δί2ϲ1ε</pattern>
-    <pattern>.δί2ϲ1ε</pattern>
-    <pattern>.δι2σ1ε</pattern>
-    <pattern>.δι2ϲ1ε</pattern>
-    <pattern>.δι2σ1θ</pattern>
-    <pattern>.δι2ϲ1θ</pattern>
-    <pattern>.δύ2σ1</pattern>
-    <pattern>.δύ2σ1</pattern>
-    <pattern>.δύ2ϲ1</pattern>
-    <pattern>.δύ2ϲ1</pattern>
-    <pattern>.δυ2σ1</pattern>
-    <pattern>.δυ2ϲ1</pattern>
-    <pattern>δύ3σ2ω.</pattern>
-    <pattern>δύ3σ2ω.</pattern>
-    <pattern>δύ3ϲ2ω.</pattern>
-    <pattern>δύ3ϲ2ω.</pattern>
-    <pattern>δύ3σ2εις.</pattern>
-    <pattern>δύ3σ2εις.</pattern>
-    <pattern>δύ3ϲ2ειϲ.</pattern>
-    <pattern>δύ3ϲ2ειϲ.</pattern>
-    <pattern>δύ3σ2εισ.</pattern>
-    <pattern>δύ3σ2εισ.</pattern>
-    <pattern>δύ3σ2ει.</pattern>
-    <pattern>δύ3σ2ει.</pattern>
-    <pattern>δύ3ϲ2ει.</pattern>
-    <pattern>δύ3ϲ2ει.</pattern>
-    <pattern>.δύ3σ2ετ</pattern>
-    <pattern>.δύ3σ2ετ</pattern>
-    <pattern>.δύ3ϲ2ετ</pattern>
-    <pattern>.δύ3ϲ2ετ</pattern>
-    <pattern>δύ3σ2ομεν.</pattern>
-    <pattern>δύ3σ2ομεν.</pattern>
-    <pattern>δύ3ϲ2ομεν.</pattern>
-    <pattern>δύ3ϲ2ομεν.</pattern>
-    <pattern>δύ3σ2ουσιν.</pattern>
-    <pattern>δύ3σ2ουσιν.</pattern>
-    <pattern>δύ3ϲ2ουϲιν.</pattern>
-    <pattern>δύ3ϲ2ουϲιν.</pattern>
-    <pattern>δύ3σ2οιμι.</pattern>
-    <pattern>δύ3σ2οιμι.</pattern>
-    <pattern>δύ3ϲ2οιμι.</pattern>
-    <pattern>δύ3ϲ2οιμι.</pattern>
-    <pattern>δύ3σ2οις.</pattern>
-    <pattern>δύ3σ2οις.</pattern>
-    <pattern>δύ3ϲ2οιϲ.</pattern>
-    <pattern>δύ3ϲ2οιϲ.</pattern>
-    <pattern>δύ3σ2οισ.</pattern>
-    <pattern>δύ3σ2οισ.</pattern>
-    <pattern>δύ3σ2οι.</pattern>
-    <pattern>δύ3σ2οι.</pattern>
-    <pattern>δύ3ϲ2οι.</pattern>
-    <pattern>δύ3ϲ2οι.</pattern>
-    <pattern>δύ3σ2οιτον.</pattern>
-    <pattern>δύ3σ2οιτον.</pattern>
-    <pattern>δύ3ϲ2οιτον.</pattern>
-    <pattern>δύ3ϲ2οιτον.</pattern>
-    <pattern>δυ3σ2οίτην.</pattern>
-    <pattern>δυ3σ2οίτην.</pattern>
-    <pattern>δυ3ϲ2οίτην.</pattern>
-    <pattern>δυ3ϲ2οίτην.</pattern>
-    <pattern>δύ3σ2οιμεν.</pattern>
-    <pattern>δύ3σ2οιμεν.</pattern>
-    <pattern>δύ3ϲ2οιμεν.</pattern>
-    <pattern>δύ3ϲ2οιμεν.</pattern>
-    <pattern>δύ3σ2οιτε.</pattern>
-    <pattern>δύ3σ2οιτε.</pattern>
-    <pattern>δύ3ϲ2οιτε.</pattern>
-    <pattern>δύ3ϲ2οιτε.</pattern>
-    <pattern>δύ3σ2οιεν.</pattern>
-    <pattern>δύ3σ2οιεν.</pattern>
-    <pattern>δύ3ϲ2οιεν.</pattern>
-    <pattern>δύ3ϲ2οιεν.</pattern>
-    <pattern>δύ3σ2ειν.</pattern>
-    <pattern>δύ3σ2ειν.</pattern>
-    <pattern>δύ3ϲ2ειν.</pattern>
-    <pattern>δύ3ϲ2ειν.</pattern>
-    <pattern>δύ3σ2ων.</pattern>
-    <pattern>δύ3σ2ων.</pattern>
-    <pattern>δύ3ϲ2ων.</pattern>
-    <pattern>δύ3ϲ2ων.</pattern>
+    <pattern> γερα2σ1φ</pattern>
+    <pattern> γερα2ϲ1φ</pattern>
+    <pattern> δα2σ1π</pattern>
+    <pattern> δα2ϲ1π</pattern>
+    <pattern> διαμφι2σ1β</pattern>
+    <pattern> διαμφι2ϲ1β</pattern>
+    <pattern> διέ2κ1ρο</pattern>
+    <pattern> διέ2κ1ρο</pattern>
+    <pattern> διε2κ1ρό</pattern>
+    <pattern> διε2κ1ρό</pattern>
+    <pattern> διέ2ξ1</pattern>
+    <pattern> διέ2ξ1</pattern>
+    <pattern> διε2ξ1</pattern>
+    <pattern> δικα2σ1π</pattern>
+    <pattern> δικα2ϲ1π</pattern>
+    <pattern> διό2σ1κ</pattern>
+    <pattern> διό2σ1κ</pattern>
+    <pattern> διό2ϲ1κ</pattern>
+    <pattern> διό2ϲ1κ</pattern>
+    <pattern> διο2σ1κ</pattern>
+    <pattern> διο2ϲ1κ</pattern>
+    <pattern> διό2σ1π</pattern>
+    <pattern> διό2σ1π</pattern>
+    <pattern> διό2ϲ1π</pattern>
+    <pattern> διό2ϲ1π</pattern>
+    <pattern> διο2σ1π</pattern>
+    <pattern> διο2ϲ1π</pattern>
+    <pattern> δί2σ1α</pattern>
+    <pattern> δί2σ1α</pattern>
+    <pattern> δί2ϲ1α</pattern>
+    <pattern> δί2ϲ1α</pattern>
+    <pattern> δι2σ1ά</pattern>
+    <pattern> δι2σ1ά</pattern>
+    <pattern> δι2ϲ1ά</pattern>
+    <pattern> δι2ϲ1ά</pattern>
+    <pattern> δί2σ1η</pattern>
+    <pattern> δί2σ1η</pattern>
+    <pattern> δί2ϲ1η</pattern>
+    <pattern> δί2ϲ1η</pattern>
+    <pattern> δι2σ1ή</pattern>
+    <pattern> δι2σ1ή</pattern>
+    <pattern> δι2ϲ1ή</pattern>
+    <pattern> δι2ϲ1ή</pattern>
+    <pattern> δί2σ1ε</pattern>
+    <pattern> δί2σ1ε</pattern>
+    <pattern> δί2ϲ1ε</pattern>
+    <pattern> δί2ϲ1ε</pattern>
+    <pattern> δι2σ1ε</pattern>
+    <pattern> δι2ϲ1ε</pattern>
+    <pattern> δι2σ1θ</pattern>
+    <pattern> δι2ϲ1θ</pattern>
+    <pattern> δύ2σ1</pattern>
+    <pattern> δύ2σ1</pattern>
+    <pattern> δύ2ϲ1</pattern>
+    <pattern> δύ2ϲ1</pattern>
+    <pattern> δυ2σ1</pattern>
+    <pattern> δυ2ϲ1</pattern>
+    <pattern>δύ3σ2ω </pattern>
+    <pattern>δύ3σ2ω </pattern>
+    <pattern>δύ3ϲ2ω </pattern>
+    <pattern>δύ3ϲ2ω </pattern>
+    <pattern>δύ3σ2εις </pattern>
+    <pattern>δύ3σ2εις </pattern>
+    <pattern>δύ3ϲ2ειϲ </pattern>
+    <pattern>δύ3ϲ2ειϲ </pattern>
+    <pattern>δύ3σ2εισ </pattern>
+    <pattern>δύ3σ2εισ </pattern>
+    <pattern>δύ3σ2ει </pattern>
+    <pattern>δύ3σ2ει </pattern>
+    <pattern>δύ3ϲ2ει </pattern>
+    <pattern>δύ3ϲ2ει </pattern>
+    <pattern> δύ3σ2ετ</pattern>
+    <pattern> δύ3σ2ετ</pattern>
+    <pattern> δύ3ϲ2ετ</pattern>
+    <pattern> δύ3ϲ2ετ</pattern>
+    <pattern>δύ3σ2ομεν </pattern>
+    <pattern>δύ3σ2ομεν </pattern>
+    <pattern>δύ3ϲ2ομεν </pattern>
+    <pattern>δύ3ϲ2ομεν </pattern>
+    <pattern>δύ3σ2ουσιν </pattern>
+    <pattern>δύ3σ2ουσιν </pattern>
+    <pattern>δύ3ϲ2ουϲιν </pattern>
+    <pattern>δύ3ϲ2ουϲιν </pattern>
+    <pattern>δύ3σ2οιμι </pattern>
+    <pattern>δύ3σ2οιμι </pattern>
+    <pattern>δύ3ϲ2οιμι </pattern>
+    <pattern>δύ3ϲ2οιμι </pattern>
+    <pattern>δύ3σ2οις </pattern>
+    <pattern>δύ3σ2οις </pattern>
+    <pattern>δύ3ϲ2οιϲ </pattern>
+    <pattern>δύ3ϲ2οιϲ </pattern>
+    <pattern>δύ3σ2οισ </pattern>
+    <pattern>δύ3σ2οισ </pattern>
+    <pattern>δύ3σ2οι </pattern>
+    <pattern>δύ3σ2οι </pattern>
+    <pattern>δύ3ϲ2οι </pattern>
+    <pattern>δύ3ϲ2οι </pattern>
+    <pattern>δύ3σ2οιτον </pattern>
+    <pattern>δύ3σ2οιτον </pattern>
+    <pattern>δύ3ϲ2οιτον </pattern>
+    <pattern>δύ3ϲ2οιτον </pattern>
+    <pattern>δυ3σ2οίτην </pattern>
+    <pattern>δυ3σ2οίτην </pattern>
+    <pattern>δυ3ϲ2οίτην </pattern>
+    <pattern>δυ3ϲ2οίτην </pattern>
+    <pattern>δύ3σ2οιμεν </pattern>
+    <pattern>δύ3σ2οιμεν </pattern>
+    <pattern>δύ3ϲ2οιμεν </pattern>
+    <pattern>δύ3ϲ2οιμεν </pattern>
+    <pattern>δύ3σ2οιτε </pattern>
+    <pattern>δύ3σ2οιτε </pattern>
+    <pattern>δύ3ϲ2οιτε </pattern>
+    <pattern>δύ3ϲ2οιτε </pattern>
+    <pattern>δύ3σ2οιεν </pattern>
+    <pattern>δύ3σ2οιεν </pattern>
+    <pattern>δύ3ϲ2οιεν </pattern>
+    <pattern>δύ3ϲ2οιεν </pattern>
+    <pattern>δύ3σ2ειν </pattern>
+    <pattern>δύ3σ2ειν </pattern>
+    <pattern>δύ3ϲ2ειν </pattern>
+    <pattern>δύ3ϲ2ειν </pattern>
+    <pattern>δύ3σ2ων </pattern>
+    <pattern>δύ3σ2ων </pattern>
+    <pattern>δύ3ϲ2ων </pattern>
+    <pattern>δύ3ϲ2ων </pattern>
     <pattern>δύ3σ2ον</pattern>
     <pattern>δύ3σ2ον</pattern>
     <pattern>δύ3ϲ2ον</pattern>
@@ -2420,98 +2422,98 @@
     <pattern>δύ3σ2ῃ</pattern>
     <pattern>δύ3ϲ2ῃ</pattern>
     <pattern>δύ3ϲ2ῃ</pattern>
-    <pattern>δύ3σ2ητον.</pattern>
-    <pattern>δύ3σ2ητον.</pattern>
-    <pattern>δύ3ϲ2ητον.</pattern>
-    <pattern>δύ3ϲ2ητον.</pattern>
-    <pattern>δύ3σ2ωμεν.</pattern>
-    <pattern>δύ3σ2ωμεν.</pattern>
-    <pattern>δύ3ϲ2ωμεν.</pattern>
-    <pattern>δύ3ϲ2ωμεν.</pattern>
-    <pattern>δύ3σ2ωσι.</pattern>
-    <pattern>δύ3σ2ωσι.</pattern>
-    <pattern>δύ3ϲ2ωϲι.</pattern>
-    <pattern>δύ3ϲ2ωϲι.</pattern>
-    <pattern>δύ3σ2αιμι.</pattern>
-    <pattern>δύ3σ2αιμι.</pattern>
-    <pattern>δύ3ϲ2αιμι.</pattern>
-    <pattern>δύ3ϲ2αιμι.</pattern>
-    <pattern>δύ3σ2αις.</pattern>
-    <pattern>δύ3σ2αις.</pattern>
-    <pattern>δύ3ϲ2αιϲ.</pattern>
-    <pattern>δύ3ϲ2αιϲ.</pattern>
-    <pattern>δύ3σ2ειας.</pattern>
-    <pattern>δύ3σ2ειας.</pattern>
-    <pattern>δύ3ϲ2ειαϲ.</pattern>
-    <pattern>δύ3ϲ2ειαϲ.</pattern>
-    <pattern>δύ3σ2αισ.</pattern>
-    <pattern>δύ3σ2αισ.</pattern>
-    <pattern>δύ3σ2ειασ.</pattern>
-    <pattern>δύ3σ2ειασ.</pattern>
-    <pattern>δύ3σ2αι.</pattern>
-    <pattern>δύ3σ2αι.</pattern>
-    <pattern>δύ3ϲ2αι.</pattern>
-    <pattern>δύ3ϲ2αι.</pattern>
-    <pattern>δύ3σ2ειε.</pattern>
-    <pattern>δύ3σ2ειε.</pattern>
-    <pattern>δύ3ϲ2ειε.</pattern>
-    <pattern>δύ3ϲ2ειε.</pattern>
-    <pattern>δύ3σ2αιτον.</pattern>
-    <pattern>δύ3σ2αιτον.</pattern>
-    <pattern>δύ3ϲ2αιτον.</pattern>
-    <pattern>δύ3ϲ2αιτον.</pattern>
-    <pattern>δυ3σ2αίτην.</pattern>
-    <pattern>δυ3σ2αίτην.</pattern>
-    <pattern>δυ3ϲ2αίτην.</pattern>
-    <pattern>δυ3ϲ2αίτην.</pattern>
-    <pattern>δύ3σ2αιμεν.</pattern>
-    <pattern>δύ3σ2αιμεν.</pattern>
-    <pattern>δύ3ϲ2αιμεν.</pattern>
-    <pattern>δύ3ϲ2αιμεν.</pattern>
-    <pattern>δύ3σ2αιτε.</pattern>
-    <pattern>δύ3σ2αιτε.</pattern>
-    <pattern>δύ3ϲ2αιτε.</pattern>
-    <pattern>δύ3ϲ2αιτε.</pattern>
+    <pattern>δύ3σ2ητον </pattern>
+    <pattern>δύ3σ2ητον </pattern>
+    <pattern>δύ3ϲ2ητον </pattern>
+    <pattern>δύ3ϲ2ητον </pattern>
+    <pattern>δύ3σ2ωμεν </pattern>
+    <pattern>δύ3σ2ωμεν </pattern>
+    <pattern>δύ3ϲ2ωμεν </pattern>
+    <pattern>δύ3ϲ2ωμεν </pattern>
+    <pattern>δύ3σ2ωσι </pattern>
+    <pattern>δύ3σ2ωσι </pattern>
+    <pattern>δύ3ϲ2ωϲι </pattern>
+    <pattern>δύ3ϲ2ωϲι </pattern>
+    <pattern>δύ3σ2αιμι </pattern>
+    <pattern>δύ3σ2αιμι </pattern>
+    <pattern>δύ3ϲ2αιμι </pattern>
+    <pattern>δύ3ϲ2αιμι </pattern>
+    <pattern>δύ3σ2αις </pattern>
+    <pattern>δύ3σ2αις </pattern>
+    <pattern>δύ3ϲ2αιϲ </pattern>
+    <pattern>δύ3ϲ2αιϲ </pattern>
+    <pattern>δύ3σ2ειας </pattern>
+    <pattern>δύ3σ2ειας </pattern>
+    <pattern>δύ3ϲ2ειαϲ </pattern>
+    <pattern>δύ3ϲ2ειαϲ </pattern>
+    <pattern>δύ3σ2αισ </pattern>
+    <pattern>δύ3σ2αισ </pattern>
+    <pattern>δύ3σ2ειασ </pattern>
+    <pattern>δύ3σ2ειασ </pattern>
+    <pattern>δύ3σ2αι </pattern>
+    <pattern>δύ3σ2αι </pattern>
+    <pattern>δύ3ϲ2αι </pattern>
+    <pattern>δύ3ϲ2αι </pattern>
+    <pattern>δύ3σ2ειε </pattern>
+    <pattern>δύ3σ2ειε </pattern>
+    <pattern>δύ3ϲ2ειε </pattern>
+    <pattern>δύ3ϲ2ειε </pattern>
+    <pattern>δύ3σ2αιτον </pattern>
+    <pattern>δύ3σ2αιτον </pattern>
+    <pattern>δύ3ϲ2αιτον </pattern>
+    <pattern>δύ3ϲ2αιτον </pattern>
+    <pattern>δυ3σ2αίτην </pattern>
+    <pattern>δυ3σ2αίτην </pattern>
+    <pattern>δυ3ϲ2αίτην </pattern>
+    <pattern>δυ3ϲ2αίτην </pattern>
+    <pattern>δύ3σ2αιμεν </pattern>
+    <pattern>δύ3σ2αιμεν </pattern>
+    <pattern>δύ3ϲ2αιμεν </pattern>
+    <pattern>δύ3ϲ2αιμεν </pattern>
+    <pattern>δύ3σ2αιτε </pattern>
+    <pattern>δύ3σ2αιτε </pattern>
+    <pattern>δύ3ϲ2αιτε </pattern>
+    <pattern>δύ3ϲ2αιτε </pattern>
     <pattern>δύ3σ2αιεν</pattern>
     <pattern>δύ3σ2αιεν</pattern>
     <pattern>δύ3ϲ2αιεν</pattern>
     <pattern>δύ3ϲ2αιεν</pattern>
-    <pattern>δύ3σ2ειαν.</pattern>
-    <pattern>δύ3σ2ειαν.</pattern>
-    <pattern>δύ3ϲ2ειαν.</pattern>
-    <pattern>δύ3ϲ2ειαν.</pattern>
-    <pattern>δύ3σ2ον.</pattern>
-    <pattern>δύ3σ2ον.</pattern>
-    <pattern>δύ3ϲ2ον.</pattern>
-    <pattern>δύ3ϲ2ον.</pattern>
-    <pattern>δυ3σ2άτω.</pattern>
-    <pattern>δυ3σ2άτω.</pattern>
-    <pattern>δυ3ϲ2άτω.</pattern>
-    <pattern>δυ3ϲ2άτω.</pattern>
-    <pattern>δύ3σ2ατον.</pattern>
-    <pattern>δύ3σ2ατον.</pattern>
-    <pattern>δύ3ϲ2ατον.</pattern>
-    <pattern>δύ3ϲ2ατον.</pattern>
-    <pattern>δυ3σ2άτων.</pattern>
-    <pattern>δυ3σ2άτων.</pattern>
-    <pattern>δυ3ϲ2άτων.</pattern>
-    <pattern>δυ3ϲ2άτων.</pattern>
-    <pattern>δύ3σ2ατε.</pattern>
-    <pattern>δύ3σ2ατε.</pattern>
-    <pattern>δύ3ϲ2ατε.</pattern>
-    <pattern>δύ3ϲ2ατε.</pattern>
-    <pattern>δυ3σ2άντων.</pattern>
-    <pattern>δυ3σ2άντων.</pattern>
-    <pattern>δυ3ϲ2άντων.</pattern>
-    <pattern>δυ3ϲ2άντων.</pattern>
-    <pattern>δύ3σ2ας.</pattern>
-    <pattern>δύ3σ2ας.</pattern>
-    <pattern>δύ3ϲ2αϲ.</pattern>
-    <pattern>δύ3ϲ2αϲ.</pattern>
-    <pattern>δύ3σ2αν.</pattern>
-    <pattern>δύ3σ2αν.</pattern>
-    <pattern>δύ3ϲ2αν.</pattern>
-    <pattern>δύ3ϲ2αν.</pattern>
+    <pattern>δύ3σ2ειαν </pattern>
+    <pattern>δύ3σ2ειαν </pattern>
+    <pattern>δύ3ϲ2ειαν </pattern>
+    <pattern>δύ3ϲ2ειαν </pattern>
+    <pattern>δύ3σ2ον </pattern>
+    <pattern>δύ3σ2ον </pattern>
+    <pattern>δύ3ϲ2ον </pattern>
+    <pattern>δύ3ϲ2ον </pattern>
+    <pattern>δυ3σ2άτω </pattern>
+    <pattern>δυ3σ2άτω </pattern>
+    <pattern>δυ3ϲ2άτω </pattern>
+    <pattern>δυ3ϲ2άτω </pattern>
+    <pattern>δύ3σ2ατον </pattern>
+    <pattern>δύ3σ2ατον </pattern>
+    <pattern>δύ3ϲ2ατον </pattern>
+    <pattern>δύ3ϲ2ατον </pattern>
+    <pattern>δυ3σ2άτων </pattern>
+    <pattern>δυ3σ2άτων </pattern>
+    <pattern>δυ3ϲ2άτων </pattern>
+    <pattern>δυ3ϲ2άτων </pattern>
+    <pattern>δύ3σ2ατε </pattern>
+    <pattern>δύ3σ2ατε </pattern>
+    <pattern>δύ3ϲ2ατε </pattern>
+    <pattern>δύ3ϲ2ατε </pattern>
+    <pattern>δυ3σ2άντων </pattern>
+    <pattern>δυ3σ2άντων </pattern>
+    <pattern>δυ3ϲ2άντων </pattern>
+    <pattern>δυ3ϲ2άντων </pattern>
+    <pattern>δύ3σ2ας </pattern>
+    <pattern>δύ3σ2ας </pattern>
+    <pattern>δύ3ϲ2αϲ </pattern>
+    <pattern>δύ3ϲ2αϲ </pattern>
+    <pattern>δύ3σ2αν </pattern>
+    <pattern>δύ3σ2αν </pattern>
+    <pattern>δύ3ϲ2αν </pattern>
+    <pattern>δύ3ϲ2αν </pattern>
     <pattern>δύ3σ2αντ</pattern>
     <pattern>δύ3σ2αντ</pattern>
     <pattern>δύ3ϲ2αντ</pattern>
@@ -2528,134 +2530,134 @@
     <pattern>δυ3σ2άσ</pattern>
     <pattern>δυ3ϲ2άϲ</pattern>
     <pattern>δυ3ϲ2άϲ</pattern>
-    <pattern>δύ3σ2ομαι.</pattern>
-    <pattern>δύ3σ2ομαι.</pattern>
-    <pattern>δύ3ϲ2ομαι.</pattern>
-    <pattern>δύ3ϲ2ομαι.</pattern>
-    <pattern>.δύ3σ2εσ</pattern>
-    <pattern>.δύ3σ2εσ</pattern>
-    <pattern>.δύ3ϲ2εϲ</pattern>
-    <pattern>.δύ3ϲ2εϲ</pattern>
-    <pattern>δυ3σ2όμεθα.</pattern>
-    <pattern>δυ3σ2όμεθα.</pattern>
-    <pattern>δυ3ϲ2όμεθα.</pattern>
-    <pattern>δυ3ϲ2όμεθα.</pattern>
-    <pattern>δύ3σ2ονται.</pattern>
-    <pattern>δύ3σ2ονται.</pattern>
-    <pattern>δύ3ϲ2ονται.</pattern>
-    <pattern>δύ3ϲ2ονται.</pattern>
-    <pattern>δυ3σ2οίμην.</pattern>
-    <pattern>δυ3σ2οίμην.</pattern>
-    <pattern>δυ3ϲ2οίμην.</pattern>
-    <pattern>δυ3ϲ2οίμην.</pattern>
-    <pattern>δύ3σ2οιο.</pattern>
-    <pattern>δύ3σ2οιο.</pattern>
-    <pattern>δύ3ϲ2οιο.</pattern>
-    <pattern>δύ3ϲ2οιο.</pattern>
-    <pattern>δύ3σ2οιτο.</pattern>
-    <pattern>δύ3σ2οιτο.</pattern>
-    <pattern>δύ3ϲ2οιτο.</pattern>
-    <pattern>δύ3ϲ2οιτο.</pattern>
-    <pattern>δύ3σ2οισθον.</pattern>
-    <pattern>δύ3σ2οισθον.</pattern>
-    <pattern>δύ3ϲ2οιϲθον.</pattern>
-    <pattern>δύ3ϲ2οιϲθον.</pattern>
-    <pattern>δυ3σ2οίσθην.</pattern>
-    <pattern>δυ3σ2οίσθην.</pattern>
-    <pattern>δυ3ϲ2οίϲθην.</pattern>
-    <pattern>δυ3ϲ2οίϲθην.</pattern>
-    <pattern>δυ3σ2οίμεθα.</pattern>
-    <pattern>δυ3σ2οίμεθα.</pattern>
-    <pattern>δυ3ϲ2οίμεθα.</pattern>
-    <pattern>δυ3ϲ2οίμεθα.</pattern>
-    <pattern>δύ3σ2οισθε.</pattern>
-    <pattern>δύ3σ2οισθε.</pattern>
-    <pattern>δύ3ϲ2οιϲθε.</pattern>
-    <pattern>δύ3ϲ2οιϲθε.</pattern>
-    <pattern>δύ3σ2οιντο.</pattern>
-    <pattern>δύ3σ2οιντο.</pattern>
-    <pattern>δύ3ϲ2οιντο.</pattern>
-    <pattern>δύ3ϲ2οιντο.</pattern>
-    <pattern>δύ3σ2εσθαι.</pattern>
-    <pattern>δύ3σ2εσθαι.</pattern>
-    <pattern>δύ3ϲ2εϲθαι.</pattern>
-    <pattern>δύ3ϲ2εϲθαι.</pattern>
-    <pattern>.δυ3σ2όμεν</pattern>
-    <pattern>.δυ3σ2όμεν</pattern>
-    <pattern>.δυ3ϲ2όμεν</pattern>
-    <pattern>.δυ3ϲ2όμεν</pattern>
-    <pattern>.δυ3σ2ομέν</pattern>
-    <pattern>.δυ3σ2ομέν</pattern>
-    <pattern>.δυ3ϲ2ομέν</pattern>
-    <pattern>.δυ3ϲ2ομέν</pattern>
-    <pattern>δύ3σ2ωμαι.</pattern>
-    <pattern>δύ3σ2ωμαι.</pattern>
-    <pattern>δύ3ϲ2ωμαι.</pattern>
-    <pattern>δύ3ϲ2ωμαι.</pattern>
-    <pattern>δύ3σ2ηται.</pattern>
-    <pattern>δύ3σ2ηται.</pattern>
-    <pattern>δύ3ϲ2ηται.</pattern>
-    <pattern>δύ3ϲ2ηται.</pattern>
+    <pattern>δύ3σ2ομαι </pattern>
+    <pattern>δύ3σ2ομαι </pattern>
+    <pattern>δύ3ϲ2ομαι </pattern>
+    <pattern>δύ3ϲ2ομαι </pattern>
+    <pattern> δύ3σ2εσ</pattern>
+    <pattern> δύ3σ2εσ</pattern>
+    <pattern> δύ3ϲ2εϲ</pattern>
+    <pattern> δύ3ϲ2εϲ</pattern>
+    <pattern>δυ3σ2όμεθα </pattern>
+    <pattern>δυ3σ2όμεθα </pattern>
+    <pattern>δυ3ϲ2όμεθα </pattern>
+    <pattern>δυ3ϲ2όμεθα </pattern>
+    <pattern>δύ3σ2ονται </pattern>
+    <pattern>δύ3σ2ονται </pattern>
+    <pattern>δύ3ϲ2ονται </pattern>
+    <pattern>δύ3ϲ2ονται </pattern>
+    <pattern>δυ3σ2οίμην </pattern>
+    <pattern>δυ3σ2οίμην </pattern>
+    <pattern>δυ3ϲ2οίμην </pattern>
+    <pattern>δυ3ϲ2οίμην </pattern>
+    <pattern>δύ3σ2οιο </pattern>
+    <pattern>δύ3σ2οιο </pattern>
+    <pattern>δύ3ϲ2οιο </pattern>
+    <pattern>δύ3ϲ2οιο </pattern>
+    <pattern>δύ3σ2οιτο </pattern>
+    <pattern>δύ3σ2οιτο </pattern>
+    <pattern>δύ3ϲ2οιτο </pattern>
+    <pattern>δύ3ϲ2οιτο </pattern>
+    <pattern>δύ3σ2οισθον </pattern>
+    <pattern>δύ3σ2οισθον </pattern>
+    <pattern>δύ3ϲ2οιϲθον </pattern>
+    <pattern>δύ3ϲ2οιϲθον </pattern>
+    <pattern>δυ3σ2οίσθην </pattern>
+    <pattern>δυ3σ2οίσθην </pattern>
+    <pattern>δυ3ϲ2οίϲθην </pattern>
+    <pattern>δυ3ϲ2οίϲθην </pattern>
+    <pattern>δυ3σ2οίμεθα </pattern>
+    <pattern>δυ3σ2οίμεθα </pattern>
+    <pattern>δυ3ϲ2οίμεθα </pattern>
+    <pattern>δυ3ϲ2οίμεθα </pattern>
+    <pattern>δύ3σ2οισθε </pattern>
+    <pattern>δύ3σ2οισθε </pattern>
+    <pattern>δύ3ϲ2οιϲθε </pattern>
+    <pattern>δύ3ϲ2οιϲθε </pattern>
+    <pattern>δύ3σ2οιντο </pattern>
+    <pattern>δύ3σ2οιντο </pattern>
+    <pattern>δύ3ϲ2οιντο </pattern>
+    <pattern>δύ3ϲ2οιντο </pattern>
+    <pattern>δύ3σ2εσθαι </pattern>
+    <pattern>δύ3σ2εσθαι </pattern>
+    <pattern>δύ3ϲ2εϲθαι </pattern>
+    <pattern>δύ3ϲ2εϲθαι </pattern>
+    <pattern> δυ3σ2όμεν</pattern>
+    <pattern> δυ3σ2όμεν</pattern>
+    <pattern> δυ3ϲ2όμεν</pattern>
+    <pattern> δυ3ϲ2όμεν</pattern>
+    <pattern> δυ3σ2ομέν</pattern>
+    <pattern> δυ3σ2ομέν</pattern>
+    <pattern> δυ3ϲ2ομέν</pattern>
+    <pattern> δυ3ϲ2ομέν</pattern>
+    <pattern>δύ3σ2ωμαι </pattern>
+    <pattern>δύ3σ2ωμαι </pattern>
+    <pattern>δύ3ϲ2ωμαι </pattern>
+    <pattern>δύ3ϲ2ωμαι </pattern>
+    <pattern>δύ3σ2ηται </pattern>
+    <pattern>δύ3σ2ηται </pattern>
+    <pattern>δύ3ϲ2ηται </pattern>
+    <pattern>δύ3ϲ2ηται </pattern>
     <pattern>δυ3σ2ώμεθα</pattern>
     <pattern>δυ3σ2ώμεθα</pattern>
     <pattern>δυ3ϲ2ώμεθα</pattern>
     <pattern>δυ3ϲ2ώμεθα</pattern>
-    <pattern>δύ3σ2ησθε.</pattern>
-    <pattern>δύ3σ2ησθε.</pattern>
-    <pattern>δύ3ϲ2ηϲθε.</pattern>
-    <pattern>δύ3ϲ2ηϲθε.</pattern>
-    <pattern>δυ3σ2αίμην.</pattern>
-    <pattern>δυ3σ2αίμην.</pattern>
-    <pattern>δυ3ϲ2αίμην.</pattern>
-    <pattern>δυ3ϲ2αίμην.</pattern>
-    <pattern>δύ3σ2αιο.</pattern>
-    <pattern>δύ3σ2αιο.</pattern>
-    <pattern>δύ3ϲ2αιο.</pattern>
-    <pattern>δύ3ϲ2αιο.</pattern>
-    <pattern>δύ3σ2αιτο.</pattern>
-    <pattern>δύ3σ2αιτο.</pattern>
-    <pattern>δύ3ϲ2αιτο.</pattern>
-    <pattern>δύ3ϲ2αιτο.</pattern>
-    <pattern>δύ3σ2αισθον.</pattern>
-    <pattern>δύ3σ2αισθον.</pattern>
-    <pattern>δύ3ϲ2αιϲθον.</pattern>
-    <pattern>δύ3ϲ2αιϲθον.</pattern>
-    <pattern>δυ3σ2αίσθην.</pattern>
-    <pattern>δυ3σ2αίσθην.</pattern>
-    <pattern>δυ3ϲ2αίϲθην.</pattern>
-    <pattern>δυ3ϲ2αίϲθην.</pattern>
-    <pattern>δυ3σ2αίμεθα.</pattern>
-    <pattern>δυ3σ2αίμεθα.</pattern>
-    <pattern>δυ3ϲ2αίμεθα.</pattern>
-    <pattern>δυ3ϲ2αίμεθα.</pattern>
-    <pattern>δύ3σ2αισθαι.</pattern>
-    <pattern>δύ3σ2αισθαι.</pattern>
-    <pattern>δύ3ϲ2αιϲθαι.</pattern>
-    <pattern>δύ3ϲ2αιϲθαι.</pattern>
-    <pattern>δύ3σ2αιντο.</pattern>
-    <pattern>δύ3σ2αιντο.</pattern>
-    <pattern>δύ3ϲ2αιντο.</pattern>
-    <pattern>δύ3ϲ2αιντο.</pattern>
-    <pattern>δυ3σ2άσθω.</pattern>
-    <pattern>δυ3σ2άσθω.</pattern>
-    <pattern>δυ3ϲ2άϲθω.</pattern>
-    <pattern>δυ3ϲ2άϲθω.</pattern>
-    <pattern>δύ3σ2ασθον.</pattern>
-    <pattern>δύ3σ2ασθον.</pattern>
-    <pattern>δύ3ϲ2αϲθον.</pattern>
-    <pattern>δύ3ϲ2αϲθον.</pattern>
-    <pattern>δυ3σ2άσθων.</pattern>
-    <pattern>δυ3σ2άσθων.</pattern>
-    <pattern>δυ3ϲ2άϲθων.</pattern>
-    <pattern>δυ3ϲ2άϲθων.</pattern>
-    <pattern>δύ3σ2ασθε.</pattern>
-    <pattern>δύ3σ2ασθε.</pattern>
-    <pattern>δύ3ϲ2αϲθε.</pattern>
-    <pattern>δύ3ϲ2αϲθε.</pattern>
-    <pattern>δύ3σ2ασθαι.</pattern>
-    <pattern>δύ3σ2ασθαι.</pattern>
-    <pattern>δύ3ϲ2αϲθαι.</pattern>
-    <pattern>δύ3ϲ2αϲθαι.</pattern>
+    <pattern>δύ3σ2ησθε </pattern>
+    <pattern>δύ3σ2ησθε </pattern>
+    <pattern>δύ3ϲ2ηϲθε </pattern>
+    <pattern>δύ3ϲ2ηϲθε </pattern>
+    <pattern>δυ3σ2αίμην </pattern>
+    <pattern>δυ3σ2αίμην </pattern>
+    <pattern>δυ3ϲ2αίμην </pattern>
+    <pattern>δυ3ϲ2αίμην </pattern>
+    <pattern>δύ3σ2αιο </pattern>
+    <pattern>δύ3σ2αιο </pattern>
+    <pattern>δύ3ϲ2αιο </pattern>
+    <pattern>δύ3ϲ2αιο </pattern>
+    <pattern>δύ3σ2αιτο </pattern>
+    <pattern>δύ3σ2αιτο </pattern>
+    <pattern>δύ3ϲ2αιτο </pattern>
+    <pattern>δύ3ϲ2αιτο </pattern>
+    <pattern>δύ3σ2αισθον </pattern>
+    <pattern>δύ3σ2αισθον </pattern>
+    <pattern>δύ3ϲ2αιϲθον </pattern>
+    <pattern>δύ3ϲ2αιϲθον </pattern>
+    <pattern>δυ3σ2αίσθην </pattern>
+    <pattern>δυ3σ2αίσθην </pattern>
+    <pattern>δυ3ϲ2αίϲθην </pattern>
+    <pattern>δυ3ϲ2αίϲθην </pattern>
+    <pattern>δυ3σ2αίμεθα </pattern>
+    <pattern>δυ3σ2αίμεθα </pattern>
+    <pattern>δυ3ϲ2αίμεθα </pattern>
+    <pattern>δυ3ϲ2αίμεθα </pattern>
+    <pattern>δύ3σ2αισθαι </pattern>
+    <pattern>δύ3σ2αισθαι </pattern>
+    <pattern>δύ3ϲ2αιϲθαι </pattern>
+    <pattern>δύ3ϲ2αιϲθαι </pattern>
+    <pattern>δύ3σ2αιντο </pattern>
+    <pattern>δύ3σ2αιντο </pattern>
+    <pattern>δύ3ϲ2αιντο </pattern>
+    <pattern>δύ3ϲ2αιντο </pattern>
+    <pattern>δυ3σ2άσθω </pattern>
+    <pattern>δυ3σ2άσθω </pattern>
+    <pattern>δυ3ϲ2άϲθω </pattern>
+    <pattern>δυ3ϲ2άϲθω </pattern>
+    <pattern>δύ3σ2ασθον </pattern>
+    <pattern>δύ3σ2ασθον </pattern>
+    <pattern>δύ3ϲ2αϲθον </pattern>
+    <pattern>δύ3ϲ2αϲθον </pattern>
+    <pattern>δυ3σ2άσθων </pattern>
+    <pattern>δυ3σ2άσθων </pattern>
+    <pattern>δυ3ϲ2άϲθων </pattern>
+    <pattern>δυ3ϲ2άϲθων </pattern>
+    <pattern>δύ3σ2ασθε </pattern>
+    <pattern>δύ3σ2ασθε </pattern>
+    <pattern>δύ3ϲ2αϲθε </pattern>
+    <pattern>δύ3ϲ2αϲθε </pattern>
+    <pattern>δύ3σ2ασθαι </pattern>
+    <pattern>δύ3σ2ασθαι </pattern>
+    <pattern>δύ3ϲ2αϲθαι </pattern>
+    <pattern>δύ3ϲ2αϲθαι </pattern>
     <pattern>δυ3σ2άμεν</pattern>
     <pattern>δυ3σ2άμεν</pattern>
     <pattern>δυ3ϲ2άμεν</pattern>
@@ -2664,115 +2666,115 @@
     <pattern>δυσ3σ2αμέν</pattern>
     <pattern>δυϲ3ϲ2αμέν</pattern>
     <pattern>δυϲ3ϲ2αμέν</pattern>
-    <pattern>δύ3σ2ατο.</pattern>
-    <pattern>δύ3σ2ατο.</pattern>
-    <pattern>δύ3ϲ2ατο.</pattern>
-    <pattern>δύ3ϲ2ατο.</pattern>
-    <pattern>δύ3σ2ετο.</pattern>
-    <pattern>δύ3σ2ετο.</pattern>
-    <pattern>δύ3ϲ2ετο.</pattern>
-    <pattern>δύ3ϲ2ετο.</pattern>
-    <pattern>δύ3σ2αντο.</pattern>
-    <pattern>δύ3σ2αντο.</pattern>
-    <pattern>δύ3ϲ2αντο.</pattern>
-    <pattern>δύ3ϲ2αντο.</pattern>
-    <pattern>δύ3σ2εο.</pattern>
-    <pattern>δύ3σ2εο.</pattern>
-    <pattern>δύ3ϲ2εο.</pattern>
-    <pattern>δύ3ϲ2εο.</pattern>
-    <pattern>.δυσεί2σ1β</pattern>
-    <pattern>.δυσεί2σ1β</pattern>
-    <pattern>.δυϲεί2ϲ1β</pattern>
-    <pattern>.δυϲεί2ϲ1β</pattern>
-    <pattern>.δυσει2σ1β</pattern>
-    <pattern>.δυϲει2ϲ1β</pattern>
-    <pattern>.δυσέ2κ1</pattern>
-    <pattern>.δυσέ2κ1</pattern>
-    <pattern>.δυϲέ2κ1</pattern>
-    <pattern>.δυϲέ2κ1</pattern>
-    <pattern>.δυσε2κ1</pattern>
-    <pattern>.δυϲε2κ1</pattern>
-    <pattern>.δυσέ2ξ1</pattern>
-    <pattern>.δυσέ2ξ1</pattern>
-    <pattern>.δυϲέ2ξ1</pattern>
-    <pattern>.δυϲέ2ξ1</pattern>
-    <pattern>.δυσε2ξ1</pattern>
-    <pattern>.δυϲε2ξ1</pattern>
-    <pattern>.δυ3σ2ιθ</pattern>
-    <pattern>.δυ3ϲ2ιθ</pattern>
-    <pattern>δύ3σ2ις.</pattern>
-    <pattern>δύ3σ2ις.</pattern>
-    <pattern>δύ3ϲ2ιϲ.</pattern>
-    <pattern>δύ3ϲ2ιϲ.</pattern>
-    <pattern>δύ3σ2ισ.</pattern>
-    <pattern>δύ3σ2ισ.</pattern>
+    <pattern>δύ3σ2ατο </pattern>
+    <pattern>δύ3σ2ατο </pattern>
+    <pattern>δύ3ϲ2ατο </pattern>
+    <pattern>δύ3ϲ2ατο </pattern>
+    <pattern>δύ3σ2ετο </pattern>
+    <pattern>δύ3σ2ετο </pattern>
+    <pattern>δύ3ϲ2ετο </pattern>
+    <pattern>δύ3ϲ2ετο </pattern>
+    <pattern>δύ3σ2αντο </pattern>
+    <pattern>δύ3σ2αντο </pattern>
+    <pattern>δύ3ϲ2αντο </pattern>
+    <pattern>δύ3ϲ2αντο </pattern>
+    <pattern>δύ3σ2εο </pattern>
+    <pattern>δύ3σ2εο </pattern>
+    <pattern>δύ3ϲ2εο </pattern>
+    <pattern>δύ3ϲ2εο </pattern>
+    <pattern> δυσεί2σ1β</pattern>
+    <pattern> δυσεί2σ1β</pattern>
+    <pattern> δυϲεί2ϲ1β</pattern>
+    <pattern> δυϲεί2ϲ1β</pattern>
+    <pattern> δυσει2σ1β</pattern>
+    <pattern> δυϲει2ϲ1β</pattern>
+    <pattern> δυσέ2κ1</pattern>
+    <pattern> δυσέ2κ1</pattern>
+    <pattern> δυϲέ2κ1</pattern>
+    <pattern> δυϲέ2κ1</pattern>
+    <pattern> δυσε2κ1</pattern>
+    <pattern> δυϲε2κ1</pattern>
+    <pattern> δυσέ2ξ1</pattern>
+    <pattern> δυσέ2ξ1</pattern>
+    <pattern> δυϲέ2ξ1</pattern>
+    <pattern> δυϲέ2ξ1</pattern>
+    <pattern> δυσε2ξ1</pattern>
+    <pattern> δυϲε2ξ1</pattern>
+    <pattern> δυ3σ2ιθ</pattern>
+    <pattern> δυ3ϲ2ιθ</pattern>
+    <pattern>δύ3σ2ις </pattern>
+    <pattern>δύ3σ2ις </pattern>
+    <pattern>δύ3ϲ2ιϲ </pattern>
+    <pattern>δύ3ϲ2ιϲ </pattern>
+    <pattern>δύ3σ2ισ </pattern>
+    <pattern>δύ3σ2ισ </pattern>
     <pattern>δύ3σ2εω</pattern>
     <pattern>δύ3σ2εω</pattern>
     <pattern>δύ3ϲ2εω</pattern>
     <pattern>δύ3ϲ2εω</pattern>
-    <pattern>δύ3σ2ιν.</pattern>
-    <pattern>δύ3σ2ιν.</pattern>
-    <pattern>δύ3ϲ2ιν.</pattern>
-    <pattern>δύ3ϲ2ιν.</pattern>
-    <pattern>δύ3σ2ι.</pattern>
-    <pattern>δύ3σ2ι.</pattern>
-    <pattern>δύ3ϲ2ι.</pattern>
-    <pattern>δύ3ϲ2ι.</pattern>
-    <pattern>δυ3σ2έοιν.</pattern>
-    <pattern>δυ3σ2έοιν.</pattern>
-    <pattern>δυ3ϲ2έοιν.</pattern>
-    <pattern>δυ3ϲ2έοιν.</pattern>
-    <pattern>δύ3σ2εσι.</pattern>
-    <pattern>δύ3σ2εσι.</pattern>
-    <pattern>δύ3ϲ2εϲι.</pattern>
-    <pattern>δύ3ϲ2εϲι.</pattern>
-    <pattern>δύ3σ2εσιν.</pattern>
-    <pattern>δύ3σ2εσιν.</pattern>
-    <pattern>δύ3ϲ2εϲιν.</pattern>
-    <pattern>δύ3ϲ2εϲιν.</pattern>
-    <pattern>.δύ3σ2κε</pattern>
-    <pattern>.δύ3σ2κε</pattern>
-    <pattern>.δύ3ϲ2κε</pattern>
-    <pattern>.δύ3ϲ2κε</pattern>
-    <pattern>.δυ3σ2μή.</pattern>
-    <pattern>.δυ3σ2μή.</pattern>
-    <pattern>.δυ3ϲ2μή.</pattern>
-    <pattern>.δυ3ϲ2μή.</pattern>
-    <pattern>.δυ3σ2μὴ.</pattern>
-    <pattern>.δυ3ϲ2μὴ.</pattern>
-    <pattern>.δυ3σ2μῆς.</pattern>
-    <pattern>.δυ3ϲ2μῆϲ.</pattern>
-    <pattern>.δυ3σ2μῆσ.</pattern>
-    <pattern>.δυ3σ2μῇ</pattern>
-    <pattern>.δυ3ϲ2μῇ</pattern>
-    <pattern>.δυ3σ2μῆ.</pattern>
-    <pattern>.δυ3ϲ2μῆ.</pattern>
-    <pattern>.δυ3σ2μᾶ</pattern>
-    <pattern>.δυ3ϲ2μᾶ</pattern>
-    <pattern>.δυ3σ2μα</pattern>
-    <pattern>.δυ3ϲ2μα</pattern>
-    <pattern>.δυ3σ2μῶ</pattern>
-    <pattern>.δυ3ϲ2μῶ</pattern>
-    <pattern>.δυσξύ2ν1</pattern>
-    <pattern>.δυσξύ2ν1</pattern>
-    <pattern>.δυϲξύ2ν1</pattern>
-    <pattern>.δυϲξύ2ν1</pattern>
-    <pattern>.δυσξυ2ν1</pattern>
-    <pattern>.δυϲξυ2ν1</pattern>
-    <pattern>.δύ3σ2ταν</pattern>
-    <pattern>.δύ3σ2ταν</pattern>
-    <pattern>.δύ3ϲ2ταν</pattern>
-    <pattern>.δύ3ϲ2ταν</pattern>
-    <pattern>.δυ3σ2τάν</pattern>
-    <pattern>.δυ3σ2τάν</pattern>
-    <pattern>.δυ3ϲ2τάν</pattern>
-    <pattern>.δυ3ϲ2τάν</pattern>
-    <pattern>.δυ3σ2την</pattern>
-    <pattern>.δυ3ϲ2την</pattern>
-    <pattern>.δυ3σ2τήν</pattern>
-    <pattern>.δυ3σ2τήν</pattern>
-    <pattern>.δυ3ϲ2τήν</pattern>
-    <pattern>.δυ3ϲ2τήν</pattern>
+    <pattern>δύ3σ2ιν </pattern>
+    <pattern>δύ3σ2ιν </pattern>
+    <pattern>δύ3ϲ2ιν </pattern>
+    <pattern>δύ3ϲ2ιν </pattern>
+    <pattern>δύ3σ2ι </pattern>
+    <pattern>δύ3σ2ι </pattern>
+    <pattern>δύ3ϲ2ι </pattern>
+    <pattern>δύ3ϲ2ι </pattern>
+    <pattern>δυ3σ2έοιν </pattern>
+    <pattern>δυ3σ2έοιν </pattern>
+    <pattern>δυ3ϲ2έοιν </pattern>
+    <pattern>δυ3ϲ2έοιν </pattern>
+    <pattern>δύ3σ2εσι </pattern>
+    <pattern>δύ3σ2εσι </pattern>
+    <pattern>δύ3ϲ2εϲι </pattern>
+    <pattern>δύ3ϲ2εϲι </pattern>
+    <pattern>δύ3σ2εσιν </pattern>
+    <pattern>δύ3σ2εσιν </pattern>
+    <pattern>δύ3ϲ2εϲιν </pattern>
+    <pattern>δύ3ϲ2εϲιν </pattern>
+    <pattern> δύ3σ2κε</pattern>
+    <pattern> δύ3σ2κε</pattern>
+    <pattern> δύ3ϲ2κε</pattern>
+    <pattern> δύ3ϲ2κε</pattern>
+    <pattern> δυ3σ2μή </pattern>
+    <pattern> δυ3σ2μή </pattern>
+    <pattern> δυ3ϲ2μή </pattern>
+    <pattern> δυ3ϲ2μή </pattern>
+    <pattern> δυ3σ2μὴ </pattern>
+    <pattern> δυ3ϲ2μὴ </pattern>
+    <pattern> δυ3σ2μῆς </pattern>
+    <pattern> δυ3ϲ2μῆϲ </pattern>
+    <pattern> δυ3σ2μῆσ </pattern>
+    <pattern> δυ3σ2μῇ</pattern>
+    <pattern> δυ3ϲ2μῇ</pattern>
+    <pattern> δυ3σ2μῆ </pattern>
+    <pattern> δυ3ϲ2μῆ </pattern>
+    <pattern> δυ3σ2μᾶ</pattern>
+    <pattern> δυ3ϲ2μᾶ</pattern>
+    <pattern> δυ3σ2μα</pattern>
+    <pattern> δυ3ϲ2μα</pattern>
+    <pattern> δυ3σ2μῶ</pattern>
+    <pattern> δυ3ϲ2μῶ</pattern>
+    <pattern> δυσξύ2ν1</pattern>
+    <pattern> δυσξύ2ν1</pattern>
+    <pattern> δυϲξύ2ν1</pattern>
+    <pattern> δυϲξύ2ν1</pattern>
+    <pattern> δυσξυ2ν1</pattern>
+    <pattern> δυϲξυ2ν1</pattern>
+    <pattern> δύ3σ2ταν</pattern>
+    <pattern> δύ3σ2ταν</pattern>
+    <pattern> δύ3ϲ2ταν</pattern>
+    <pattern> δύ3ϲ2ταν</pattern>
+    <pattern> δυ3σ2τάν</pattern>
+    <pattern> δυ3σ2τάν</pattern>
+    <pattern> δυ3ϲ2τάν</pattern>
+    <pattern> δυ3ϲ2τάν</pattern>
+    <pattern> δυ3σ2την</pattern>
+    <pattern> δυ3ϲ2την</pattern>
+    <pattern> δυ3σ2τήν</pattern>
+    <pattern> δυ3σ2τήν</pattern>
+    <pattern> δυ3ϲ2τήν</pattern>
+    <pattern> δυ3ϲ2τήν</pattern>
     <pattern>ἐδυ2σ1τ</pattern>
     <pattern>ἐδυ2ϲ1τ</pattern>
     <pattern>εἰ2ν1όδ</pattern>
@@ -2782,38 +2784,38 @@
     <pattern>εἰ2ϲ1</pattern>
     <pattern>εἴ2σ1</pattern>
     <pattern>εἴ2ϲ1</pattern>
-    <pattern>εἰ3σ2ί.</pattern>
-    <pattern>εἰ3σ2ί.</pattern>
-    <pattern>εἰ3ϲ2ί.</pattern>
-    <pattern>εἰ3ϲ2ί.</pattern>
-    <pattern>εἰ3σ2ὶ.</pattern>
-    <pattern>εἰ3ϲ2ὶ.</pattern>
-    <pattern>εἰ3σ2ι.</pattern>
-    <pattern>εἰ3ϲ2ι.</pattern>
-    <pattern>εἰ3σ2ίν.</pattern>
-    <pattern>εἰ3σ2ίν.</pattern>
-    <pattern>εἰ3ϲ2ίν.</pattern>
-    <pattern>εἰ3ϲ2ίν.</pattern>
-    <pattern>εἰ3σ2ὶν.</pattern>
-    <pattern>εἰ3ϲ2ὶν.</pattern>
-    <pattern>εἰ3σ2ιν.</pattern>
-    <pattern>εἰ3ϲ2ιν.</pattern>
+    <pattern>εἰ3σ2ί </pattern>
+    <pattern>εἰ3σ2ί </pattern>
+    <pattern>εἰ3ϲ2ί </pattern>
+    <pattern>εἰ3ϲ2ί </pattern>
+    <pattern>εἰ3σ2ὶ </pattern>
+    <pattern>εἰ3ϲ2ὶ </pattern>
+    <pattern>εἰ3σ2ι </pattern>
+    <pattern>εἰ3ϲ2ι </pattern>
+    <pattern>εἰ3σ2ίν </pattern>
+    <pattern>εἰ3σ2ίν </pattern>
+    <pattern>εἰ3ϲ2ίν </pattern>
+    <pattern>εἰ3ϲ2ίν </pattern>
+    <pattern>εἰ3σ2ὶν </pattern>
+    <pattern>εἰ3ϲ2ὶν </pattern>
+    <pattern>εἰ3σ2ιν </pattern>
+    <pattern>εἰ3ϲ2ιν </pattern>
     <pattern>εἴ3σ2ομ</pattern>
     <pattern>εἴ3ϲ2ομ</pattern>
-    <pattern>εἴ3σ2ῃ.</pattern>
-    <pattern>εἴ3ϲ2ῃ.</pattern>
-    <pattern>εἴσει.</pattern>
-    <pattern>εἴϲει.</pattern>
-    <pattern>εἴ3σ2εται.</pattern>
-    <pattern>εἴ3ϲ2εται.</pattern>
-    <pattern>εἴ3σ2εσθον.</pattern>
-    <pattern>εἴ3ϲ2εϲθον.</pattern>
+    <pattern>εἴ3σ2ῃ </pattern>
+    <pattern>εἴ3ϲ2ῃ </pattern>
+    <pattern>εἴσει </pattern>
+    <pattern>εἴϲει </pattern>
+    <pattern>εἴ3σ2εται </pattern>
+    <pattern>εἴ3ϲ2εται </pattern>
+    <pattern>εἴ3σ2εσθον </pattern>
+    <pattern>εἴ3ϲ2εϲθον </pattern>
     <pattern>εἰ3σ2όμ</pattern>
     <pattern>εἰ3σ2όμ</pattern>
     <pattern>εἰ3ϲ2όμ</pattern>
     <pattern>εἰ3ϲ2όμ</pattern>
-    <pattern>εἴ3σ2εσθε.</pattern>
-    <pattern>εἴ3ϲ2εϲθε.</pattern>
+    <pattern>εἴ3σ2εσθε </pattern>
+    <pattern>εἴ3ϲ2εϲθε </pattern>
     <pattern>εἴ3σ2ονται</pattern>
     <pattern>εἴ3ϲ2ονται</pattern>
     <pattern>εἰ3σ2οίμην</pattern>
@@ -2848,10 +2850,10 @@
     <pattern>εἰ3σ2ομέν</pattern>
     <pattern>εἰ3ϲ2ομέν</pattern>
     <pattern>εἰ3ϲ2ομέν</pattern>
-    <pattern>εἴ3σ2άμην.</pattern>
-    <pattern>εἴ3σ2άμην.</pattern>
-    <pattern>εἴ3ϲ2άμην.</pattern>
-    <pattern>εἴ3ϲ2άμην.</pattern>
+    <pattern>εἴ3σ2άμην </pattern>
+    <pattern>εἴ3σ2άμην </pattern>
+    <pattern>εἴ3ϲ2άμην </pattern>
+    <pattern>εἴ3ϲ2άμην </pattern>
     <pattern>εἴ3σ2ω</pattern>
     <pattern>εἴ3ϲ2ω</pattern>
     <pattern>εἴ3σ2ατο</pattern>
@@ -3082,7 +3084,7 @@
     <pattern>ἐ3κ2ρώξ</pattern>
     <pattern>ἐ3κ2ρώξ</pattern>
     <pattern>ἐ2κ1ταθ</pattern>
-    <pattern>ἔ2κ1ταμε.</pattern>
+    <pattern>ἔ2κ1ταμε </pattern>
     <pattern>ἐ2κ1τάμν</pattern>
     <pattern>ἐ2κ1τάμν</pattern>
     <pattern>ἐ2κ1ταν</pattern>
@@ -3115,41 +3117,41 @@
     <pattern>ἐ2κ1τό</pattern>
     <pattern>ἐ2κ1το</pattern>
     <pattern>ἔ2κ1το</pattern>
-    <pattern>ἐ3κ2τός.</pattern>
-    <pattern>ἐ3κ2τός.</pattern>
-    <pattern>ἐ3κ2τόϲ.</pattern>
-    <pattern>ἐ3κ2τόϲ.</pattern>
-    <pattern>ἐ3κ2τὸς.</pattern>
-    <pattern>ἐ3κ2τὸϲ.</pattern>
-    <pattern>ἐ3κ2τόσ.</pattern>
-    <pattern>ἐ3κ2τόσ.</pattern>
-    <pattern>ἐ3κ2τὸσ.</pattern>
+    <pattern>ἐ3κ2τός </pattern>
+    <pattern>ἐ3κ2τός </pattern>
+    <pattern>ἐ3κ2τόϲ </pattern>
+    <pattern>ἐ3κ2τόϲ </pattern>
+    <pattern>ἐ3κ2τὸς </pattern>
+    <pattern>ἐ3κ2τὸϲ </pattern>
+    <pattern>ἐ3κ2τόσ </pattern>
+    <pattern>ἐ3κ2τόσ </pattern>
+    <pattern>ἐ3κ2τὸσ </pattern>
     <pattern>ἐ2κ1τρ</pattern>
     <pattern>ἔ2κ1τυπο</pattern>
-    <pattern>ἐ2κ1τύπου.</pattern>
-    <pattern>ἐ2κ1τύπου.</pattern>
-    <pattern>ἐ2κ1τύπῳ.</pattern>
-    <pattern>ἐ2κ1τύπῳ.</pattern>
-    <pattern>ἔ2κ1τυπε.</pattern>
-    <pattern>ἐ2κ1τύπω.</pattern>
-    <pattern>ἐ2κ1τύπω.</pattern>
-    <pattern>ἐ2κτύποι.</pattern>
-    <pattern>ἐ2κτύποι.</pattern>
-    <pattern>ἐ2κ1τύπων.</pattern>
-    <pattern>ἐ2κ1τύπων.</pattern>
-    <pattern>ἐ2κ1τύποις.</pattern>
-    <pattern>ἐ2κ1τύποις.</pattern>
-    <pattern>ἐ2κ1τύποιϲ.</pattern>
-    <pattern>ἐ2κ1τύποιϲ.</pattern>
-    <pattern>ἐ2κ1τύποισ.</pattern>
-    <pattern>ἐ2κ1τύποισ.</pattern>
-    <pattern>ἐ2κ1τύπους.</pattern>
-    <pattern>ἐ2κ1τύπους.</pattern>
-    <pattern>ἐ2κ1τύπουϲ.</pattern>
-    <pattern>ἐ2κ1τύπουϲ.</pattern>
-    <pattern>ἐ2κ1τύπουσ.</pattern>
-    <pattern>ἐ2κ1τύπουσ.</pattern>
-    <pattern>ἔ2κ1τυπα.</pattern>
+    <pattern>ἐ2κ1τύπου </pattern>
+    <pattern>ἐ2κ1τύπου </pattern>
+    <pattern>ἐ2κ1τύπῳ </pattern>
+    <pattern>ἐ2κ1τύπῳ </pattern>
+    <pattern>ἔ2κ1τυπε </pattern>
+    <pattern>ἐ2κ1τύπω </pattern>
+    <pattern>ἐ2κ1τύπω </pattern>
+    <pattern>ἐ2κτύποι </pattern>
+    <pattern>ἐ2κτύποι </pattern>
+    <pattern>ἐ2κ1τύπων </pattern>
+    <pattern>ἐ2κ1τύπων </pattern>
+    <pattern>ἐ2κ1τύποις </pattern>
+    <pattern>ἐ2κ1τύποις </pattern>
+    <pattern>ἐ2κ1τύποιϲ </pattern>
+    <pattern>ἐ2κ1τύποιϲ </pattern>
+    <pattern>ἐ2κ1τύποισ </pattern>
+    <pattern>ἐ2κ1τύποισ </pattern>
+    <pattern>ἐ2κ1τύπους </pattern>
+    <pattern>ἐ2κ1τύπους </pattern>
+    <pattern>ἐ2κ1τύπουϲ </pattern>
+    <pattern>ἐ2κ1τύπουϲ </pattern>
+    <pattern>ἐ2κ1τύπουσ </pattern>
+    <pattern>ἐ2κ1τύπουσ </pattern>
+    <pattern>ἔ2κ1τυπα </pattern>
     <pattern>ἐ2κ1τυ</pattern>
     <pattern>ἑλλή2σ1π</pattern>
     <pattern>ἑλλή2σ1π</pattern>
@@ -3171,15 +3173,15 @@
     <pattern>ἐ3ν2ακόϲ</pattern>
     <pattern>ἐ3ν2ακοσ</pattern>
     <pattern>ἐ3ν2ακοϲ</pattern>
-    <pattern>ἔ3ν2αρα.</pattern>
-    <pattern>ἐ3ν2άρων.</pattern>
-    <pattern>ἐ3ν2άρων.</pattern>
-    <pattern>ἐ3ν2άροις.</pattern>
-    <pattern>ἐ3ν2άροις.</pattern>
-    <pattern>ἐ3ν2άροιϲ.</pattern>
-    <pattern>ἐ3ν2άροιϲ.</pattern>
-    <pattern>ἐ3ν2άροισ.</pattern>
-    <pattern>ἐ3ν2άροισ.</pattern>
+    <pattern>ἔ3ν2αρα </pattern>
+    <pattern>ἐ3ν2άρων </pattern>
+    <pattern>ἐ3ν2άρων </pattern>
+    <pattern>ἐ3ν2άροις </pattern>
+    <pattern>ἐ3ν2άροις </pattern>
+    <pattern>ἐ3ν2άροιϲ </pattern>
+    <pattern>ἐ3ν2άροιϲ </pattern>
+    <pattern>ἐ3ν2άροισ </pattern>
+    <pattern>ἐ3ν2άροισ </pattern>
     <pattern>ἐ3ν2αρηφ</pattern>
     <pattern>ἐ4ν3αραρ</pattern>
     <pattern>ἐ3ν2άρεε</pattern>
@@ -3264,7 +3266,7 @@
     <pattern>ἐ3ν2ηή</pattern>
     <pattern>ἐ3ν2ηή</pattern>
     <pattern>ἐ3ν2ηὴ</pattern>
-    <pattern>ἔ3ν2ην.</pattern>
+    <pattern>ἔ3ν2ην </pattern>
     <pattern>ἐ3ν2ηεί</pattern>
     <pattern>ἐ3ν2ηεί</pattern>
     <pattern>ἐ3ν2ηο</pattern>
@@ -3292,12 +3294,12 @@
     <pattern>ἐ4ν3ίζ</pattern>
     <pattern>ἐ4ν3ίη</pattern>
     <pattern>ἐ4ν3ίη</pattern>
-    <pattern>ἐ4ν3ιέτον.</pattern>
-    <pattern>ἐ4ν3ιέτον.</pattern>
-    <pattern>ἐ4ν3ίεμεν.</pattern>
-    <pattern>ἐ4ν3ίεμεν.</pattern>
-    <pattern>ἐ4ν3ίω.</pattern>
-    <pattern>ἐ4ν3ίω.</pattern>
+    <pattern>ἐ4ν3ιέτον </pattern>
+    <pattern>ἐ4ν3ιέτον </pattern>
+    <pattern>ἐ4ν3ίεμεν </pattern>
+    <pattern>ἐ4ν3ίεμεν </pattern>
+    <pattern>ἐ4ν3ίω </pattern>
+    <pattern>ἐ4ν3ίω </pattern>
     <pattern>ἐ4ν3ιππ</pattern>
     <pattern>ἐ4ν3ίππ</pattern>
     <pattern>ἐ4ν3ίππ</pattern>
@@ -3321,21 +3323,21 @@
     <pattern>ἐ4ν3ίσχ</pattern>
     <pattern>ἐ4ν3ίϲχ</pattern>
     <pattern>ἐ4ν3ίϲχ</pattern>
-    <pattern>ἔ3ν2ος.</pattern>
-    <pattern>ἔ3ν2οϲ.</pattern>
-    <pattern>ἔ3ν2οσ.</pattern>
-    <pattern>ἔ3ν2ου.</pattern>
-    <pattern>ἔ3ν2ον.</pattern>
+    <pattern>ἔ3ν2ος </pattern>
+    <pattern>ἔ3ν2οϲ </pattern>
+    <pattern>ἔ3ν2οσ </pattern>
+    <pattern>ἔ3ν2ου </pattern>
+    <pattern>ἔ3ν2ον </pattern>
     <pattern>ἔ3ν2ω</pattern>
-    <pattern>ἔ3ν2οι.</pattern>
-    <pattern>ἔ3ν2οις.</pattern>
-    <pattern>ἔ3ν2οιϲ.</pattern>
-    <pattern>ἔ3ν2οισ.</pattern>
-    <pattern>ἔ3ν2ης.</pattern>
-    <pattern>ἔ3ν2ηϲ.</pattern>
-    <pattern>ἔ3ν2ησ.</pattern>
-    <pattern>ἔ3ν2ῃ.</pattern>
-    <pattern>ἔ3ν2η.</pattern>
+    <pattern>ἔ3ν2οι </pattern>
+    <pattern>ἔ3ν2οις </pattern>
+    <pattern>ἔ3ν2οιϲ </pattern>
+    <pattern>ἔ3ν2οισ </pattern>
+    <pattern>ἔ3ν2ης </pattern>
+    <pattern>ἔ3ν2ηϲ </pattern>
+    <pattern>ἔ3ν2ησ </pattern>
+    <pattern>ἔ3ν2ῃ </pattern>
+    <pattern>ἔ3ν2η </pattern>
     <pattern>ἔ3ν2οσι</pattern>
     <pattern>ἔ3ν2οϲι</pattern>
     <pattern>ἐ3ν2όσε</pattern>
@@ -3373,7 +3375,7 @@
     <pattern>ἐ3ξ2ύρ</pattern>
     <pattern>ἔ3ξ2υσ</pattern>
     <pattern>ἔ3ξ2υϲ</pattern>
-    <pattern>ἔ3ξ2ω.</pattern>
+    <pattern>ἔ3ξ2ω </pattern>
     <pattern>ἑ2ξ1ήρετμ</pattern>
     <pattern>ἑ2ξ1ήρετμ</pattern>
     <pattern>ἑ2ξ1ηρέτμ</pattern>
@@ -3384,50 +3386,50 @@
     <pattern>ἐπεί2ϲ1</pattern>
     <pattern>ἐπει2σ1</pattern>
     <pattern>ἐπει2ϲ1</pattern>
-    <pattern>ἐπεί3σ2ατον.</pattern>
-    <pattern>ἐπεί3σ2ατον.</pattern>
-    <pattern>ἐπεί3ϲ2ατον.</pattern>
-    <pattern>ἐπεί3ϲ2ατον.</pattern>
-    <pattern>ἐπει3σ2άτην.</pattern>
-    <pattern>ἐπει3σ2άτην.</pattern>
-    <pattern>ἐπει3ϲ2άτην.</pattern>
-    <pattern>ἐπει3ϲ2άτην.</pattern>
-    <pattern>ἐπεί3σ2αμεν.</pattern>
-    <pattern>ἐπεί3σ2αμεν.</pattern>
-    <pattern>ἐπεί3ϲ2αμεν.</pattern>
-    <pattern>ἐπεί3ϲ2αμεν.</pattern>
+    <pattern>ἐπεί3σ2ατον </pattern>
+    <pattern>ἐπεί3σ2ατον </pattern>
+    <pattern>ἐπεί3ϲ2ατον </pattern>
+    <pattern>ἐπεί3ϲ2ατον </pattern>
+    <pattern>ἐπει3σ2άτην </pattern>
+    <pattern>ἐπει3σ2άτην </pattern>
+    <pattern>ἐπει3ϲ2άτην </pattern>
+    <pattern>ἐπει3ϲ2άτην </pattern>
+    <pattern>ἐπεί3σ2αμεν </pattern>
+    <pattern>ἐπεί3σ2αμεν </pattern>
+    <pattern>ἐπεί3ϲ2αμεν </pattern>
+    <pattern>ἐπεί3ϲ2αμεν </pattern>
     <pattern>ἐπεί3σ2ατε</pattern>
     <pattern>ἐπεί3σ2ατε</pattern>
     <pattern>ἐπεί3ϲ2ατε</pattern>
     <pattern>ἐπεί3ϲ2ατε</pattern>
-    <pattern>ἐπει3σ2άμην.</pattern>
-    <pattern>ἐπει3σ2άμην.</pattern>
-    <pattern>ἐπει3ϲ2άμην.</pattern>
-    <pattern>ἐπει3ϲ2άμην.</pattern>
-    <pattern>ἐπεί3σ2ω.</pattern>
-    <pattern>ἐπεί3σ2ω.</pattern>
-    <pattern>ἐπεί3ϲ2ω.</pattern>
-    <pattern>ἐπεί3ϲ2ω.</pattern>
+    <pattern>ἐπει3σ2άμην </pattern>
+    <pattern>ἐπει3σ2άμην </pattern>
+    <pattern>ἐπει3ϲ2άμην </pattern>
+    <pattern>ἐπει3ϲ2άμην </pattern>
+    <pattern>ἐπεί3σ2ω </pattern>
+    <pattern>ἐπεί3σ2ω </pattern>
+    <pattern>ἐπεί3ϲ2ω </pattern>
+    <pattern>ἐπεί3ϲ2ω </pattern>
     <pattern>ἐπεί3σ2ατο</pattern>
     <pattern>ἐπεί3σ2ατο</pattern>
     <pattern>ἐπεί3ϲ2ατο</pattern>
     <pattern>ἐπεί3ϲ2ατο</pattern>
-    <pattern>ἐπεί3σ2ασθον.</pattern>
-    <pattern>ἐπεί3σ2ασθον.</pattern>
-    <pattern>ἐπεί3ϲ2αϲθον.</pattern>
-    <pattern>ἐπεί3ϲ2αϲθον.</pattern>
-    <pattern>ἐπει3σ2άμεθα.</pattern>
-    <pattern>ἐπει3σ2άμεθα.</pattern>
-    <pattern>ἐπει3ϲ2άμεθα.</pattern>
-    <pattern>ἐπει3ϲ2άμεθα.</pattern>
-    <pattern>ἐπεί3σ2ασθε.</pattern>
-    <pattern>ἐπεί3σ2ασθε.</pattern>
-    <pattern>ἐπεί3ϲ2αϲθε.</pattern>
-    <pattern>ἐπεί3ϲ2αϲθε.</pattern>
-    <pattern>ἐπεί3σ2αντο.</pattern>
-    <pattern>ἐπεί3σ2αντο.</pattern>
-    <pattern>ἐπεί3ϲ2αντο.</pattern>
-    <pattern>ἐπεί3ϲ2αντο.</pattern>
+    <pattern>ἐπεί3σ2ασθον </pattern>
+    <pattern>ἐπεί3σ2ασθον </pattern>
+    <pattern>ἐπεί3ϲ2αϲθον </pattern>
+    <pattern>ἐπεί3ϲ2αϲθον </pattern>
+    <pattern>ἐπει3σ2άμεθα </pattern>
+    <pattern>ἐπει3σ2άμεθα </pattern>
+    <pattern>ἐπει3ϲ2άμεθα </pattern>
+    <pattern>ἐπει3ϲ2άμεθα </pattern>
+    <pattern>ἐπεί3σ2ασθε </pattern>
+    <pattern>ἐπεί3σ2ασθε </pattern>
+    <pattern>ἐπεί3ϲ2αϲθε </pattern>
+    <pattern>ἐπεί3ϲ2αϲθε </pattern>
+    <pattern>ἐπεί3σ2αντο </pattern>
+    <pattern>ἐπεί3σ2αντο </pattern>
+    <pattern>ἐπεί3ϲ2αντο </pattern>
+    <pattern>ἐπεί3ϲ2αντο </pattern>
     <pattern>ἐπεί3σ2θ</pattern>
     <pattern>ἐπεί3σ2θ</pattern>
     <pattern>ἐπεί3ϲ2θ</pattern>
@@ -3476,12 +3478,12 @@
     <pattern>ἐ4ϲ3κά</pattern>
     <pattern>ἐ4σ3κα</pattern>
     <pattern>ἐ4ϲ3κα</pattern>
-    <pattern>ἐ3σ2μὲν.</pattern>
-    <pattern>ἐ3ϲ2μὲν.</pattern>
-    <pattern>ἐ3σ2μέν.</pattern>
-    <pattern>ἐ3σ2μέν.</pattern>
-    <pattern>ἐ3ϲ2μέν.</pattern>
-    <pattern>ἐ3ϲ2μέν.</pattern>
+    <pattern>ἐ3σ2μὲν </pattern>
+    <pattern>ἐ3ϲ2μὲν </pattern>
+    <pattern>ἐ3σ2μέν </pattern>
+    <pattern>ἐ3σ2μέν </pattern>
+    <pattern>ἐ3ϲ2μέν </pattern>
+    <pattern>ἐ3ϲ2μέν </pattern>
     <pattern>ἐ3σ2τ</pattern>
     <pattern>ἐ3ϲ2τ</pattern>
     <pattern>ἐ3σ2όμεθα</pattern>
@@ -3553,169 +3555,169 @@
     <pattern>εὐξυ2ν1</pattern>
     <pattern>ἐω2σ1φ</pattern>
     <pattern>ἐω2ϲ1φ</pattern>
-    <pattern>ἤ2ν1οψ.</pattern>
+    <pattern>ἤ2ν1οψ </pattern>
     <pattern>ἤ2ν1οπ</pattern>
     <pattern>ἠ2ν1όπ</pattern>
     <pattern>ἠ2ν1όπ</pattern>
-    <pattern>.θεμι2σ1κρ</pattern>
-    <pattern>.θεμι2ϲ1κρ</pattern>
-    <pattern>.θεό2σ1δ</pattern>
-    <pattern>.θεό2σ1δ</pattern>
-    <pattern>.θεό2ϲ1δ</pattern>
-    <pattern>.θεό2ϲ1δ</pattern>
-    <pattern>.θεο2σ1δ</pattern>
-    <pattern>.θεο2ϲ1δ</pattern>
-    <pattern>.θεοι2σ1εχθρ</pattern>
-    <pattern>.θεοι2ϲ1εχθρ</pattern>
-    <pattern>.θη2ρ1αγρ</pattern>
-    <pattern>.θυο2σ1κ</pattern>
-    <pattern>.θυο2ϲ1κ</pattern>
-    <pattern>.καθυπε2ρ1</pattern>
-    <pattern>.καλω2σ1ορ</pattern>
-    <pattern>.καλω2ϲ1ορ</pattern>
-    <pattern>.καλω2σ1όρ</pattern>
-    <pattern>.καλω2σ1όρ</pattern>
-    <pattern>.καλω2ϲ1όρ</pattern>
-    <pattern>.καλω2ϲ1όρ</pattern>
-    <pattern>.κα2ν1είς.</pattern>
-    <pattern>.κα2ν1είς.</pattern>
-    <pattern>.κα2ν1είϲ.</pattern>
-    <pattern>.κα2ν1είϲ.</pattern>
-    <pattern>.κα2ν1εὶς.</pattern>
-    <pattern>.κα2ν1εὶϲ.</pattern>
-    <pattern>.κα2ν1είσ.</pattern>
-    <pattern>.κα2ν1είσ.</pattern>
-    <pattern>.κα2ν1εὶσ.</pattern>
-    <pattern>.κα2ν1εν</pattern>
-    <pattern>.κα2ν1έν</pattern>
-    <pattern>.κα2ν1έν</pattern>
-    <pattern>.καταδυ2σ1ωπ</pattern>
-    <pattern>.καταδυ2ϲ1ωπ</pattern>
-    <pattern>.κατεδυ2σ1ώπ</pattern>
-    <pattern>.κατεδυ2σ1ώπ</pattern>
-    <pattern>.κατεδυ2ϲ1ώπ</pattern>
-    <pattern>.κατεδυ2ϲ1ώπ</pattern>
-    <pattern>.κατει2σ1</pattern>
-    <pattern>.κατει2ϲ1</pattern>
-    <pattern>.κατε2ν1αί</pattern>
-    <pattern>.κατε2ν1αί</pattern>
-    <pattern>.κατε2ν1ή</pattern>
-    <pattern>.κατε2ν1ή</pattern>
-    <pattern>.κατε2ξ1α2ν1ί</pattern>
-    <pattern>.κατε2ξ1α2ν1ί</pattern>
-    <pattern>.κατε2ξ1α2ν1έσ</pattern>
-    <pattern>.κατε2ξ1α2ν1έσ</pattern>
-    <pattern>.κατε2ξ1α2ν1έϲ</pattern>
-    <pattern>.κατε2ξ1α2ν1έϲ</pattern>
-    <pattern>.κερα2σ1φ</pattern>
-    <pattern>.κερα2ϲ1φ</pattern>
-    <pattern>.κρά2σ1π</pattern>
-    <pattern>.κρά2σ1π</pattern>
-    <pattern>.κρά2ϲ1π</pattern>
-    <pattern>.κρά2ϲ1π</pattern>
-    <pattern>.κρα2σ1π</pattern>
-    <pattern>.κρα2ϲ1π</pattern>
-    <pattern>.κυνό2σ1α</pattern>
-    <pattern>.κυνό2σ1α</pattern>
-    <pattern>.κυνό2ϲ1α</pattern>
-    <pattern>.κυνό2ϲ1α</pattern>
-    <pattern>.κυνό2σ1β</pattern>
-    <pattern>.κυνό2σ1β</pattern>
-    <pattern>.κυνό2ϲ1β</pattern>
-    <pattern>.κυνό2ϲ1β</pattern>
-    <pattern>.κυνο2σ1β</pattern>
-    <pattern>.κυνο2ϲ1β</pattern>
-    <pattern>.κυνό2σ1ο</pattern>
-    <pattern>.κυνό2σ1ο</pattern>
-    <pattern>.κυνό2ϲ1ο</pattern>
-    <pattern>.κυνό2ϲ1ο</pattern>
-    <pattern>.κυνο2σ1ο</pattern>
-    <pattern>.κυνο2ϲ1ο</pattern>
-    <pattern>.κυνο2σ1φ</pattern>
-    <pattern>.κυνο2ϲ1φ</pattern>
-    <pattern>.μελα2ν1άγ</pattern>
-    <pattern>.μελα2ν1άγ</pattern>
-    <pattern>.μελα2ν1αγ</pattern>
-    <pattern>.μελα2ν1άε</pattern>
-    <pattern>.μελα2ν1άε</pattern>
-    <pattern>.μελα2ν1αέ</pattern>
-    <pattern>.μελα2ν1αέ</pattern>
-    <pattern>.μελα2ν1αθ</pattern>
-    <pattern>.μελα2ν1αιγ</pattern>
-    <pattern>.μελα2ν1αυγ</pattern>
-    <pattern>.μελα2ν1είμ</pattern>
-    <pattern>.μελα2ν1είμ</pattern>
-    <pattern>.μελα2ν1εῖμ</pattern>
-    <pattern>.μελά2ν1ιππ</pattern>
-    <pattern>.μελά2ν1ιππ</pattern>
-    <pattern>.μελα2ν1ίππ</pattern>
-    <pattern>.μελα2ν1ίππ</pattern>
-    <pattern>.μελα2ν1όμμ</pattern>
-    <pattern>.μελα2ν1όμμ</pattern>
-    <pattern>.μελα2ν1ομμ</pattern>
-    <pattern>.μελά2ν1οσσ</pattern>
-    <pattern>.μελά2ν1οσσ</pattern>
-    <pattern>.μελά2ν1οϲϲ</pattern>
-    <pattern>.μελά2ν1οϲϲ</pattern>
-    <pattern>.μελα2ν1όσσ</pattern>
-    <pattern>.μελα2ν1όσσ</pattern>
-    <pattern>.μελα2ν1όϲϲ</pattern>
-    <pattern>.μελα2ν1όϲϲ</pattern>
-    <pattern>.μελά2ν1οστ</pattern>
-    <pattern>.μελά2ν1οστ</pattern>
-    <pattern>.μελά2ν1οϲτ</pattern>
-    <pattern>.μελά2ν1οϲτ</pattern>
-    <pattern>.μελα2ν1όστ</pattern>
-    <pattern>.μελα2ν1όστ</pattern>
-    <pattern>.μελα2ν1όϲτ</pattern>
-    <pattern>.μελα2ν1όϲτ</pattern>
-    <pattern>.μελά2ν1ουρ</pattern>
-    <pattern>.μελά2ν1ουρ</pattern>
-    <pattern>.μελα2ν1ούρ</pattern>
-    <pattern>.μελα2ν1ούρ</pattern>
-    <pattern>.μελα2ν1ουρ</pattern>
-    <pattern>.μελά2ν1υ</pattern>
-    <pattern>.μελά2ν1υ</pattern>
-    <pattern>.μελα2ν1ύ</pattern>
-    <pattern>.μελα2ν1ύ</pattern>
-    <pattern>.μετε2ξ1α</pattern>
-    <pattern>.μετε2ξ1έ</pattern>
-    <pattern>.μετε2ξ1έ</pattern>
-    <pattern>.μετε2ξ1ε</pattern>
-    <pattern>.μογι2σ1</pattern>
-    <pattern>.μογι2ϲ1</pattern>
-    <pattern>.μογο2σ1τ</pattern>
-    <pattern>.μογο2ϲ1τ</pattern>
-    <pattern>.μυ2σ1π</pattern>
-    <pattern>.μυ2ϲ1π</pattern>
-    <pattern>.μυ2σ1επ</pattern>
-    <pattern>.μυ2ϲ1επ</pattern>
-    <pattern>.νεώ2σ1οικ</pattern>
-    <pattern>.νεώ2σ1οικ</pattern>
-    <pattern>.νεώ2ϲ1οικ</pattern>
-    <pattern>.νεώ2ϲ1οικ</pattern>
-    <pattern>.νεω2σ1οίκ</pattern>
-    <pattern>.νεω2σ1οίκ</pattern>
-    <pattern>.νεω2ϲ1οίκ</pattern>
-    <pattern>.νεω2ϲ1οίκ</pattern>
-    <pattern>.νου2ν1ε</pattern>
-    <pattern>.ξυ2ν1αγ</pattern>
-    <pattern>.ξυ2ν1ε</pattern>
-    <pattern>.ξυ2ν1έ</pattern>
-    <pattern>.ξυ2ν1έ</pattern>
-    <pattern>.ξύ2ν1ε</pattern>
-    <pattern>.ξύ2ν1ε</pattern>
-    <pattern>.ξυ3ν2εώ</pattern>
-    <pattern>.ξυ3ν2εώ</pattern>
-    <pattern>.ξυ3ν2εῶ</pattern>
-    <pattern>.ξυ2ν1ῆκ</pattern>
-    <pattern>.ξύ2ν1ι</pattern>
-    <pattern>.ξύ2ν1ι</pattern>
-    <pattern>.ξυ2ν1ί</pattern>
-    <pattern>.ξυ2ν1ί</pattern>
-    <pattern>οἱο2ν1εί.</pattern>
-    <pattern>οἱο2ν1εί.</pattern>
-    <pattern>οἱο2ν1εὶ.</pattern>
+    <pattern> θεμι2σ1κρ</pattern>
+    <pattern> θεμι2ϲ1κρ</pattern>
+    <pattern> θεό2σ1δ</pattern>
+    <pattern> θεό2σ1δ</pattern>
+    <pattern> θεό2ϲ1δ</pattern>
+    <pattern> θεό2ϲ1δ</pattern>
+    <pattern> θεο2σ1δ</pattern>
+    <pattern> θεο2ϲ1δ</pattern>
+    <pattern> θεοι2σ1εχθρ</pattern>
+    <pattern> θεοι2ϲ1εχθρ</pattern>
+    <pattern> θη2ρ1αγρ</pattern>
+    <pattern> θυο2σ1κ</pattern>
+    <pattern> θυο2ϲ1κ</pattern>
+    <pattern> καθυπε2ρ1</pattern>
+    <pattern> καλω2σ1ορ</pattern>
+    <pattern> καλω2ϲ1ορ</pattern>
+    <pattern> καλω2σ1όρ</pattern>
+    <pattern> καλω2σ1όρ</pattern>
+    <pattern> καλω2ϲ1όρ</pattern>
+    <pattern> καλω2ϲ1όρ</pattern>
+    <pattern> κα2ν1είς </pattern>
+    <pattern> κα2ν1είς </pattern>
+    <pattern> κα2ν1είϲ </pattern>
+    <pattern> κα2ν1είϲ </pattern>
+    <pattern> κα2ν1εὶς </pattern>
+    <pattern> κα2ν1εὶϲ </pattern>
+    <pattern> κα2ν1είσ </pattern>
+    <pattern> κα2ν1είσ </pattern>
+    <pattern> κα2ν1εὶσ </pattern>
+    <pattern> κα2ν1εν</pattern>
+    <pattern> κα2ν1έν</pattern>
+    <pattern> κα2ν1έν</pattern>
+    <pattern> καταδυ2σ1ωπ</pattern>
+    <pattern> καταδυ2ϲ1ωπ</pattern>
+    <pattern> κατεδυ2σ1ώπ</pattern>
+    <pattern> κατεδυ2σ1ώπ</pattern>
+    <pattern> κατεδυ2ϲ1ώπ</pattern>
+    <pattern> κατεδυ2ϲ1ώπ</pattern>
+    <pattern> κατει2σ1</pattern>
+    <pattern> κατει2ϲ1</pattern>
+    <pattern> κατε2ν1αί</pattern>
+    <pattern> κατε2ν1αί</pattern>
+    <pattern> κατε2ν1ή</pattern>
+    <pattern> κατε2ν1ή</pattern>
+    <pattern> κατε2ξ1α2ν1ί</pattern>
+    <pattern> κατε2ξ1α2ν1ί</pattern>
+    <pattern> κατε2ξ1α2ν1έσ</pattern>
+    <pattern> κατε2ξ1α2ν1έσ</pattern>
+    <pattern> κατε2ξ1α2ν1έϲ</pattern>
+    <pattern> κατε2ξ1α2ν1έϲ</pattern>
+    <pattern> κερα2σ1φ</pattern>
+    <pattern> κερα2ϲ1φ</pattern>
+    <pattern> κρά2σ1π</pattern>
+    <pattern> κρά2σ1π</pattern>
+    <pattern> κρά2ϲ1π</pattern>
+    <pattern> κρά2ϲ1π</pattern>
+    <pattern> κρα2σ1π</pattern>
+    <pattern> κρα2ϲ1π</pattern>
+    <pattern> κυνό2σ1α</pattern>
+    <pattern> κυνό2σ1α</pattern>
+    <pattern> κυνό2ϲ1α</pattern>
+    <pattern> κυνό2ϲ1α</pattern>
+    <pattern> κυνό2σ1β</pattern>
+    <pattern> κυνό2σ1β</pattern>
+    <pattern> κυνό2ϲ1β</pattern>
+    <pattern> κυνό2ϲ1β</pattern>
+    <pattern> κυνο2σ1β</pattern>
+    <pattern> κυνο2ϲ1β</pattern>
+    <pattern> κυνό2σ1ο</pattern>
+    <pattern> κυνό2σ1ο</pattern>
+    <pattern> κυνό2ϲ1ο</pattern>
+    <pattern> κυνό2ϲ1ο</pattern>
+    <pattern> κυνο2σ1ο</pattern>
+    <pattern> κυνο2ϲ1ο</pattern>
+    <pattern> κυνο2σ1φ</pattern>
+    <pattern> κυνο2ϲ1φ</pattern>
+    <pattern> μελα2ν1άγ</pattern>
+    <pattern> μελα2ν1άγ</pattern>
+    <pattern> μελα2ν1αγ</pattern>
+    <pattern> μελα2ν1άε</pattern>
+    <pattern> μελα2ν1άε</pattern>
+    <pattern> μελα2ν1αέ</pattern>
+    <pattern> μελα2ν1αέ</pattern>
+    <pattern> μελα2ν1αθ</pattern>
+    <pattern> μελα2ν1αιγ</pattern>
+    <pattern> μελα2ν1αυγ</pattern>
+    <pattern> μελα2ν1είμ</pattern>
+    <pattern> μελα2ν1είμ</pattern>
+    <pattern> μελα2ν1εῖμ</pattern>
+    <pattern> μελά2ν1ιππ</pattern>
+    <pattern> μελά2ν1ιππ</pattern>
+    <pattern> μελα2ν1ίππ</pattern>
+    <pattern> μελα2ν1ίππ</pattern>
+    <pattern> μελα2ν1όμμ</pattern>
+    <pattern> μελα2ν1όμμ</pattern>
+    <pattern> μελα2ν1ομμ</pattern>
+    <pattern> μελά2ν1οσσ</pattern>
+    <pattern> μελά2ν1οσσ</pattern>
+    <pattern> μελά2ν1οϲϲ</pattern>
+    <pattern> μελά2ν1οϲϲ</pattern>
+    <pattern> μελα2ν1όσσ</pattern>
+    <pattern> μελα2ν1όσσ</pattern>
+    <pattern> μελα2ν1όϲϲ</pattern>
+    <pattern> μελα2ν1όϲϲ</pattern>
+    <pattern> μελά2ν1οστ</pattern>
+    <pattern> μελά2ν1οστ</pattern>
+    <pattern> μελά2ν1οϲτ</pattern>
+    <pattern> μελά2ν1οϲτ</pattern>
+    <pattern> μελα2ν1όστ</pattern>
+    <pattern> μελα2ν1όστ</pattern>
+    <pattern> μελα2ν1όϲτ</pattern>
+    <pattern> μελα2ν1όϲτ</pattern>
+    <pattern> μελά2ν1ουρ</pattern>
+    <pattern> μελά2ν1ουρ</pattern>
+    <pattern> μελα2ν1ούρ</pattern>
+    <pattern> μελα2ν1ούρ</pattern>
+    <pattern> μελα2ν1ουρ</pattern>
+    <pattern> μελά2ν1υ</pattern>
+    <pattern> μελά2ν1υ</pattern>
+    <pattern> μελα2ν1ύ</pattern>
+    <pattern> μελα2ν1ύ</pattern>
+    <pattern> μετε2ξ1α</pattern>
+    <pattern> μετε2ξ1έ</pattern>
+    <pattern> μετε2ξ1έ</pattern>
+    <pattern> μετε2ξ1ε</pattern>
+    <pattern> μογι2σ1</pattern>
+    <pattern> μογι2ϲ1</pattern>
+    <pattern> μογο2σ1τ</pattern>
+    <pattern> μογο2ϲ1τ</pattern>
+    <pattern> μυ2σ1π</pattern>
+    <pattern> μυ2ϲ1π</pattern>
+    <pattern> μυ2σ1επ</pattern>
+    <pattern> μυ2ϲ1επ</pattern>
+    <pattern> νεώ2σ1οικ</pattern>
+    <pattern> νεώ2σ1οικ</pattern>
+    <pattern> νεώ2ϲ1οικ</pattern>
+    <pattern> νεώ2ϲ1οικ</pattern>
+    <pattern> νεω2σ1οίκ</pattern>
+    <pattern> νεω2σ1οίκ</pattern>
+    <pattern> νεω2ϲ1οίκ</pattern>
+    <pattern> νεω2ϲ1οίκ</pattern>
+    <pattern> νου2ν1ε</pattern>
+    <pattern> ξυ2ν1αγ</pattern>
+    <pattern> ξυ2ν1ε</pattern>
+    <pattern> ξυ2ν1έ</pattern>
+    <pattern> ξυ2ν1έ</pattern>
+    <pattern> ξύ2ν1ε</pattern>
+    <pattern> ξύ2ν1ε</pattern>
+    <pattern> ξυ3ν2εώ</pattern>
+    <pattern> ξυ3ν2εώ</pattern>
+    <pattern> ξυ3ν2εῶ</pattern>
+    <pattern> ξυ2ν1ῆκ</pattern>
+    <pattern> ξύ2ν1ι</pattern>
+    <pattern> ξύ2ν1ι</pattern>
+    <pattern> ξυ2ν1ί</pattern>
+    <pattern> ξυ2ν1ί</pattern>
+    <pattern>οἱο2ν1εί </pattern>
+    <pattern>οἱο2ν1εί </pattern>
+    <pattern>οἱο2ν1εὶ </pattern>
     <pattern>οἱό2σ1</pattern>
     <pattern>οἱό2σ1</pattern>
     <pattern>οἱό2ϲ1</pattern>
@@ -3726,17 +3728,17 @@
     <pattern>οἰ2ϲ1πώτ</pattern>
     <pattern>οἰ2σ1πωτ</pattern>
     <pattern>οἰ2ϲ1πωτ</pattern>
-    <pattern>ὁλο2ν1έν.</pattern>
-    <pattern>ὁλο2ν1έν.</pattern>
-    <pattern>ὁλο2ν1ὲν.</pattern>
+    <pattern>ὁλο2ν1έν </pattern>
+    <pattern>ὁλο2ν1έν </pattern>
+    <pattern>ὁλο2ν1ὲν </pattern>
     <pattern>ὁπω2σ1</pattern>
     <pattern>ὁπω2ϲ1</pattern>
-    <pattern>ὅ2σ1γε.</pattern>
-    <pattern>ὅ2ϲ1γε.</pattern>
-    <pattern>ὁσο2ν1ῶν.</pattern>
-    <pattern>ὁϲο2ν1ῶν.</pattern>
-    <pattern>ὅ2σ1περ.</pattern>
-    <pattern>ὅ2ϲ1περ.</pattern>
+    <pattern>ὅ2σ1γε </pattern>
+    <pattern>ὅ2ϲ1γε </pattern>
+    <pattern>ὁσο2ν1ῶν </pattern>
+    <pattern>ὁϲο2ν1ῶν </pattern>
+    <pattern>ὅ2σ1περ </pattern>
+    <pattern>ὅ2ϲ1περ </pattern>
     <pattern>ὅ2σ1τις</pattern>
     <pattern>ὅ2ϲ1τιϲ</pattern>
     <pattern>οἷ2σ1τισι</pattern>
@@ -3749,12 +3751,12 @@
     <pattern>αἷ2ϲ1τιϲι</pattern>
     <pattern>ἅ2σ1τινας</pattern>
     <pattern>ἅ2ϲ1τιναϲ</pattern>
-    <pattern>ὁ2σ1τι2σ1οῦν.</pattern>
-    <pattern>ὁ2ϲ1τι2ϲ1οῦν.</pattern>
-    <pattern>ἡτι2σ1οῦν.</pattern>
-    <pattern>ἡτι2ϲ1οῦν.</pattern>
-    <pattern>ὁποιου2σ1τινα2σ1οῦν.</pattern>
-    <pattern>ὁποιου2ϲ1τινα2ϲ1οῦν.</pattern>
+    <pattern>ὁ2σ1τι2σ1οῦν </pattern>
+    <pattern>ὁ2ϲ1τι2ϲ1οῦν </pattern>
+    <pattern>ἡτι2σ1οῦν </pattern>
+    <pattern>ἡτι2ϲ1οῦν </pattern>
+    <pattern>ὁποιου2σ1τινα2σ1οῦν </pattern>
+    <pattern>ὁποιου2ϲ1τινα2ϲ1οῦν </pattern>
     <pattern>οὐδενό2σ1ω</pattern>
     <pattern>οὐδενό2σ1ω</pattern>
     <pattern>οὐδενό2ϲ1ω</pattern>
@@ -3763,335 +3765,335 @@
     <pattern>οὐδενο2σ1ώ</pattern>
     <pattern>οὐδενο2ϲ1ώ</pattern>
     <pattern>οὐδενο2ϲ1ώ</pattern>
-    <pattern>.παλι2ν1</pattern>
-    <pattern>.παλί2ν1</pattern>
-    <pattern>.παλί2ν1</pattern>
-    <pattern>.πα2ν1</pattern>
-    <pattern>.πά2ν1</pattern>
-    <pattern>.πά2ν1</pattern>
-    <pattern>.πα3ν2ός.</pattern>
-    <pattern>.πα3ν2ός.</pattern>
-    <pattern>.πα3ν2όϲ.</pattern>
-    <pattern>.πα3ν2όϲ.</pattern>
-    <pattern>.πα3ν2ὸς.</pattern>
-    <pattern>.πα3ν2ὸϲ.</pattern>
-    <pattern>.πα3ν2όσ.</pattern>
-    <pattern>.πα3ν2όσ.</pattern>
-    <pattern>.πα3ν2ὸσ.</pattern>
-    <pattern>.πα3ν2ί.</pattern>
-    <pattern>.πα3ν2ί.</pattern>
-    <pattern>.πα3ν2ὶ.</pattern>
-    <pattern>.πάνα.</pattern>
-    <pattern>.πάνα.</pattern>
-    <pattern>.πα3ν2ῶν.</pattern>
-    <pattern>.πα3ν2ικ</pattern>
-    <pattern>.πα3ν2ίσδ</pattern>
-    <pattern>.πα3ν2ίσδ</pattern>
-    <pattern>.πα3ν2ίϲδ</pattern>
-    <pattern>.πα3ν2ίϲδ</pattern>
-    <pattern>.πα3ν2ισδ</pattern>
-    <pattern>.πα3ν2ιϲδ</pattern>
-    <pattern>.πα3ν2οῦ.</pattern>
-    <pattern>.πα3ν2ῷ.</pattern>
-    <pattern>.πα3ν2ό.</pattern>
-    <pattern>.πα3ν2ό.</pattern>
-    <pattern>.πα3ν2ὸ.</pattern>
-    <pattern>.πα3ν2όν.</pattern>
-    <pattern>.πα3ν2όν.</pattern>
-    <pattern>.πα3ν2ὸν.</pattern>
-    <pattern>.πα3ν2έ.</pattern>
-    <pattern>.πα3ν2έ.</pattern>
-    <pattern>.πα3ν2ὲ.</pattern>
-    <pattern>.πα3ν2οί.</pattern>
-    <pattern>.πα3ν2οί.</pattern>
-    <pattern>.πα3ν2οὶ.</pattern>
-    <pattern>.πα3ν2οῖς.</pattern>
-    <pattern>.πα3ν2οῖϲ.</pattern>
-    <pattern>.πα3ν2οῖσ.</pattern>
-    <pattern>.πα3ν2ούς.</pattern>
-    <pattern>.πα3ν2ούς.</pattern>
-    <pattern>.πα3ν2ούϲ.</pattern>
-    <pattern>.πα3ν2ούϲ.</pattern>
-    <pattern>.πα3ν2οὺς.</pattern>
-    <pattern>.πα3ν2οὺϲ.</pattern>
-    <pattern>.πα3ν2ούσ.</pattern>
-    <pattern>.πα3ν2ούσ.</pattern>
-    <pattern>.πα3ν2οὺσ.</pattern>
-    <pattern>.παρα2ν1ίσχ</pattern>
-    <pattern>.παρα2ν1ίσχ</pattern>
-    <pattern>.παρα2ν1ίϲχ</pattern>
-    <pattern>.παρα2ν1ίϲχ</pattern>
-    <pattern>.παρεί2σ1</pattern>
-    <pattern>.παρεί2σ1</pattern>
-    <pattern>.παρεί2ϲ1</pattern>
-    <pattern>.παρεί2ϲ1</pattern>
-    <pattern>.παρει2σ1</pattern>
-    <pattern>.παρει2ϲ1</pattern>
-    <pattern>.παρε2κ1λ</pattern>
-    <pattern>.παρε2κ1τρ</pattern>
-    <pattern>.παρε2ν1εῖ</pattern>
-    <pattern>.παρε2ν1ο</pattern>
-    <pattern>.παρε2ξ1</pattern>
-    <pattern>.παρέ2ξ1</pattern>
-    <pattern>.παρέ2ξ1</pattern>
-    <pattern>παρέ3ξ2ω.</pattern>
-    <pattern>παρέ3ξ2ω.</pattern>
-    <pattern>παρέ3ξ2εις.</pattern>
-    <pattern>παρέ3ξ2εις.</pattern>
-    <pattern>παρέ3ξ2ειϲ.</pattern>
-    <pattern>παρέ3ξ2ειϲ.</pattern>
-    <pattern>παρέ3ξ2εισ.</pattern>
-    <pattern>παρέ3ξ2εισ.</pattern>
-    <pattern>παρέ3ξ2ει.</pattern>
-    <pattern>παρέ3ξ2ει.</pattern>
-    <pattern>παρέ3ξ2ετον.</pattern>
-    <pattern>παρέ3ξ2ετον.</pattern>
-    <pattern>παρε3ξ2έτην.</pattern>
-    <pattern>παρε3ξ2έτην.</pattern>
-    <pattern>παρέ3ξ2ομεν.</pattern>
-    <pattern>παρέ3ξ2ομεν.</pattern>
-    <pattern>παρέ3ξ2ετε.</pattern>
-    <pattern>παρέ3ξ2ετε.</pattern>
-    <pattern>παρέ3ξ2ουσι.</pattern>
-    <pattern>παρέ3ξ2ουσι.</pattern>
-    <pattern>παρέ3ξ2ουϲι.</pattern>
-    <pattern>παρέ3ξ2ουϲι.</pattern>
+    <pattern> παλι2ν1</pattern>
+    <pattern> παλί2ν1</pattern>
+    <pattern> παλί2ν1</pattern>
+    <pattern> πα2ν1</pattern>
+    <pattern> πά2ν1</pattern>
+    <pattern> πά2ν1</pattern>
+    <pattern> πα3ν2ός </pattern>
+    <pattern> πα3ν2ός </pattern>
+    <pattern> πα3ν2όϲ </pattern>
+    <pattern> πα3ν2όϲ </pattern>
+    <pattern> πα3ν2ὸς </pattern>
+    <pattern> πα3ν2ὸϲ </pattern>
+    <pattern> πα3ν2όσ </pattern>
+    <pattern> πα3ν2όσ </pattern>
+    <pattern> πα3ν2ὸσ </pattern>
+    <pattern> πα3ν2ί </pattern>
+    <pattern> πα3ν2ί </pattern>
+    <pattern> πα3ν2ὶ </pattern>
+    <pattern> πάνα </pattern>
+    <pattern> πάνα </pattern>
+    <pattern> πα3ν2ῶν </pattern>
+    <pattern> πα3ν2ικ</pattern>
+    <pattern> πα3ν2ίσδ</pattern>
+    <pattern> πα3ν2ίσδ</pattern>
+    <pattern> πα3ν2ίϲδ</pattern>
+    <pattern> πα3ν2ίϲδ</pattern>
+    <pattern> πα3ν2ισδ</pattern>
+    <pattern> πα3ν2ιϲδ</pattern>
+    <pattern> πα3ν2οῦ </pattern>
+    <pattern> πα3ν2ῷ </pattern>
+    <pattern> πα3ν2ό </pattern>
+    <pattern> πα3ν2ό </pattern>
+    <pattern> πα3ν2ὸ </pattern>
+    <pattern> πα3ν2όν </pattern>
+    <pattern> πα3ν2όν </pattern>
+    <pattern> πα3ν2ὸν </pattern>
+    <pattern> πα3ν2έ </pattern>
+    <pattern> πα3ν2έ </pattern>
+    <pattern> πα3ν2ὲ </pattern>
+    <pattern> πα3ν2οί </pattern>
+    <pattern> πα3ν2οί </pattern>
+    <pattern> πα3ν2οὶ </pattern>
+    <pattern> πα3ν2οῖς </pattern>
+    <pattern> πα3ν2οῖϲ </pattern>
+    <pattern> πα3ν2οῖσ </pattern>
+    <pattern> πα3ν2ούς </pattern>
+    <pattern> πα3ν2ούς </pattern>
+    <pattern> πα3ν2ούϲ </pattern>
+    <pattern> πα3ν2ούϲ </pattern>
+    <pattern> πα3ν2οὺς </pattern>
+    <pattern> πα3ν2οὺϲ </pattern>
+    <pattern> πα3ν2ούσ </pattern>
+    <pattern> πα3ν2ούσ </pattern>
+    <pattern> πα3ν2οὺσ </pattern>
+    <pattern> παρα2ν1ίσχ</pattern>
+    <pattern> παρα2ν1ίσχ</pattern>
+    <pattern> παρα2ν1ίϲχ</pattern>
+    <pattern> παρα2ν1ίϲχ</pattern>
+    <pattern> παρεί2σ1</pattern>
+    <pattern> παρεί2σ1</pattern>
+    <pattern> παρεί2ϲ1</pattern>
+    <pattern> παρεί2ϲ1</pattern>
+    <pattern> παρει2σ1</pattern>
+    <pattern> παρει2ϲ1</pattern>
+    <pattern> παρε2κ1λ</pattern>
+    <pattern> παρε2κ1τρ</pattern>
+    <pattern> παρε2ν1εῖ</pattern>
+    <pattern> παρε2ν1ο</pattern>
+    <pattern> παρε2ξ1</pattern>
+    <pattern> παρέ2ξ1</pattern>
+    <pattern> παρέ2ξ1</pattern>
+    <pattern>παρέ3ξ2ω </pattern>
+    <pattern>παρέ3ξ2ω </pattern>
+    <pattern>παρέ3ξ2εις </pattern>
+    <pattern>παρέ3ξ2εις </pattern>
+    <pattern>παρέ3ξ2ειϲ </pattern>
+    <pattern>παρέ3ξ2ειϲ </pattern>
+    <pattern>παρέ3ξ2εισ </pattern>
+    <pattern>παρέ3ξ2εισ </pattern>
+    <pattern>παρέ3ξ2ει </pattern>
+    <pattern>παρέ3ξ2ει </pattern>
+    <pattern>παρέ3ξ2ετον </pattern>
+    <pattern>παρέ3ξ2ετον </pattern>
+    <pattern>παρε3ξ2έτην </pattern>
+    <pattern>παρε3ξ2έτην </pattern>
+    <pattern>παρέ3ξ2ομεν </pattern>
+    <pattern>παρέ3ξ2ομεν </pattern>
+    <pattern>παρέ3ξ2ετε </pattern>
+    <pattern>παρέ3ξ2ετε </pattern>
+    <pattern>παρέ3ξ2ουσι </pattern>
+    <pattern>παρέ3ξ2ουσι </pattern>
+    <pattern>παρέ3ξ2ουϲι </pattern>
+    <pattern>παρέ3ξ2ουϲι </pattern>
     <pattern>παρέ3ξ2ομαι</pattern>
     <pattern>παρέ3ξ2ομαι</pattern>
     <pattern>παρέ3ξ2ῃ</pattern>
     <pattern>παρέ3ξ2ῃ</pattern>
-    <pattern>παρέ3ξ2εται.</pattern>
-    <pattern>παρέ3ξ2εται.</pattern>
-    <pattern>παρέ3ξ2εσθον.</pattern>
-    <pattern>παρέ3ξ2εσθον.</pattern>
-    <pattern>παρέ3ξ2εϲθον.</pattern>
-    <pattern>παρέ3ξ2εϲθον.</pattern>
-    <pattern>παρε3ξ2όμεθα.</pattern>
-    <pattern>παρε3ξ2όμεθα.</pattern>
-    <pattern>παρέ3ξ2εσθε.</pattern>
-    <pattern>παρέ3ξ2εσθε.</pattern>
-    <pattern>παρέ3ξ2εϲθε.</pattern>
-    <pattern>παρέ3ξ2εϲθε.</pattern>
-    <pattern>παρέ3ξ2ονται.</pattern>
-    <pattern>παρέ3ξ2ονται.</pattern>
-    <pattern>.πλεο2ν1έ</pattern>
-    <pattern>.πλεο2ν1έ</pattern>
-    <pattern>.πλεο2ν1ε</pattern>
-    <pattern>.προει2σ1</pattern>
-    <pattern>.προει2ϲ1</pattern>
-    <pattern>.προε2κ1</pattern>
-    <pattern>.προε2ν1</pattern>
-    <pattern>.προε2ξ1</pattern>
-    <pattern>.προέ2ξ1</pattern>
-    <pattern>.προέ2ξ1</pattern>
-    <pattern>.προ2σ1</pattern>
-    <pattern>.προ2ϲ1</pattern>
-    <pattern>.προ3σ2άβ</pattern>
-    <pattern>.προ3σ2άβ</pattern>
-    <pattern>.προ3ϲ2άβ</pattern>
-    <pattern>.προ3ϲ2άβ</pattern>
-    <pattern>.προ3σ2αβ</pattern>
-    <pattern>.προ3ϲ2αβ</pattern>
-    <pattern>.προσει2σ1</pattern>
-    <pattern>.προϲει2ϲ1</pattern>
-    <pattern>.προ3σ2εί</pattern>
-    <pattern>.προ3σ2εί</pattern>
-    <pattern>.προ3ϲ2εί</pattern>
-    <pattern>.προ3ϲ2εί</pattern>
-    <pattern>.προ3σ2έσει</pattern>
-    <pattern>.προ3σ2έσει</pattern>
-    <pattern>.προ3ϲ2έϲει</pattern>
-    <pattern>.προ3ϲ2έϲει</pattern>
-    <pattern>.προ3σ2εσεί</pattern>
-    <pattern>.προ3σ2εσεί</pattern>
-    <pattern>.προ3ϲ2εϲεί</pattern>
-    <pattern>.προ3ϲ2εϲεί</pattern>
-    <pattern>.προσε2ν1</pattern>
-    <pattern>.προϲε2ν1</pattern>
-    <pattern>.προσε2ξ1</pattern>
-    <pattern>.προϲε2ξ1</pattern>
-    <pattern>.πρό3σ2θι</pattern>
-    <pattern>.πρό3σ2θι</pattern>
-    <pattern>.πρό3ϲ2θι</pattern>
-    <pattern>.πρό3ϲ2θι</pattern>
-    <pattern>.προ3σ2θί</pattern>
-    <pattern>.προ3σ2θί</pattern>
-    <pattern>.προ3ϲ2θί</pattern>
-    <pattern>.προ3ϲ2θί</pattern>
-    <pattern>.προ4σ3θιγ</pattern>
-    <pattern>.προ4ϲ3θιγ</pattern>
-    <pattern>.πρό3σ2κοπ</pattern>
-    <pattern>.πρό3σ2κοπ</pattern>
-    <pattern>.πρό3ϲ2κοπ</pattern>
-    <pattern>.πρό3ϲ2κοπ</pattern>
-    <pattern>.προ3σ2κόπ</pattern>
-    <pattern>.προ3σ2κόπ</pattern>
-    <pattern>.προ3ϲ2κόπ</pattern>
-    <pattern>.προ3ϲ2κόπ</pattern>
-    <pattern>.προ3σ2τασ</pattern>
-    <pattern>.προ3ϲ2ταϲ</pattern>
-    <pattern>.προ3σ2τάτ</pattern>
-    <pattern>.προ3σ2τάτ</pattern>
-    <pattern>.προ3ϲ2τάτ</pattern>
-    <pattern>.προ3ϲ2τάτ</pattern>
-    <pattern>.προ3σ2τατ</pattern>
-    <pattern>.προ3ϲ2τατ</pattern>
-    <pattern>.προ3σ2ταυ</pattern>
-    <pattern>.προ3ϲ2ταυ</pattern>
-    <pattern>.προ3σ2τεί</pattern>
-    <pattern>.προ3σ2τεί</pattern>
-    <pattern>.προ3ϲ2τεί</pattern>
-    <pattern>.προ3ϲ2τεί</pattern>
-    <pattern>.προ3σ2τεν</pattern>
-    <pattern>.προ3ϲ2τεν</pattern>
-    <pattern>.προ3σ2τέν</pattern>
-    <pattern>.προ3σ2τέν</pattern>
-    <pattern>.προ3ϲ2τέν</pattern>
-    <pattern>.προ3ϲ2τέν</pattern>
-    <pattern>.προ3σ2τερν</pattern>
-    <pattern>.προ3ϲ2τερν</pattern>
-    <pattern>.πρό3σ2τερν</pattern>
-    <pattern>.πρό3σ2τερν</pattern>
-    <pattern>.πρό3ϲ2τερν</pattern>
-    <pattern>.πρό3ϲ2τερν</pattern>
-    <pattern>.προ3σ2τέρν</pattern>
-    <pattern>.προ3σ2τέρν</pattern>
-    <pattern>.προ3ϲ2τέρν</pattern>
-    <pattern>.προ3ϲ2τέρν</pattern>
-    <pattern>.προ3σ2τήσ</pattern>
-    <pattern>.προ3σ2τήσ</pattern>
-    <pattern>.προ3ϲ2τήϲ</pattern>
-    <pattern>.προ3ϲ2τήϲ</pattern>
-    <pattern>.προ3σ2τόμ</pattern>
-    <pattern>.προ3σ2τόμ</pattern>
-    <pattern>.προ3ϲ2τόμ</pattern>
-    <pattern>.προ3ϲ2τόμ</pattern>
-    <pattern>.προ3σ2τομ</pattern>
-    <pattern>.προ3ϲ2τομ</pattern>
-    <pattern>.πρό3σ2τῳ</pattern>
-    <pattern>.πρό3σ2τῳ</pattern>
-    <pattern>.πρό3ϲ2τῳ</pattern>
-    <pattern>.πρό3ϲ2τῳ</pattern>
-    <pattern>.προ3σ2τῴ</pattern>
-    <pattern>.προ3ϲ2τῴ</pattern>
-    <pattern>.προ3σ2υγ</pattern>
-    <pattern>.προ3ϲ2υγ</pattern>
-    <pattern>.προ3σ2υμ</pattern>
-    <pattern>.προ3ϲ2υμ</pattern>
-    <pattern>.προ3σ2υ2ν1</pattern>
-    <pattern>.προ3ϲ2υ2ν1</pattern>
-    <pattern>.πρό3σ2φαγμ</pattern>
-    <pattern>.πρό3σ2φαγμ</pattern>
-    <pattern>.πρό3ϲ2φαγμ</pattern>
-    <pattern>.πρό3ϲ2φαγμ</pattern>
-    <pattern>.προ3σ2φάγμ</pattern>
-    <pattern>.προ3σ2φάγμ</pattern>
-    <pattern>.προ3ϲ2φάγμ</pattern>
-    <pattern>.προ3ϲ2φάγμ</pattern>
-    <pattern>.προ3σ2φάζ</pattern>
-    <pattern>.προ3σ2φάζ</pattern>
-    <pattern>.προ3ϲ2φάζ</pattern>
-    <pattern>.προ3ϲ2φάζ</pattern>
-    <pattern>.προ3σ2φάττ</pattern>
-    <pattern>.προ3σ2φάττ</pattern>
-    <pattern>.προ3ϲ2φάττ</pattern>
-    <pattern>.προ3ϲ2φάττ</pattern>
-    <pattern>.πρό3σ2χημ</pattern>
-    <pattern>.πρό3σ2χημ</pattern>
-    <pattern>.πρό3ϲ2χημ</pattern>
-    <pattern>.πρό3ϲ2χημ</pattern>
-    <pattern>.προ3σ2χήμ</pattern>
-    <pattern>.προ3σ2χήμ</pattern>
-    <pattern>.προ3ϲ2χήμ</pattern>
-    <pattern>.προ3ϲ2χήμ</pattern>
-    <pattern>.πρό3σ2ω.</pattern>
-    <pattern>.πρό3σ2ω.</pattern>
-    <pattern>.πρό3ϲ2ω.</pattern>
-    <pattern>.πρό3ϲ2ω.</pattern>
-    <pattern>.πρό3σ2ωθεν.</pattern>
-    <pattern>.πρό3σ2ωθεν.</pattern>
-    <pattern>.πρό3ϲ2ωθεν.</pattern>
-    <pattern>.πρό3ϲ2ωθεν.</pattern>
-    <pattern>.προ3σ2ώτ</pattern>
-    <pattern>.προ3σ2ώτ</pattern>
-    <pattern>.προ3ϲ2ώτ</pattern>
-    <pattern>.προ3ϲ2ώτ</pattern>
-    <pattern>.προ3σ2ωτ</pattern>
-    <pattern>.προ3ϲ2ωτ</pattern>
-    <pattern>.προϋπε2ξ1</pattern>
-    <pattern>.πυ2ρ1άγ</pattern>
-    <pattern>.πυ2ρ1άγ</pattern>
-    <pattern>.πυ2ρ1αγ</pattern>
-    <pattern>.πυ2ρ1αίθ</pattern>
-    <pattern>.πυ2ρ1αίθ</pattern>
-    <pattern>.πυ2ρ1αιθ</pattern>
-    <pattern>.πυ2ρ1ῆθ</pattern>
-    <pattern>.πυ2ρ1ηθ</pattern>
-    <pattern>.πυ2ρ1ήθ</pattern>
-    <pattern>.πυ2ρ1ήθ</pattern>
-    <pattern>.πυ2ρ1ακ</pattern>
-    <pattern>.πύ2ρ1αυ</pattern>
-    <pattern>.πύ2ρ1αυ</pattern>
-    <pattern>.πυ2ρ1αύ</pattern>
-    <pattern>.πυ2ρ1αύ</pattern>
-    <pattern>.πυ2ρ1αυ</pattern>
-    <pattern>.πυ2ρ1ήνεμ</pattern>
-    <pattern>.πυ2ρ1ήνεμ</pattern>
-    <pattern>.πυ2ρ1ηνέμ</pattern>
-    <pattern>.πυ2ρ1ηνέμ</pattern>
-    <pattern>.πυ2ρ1ωπ</pattern>
-    <pattern>.σελα2σ1φό</pattern>
-    <pattern>.σελα2σ1φό</pattern>
-    <pattern>.ϲελα2ϲ1φό</pattern>
-    <pattern>.ϲελα2ϲ1φό</pattern>
-    <pattern>.σελα2σ1φο</pattern>
-    <pattern>.ϲελα2ϲ1φο</pattern>
-    <pattern>.συμπαρει2σ1</pattern>
-    <pattern>.ϲυμπαρει2ϲ1</pattern>
-    <pattern>.συ2ν1</pattern>
-    <pattern>.ϲυ2ν1</pattern>
-    <pattern>.σύ2ν1</pattern>
-    <pattern>.σύ2ν1</pattern>
-    <pattern>.ϲύ2ν1</pattern>
-    <pattern>.ϲύ2ν1</pattern>
-    <pattern>.συνδιέ2ξ1</pattern>
-    <pattern>.συνδιέ2ξ1</pattern>
-    <pattern>.ϲυνδιέ2ξ1</pattern>
-    <pattern>.ϲυνδιέ2ξ1</pattern>
-    <pattern>.συνδιε2ξ1</pattern>
-    <pattern>.ϲυνδιε2ξ1</pattern>
-    <pattern>.συνδυ2σ1</pattern>
-    <pattern>.ϲυνδυ2ϲ1</pattern>
-    <pattern>.συνε2ξ1</pattern>
-    <pattern>.ϲυνε2ξ1</pattern>
-    <pattern>.τεσσαρε2σ1κ</pattern>
-    <pattern>.τεϲϲαρε2ϲ1κ</pattern>
-    <pattern>.τρει2σ1κ</pattern>
-    <pattern>.τρει2ϲ1κ</pattern>
-    <pattern>.τρι2σ1</pattern>
-    <pattern>.τρι2ϲ1</pattern>
-    <pattern>.τρι3σ2μό</pattern>
-    <pattern>.τρι3σ2μό</pattern>
-    <pattern>.τρι3ϲ2μό</pattern>
-    <pattern>.τρι3ϲ2μό</pattern>
-    <pattern>.τρι3σ2μο</pattern>
-    <pattern>.τρι3ϲ2μο</pattern>
-    <pattern>.τρι3σ2μῶ</pattern>
-    <pattern>.τρι3ϲ2μῶ</pattern>
-    <pattern>.τρι3σ2π</pattern>
-    <pattern>.τρι3ϲ2π</pattern>
-    <pattern>.τρί3σ2τ</pattern>
-    <pattern>.τρί3σ2τ</pattern>
-    <pattern>.τρί3ϲ2τ</pattern>
-    <pattern>.τρί3ϲ2τ</pattern>
-    <pattern>.τρι3σ2τ</pattern>
-    <pattern>.τρι3ϲ2τ</pattern>
-    <pattern>.τρι3σ2ώ</pattern>
-    <pattern>.τρι3σ2ώ</pattern>
-    <pattern>.τρι3ϲ2ώ</pattern>
-    <pattern>.τρι3ϲ2ώ</pattern>
-    <pattern>.τρι3σ2ω</pattern>
-    <pattern>.τρι3ϲ2ω</pattern>
+    <pattern>παρέ3ξ2εται </pattern>
+    <pattern>παρέ3ξ2εται </pattern>
+    <pattern>παρέ3ξ2εσθον </pattern>
+    <pattern>παρέ3ξ2εσθον </pattern>
+    <pattern>παρέ3ξ2εϲθον </pattern>
+    <pattern>παρέ3ξ2εϲθον </pattern>
+    <pattern>παρε3ξ2όμεθα </pattern>
+    <pattern>παρε3ξ2όμεθα </pattern>
+    <pattern>παρέ3ξ2εσθε </pattern>
+    <pattern>παρέ3ξ2εσθε </pattern>
+    <pattern>παρέ3ξ2εϲθε </pattern>
+    <pattern>παρέ3ξ2εϲθε </pattern>
+    <pattern>παρέ3ξ2ονται </pattern>
+    <pattern>παρέ3ξ2ονται </pattern>
+    <pattern> πλεο2ν1έ</pattern>
+    <pattern> πλεο2ν1έ</pattern>
+    <pattern> πλεο2ν1ε</pattern>
+    <pattern> προει2σ1</pattern>
+    <pattern> προει2ϲ1</pattern>
+    <pattern> προε2κ1</pattern>
+    <pattern> προε2ν1</pattern>
+    <pattern> προε2ξ1</pattern>
+    <pattern> προέ2ξ1</pattern>
+    <pattern> προέ2ξ1</pattern>
+    <pattern> προ2σ1</pattern>
+    <pattern> προ2ϲ1</pattern>
+    <pattern> προ3σ2άβ</pattern>
+    <pattern> προ3σ2άβ</pattern>
+    <pattern> προ3ϲ2άβ</pattern>
+    <pattern> προ3ϲ2άβ</pattern>
+    <pattern> προ3σ2αβ</pattern>
+    <pattern> προ3ϲ2αβ</pattern>
+    <pattern> προσει2σ1</pattern>
+    <pattern> προϲει2ϲ1</pattern>
+    <pattern> προ3σ2εί</pattern>
+    <pattern> προ3σ2εί</pattern>
+    <pattern> προ3ϲ2εί</pattern>
+    <pattern> προ3ϲ2εί</pattern>
+    <pattern> προ3σ2έσει</pattern>
+    <pattern> προ3σ2έσει</pattern>
+    <pattern> προ3ϲ2έϲει</pattern>
+    <pattern> προ3ϲ2έϲει</pattern>
+    <pattern> προ3σ2εσεί</pattern>
+    <pattern> προ3σ2εσεί</pattern>
+    <pattern> προ3ϲ2εϲεί</pattern>
+    <pattern> προ3ϲ2εϲεί</pattern>
+    <pattern> προσε2ν1</pattern>
+    <pattern> προϲε2ν1</pattern>
+    <pattern> προσε2ξ1</pattern>
+    <pattern> προϲε2ξ1</pattern>
+    <pattern> πρό3σ2θι</pattern>
+    <pattern> πρό3σ2θι</pattern>
+    <pattern> πρό3ϲ2θι</pattern>
+    <pattern> πρό3ϲ2θι</pattern>
+    <pattern> προ3σ2θί</pattern>
+    <pattern> προ3σ2θί</pattern>
+    <pattern> προ3ϲ2θί</pattern>
+    <pattern> προ3ϲ2θί</pattern>
+    <pattern> προ4σ3θιγ</pattern>
+    <pattern> προ4ϲ3θιγ</pattern>
+    <pattern> πρό3σ2κοπ</pattern>
+    <pattern> πρό3σ2κοπ</pattern>
+    <pattern> πρό3ϲ2κοπ</pattern>
+    <pattern> πρό3ϲ2κοπ</pattern>
+    <pattern> προ3σ2κόπ</pattern>
+    <pattern> προ3σ2κόπ</pattern>
+    <pattern> προ3ϲ2κόπ</pattern>
+    <pattern> προ3ϲ2κόπ</pattern>
+    <pattern> προ3σ2τασ</pattern>
+    <pattern> προ3ϲ2ταϲ</pattern>
+    <pattern> προ3σ2τάτ</pattern>
+    <pattern> προ3σ2τάτ</pattern>
+    <pattern> προ3ϲ2τάτ</pattern>
+    <pattern> προ3ϲ2τάτ</pattern>
+    <pattern> προ3σ2τατ</pattern>
+    <pattern> προ3ϲ2τατ</pattern>
+    <pattern> προ3σ2ταυ</pattern>
+    <pattern> προ3ϲ2ταυ</pattern>
+    <pattern> προ3σ2τεί</pattern>
+    <pattern> προ3σ2τεί</pattern>
+    <pattern> προ3ϲ2τεί</pattern>
+    <pattern> προ3ϲ2τεί</pattern>
+    <pattern> προ3σ2τεν</pattern>
+    <pattern> προ3ϲ2τεν</pattern>
+    <pattern> προ3σ2τέν</pattern>
+    <pattern> προ3σ2τέν</pattern>
+    <pattern> προ3ϲ2τέν</pattern>
+    <pattern> προ3ϲ2τέν</pattern>
+    <pattern> προ3σ2τερν</pattern>
+    <pattern> προ3ϲ2τερν</pattern>
+    <pattern> πρό3σ2τερν</pattern>
+    <pattern> πρό3σ2τερν</pattern>
+    <pattern> πρό3ϲ2τερν</pattern>
+    <pattern> πρό3ϲ2τερν</pattern>
+    <pattern> προ3σ2τέρν</pattern>
+    <pattern> προ3σ2τέρν</pattern>
+    <pattern> προ3ϲ2τέρν</pattern>
+    <pattern> προ3ϲ2τέρν</pattern>
+    <pattern> προ3σ2τήσ</pattern>
+    <pattern> προ3σ2τήσ</pattern>
+    <pattern> προ3ϲ2τήϲ</pattern>
+    <pattern> προ3ϲ2τήϲ</pattern>
+    <pattern> προ3σ2τόμ</pattern>
+    <pattern> προ3σ2τόμ</pattern>
+    <pattern> προ3ϲ2τόμ</pattern>
+    <pattern> προ3ϲ2τόμ</pattern>
+    <pattern> προ3σ2τομ</pattern>
+    <pattern> προ3ϲ2τομ</pattern>
+    <pattern> πρό3σ2τῳ</pattern>
+    <pattern> πρό3σ2τῳ</pattern>
+    <pattern> πρό3ϲ2τῳ</pattern>
+    <pattern> πρό3ϲ2τῳ</pattern>
+    <pattern> προ3σ2τῴ</pattern>
+    <pattern> προ3ϲ2τῴ</pattern>
+    <pattern> προ3σ2υγ</pattern>
+    <pattern> προ3ϲ2υγ</pattern>
+    <pattern> προ3σ2υμ</pattern>
+    <pattern> προ3ϲ2υμ</pattern>
+    <pattern> προ3σ2υ2ν1</pattern>
+    <pattern> προ3ϲ2υ2ν1</pattern>
+    <pattern> πρό3σ2φαγμ</pattern>
+    <pattern> πρό3σ2φαγμ</pattern>
+    <pattern> πρό3ϲ2φαγμ</pattern>
+    <pattern> πρό3ϲ2φαγμ</pattern>
+    <pattern> προ3σ2φάγμ</pattern>
+    <pattern> προ3σ2φάγμ</pattern>
+    <pattern> προ3ϲ2φάγμ</pattern>
+    <pattern> προ3ϲ2φάγμ</pattern>
+    <pattern> προ3σ2φάζ</pattern>
+    <pattern> προ3σ2φάζ</pattern>
+    <pattern> προ3ϲ2φάζ</pattern>
+    <pattern> προ3ϲ2φάζ</pattern>
+    <pattern> προ3σ2φάττ</pattern>
+    <pattern> προ3σ2φάττ</pattern>
+    <pattern> προ3ϲ2φάττ</pattern>
+    <pattern> προ3ϲ2φάττ</pattern>
+    <pattern> πρό3σ2χημ</pattern>
+    <pattern> πρό3σ2χημ</pattern>
+    <pattern> πρό3ϲ2χημ</pattern>
+    <pattern> πρό3ϲ2χημ</pattern>
+    <pattern> προ3σ2χήμ</pattern>
+    <pattern> προ3σ2χήμ</pattern>
+    <pattern> προ3ϲ2χήμ</pattern>
+    <pattern> προ3ϲ2χήμ</pattern>
+    <pattern> πρό3σ2ω </pattern>
+    <pattern> πρό3σ2ω </pattern>
+    <pattern> πρό3ϲ2ω </pattern>
+    <pattern> πρό3ϲ2ω </pattern>
+    <pattern> πρό3σ2ωθεν </pattern>
+    <pattern> πρό3σ2ωθεν </pattern>
+    <pattern> πρό3ϲ2ωθεν </pattern>
+    <pattern> πρό3ϲ2ωθεν </pattern>
+    <pattern> προ3σ2ώτ</pattern>
+    <pattern> προ3σ2ώτ</pattern>
+    <pattern> προ3ϲ2ώτ</pattern>
+    <pattern> προ3ϲ2ώτ</pattern>
+    <pattern> προ3σ2ωτ</pattern>
+    <pattern> προ3ϲ2ωτ</pattern>
+    <pattern> προϋπε2ξ1</pattern>
+    <pattern> πυ2ρ1άγ</pattern>
+    <pattern> πυ2ρ1άγ</pattern>
+    <pattern> πυ2ρ1αγ</pattern>
+    <pattern> πυ2ρ1αίθ</pattern>
+    <pattern> πυ2ρ1αίθ</pattern>
+    <pattern> πυ2ρ1αιθ</pattern>
+    <pattern> πυ2ρ1ῆθ</pattern>
+    <pattern> πυ2ρ1ηθ</pattern>
+    <pattern> πυ2ρ1ήθ</pattern>
+    <pattern> πυ2ρ1ήθ</pattern>
+    <pattern> πυ2ρ1ακ</pattern>
+    <pattern> πύ2ρ1αυ</pattern>
+    <pattern> πύ2ρ1αυ</pattern>
+    <pattern> πυ2ρ1αύ</pattern>
+    <pattern> πυ2ρ1αύ</pattern>
+    <pattern> πυ2ρ1αυ</pattern>
+    <pattern> πυ2ρ1ήνεμ</pattern>
+    <pattern> πυ2ρ1ήνεμ</pattern>
+    <pattern> πυ2ρ1ηνέμ</pattern>
+    <pattern> πυ2ρ1ηνέμ</pattern>
+    <pattern> πυ2ρ1ωπ</pattern>
+    <pattern> σελα2σ1φό</pattern>
+    <pattern> σελα2σ1φό</pattern>
+    <pattern> ϲελα2ϲ1φό</pattern>
+    <pattern> ϲελα2ϲ1φό</pattern>
+    <pattern> σελα2σ1φο</pattern>
+    <pattern> ϲελα2ϲ1φο</pattern>
+    <pattern> συμπαρει2σ1</pattern>
+    <pattern> ϲυμπαρει2ϲ1</pattern>
+    <pattern> συ2ν1</pattern>
+    <pattern> ϲυ2ν1</pattern>
+    <pattern> σύ2ν1</pattern>
+    <pattern> σύ2ν1</pattern>
+    <pattern> ϲύ2ν1</pattern>
+    <pattern> ϲύ2ν1</pattern>
+    <pattern> συνδιέ2ξ1</pattern>
+    <pattern> συνδιέ2ξ1</pattern>
+    <pattern> ϲυνδιέ2ξ1</pattern>
+    <pattern> ϲυνδιέ2ξ1</pattern>
+    <pattern> συνδιε2ξ1</pattern>
+    <pattern> ϲυνδιε2ξ1</pattern>
+    <pattern> συνδυ2σ1</pattern>
+    <pattern> ϲυνδυ2ϲ1</pattern>
+    <pattern> συνε2ξ1</pattern>
+    <pattern> ϲυνε2ξ1</pattern>
+    <pattern> τεσσαρε2σ1κ</pattern>
+    <pattern> τεϲϲαρε2ϲ1κ</pattern>
+    <pattern> τρει2σ1κ</pattern>
+    <pattern> τρει2ϲ1κ</pattern>
+    <pattern> τρι2σ1</pattern>
+    <pattern> τρι2ϲ1</pattern>
+    <pattern> τρι3σ2μό</pattern>
+    <pattern> τρι3σ2μό</pattern>
+    <pattern> τρι3ϲ2μό</pattern>
+    <pattern> τρι3ϲ2μό</pattern>
+    <pattern> τρι3σ2μο</pattern>
+    <pattern> τρι3ϲ2μο</pattern>
+    <pattern> τρι3σ2μῶ</pattern>
+    <pattern> τρι3ϲ2μῶ</pattern>
+    <pattern> τρι3σ2π</pattern>
+    <pattern> τρι3ϲ2π</pattern>
+    <pattern> τρί3σ2τ</pattern>
+    <pattern> τρί3σ2τ</pattern>
+    <pattern> τρί3ϲ2τ</pattern>
+    <pattern> τρί3ϲ2τ</pattern>
+    <pattern> τρι3σ2τ</pattern>
+    <pattern> τρι3ϲ2τ</pattern>
+    <pattern> τρι3σ2ώ</pattern>
+    <pattern> τρι3σ2ώ</pattern>
+    <pattern> τρι3ϲ2ώ</pattern>
+    <pattern> τρι3ϲ2ώ</pattern>
+    <pattern> τρι3σ2ω</pattern>
+    <pattern> τρι3ϲ2ω</pattern>
     <pattern>ὑο2σ1κ</pattern>
     <pattern>ὑο2ϲ1κ</pattern>
     <pattern>ὑπεί2σ1</pattern>
@@ -4127,33 +4129,33 @@
     <pattern>ὑπε2ρ1</pattern>
     <pattern>ὑπέ2ρ1</pattern>
     <pattern>ὑπέ2ρ1</pattern>
-    <pattern>ὑπέ3ρ2α.</pattern>
-    <pattern>ὑπέ3ρ2α.</pattern>
-    <pattern>ὑπέ3ρ2ης.</pattern>
-    <pattern>ὑπέ3ρ2ης.</pattern>
-    <pattern>ὑπέ3ρ2ηϲ.</pattern>
-    <pattern>ὑπέ3ρ2ηϲ.</pattern>
-    <pattern>ὑπέ3ρ2ησ.</pattern>
-    <pattern>ὑπέ3ρ2ησ.</pattern>
-    <pattern>ὑπέ3ρ2ᾳ.</pattern>
-    <pattern>ὑπέ3ρ2ᾳ.</pattern>
-    <pattern>ὑπέ3ρ2αν.</pattern>
-    <pattern>ὑπέ3ρ2αν.</pattern>
-    <pattern>ὑπέ3ρ2αι.</pattern>
-    <pattern>ὑπέ3ρ2αι.</pattern>
-    <pattern>ὑπε3ρ2ῶν.</pattern>
-    <pattern>ὑπέ3ρ2αις.</pattern>
-    <pattern>ὑπέ3ρ2αις.</pattern>
-    <pattern>ὑπέ3ρ2αιϲ.</pattern>
-    <pattern>ὑπέ3ρ2αιϲ.</pattern>
-    <pattern>ὑπέ3ρ2αισ.</pattern>
-    <pattern>ὑπέ3ρ2αισ.</pattern>
-    <pattern>ὑπέ3ρ2ας.</pattern>
-    <pattern>ὑπέ3ρ2ας.</pattern>
-    <pattern>ὑπέ3ρ2αϲ.</pattern>
-    <pattern>ὑπέ3ρ2αϲ.</pattern>
-    <pattern>ὑπέ3ρ2ασ.</pattern>
-    <pattern>ὑπέ3ρ2ασ.</pattern>
+    <pattern>ὑπέ3ρ2α </pattern>
+    <pattern>ὑπέ3ρ2α </pattern>
+    <pattern>ὑπέ3ρ2ης </pattern>
+    <pattern>ὑπέ3ρ2ης </pattern>
+    <pattern>ὑπέ3ρ2ηϲ </pattern>
+    <pattern>ὑπέ3ρ2ηϲ </pattern>
+    <pattern>ὑπέ3ρ2ησ </pattern>
+    <pattern>ὑπέ3ρ2ησ </pattern>
+    <pattern>ὑπέ3ρ2ᾳ </pattern>
+    <pattern>ὑπέ3ρ2ᾳ </pattern>
+    <pattern>ὑπέ3ρ2αν </pattern>
+    <pattern>ὑπέ3ρ2αν </pattern>
+    <pattern>ὑπέ3ρ2αι </pattern>
+    <pattern>ὑπέ3ρ2αι </pattern>
+    <pattern>ὑπε3ρ2ῶν </pattern>
+    <pattern>ὑπέ3ρ2αις </pattern>
+    <pattern>ὑπέ3ρ2αις </pattern>
+    <pattern>ὑπέ3ρ2αιϲ </pattern>
+    <pattern>ὑπέ3ρ2αιϲ </pattern>
+    <pattern>ὑπέ3ρ2αισ </pattern>
+    <pattern>ὑπέ3ρ2αισ </pattern>
+    <pattern>ὑπέ3ρ2ας </pattern>
+    <pattern>ὑπέ3ρ2ας </pattern>
+    <pattern>ὑπέ3ρ2αϲ </pattern>
+    <pattern>ὑπέ3ρ2αϲ </pattern>
+    <pattern>ὑπέ3ρ2ασ </pattern>
+    <pattern>ὑπέ3ρ2ασ </pattern>
     <pattern>ὑπε3ρ2εθ</pattern>
     <pattern>ὑπε3ρ2έθ</pattern>
     <pattern>ὑπε3ρ2έθ</pattern>
@@ -4178,10 +4180,10 @@
     <pattern>ὑπε3ρ2ῶ</pattern>
     <pattern>ὑπε3ρ2έε</pattern>
     <pattern>ὑπε3ρ2έε</pattern>
-    <pattern>ὑπε3ρ2εῖς.</pattern>
-    <pattern>ὑπε3ρ2εῖϲ.</pattern>
-    <pattern>ὑπε3ρ2εῖσ.</pattern>
-    <pattern>ὑπε3ρ2εῖ.</pattern>
+    <pattern>ὑπε3ρ2εῖς </pattern>
+    <pattern>ὑπε3ρ2εῖϲ </pattern>
+    <pattern>ὑπε3ρ2εῖσ </pattern>
+    <pattern>ὑπε3ρ2εῖ </pattern>
     <pattern>ὑπε3ρ2έο</pattern>
     <pattern>ὑπε3ρ2έο</pattern>
     <pattern>ὑπε3ρ2οῦ</pattern>
@@ -4193,149 +4195,149 @@
     <pattern>ὕ2ϲ1τρ</pattern>
     <pattern>ὑ2σ1τρ</pattern>
     <pattern>ὑ2ϲ1τρ</pattern>
-    <pattern>.φαε2σ1φ</pattern>
-    <pattern>.φαε2ϲ1φ</pattern>
-    <pattern>.φω2σ1φ</pattern>
-    <pattern>.φω2ϲ1φ</pattern>
-    <pattern>.χαρι2σ1ανδρ</pattern>
-    <pattern>.χαρι2ϲ1ανδρ</pattern>
-    <pattern>.χαρι2σ1άνδρ</pattern>
-    <pattern>.χαρι2σ1άνδρ</pattern>
-    <pattern>.χαρι2ϲ1άνδρ</pattern>
-    <pattern>.χαρι2ϲ1άνδρ</pattern>
-    <pattern>.χει2ρ1άγ</pattern>
-    <pattern>.χει2ρ1άγ</pattern>
-    <pattern>.χει2ρ1αγ</pattern>
-    <pattern>.χει2ρ1απ</pattern>
-    <pattern>.χει2ρ1αψ</pattern>
-    <pattern>.χει2ρ1ου</pattern>
-    <pattern>.χει2ρ1ῶν</pattern>
-    <pattern>.χει2ρ1άν</pattern>
-    <pattern>.χει2ρ1άν</pattern>
-    <pattern>.χει2ρ1αν</pattern>
-    <pattern>.χη2ν1ναλ</pattern>
-    <pattern>ὡ2σ1α2ν1εί.</pattern>
-    <pattern>ὡ2σ1α2ν1εί.</pattern>
-    <pattern>ὡ2ϲ1α2ν1εί.</pattern>
-    <pattern>ὡ2ϲ1α2ν1εί.</pattern>
-    <pattern>ὡ2σ1α2ν1εὶ.</pattern>
-    <pattern>ὡ2ϲ1α2ν1εὶ.</pattern>
-    <pattern>ὡ2σ1αύτως.</pattern>
-    <pattern>ὡ2σ1αύτως.</pattern>
-    <pattern>ὡ2ϲ1αύτωϲ.</pattern>
-    <pattern>ὡ2ϲ1αύτωϲ.</pattern>
-    <pattern>ὡ2σ1αύτωσ.</pattern>
-    <pattern>ὡ2σ1αύτωσ.</pattern>
-    <pattern>ὡ2σ1εί.</pattern>
-    <pattern>ὡ2σ1εί.</pattern>
-    <pattern>ὡ2ϲ1εί.</pattern>
-    <pattern>ὡ2ϲ1εί.</pattern>
-    <pattern>ὡ2σ1εὶ.</pattern>
-    <pattern>ὡ2ϲ1εὶ.</pattern>
-    <pattern>ὥ2σ1περ.</pattern>
-    <pattern>ὥ2ϲ1περ.</pattern>
-    <pattern>ὡ2σ1πε2ρ1εί.</pattern>
-    <pattern>ὡ2σ1πε2ρ1εί.</pattern>
-    <pattern>ὡ2ϲ1πε2ρ1εί.</pattern>
-    <pattern>ὡ2ϲ1πε2ρ1εί.</pattern>
-    <pattern>ὡ2σ1πε2ρ1εὶ.</pattern>
-    <pattern>ὡ2ϲ1πε2ρ1εὶ.</pattern>
+    <pattern> φαε2σ1φ</pattern>
+    <pattern> φαε2ϲ1φ</pattern>
+    <pattern> φω2σ1φ</pattern>
+    <pattern> φω2ϲ1φ</pattern>
+    <pattern> χαρι2σ1ανδρ</pattern>
+    <pattern> χαρι2ϲ1ανδρ</pattern>
+    <pattern> χαρι2σ1άνδρ</pattern>
+    <pattern> χαρι2σ1άνδρ</pattern>
+    <pattern> χαρι2ϲ1άνδρ</pattern>
+    <pattern> χαρι2ϲ1άνδρ</pattern>
+    <pattern> χει2ρ1άγ</pattern>
+    <pattern> χει2ρ1άγ</pattern>
+    <pattern> χει2ρ1αγ</pattern>
+    <pattern> χει2ρ1απ</pattern>
+    <pattern> χει2ρ1αψ</pattern>
+    <pattern> χει2ρ1ου</pattern>
+    <pattern> χει2ρ1ῶν</pattern>
+    <pattern> χει2ρ1άν</pattern>
+    <pattern> χει2ρ1άν</pattern>
+    <pattern> χει2ρ1αν</pattern>
+    <pattern> χη2ν1ναλ</pattern>
+    <pattern>ὡ2σ1α2ν1εί </pattern>
+    <pattern>ὡ2σ1α2ν1εί </pattern>
+    <pattern>ὡ2ϲ1α2ν1εί </pattern>
+    <pattern>ὡ2ϲ1α2ν1εί </pattern>
+    <pattern>ὡ2σ1α2ν1εὶ </pattern>
+    <pattern>ὡ2ϲ1α2ν1εὶ </pattern>
+    <pattern>ὡ2σ1αύτως </pattern>
+    <pattern>ὡ2σ1αύτως </pattern>
+    <pattern>ὡ2ϲ1αύτωϲ </pattern>
+    <pattern>ὡ2ϲ1αύτωϲ </pattern>
+    <pattern>ὡ2σ1αύτωσ </pattern>
+    <pattern>ὡ2σ1αύτωσ </pattern>
+    <pattern>ὡ2σ1εί </pattern>
+    <pattern>ὡ2σ1εί </pattern>
+    <pattern>ὡ2ϲ1εί </pattern>
+    <pattern>ὡ2ϲ1εί </pattern>
+    <pattern>ὡ2σ1εὶ </pattern>
+    <pattern>ὡ2ϲ1εὶ </pattern>
+    <pattern>ὥ2σ1περ </pattern>
+    <pattern>ὥ2ϲ1περ </pattern>
+    <pattern>ὡ2σ1πε2ρ1εί </pattern>
+    <pattern>ὡ2σ1πε2ρ1εί </pattern>
+    <pattern>ὡ2ϲ1πε2ρ1εί </pattern>
+    <pattern>ὡ2ϲ1πε2ρ1εί </pattern>
+    <pattern>ὡ2σ1πε2ρ1εὶ </pattern>
+    <pattern>ὡ2ϲ1πε2ρ1εὶ </pattern>
     <pattern>ὥ2σ1τε</pattern>
     <pattern>ὥ2ϲ1τε</pattern>
-    <pattern>ι2σ1χίλιοι.</pattern>
-    <pattern>ι2σ1χίλιοι.</pattern>
-    <pattern>ι2ϲ1χίλιοι.</pattern>
-    <pattern>ι2ϲ1χίλιοι.</pattern>
-    <pattern>ι2σ1χιλίων.</pattern>
-    <pattern>ι2σ1χιλίων.</pattern>
-    <pattern>ι2ϲ1χιλίων.</pattern>
-    <pattern>ι2ϲ1χιλίων.</pattern>
-    <pattern>ι2σ1χιλίοις.</pattern>
-    <pattern>ι2σ1χιλίοις.</pattern>
-    <pattern>ι2ϲ1χιλίοιϲ.</pattern>
-    <pattern>ι2ϲ1χιλίοιϲ.</pattern>
-    <pattern>ι2σ1χιλίοισ.</pattern>
-    <pattern>ι2σ1χιλίοισ.</pattern>
-    <pattern>ι2σ1χιλίους.</pattern>
-    <pattern>ι2σ1χιλίους.</pattern>
-    <pattern>ι2ϲ1χιλίουϲ.</pattern>
-    <pattern>ι2ϲ1χιλίουϲ.</pattern>
-    <pattern>ι2σ1χιλίουσ.</pattern>
-    <pattern>ι2σ1χιλίουσ.</pattern>
-    <pattern>ι2σ1χίλιαι.</pattern>
-    <pattern>ι2σ1χίλιαι.</pattern>
-    <pattern>ι2ϲ1χίλιαι.</pattern>
-    <pattern>ι2ϲ1χίλιαι.</pattern>
-    <pattern>ι2σ1χιλίαις.</pattern>
-    <pattern>ι2σ1χιλίαις.</pattern>
-    <pattern>ι2ϲ1χιλίαιϲ.</pattern>
-    <pattern>ι2ϲ1χιλίαιϲ.</pattern>
-    <pattern>ι2σ1χιλίαισ.</pattern>
-    <pattern>ι2σ1χιλίαισ.</pattern>
-    <pattern>ι2σ1χιλίας.</pattern>
-    <pattern>ι2σ1χιλίας.</pattern>
-    <pattern>ι2ϲ1χιλίαϲ.</pattern>
-    <pattern>ι2ϲ1χιλίαϲ.</pattern>
-    <pattern>ι2σ1χιλίασ.</pattern>
-    <pattern>ι2σ1χιλίασ.</pattern>
-    <pattern>ι2σ1χίλια.</pattern>
-    <pattern>ι2σ1χίλια.</pattern>
-    <pattern>ι2ϲ1χίλια.</pattern>
-    <pattern>ι2ϲ1χίλια.</pattern>
-    <pattern>ι2σ1μύριοι.</pattern>
-    <pattern>ι2σ1μύριοι.</pattern>
-    <pattern>ι2ϲ1μύριοι.</pattern>
-    <pattern>ι2ϲ1μύριοι.</pattern>
-    <pattern>ι2σ1μυρίων.</pattern>
-    <pattern>ι2σ1μυρίων.</pattern>
-    <pattern>ι2ϲ1μυρίων.</pattern>
-    <pattern>ι2ϲ1μυρίων.</pattern>
-    <pattern>ι2σ1μυρίοις.</pattern>
-    <pattern>ι2σ1μυρίοις.</pattern>
-    <pattern>ι2ϲ1μυρίοιϲ.</pattern>
-    <pattern>ι2ϲ1μυρίοιϲ.</pattern>
-    <pattern>ι2σ1μυρίοισ.</pattern>
-    <pattern>ι2σ1μυρίοισ.</pattern>
-    <pattern>ι2σ1μυρίους.</pattern>
-    <pattern>ι2σ1μυρίους.</pattern>
-    <pattern>ι2ϲ1μυρίουϲ.</pattern>
-    <pattern>ι2ϲ1μυρίουϲ.</pattern>
-    <pattern>ι2σ1μυρίουσ.</pattern>
-    <pattern>ι2σ1μυρίουσ.</pattern>
-    <pattern>ι2σ1μύριαι.</pattern>
-    <pattern>ι2σ1μύριαι.</pattern>
-    <pattern>ι2ϲ1μύριαι.</pattern>
-    <pattern>ι2ϲ1μύριαι.</pattern>
-    <pattern>ι2σ1μυρίαις.</pattern>
-    <pattern>ι2σ1μυρίαις.</pattern>
-    <pattern>ι2ϲ1μυρίαιϲ.</pattern>
-    <pattern>ι2ϲ1μυρίαιϲ.</pattern>
-    <pattern>ι2σ1μυρίαισ.</pattern>
-    <pattern>ι2σ1μυρίαισ.</pattern>
-    <pattern>ι2σ1μυρίας.</pattern>
-    <pattern>ι2σ1μυρίας.</pattern>
-    <pattern>ι2ϲ1μυρίαϲ.</pattern>
-    <pattern>ι2ϲ1μυρίαϲ.</pattern>
-    <pattern>ι2σ1μυρίασ.</pattern>
-    <pattern>ι2σ1μυρίασ.</pattern>
-    <pattern>ι2σ1μύρια.</pattern>
-    <pattern>ι2σ1μύρια.</pattern>
-    <pattern>ι2ϲ1μύρια.</pattern>
-    <pattern>ι2ϲ1μύρια.</pattern>
+    <pattern>ι2σ1χίλιοι </pattern>
+    <pattern>ι2σ1χίλιοι </pattern>
+    <pattern>ι2ϲ1χίλιοι </pattern>
+    <pattern>ι2ϲ1χίλιοι </pattern>
+    <pattern>ι2σ1χιλίων </pattern>
+    <pattern>ι2σ1χιλίων </pattern>
+    <pattern>ι2ϲ1χιλίων </pattern>
+    <pattern>ι2ϲ1χιλίων </pattern>
+    <pattern>ι2σ1χιλίοις </pattern>
+    <pattern>ι2σ1χιλίοις </pattern>
+    <pattern>ι2ϲ1χιλίοιϲ </pattern>
+    <pattern>ι2ϲ1χιλίοιϲ </pattern>
+    <pattern>ι2σ1χιλίοισ </pattern>
+    <pattern>ι2σ1χιλίοισ </pattern>
+    <pattern>ι2σ1χιλίους </pattern>
+    <pattern>ι2σ1χιλίους </pattern>
+    <pattern>ι2ϲ1χιλίουϲ </pattern>
+    <pattern>ι2ϲ1χιλίουϲ </pattern>
+    <pattern>ι2σ1χιλίουσ </pattern>
+    <pattern>ι2σ1χιλίουσ </pattern>
+    <pattern>ι2σ1χίλιαι </pattern>
+    <pattern>ι2σ1χίλιαι </pattern>
+    <pattern>ι2ϲ1χίλιαι </pattern>
+    <pattern>ι2ϲ1χίλιαι </pattern>
+    <pattern>ι2σ1χιλίαις </pattern>
+    <pattern>ι2σ1χιλίαις </pattern>
+    <pattern>ι2ϲ1χιλίαιϲ </pattern>
+    <pattern>ι2ϲ1χιλίαιϲ </pattern>
+    <pattern>ι2σ1χιλίαισ </pattern>
+    <pattern>ι2σ1χιλίαισ </pattern>
+    <pattern>ι2σ1χιλίας </pattern>
+    <pattern>ι2σ1χιλίας </pattern>
+    <pattern>ι2ϲ1χιλίαϲ </pattern>
+    <pattern>ι2ϲ1χιλίαϲ </pattern>
+    <pattern>ι2σ1χιλίασ </pattern>
+    <pattern>ι2σ1χιλίασ </pattern>
+    <pattern>ι2σ1χίλια </pattern>
+    <pattern>ι2σ1χίλια </pattern>
+    <pattern>ι2ϲ1χίλια </pattern>
+    <pattern>ι2ϲ1χίλια </pattern>
+    <pattern>ι2σ1μύριοι </pattern>
+    <pattern>ι2σ1μύριοι </pattern>
+    <pattern>ι2ϲ1μύριοι </pattern>
+    <pattern>ι2ϲ1μύριοι </pattern>
+    <pattern>ι2σ1μυρίων </pattern>
+    <pattern>ι2σ1μυρίων </pattern>
+    <pattern>ι2ϲ1μυρίων </pattern>
+    <pattern>ι2ϲ1μυρίων </pattern>
+    <pattern>ι2σ1μυρίοις </pattern>
+    <pattern>ι2σ1μυρίοις </pattern>
+    <pattern>ι2ϲ1μυρίοιϲ </pattern>
+    <pattern>ι2ϲ1μυρίοιϲ </pattern>
+    <pattern>ι2σ1μυρίοισ </pattern>
+    <pattern>ι2σ1μυρίοισ </pattern>
+    <pattern>ι2σ1μυρίους </pattern>
+    <pattern>ι2σ1μυρίους </pattern>
+    <pattern>ι2ϲ1μυρίουϲ </pattern>
+    <pattern>ι2ϲ1μυρίουϲ </pattern>
+    <pattern>ι2σ1μυρίουσ </pattern>
+    <pattern>ι2σ1μυρίουσ </pattern>
+    <pattern>ι2σ1μύριαι </pattern>
+    <pattern>ι2σ1μύριαι </pattern>
+    <pattern>ι2ϲ1μύριαι </pattern>
+    <pattern>ι2ϲ1μύριαι </pattern>
+    <pattern>ι2σ1μυρίαις </pattern>
+    <pattern>ι2σ1μυρίαις </pattern>
+    <pattern>ι2ϲ1μυρίαιϲ </pattern>
+    <pattern>ι2ϲ1μυρίαιϲ </pattern>
+    <pattern>ι2σ1μυρίαισ </pattern>
+    <pattern>ι2σ1μυρίαισ </pattern>
+    <pattern>ι2σ1μυρίας </pattern>
+    <pattern>ι2σ1μυρίας </pattern>
+    <pattern>ι2ϲ1μυρίαϲ </pattern>
+    <pattern>ι2ϲ1μυρίαϲ </pattern>
+    <pattern>ι2σ1μυρίασ </pattern>
+    <pattern>ι2σ1μυρίασ </pattern>
+    <pattern>ι2σ1μύρια </pattern>
+    <pattern>ι2σ1μύρια </pattern>
+    <pattern>ι2ϲ1μύρια </pattern>
+    <pattern>ι2ϲ1μύρια </pattern>
     <pattern>ι2σ1χιλιοστ</pattern>
     <pattern>ι2ϲ1χιλιοϲτ</pattern>
     <pattern>ι2σ1μυριοστ</pattern>
     <pattern>ι2ϲ1μυριοϲτ</pattern>
-    <pattern>ι2σ1χιλιάκις.</pattern>
-    <pattern>ι2σ1χιλιάκις.</pattern>
-    <pattern>ι2ϲ1χιλιάκιϲ.</pattern>
-    <pattern>ι2ϲ1χιλιάκιϲ.</pattern>
-    <pattern>ι2σ1χιλιάκισ.</pattern>
-    <pattern>ι2σ1χιλιάκισ.</pattern>
-    <pattern>ι2σ1μυριάκις.</pattern>
-    <pattern>ι2σ1μυριάκις.</pattern>
-    <pattern>ι2ϲ1μυριάκιϲ.</pattern>
-    <pattern>ι2ϲ1μυριάκιϲ.</pattern>
-    <pattern>ι2σ1μυριάκισ.</pattern>
-    <pattern>ι2σ1μυριάκισ.</pattern>
+    <pattern>ι2σ1χιλιάκις </pattern>
+    <pattern>ι2σ1χιλιάκις </pattern>
+    <pattern>ι2ϲ1χιλιάκιϲ </pattern>
+    <pattern>ι2ϲ1χιλιάκιϲ </pattern>
+    <pattern>ι2σ1χιλιάκισ </pattern>
+    <pattern>ι2σ1χιλιάκισ </pattern>
+    <pattern>ι2σ1μυριάκις </pattern>
+    <pattern>ι2σ1μυριάκις </pattern>
+    <pattern>ι2ϲ1μυριάκιϲ </pattern>
+    <pattern>ι2ϲ1μυριάκιϲ </pattern>
+    <pattern>ι2σ1μυριάκισ </pattern>
+    <pattern>ι2σ1μυριάκισ </pattern>
 </HyphenationDescription>

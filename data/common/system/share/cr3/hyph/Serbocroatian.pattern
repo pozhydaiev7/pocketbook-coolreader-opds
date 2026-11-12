@@ -58,7 +58,9 @@
 % \message{Serbocroatian Hyphenation Patterns `hyph-sh-cyrl' Version 2.02 <2008/06/22>}
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Serbocroatian" lang="sh"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>т2ј</pattern>
     <pattern>т2л</pattern>
     <pattern>т2љ</pattern>
@@ -184,31 +186,31 @@
     <pattern>2т1ђ</pattern>
     <pattern>2т1ћ</pattern>
     <pattern>2т1ч</pattern>
-    <pattern>2дј.</pattern>
-    <pattern>2дл.</pattern>
-    <pattern>2дљ.</pattern>
-    <pattern>2др.</pattern>
-    <pattern>2дв.</pattern>
-    <pattern>2гј.</pattern>
-    <pattern>2гл.</pattern>
-    <pattern>2гљ.</pattern>
-    <pattern>2гр.</pattern>
-    <pattern>2гв.</pattern>
-    <pattern>2хј.</pattern>
-    <pattern>2хл.</pattern>
-    <pattern>2хљ.</pattern>
-    <pattern>2хр.</pattern>
-    <pattern>2хв.</pattern>
-    <pattern>2кј.</pattern>
-    <pattern>2кл.</pattern>
-    <pattern>2кљ.</pattern>
-    <pattern>2кр.</pattern>
-    <pattern>2кв.</pattern>
-    <pattern>2тј.</pattern>
-    <pattern>2тл.</pattern>
-    <pattern>2тљ.</pattern>
-    <pattern>2тр.</pattern>
-    <pattern>2тв.</pattern>
+    <pattern>2дј </pattern>
+    <pattern>2дл </pattern>
+    <pattern>2дљ </pattern>
+    <pattern>2др </pattern>
+    <pattern>2дв </pattern>
+    <pattern>2гј </pattern>
+    <pattern>2гл </pattern>
+    <pattern>2гљ </pattern>
+    <pattern>2гр </pattern>
+    <pattern>2гв </pattern>
+    <pattern>2хј </pattern>
+    <pattern>2хл </pattern>
+    <pattern>2хљ </pattern>
+    <pattern>2хр </pattern>
+    <pattern>2хв </pattern>
+    <pattern>2кј </pattern>
+    <pattern>2кл </pattern>
+    <pattern>2кљ </pattern>
+    <pattern>2кр </pattern>
+    <pattern>2кв </pattern>
+    <pattern>2тј </pattern>
+    <pattern>2тл </pattern>
+    <pattern>2тљ </pattern>
+    <pattern>2тр </pattern>
+    <pattern>2тв </pattern>
     <pattern>п2ј</pattern>
     <pattern>п2л</pattern>
     <pattern>п2љ</pattern>
@@ -334,26 +336,26 @@
     <pattern>2в1ђ</pattern>
     <pattern>2в1ћ</pattern>
     <pattern>2в1ч</pattern>
-    <pattern>2бј.</pattern>
-    <pattern>2бл.</pattern>
-    <pattern>2бљ.</pattern>
-    <pattern>2бр.</pattern>
-    <pattern>2фј.</pattern>
-    <pattern>2фл.</pattern>
-    <pattern>2фљ.</pattern>
-    <pattern>2фр.</pattern>
-    <pattern>2мј.</pattern>
-    <pattern>2мл.</pattern>
-    <pattern>2мљ.</pattern>
-    <pattern>2мр.</pattern>
-    <pattern>2пј.</pattern>
-    <pattern>2пл.</pattern>
-    <pattern>2пљ.</pattern>
-    <pattern>2пр.</pattern>
-    <pattern>2вј.</pattern>
-    <pattern>2вл.</pattern>
-    <pattern>2вљ.</pattern>
-    <pattern>2вр.</pattern>
+    <pattern>2бј </pattern>
+    <pattern>2бл </pattern>
+    <pattern>2бљ </pattern>
+    <pattern>2бр </pattern>
+    <pattern>2фј </pattern>
+    <pattern>2фл </pattern>
+    <pattern>2фљ </pattern>
+    <pattern>2фр </pattern>
+    <pattern>2мј </pattern>
+    <pattern>2мл </pattern>
+    <pattern>2мљ </pattern>
+    <pattern>2мр </pattern>
+    <pattern>2пј </pattern>
+    <pattern>2пл </pattern>
+    <pattern>2пљ </pattern>
+    <pattern>2пр </pattern>
+    <pattern>2вј </pattern>
+    <pattern>2вл </pattern>
+    <pattern>2вљ </pattern>
+    <pattern>2вр </pattern>
     <pattern>с2ц</pattern>
     <pattern>с2ј</pattern>
     <pattern>с2к</pattern>
@@ -379,18 +381,18 @@
     <pattern>2с1ђ</pattern>
     <pattern>2с1ћ</pattern>
     <pattern>2с1ч</pattern>
-    <pattern>2сј.</pattern>
-    <pattern>2ск.</pattern>
-    <pattern>2сл.</pattern>
-    <pattern>2см.</pattern>
-    <pattern>2сн.</pattern>
-    <pattern>2сп.</pattern>
-    <pattern>2сљ.</pattern>
-    <pattern>2ср.</pattern>
-    <pattern>2ст.</pattern>
-    <pattern>2св.</pattern>
-    <pattern>2сњ.</pattern>
-    <pattern>2сц.</pattern>
+    <pattern>2сј </pattern>
+    <pattern>2ск </pattern>
+    <pattern>2сл </pattern>
+    <pattern>2см </pattern>
+    <pattern>2сн </pattern>
+    <pattern>2сп </pattern>
+    <pattern>2сљ </pattern>
+    <pattern>2ср </pattern>
+    <pattern>2ст </pattern>
+    <pattern>2св </pattern>
+    <pattern>2сњ </pattern>
+    <pattern>2сц </pattern>
     <pattern>з2б</pattern>
     <pattern>з2д</pattern>
     <pattern>з2г</pattern>
@@ -416,17 +418,17 @@
     <pattern>2з1ђ</pattern>
     <pattern>2з1ћ</pattern>
     <pattern>2з1ч</pattern>
-    <pattern>2зј.</pattern>
-    <pattern>2зл.</pattern>
-    <pattern>2зм.</pattern>
-    <pattern>2зн.</pattern>
-    <pattern>2зљ.</pattern>
-    <pattern>2зр.</pattern>
-    <pattern>2зв.</pattern>
-    <pattern>2зњ.</pattern>
-    <pattern>2зб.</pattern>
-    <pattern>2зд.</pattern>
-    <pattern>2зг.</pattern>
+    <pattern>2зј </pattern>
+    <pattern>2зл </pattern>
+    <pattern>2зм </pattern>
+    <pattern>2зн </pattern>
+    <pattern>2зљ </pattern>
+    <pattern>2зр </pattern>
+    <pattern>2зв </pattern>
+    <pattern>2зњ </pattern>
+    <pattern>2зб </pattern>
+    <pattern>2зд </pattern>
+    <pattern>2зг </pattern>
     <pattern>ш2ц</pattern>
     <pattern>ш2к</pattern>
     <pattern>ш2л</pattern>
@@ -452,18 +454,18 @@
     <pattern>2ш1ђ</pattern>
     <pattern>2ш1ј</pattern>
     <pattern>2ш1р</pattern>
-    <pattern>2шк.</pattern>
-    <pattern>2шл.</pattern>
-    <pattern>2шм.</pattern>
-    <pattern>2шн.</pattern>
-    <pattern>2шп.</pattern>
-    <pattern>2шљ.</pattern>
-    <pattern>2шт.</pattern>
-    <pattern>2шв.</pattern>
-    <pattern>2шњ.</pattern>
-    <pattern>2шћ.</pattern>
-    <pattern>2шч.</pattern>
-    <pattern>2шц.</pattern>
+    <pattern>2шк </pattern>
+    <pattern>2шл </pattern>
+    <pattern>2шм </pattern>
+    <pattern>2шн </pattern>
+    <pattern>2шп </pattern>
+    <pattern>2шљ </pattern>
+    <pattern>2шт </pattern>
+    <pattern>2шв </pattern>
+    <pattern>2шњ </pattern>
+    <pattern>2шћ </pattern>
+    <pattern>2шч </pattern>
+    <pattern>2шц </pattern>
     <pattern>ж2б</pattern>
     <pattern>ж2д</pattern>
     <pattern>ж2г</pattern>
@@ -489,16 +491,16 @@
     <pattern>2ж1ч</pattern>
     <pattern>2ж1ј</pattern>
     <pattern>2ж1р</pattern>
-    <pattern>2жл.</pattern>
-    <pattern>2жм.</pattern>
-    <pattern>2жн.</pattern>
-    <pattern>2жљ.</pattern>
-    <pattern>2жв.</pattern>
-    <pattern>2жњ.</pattern>
-    <pattern>2жђ.</pattern>
-    <pattern>2жб.</pattern>
-    <pattern>2жд.</pattern>
-    <pattern>2жг.</pattern>
+    <pattern>2жл </pattern>
+    <pattern>2жм </pattern>
+    <pattern>2жн </pattern>
+    <pattern>2жљ </pattern>
+    <pattern>2жв </pattern>
+    <pattern>2жњ </pattern>
+    <pattern>2жђ </pattern>
+    <pattern>2жб </pattern>
+    <pattern>2жд </pattern>
+    <pattern>2жг </pattern>
     <pattern>ц2ј</pattern>
     <pattern>ц2р</pattern>
     <pattern>ц2в</pattern>
@@ -524,9 +526,9 @@
     <pattern>2ц1ђ</pattern>
     <pattern>2ц1ћ</pattern>
     <pattern>2ц1ч</pattern>
-    <pattern>2цј.</pattern>
-    <pattern>2цр.</pattern>
-    <pattern>2цв.</pattern>
+    <pattern>2цј </pattern>
+    <pattern>2цр </pattern>
+    <pattern>2цв </pattern>
     <pattern>ч2в</pattern>
     <pattern>2ч1ж</pattern>
     <pattern>2ч1б</pattern>
@@ -552,7 +554,7 @@
     <pattern>2ч1ђ</pattern>
     <pattern>2ч1ћ</pattern>
     <pattern>2ч1ч</pattern>
-    <pattern>2чв.</pattern>
+    <pattern>2чв </pattern>
     <pattern>2ј1ж</pattern>
     <pattern>2ј1б</pattern>
     <pattern>2ј1ц</pattern>
@@ -778,31 +780,31 @@
     <pattern>2ћ1ђ</pattern>
     <pattern>2ћ1ћ</pattern>
     <pattern>2ћ1ч</pattern>
-    <pattern>.х2</pattern>
-    <pattern>.ј2</pattern>
-    <pattern>.к2</pattern>
-    <pattern>.л2</pattern>
-    <pattern>.м2</pattern>
-    <pattern>.н2</pattern>
-    <pattern>.п2</pattern>
-    <pattern>.љ2</pattern>
-    <pattern>.р2</pattern>
-    <pattern>.с2</pattern>
-    <pattern>.т2</pattern>
-    <pattern>.в2</pattern>
-    <pattern>.њ2</pattern>
-    <pattern>.џ2</pattern>
-    <pattern>.з2</pattern>
-    <pattern>.ш2</pattern>
-    <pattern>.ђ2</pattern>
-    <pattern>.ћ2</pattern>
-    <pattern>.ч2</pattern>
-    <pattern>.ж2</pattern>
-    <pattern>.б2</pattern>
-    <pattern>.ц2</pattern>
-    <pattern>.д2</pattern>
-    <pattern>.ф2</pattern>
-    <pattern>.г2</pattern>
+    <pattern> х2</pattern>
+    <pattern> ј2</pattern>
+    <pattern> к2</pattern>
+    <pattern> л2</pattern>
+    <pattern> м2</pattern>
+    <pattern> н2</pattern>
+    <pattern> п2</pattern>
+    <pattern> љ2</pattern>
+    <pattern> р2</pattern>
+    <pattern> с2</pattern>
+    <pattern> т2</pattern>
+    <pattern> в2</pattern>
+    <pattern> њ2</pattern>
+    <pattern> џ2</pattern>
+    <pattern> з2</pattern>
+    <pattern> ш2</pattern>
+    <pattern> ђ2</pattern>
+    <pattern> ћ2</pattern>
+    <pattern> ч2</pattern>
+    <pattern> ж2</pattern>
+    <pattern> б2</pattern>
+    <pattern> ц2</pattern>
+    <pattern> д2</pattern>
+    <pattern> ф2</pattern>
+    <pattern> г2</pattern>
     <pattern>о3а</pattern>
     <pattern>о3е</pattern>
     <pattern>о3и</pattern>
@@ -1404,62 +1406,62 @@
     <pattern>2ж3бљ</pattern>
     <pattern>2ж3бр</pattern>
     <pattern>2з3бљ</pattern>
-    <pattern>.а4е2ро</pattern>
-    <pattern>.бе4о</pattern>
-    <pattern>.би4о</pattern>
-    <pattern>.ге4о</pattern>
-    <pattern>.за3г2н</pattern>
-    <pattern>.за3т2ка</pattern>
-    <pattern>.иза3г2н</pattern>
-    <pattern>.иза3т2к</pattern>
-    <pattern>.из3г2н</pattern>
-    <pattern>.изд2но</pattern>
-    <pattern>.изд2ну</pattern>
-    <pattern>.изд2на</pattern>
-    <pattern>.изр2к</pattern>
-    <pattern>.ист2к</pattern>
-    <pattern>.наг2н</pattern>
-    <pattern>.наг2њ</pattern>
-    <pattern>.на3д2нев</pattern>
-    <pattern>.на3д2нич</pattern>
-    <pattern>.на3д2ниц</pattern>
-    <pattern>.на3т2ках</pattern>
-    <pattern>.на3т2кам</pattern>
-    <pattern>.на3т2касм</pattern>
-    <pattern>.на3т2каст</pattern>
-    <pattern>.ода3г2н</pattern>
-    <pattern>.ода3д2н</pattern>
-    <pattern>.од3г2н</pattern>
-    <pattern>.од3м2н</pattern>
-    <pattern>.о3т2ках</pattern>
-    <pattern>.о3т2кам</pattern>
-    <pattern>.о3т2касм</pattern>
-    <pattern>.о3т2каст</pattern>
-    <pattern>.по3г2н</pattern>
-    <pattern>.по3д2нев</pattern>
-    <pattern>.по3м2н</pattern>
-    <pattern>.по3м2њ</pattern>
-    <pattern>.по3р2в</pattern>
-    <pattern>.по3р2ђ</pattern>
-    <pattern>.по3т2ках</pattern>
-    <pattern>.по3т2кам</pattern>
-    <pattern>.по3т2кат</pattern>
-    <pattern>.по3т2кав</pattern>
-    <pattern>.пред3м2н</pattern>
-    <pattern>.пред3м2њ</pattern>
-    <pattern>.пре3т2ках</pattern>
-    <pattern>.пре3т2кам</pattern>
-    <pattern>.пре3т2кат</pattern>
-    <pattern>.про3г2н</pattern>
-    <pattern>.про3т2ки</pattern>
-    <pattern>.про3т2ка</pattern>
-    <pattern>.раза3г2н</pattern>
-    <pattern>.раз3г2н</pattern>
-    <pattern>.раз3д2ни</pattern>
-    <pattern>.раза3т2ка</pattern>
-    <pattern>.у3г2ми</pattern>
-    <pattern>.у3г2н</pattern>
-    <pattern>.уза3т2ка</pattern>
+    <pattern> а4е2ро</pattern>
+    <pattern> бе4о</pattern>
+    <pattern> би4о</pattern>
+    <pattern> ге4о</pattern>
+    <pattern> за3г2н</pattern>
+    <pattern> за3т2ка</pattern>
+    <pattern> иза3г2н</pattern>
+    <pattern> иза3т2к</pattern>
+    <pattern> из3г2н</pattern>
+    <pattern> изд2но</pattern>
+    <pattern> изд2ну</pattern>
+    <pattern> изд2на</pattern>
+    <pattern> изр2к</pattern>
+    <pattern> ист2к</pattern>
+    <pattern> наг2н</pattern>
+    <pattern> наг2њ</pattern>
+    <pattern> на3д2нев</pattern>
+    <pattern> на3д2нич</pattern>
+    <pattern> на3д2ниц</pattern>
+    <pattern> на3т2ках</pattern>
+    <pattern> на3т2кам</pattern>
+    <pattern> на3т2касм</pattern>
+    <pattern> на3т2каст</pattern>
+    <pattern> ода3г2н</pattern>
+    <pattern> ода3д2н</pattern>
+    <pattern> од3г2н</pattern>
+    <pattern> од3м2н</pattern>
+    <pattern> о3т2ках</pattern>
+    <pattern> о3т2кам</pattern>
+    <pattern> о3т2касм</pattern>
+    <pattern> о3т2каст</pattern>
+    <pattern> по3г2н</pattern>
+    <pattern> по3д2нев</pattern>
+    <pattern> по3м2н</pattern>
+    <pattern> по3м2њ</pattern>
+    <pattern> по3р2в</pattern>
+    <pattern> по3р2ђ</pattern>
+    <pattern> по3т2ках</pattern>
+    <pattern> по3т2кам</pattern>
+    <pattern> по3т2кат</pattern>
+    <pattern> по3т2кав</pattern>
+    <pattern> пред3м2н</pattern>
+    <pattern> пред3м2њ</pattern>
+    <pattern> пре3т2ках</pattern>
+    <pattern> пре3т2кам</pattern>
+    <pattern> пре3т2кат</pattern>
+    <pattern> про3г2н</pattern>
+    <pattern> про3т2ки</pattern>
+    <pattern> про3т2ка</pattern>
+    <pattern> раза3г2н</pattern>
+    <pattern> раз3г2н</pattern>
+    <pattern> раз3д2ни</pattern>
+    <pattern> раза3т2ка</pattern>
+    <pattern> у3г2ми</pattern>
+    <pattern> у3г2н</pattern>
+    <pattern> уза3т2ка</pattern>
     <pattern>3х2тети</pattern>
     <pattern>3х2тјети</pattern>
     <pattern>3х2тел</pattern>
@@ -1468,16 +1470,16 @@
     <pattern>3х2тјел</pattern>
     <pattern>3х2тјев</pattern>
     <pattern>3х2тјењ</pattern>
-    <pattern>3г2дегод.</pattern>
-    <pattern>3г2дјегод.</pattern>
+    <pattern>3г2дегод </pattern>
+    <pattern>3г2дјегод </pattern>
     <pattern>3г2декак</pattern>
     <pattern>3г2декад</pattern>
     <pattern>3г2дјекак</pattern>
     <pattern>3г2дјекад</pattern>
-    <pattern>ни3г2де.</pattern>
-    <pattern>не3г2де.</pattern>
-    <pattern>ни3г2дје.</pattern>
-    <pattern>не3г2дје.</pattern>
+    <pattern>ни3г2де </pattern>
+    <pattern>не3г2де </pattern>
+    <pattern>ни3г2дје </pattern>
+    <pattern>не3г2дје </pattern>
     <pattern>3б2дет</pattern>
     <pattern>3б2дењ</pattern>
     <pattern>3б2дјет</pattern>
@@ -1530,1185 +1532,1185 @@
     <pattern>3ч2лањ</pattern>
     <pattern>3р2је</pattern>
     <pattern>4р3јем</pattern>
-    <pattern>4р3је.</pattern>
-    <pattern>.бе2з3ј</pattern>
-    <pattern>.бе2з3л</pattern>
-    <pattern>.бе2з3м</pattern>
-    <pattern>.бе2з3н</pattern>
-    <pattern>.бе2з3љ</pattern>
-    <pattern>.бе2з3р</pattern>
-    <pattern>.бе2з3в</pattern>
-    <pattern>.бе2з3њ</pattern>
-    <pattern>.бе2з3б</pattern>
-    <pattern>.бе2з3д</pattern>
-    <pattern>.бе2з3г</pattern>
-    <pattern>.бе2з3и</pattern>
-    <pattern>.бе2з3о</pattern>
-    <pattern>.бе2з3у</pattern>
-    <pattern>.бе2з3алкохол</pattern>
-    <pattern>.бе2з3атомск</pattern>
-    <pattern>.бе3з4бедн</pattern>
-    <pattern>.бе3з4беда</pattern>
-    <pattern>.бе3з4бједн</pattern>
-    <pattern>.бе3з4бједа</pattern>
-    <pattern>.бе3з4бели</pattern>
-    <pattern>.бе3з4бол</pattern>
-    <pattern>.бе3з4вучн</pattern>
-    <pattern>.бе3з4вуча</pattern>
-    <pattern>.бе3з4истан</pattern>
-    <pattern>.бе3з4истен</pattern>
-    <pattern>.бе3з4јак</pattern>
-    <pattern>.бе3з4јач</pattern>
-    <pattern>.бе3з4лобн</pattern>
-    <pattern>.бе3з4лоба</pattern>
-    <pattern>.бе3з4начај</pattern>
-    <pattern>.бе3з4рачн</pattern>
-    <pattern>.бе3з4рача</pattern>
-    <pattern>.бе3з4уп</pattern>
-    <pattern>.бе3з4уб</pattern>
-    <pattern>.бе2с3ц</pattern>
-    <pattern>.бе2с3к</pattern>
-    <pattern>.бе2с3п</pattern>
-    <pattern>.бе2с3т</pattern>
-    <pattern>.бе3с4крупул</pattern>
-    <pattern>.бе3с4покојн</pattern>
-    <pattern>.бе3с4покоја</pattern>
-    <pattern>.бе3с4порн</pattern>
-    <pattern>.бе3с4пора</pattern>
-    <pattern>.бе3с4твар</pattern>
-    <pattern>.бе3с4тид</pattern>
-    <pattern>.бе3с4тија</pattern>
-    <pattern>.бе3с4тилу</pattern>
-    <pattern>.бе3с4тиљ</pattern>
-    <pattern>.бе3с4трана</pattern>
-    <pattern>.бе3с4трас</pattern>
-    <pattern>.бес4тселер</pattern>
-    <pattern>.бе2ш3ћ</pattern>
-    <pattern>.бе2ш3ч</pattern>
-    <pattern>.ва2н3евр</pattern>
-    <pattern>.ва2н3устав</pattern>
-    <pattern>.и2з3б</pattern>
-    <pattern>.и2з3д</pattern>
-    <pattern>.и2з3г</pattern>
-    <pattern>.и2з3ј</pattern>
-    <pattern>.и2з3л</pattern>
-    <pattern>.и2з3м</pattern>
-    <pattern>.и2з3н</pattern>
-    <pattern>.и2з3љ</pattern>
-    <pattern>.и2з3р</pattern>
-    <pattern>.и2з3в</pattern>
-    <pattern>.и2з3њ</pattern>
-    <pattern>.и2з3и</pattern>
-    <pattern>.и2з3о</pattern>
-    <pattern>.и2з3у</pattern>
-    <pattern>.и2з3бија</pattern>
-    <pattern>.и2з3бива</pattern>
-    <pattern>.и2з3веди</pattern>
-    <pattern>.и2з3ведн</pattern>
-    <pattern>.и2з3ведб</pattern>
-    <pattern>.и2з3веде</pattern>
-    <pattern>.и2з3дај</pattern>
-    <pattern>.и2з3аба</pattern>
-    <pattern>.и2з3ака</pattern>
-    <pattern>.и2з3анал</pattern>
-    <pattern>.и3з4бав</pattern>
-    <pattern>.и3з4бичкава</pattern>
-    <pattern>.и3з4блеушан</pattern>
-    <pattern>.и3з4бојак</pattern>
-    <pattern>.и3з4бојк</pattern>
-    <pattern>.и3з4вали</pattern>
-    <pattern>.и3з4валу</pattern>
-    <pattern>.и3з4вала</pattern>
-    <pattern>.и3з4вале</pattern>
-    <pattern>.и3з4ваљи</pattern>
-    <pattern>.и3з4вижд</pattern>
-    <pattern>.и3з4виискр</pattern>
-    <pattern>.и3з4вија</pattern>
-    <pattern>.и3з4вијен</pattern>
-    <pattern>.и3з4вин</pattern>
-    <pattern>.и3з4вир</pattern>
-    <pattern>.и3з4вињ</pattern>
-    <pattern>.и3з4витоп</pattern>
-    <pattern>.и3з4вјед</pattern>
-    <pattern>.и3з4војац</pattern>
-    <pattern>.и3з4војц</pattern>
-    <pattern>.и3з4вор</pattern>
-    <pattern>.и3з4гомет</pattern>
-    <pattern>.и3з4гред</pattern>
-    <pattern>.и3з4грн</pattern>
-    <pattern>.и3з4грт</pattern>
-    <pattern>.и3з4драв</pattern>
-    <pattern>.и3з4иђ</pattern>
-    <pattern>.и3з4ид</pattern>
-    <pattern>.и3з4ими</pattern>
-    <pattern>.и3з4јежљ</pattern>
-    <pattern>.и3з4лоз</pattern>
-    <pattern>.и3з4лож</pattern>
-    <pattern>.и3з4лог</pattern>
-    <pattern>.и3з4лопаћ</pattern>
-    <pattern>.и3з4ним</pattern>
-    <pattern>.и3з4ној</pattern>
-    <pattern>.из4оанем</pattern>
-    <pattern>.из4оаном</pattern>
-    <pattern>.из4обат</pattern>
-    <pattern>.из4оброн</pattern>
-    <pattern>.из4огам</pattern>
-    <pattern>.из4огео</pattern>
-    <pattern>.из4оглос</pattern>
-    <pattern>.из4огон</pattern>
-    <pattern>.из4ограф</pattern>
-    <pattern>.из4одим</pattern>
-    <pattern>.из4один</pattern>
-    <pattern>.из4одоз</pattern>
-    <pattern>.из4оклин</pattern>
-    <pattern>.из4околон</pattern>
-    <pattern>.и3з4олат</pattern>
-    <pattern>.и3з4олац</pattern>
-    <pattern>.и3з4олир</pattern>
-    <pattern>.и3з4олов</pattern>
-    <pattern>.из4олекс</pattern>
-    <pattern>.из4олукс</pattern>
-    <pattern>.из4омер</pattern>
-    <pattern>.из4ометр</pattern>
-    <pattern>.из4оморф</pattern>
-    <pattern>.из4онеф</pattern>
-    <pattern>.из4оном</pattern>
-    <pattern>.из4опат</pattern>
-    <pattern>.из4опер</pattern>
-    <pattern>.из4опле</pattern>
-    <pattern>.из4опол</pattern>
-    <pattern>.из4опсеф</pattern>
-    <pattern>.из4орах</pattern>
-    <pattern>.из4осеи</pattern>
-    <pattern>.из4осинт</pattern>
-    <pattern>.из4осист</pattern>
-    <pattern>.из4оскел</pattern>
-    <pattern>.из4оскоп</pattern>
-    <pattern>.из4остаз</pattern>
-    <pattern>.из4осте</pattern>
-    <pattern>.из4отах</pattern>
-    <pattern>.из4отал</pattern>
-    <pattern>.из4отер</pattern>
-    <pattern>.из4отон</pattern>
-    <pattern>.из4отоп</pattern>
-    <pattern>.из4отро</pattern>
-    <pattern>.из4офон</pattern>
-    <pattern>.из4офот</pattern>
-    <pattern>.из4охал</pattern>
-    <pattern>.из4охаз</pattern>
-    <pattern>.из4охел</pattern>
-    <pattern>.из4охиј</pattern>
-    <pattern>.из4охим</pattern>
-    <pattern>.из4охит</pattern>
-    <pattern>.из4охипс</pattern>
-    <pattern>.из4охор</pattern>
-    <pattern>.из4охро</pattern>
-    <pattern>.и3з4раел</pattern>
-    <pattern>.и3з4раиљ</pattern>
-    <pattern>.и3з4рачи</pattern>
-    <pattern>.и3з4ун</pattern>
-    <pattern>.и3з4упч</pattern>
-    <pattern>.и2с3ц</pattern>
-    <pattern>.и2с3к</pattern>
-    <pattern>.и2с3п</pattern>
-    <pattern>.и2с3т</pattern>
-    <pattern>.и3с4как</pattern>
-    <pattern>.и3с4кат</pattern>
-    <pattern>.и3с4кањ</pattern>
-    <pattern>.и3с4кариот</pattern>
-    <pattern>.и3с4квас</pattern>
-    <pattern>.и3с4кврч</pattern>
-    <pattern>.и3с4кин</pattern>
-    <pattern>.и3с4кита</pattern>
-    <pattern>.и3с4конск</pattern>
-    <pattern>.и3с4коч</pattern>
-    <pattern>.и3с4крам</pattern>
-    <pattern>.и3с4крит</pattern>
-    <pattern>.и3с4криш</pattern>
-    <pattern>.и3с4крич</pattern>
-    <pattern>.и3с4криц</pattern>
-    <pattern>.и3с4крат</pattern>
-    <pattern>.и3с4крен</pattern>
-    <pattern>.и3с4крењ</pattern>
-    <pattern>.и3с4крој</pattern>
-    <pattern>.и3с4крсн</pattern>
-    <pattern>.и3с4крса</pattern>
-    <pattern>.и3с4купља</pattern>
-    <pattern>.и3с4лам</pattern>
-    <pattern>.и3с4лаб</pattern>
-    <pattern>.и3с4леђ</pattern>
-    <pattern>.и3с4лед</pattern>
-    <pattern>.и3с4лијеђ</pattern>
-    <pattern>.и3с4лијед</pattern>
-    <pattern>.и3с4љеђ</pattern>
-    <pattern>.и3с4љед</pattern>
-    <pattern>.и3с4лик</pattern>
-    <pattern>.и3с4лин</pattern>
-    <pattern>.и3с4лов</pattern>
-    <pattern>.и3с4луш</pattern>
-    <pattern>.и3с4луж</pattern>
-    <pattern>.и3с4ме</pattern>
-    <pattern>.и3с4мије</pattern>
-    <pattern>.и3с4мје</pattern>
-    <pattern>.и3с4пав</pattern>
-    <pattern>.и3с4паљив</pattern>
-    <pattern>.и3с4пира</pattern>
-    <pattern>.и3с4плит</pattern>
-    <pattern>.и3с4плић</pattern>
-    <pattern>.и3с4покој</pattern>
-    <pattern>.и3с4полин</pattern>
-    <pattern>.и3с4пон</pattern>
-    <pattern>.и3с4порав</pattern>
-    <pattern>.и3с4прави</pattern>
-    <pattern>.и3с4правк</pattern>
-    <pattern>.и3с4правн</pattern>
-    <pattern>.и3с4прављ</pattern>
-    <pattern>.и3с4права</pattern>
-    <pattern>.и3с4пупч</pattern>
-    <pattern>.и3с4пур</pattern>
-    <pattern>.и3с4ред</pattern>
-    <pattern>.и3с4рк</pattern>
-    <pattern>.и3с4тави</pattern>
-    <pattern>.и3с4тављ</pattern>
-    <pattern>.и3с4такн</pattern>
-    <pattern>.и3с4там</pattern>
-    <pattern>.и3с4тар</pattern>
-    <pattern>.и3с4тас</pattern>
-    <pattern>.и3с4таћ</pattern>
-    <pattern>.и3с4тин</pattern>
-    <pattern>.и3с4тир</pattern>
-    <pattern>.и3с4тиц</pattern>
-    <pattern>.и3с4тифан</pattern>
-    <pattern>.и3с4ток</pattern>
-    <pattern>.и3с4тори</pattern>
-    <pattern>.и3с4точн</pattern>
-    <pattern>.и3с4точњ</pattern>
-    <pattern>.и3с4точа</pattern>
-    <pattern>.и3с4трав</pattern>
-    <pattern>.и3с4трад</pattern>
-    <pattern>.и3с4тран</pattern>
-    <pattern>.и3с4трић</pattern>
-    <pattern>.и3с4триж</pattern>
-    <pattern>.и3с4триц</pattern>
-    <pattern>.и3с4труг</pattern>
-    <pattern>.и3с4туп</pattern>
-    <pattern>.и3с4ук</pattern>
-    <pattern>.и3с4ус</pattern>
-    <pattern>.и3с4ут</pattern>
-    <pattern>.и3с4уш</pattern>
-    <pattern>.и2ж3ђ</pattern>
-    <pattern>.и2ш3ћ</pattern>
-    <pattern>.и2ш3ч</pattern>
-    <pattern>.из3бе2з3обр</pattern>
-    <pattern>.из3бе2з3ум</pattern>
-    <pattern>.из3ва2н3евр</pattern>
-    <pattern>.на2д3л</pattern>
-    <pattern>.на2д3љ</pattern>
-    <pattern>.на2д3в</pattern>
-    <pattern>.на3д4вал</pattern>
-    <pattern>.на3д4веси</pattern>
-    <pattern>.на3д4вест</pattern>
-    <pattern>.на3д4виј</pattern>
-    <pattern>.на3д4вит</pattern>
-    <pattern>.на3д4вла</pattern>
-    <pattern>.на3д4воје</pattern>
-    <pattern>.на3д4вор</pattern>
-    <pattern>.на2д3игр</pattern>
-    <pattern>.на2д3инж</pattern>
-    <pattern>.на2д3ина</pattern>
-    <pattern>.на2д3иск</pattern>
-    <pattern>.на2д3јах</pattern>
-    <pattern>.на2д3јач</pattern>
-    <pattern>.на2д3јек</pattern>
-    <pattern>.на2д3јез</pattern>
-    <pattern>.на2д3јеч</pattern>
-    <pattern>.на2д3јун</pattern>
-    <pattern>.на3д4лан</pattern>
-    <pattern>.на3д4леш</pattern>
-    <pattern>.на3д4леж</pattern>
-    <pattern>.на2д3ора</pattern>
-    <pattern>.на2д3осо</pattern>
-    <pattern>.на2д3осе</pattern>
-    <pattern>.на2д3осје</pattern>
-    <pattern>.на2д3офи</pattern>
-    <pattern>.на2д3оч</pattern>
-    <pattern>.на2д3ран</pattern>
-    <pattern>.на2д3рач</pattern>
-    <pattern>.на2д3раст</pattern>
-    <pattern>.на2д3рашћ</pattern>
-    <pattern>.на2д3реал</pattern>
-    <pattern>.на2д3реп</pattern>
-    <pattern>.на2д3рук</pattern>
-    <pattern>.на2д3руч</pattern>
-    <pattern>.на2д3руг</pattern>
-    <pattern>.на2д3удар</pattern>
-    <pattern>.на2д3ум</pattern>
-    <pattern>.на2д3уч</pattern>
-    <pattern>.на2ј3а</pattern>
-    <pattern>.на2ј3е</pattern>
-    <pattern>.на2ј3и</pattern>
-    <pattern>.на2ј3о</pattern>
-    <pattern>.на2ј3у</pattern>
-    <pattern>.на3ј4ави</pattern>
-    <pattern>.на3ј4ављ</pattern>
-    <pattern>.на3ј4ава</pattern>
-    <pattern>.на3ј4аве</pattern>
-    <pattern>.на3ј4ади</pattern>
-    <pattern>.на3ј4ада</pattern>
-    <pattern>.на3ј4аде</pattern>
-    <pattern>.на3ј4ажи</pattern>
-    <pattern>.на3ј4ази</pattern>
-    <pattern>.на3ј4ако</pattern>
-    <pattern>.на3ј4ака</pattern>
-    <pattern>.на3ј4ало</pattern>
-    <pattern>.на3ј4ами</pattern>
-    <pattern>.на3ј4амл</pattern>
-    <pattern>.на3ј4амн</pattern>
-    <pattern>.на3ј4ари</pattern>
-    <pattern>.на3ј4арм</pattern>
-    <pattern>.на3ј4арц</pattern>
-    <pattern>.на3ј4ати</pattern>
-    <pattern>.на3ј4аук</pattern>
-    <pattern>.на3ј4ах</pattern>
-    <pattern>.на3ј4аш</pattern>
-    <pattern>.на3ј4еди</pattern>
-    <pattern>.на3ј4едн</pattern>
-    <pattern>.на3ј4едр</pattern>
-    <pattern>.на3ј4еда</pattern>
-    <pattern>.на3ј4ежи</pattern>
-    <pattern>.на3ј4ежу</pattern>
-    <pattern>.на3ј4еже</pattern>
-    <pattern>.на3ј4езн</pattern>
-    <pattern>.на3ј4езд</pattern>
-    <pattern>.на3ј4ести</pattern>
-    <pattern>.на3ј4етк</pattern>
-    <pattern>.на3ј4ец</pattern>
-    <pattern>.на3ј4ури</pattern>
-    <pattern>.на3ј4урен</pattern>
-    <pattern>.о2б3ј</pattern>
-    <pattern>.о2б3љ</pattern>
-    <pattern>.о2б3р</pattern>
-    <pattern>.обе2з3б</pattern>
-    <pattern>.обе2з3д</pattern>
-    <pattern>.обе2з3г</pattern>
-    <pattern>.обе2з3ј</pattern>
-    <pattern>.обе2з3л</pattern>
-    <pattern>.обе2з3м</pattern>
-    <pattern>.обе2з3н</pattern>
-    <pattern>.обе2з3о</pattern>
-    <pattern>.обе2з3љ</pattern>
-    <pattern>.обе2з3р</pattern>
-    <pattern>.обе2з3у</pattern>
-    <pattern>.обе2з3в</pattern>
-    <pattern>.обе3з4виј</pattern>
-    <pattern>.обе3з4нан</pattern>
-    <pattern>.обе3з4нањ</pattern>
-    <pattern>.обе3з4нач</pattern>
-    <pattern>.обе3з4уб</pattern>
-    <pattern>.обе2с3ц</pattern>
-    <pattern>.обе2с3к</pattern>
-    <pattern>.обе2с3п</pattern>
-    <pattern>.обе2с3т</pattern>
-    <pattern>.обе3с4тан</pattern>
-    <pattern>.обе3с4тиј</pattern>
-    <pattern>.обе3с4тран</pattern>
-    <pattern>.обе2ш3ћ</pattern>
-    <pattern>.обе2ш3ч</pattern>
-    <pattern>.о2б3игр</pattern>
-    <pattern>.о2б3истин</pattern>
-    <pattern>.о2б3истињ</pattern>
-    <pattern>.о3б4јек</pattern>
-    <pattern>.о3б4јер</pattern>
-    <pattern>.о3б4јеси</pattern>
-    <pattern>.о3б4јет</pattern>
-    <pattern>.о3б4јеш</pattern>
-    <pattern>.о2б3лај</pattern>
-    <pattern>.о2б3лам</pattern>
-    <pattern>.о2б3лакш</pattern>
-    <pattern>.о2б3ласк</pattern>
-    <pattern>.о2б3леп</pattern>
-    <pattern>.о2б3лет</pattern>
-    <pattern>.о2б3лећ</pattern>
-    <pattern>.о2б3леж</pattern>
-    <pattern>.о2б3лег</pattern>
-    <pattern>.о2б3лијеп</pattern>
-    <pattern>.о2б3лијет</pattern>
-    <pattern>.о2б3лијеж</pattern>
-    <pattern>.о2б3лијег</pattern>
-    <pattern>.о2б3леден</pattern>
-    <pattern>.о2б3лив</pattern>
-    <pattern>.о2б3лизат</pattern>
-    <pattern>.о2б3лизав</pattern>
-    <pattern>.о2б3лизи</pattern>
-    <pattern>.о2б3лист</pattern>
-    <pattern>.о2б3лока</pattern>
-    <pattern>.о2б3лук</pattern>
-    <pattern>.о2б3луч</pattern>
-    <pattern>.о3б4љан</pattern>
-    <pattern>.о3б4љут</pattern>
-    <pattern>.о3б4љуз</pattern>
-    <pattern>.о2б3ору</pattern>
-    <pattern>.о3б4раже</pattern>
-    <pattern>.о3б4рази</pattern>
-    <pattern>.о3б4разн</pattern>
-    <pattern>.о3б4разо</pattern>
-    <pattern>.о3б4разу</pattern>
-    <pattern>.о3б4раза</pattern>
-    <pattern>.о3б4разд</pattern>
-    <pattern>.о3б4рамб</pattern>
-    <pattern>.о3б4ран</pattern>
-    <pattern>.о3б4рањ</pattern>
-    <pattern>.о3б4рат</pattern>
-    <pattern>.о3б4раћ</pattern>
-    <pattern>.о3б4рашн</pattern>
-    <pattern>.о3б4рашч</pattern>
-    <pattern>.о3б4рв</pattern>
-    <pattern>.о3б4рђ</pattern>
-    <pattern>.о3б4рем</pattern>
-    <pattern>.о3б4рес</pattern>
-    <pattern>.о3б4ређ</pattern>
-    <pattern>.о3б4реч</pattern>
-    <pattern>.о3б4реж</pattern>
-    <pattern>.о3б4рец</pattern>
-    <pattern>.о3б4ред</pattern>
-    <pattern>.о3б4рети</pattern>
-    <pattern>.о3б4ретн</pattern>
-    <pattern>.о3б4риј</pattern>
-    <pattern>.о3б4рис</pattern>
-    <pattern>.о3б4рит</pattern>
-    <pattern>.о3б4рив</pattern>
-    <pattern>.о3б4рич</pattern>
-    <pattern>.о3б4риц</pattern>
-    <pattern>.о3б4рк</pattern>
-    <pattern>.о3б4рл</pattern>
-    <pattern>.о3б4рн</pattern>
-    <pattern>.о3б4рљ</pattern>
-    <pattern>.о3б4рс</pattern>
-    <pattern>.о3б4рт</pattern>
-    <pattern>.о3б4рш</pattern>
-    <pattern>.о3б4рч</pattern>
-    <pattern>.о3б4рок</pattern>
-    <pattern>.о3б4рон</pattern>
-    <pattern>.о3б4роњ</pattern>
-    <pattern>.о3б4роћ</pattern>
-    <pattern>.о3б4роч</pattern>
-    <pattern>.о3б4рова</pattern>
-    <pattern>.о3б4ровц</pattern>
-    <pattern>.о3б4рук</pattern>
-    <pattern>.о3б4рун</pattern>
-    <pattern>.о3б4рус</pattern>
-    <pattern>.о3б4руњ</pattern>
-    <pattern>.о3б4руш</pattern>
-    <pattern>.о3б4руч</pattern>
-    <pattern>.о2б3убож</pattern>
-    <pattern>.о2б3уз</pattern>
-    <pattern>.о2б3уж</pattern>
-    <pattern>.о2б3уд</pattern>
-    <pattern>.о2б3уми</pattern>
-    <pattern>.о2б3умј</pattern>
-    <pattern>.о2б3умр</pattern>
-    <pattern>.о2б3уме</pattern>
-    <pattern>.о2д3ј</pattern>
-    <pattern>.о2д3л</pattern>
-    <pattern>.о2д3љ</pattern>
-    <pattern>.о2д3р</pattern>
-    <pattern>.о2д3в</pattern>
-    <pattern>.о2д3арг</pattern>
-    <pattern>.о3д4вај</pattern>
-    <pattern>.о3д4важ</pattern>
-    <pattern>.о3д4весн</pattern>
-    <pattern>.о3д4вест</pattern>
-    <pattern>.о3д4веса</pattern>
-    <pattern>.о3д4викав</pattern>
-    <pattern>.о3д4викн</pattern>
-    <pattern>.о3д4вис</pattern>
-    <pattern>.о3д4вић</pattern>
-    <pattern>.о3д4вој</pattern>
-    <pattern>.о2д3игр</pattern>
-    <pattern>.о2д3и2з3в</pattern>
-    <pattern>.о2д3и2з3д</pattern>
-    <pattern>.о2д3иск</pattern>
-    <pattern>.о2д3исти</pattern>
-    <pattern>.о3д4јел</pattern>
-    <pattern>.о3д4јен</pattern>
-    <pattern>.о3д4јев</pattern>
-    <pattern>.о3д4јећ</pattern>
-    <pattern>.о3д4лаз</pattern>
-    <pattern>.о3д4лаж</pattern>
-    <pattern>.о3д4лаг</pattern>
-    <pattern>.о3д4лака</pattern>
-    <pattern>.о3д4лук</pattern>
-    <pattern>.о3д4луч</pattern>
-    <pattern>.о2д3озд</pattern>
-    <pattern>.о2д3озг</pattern>
-    <pattern>.о2д3ок</pattern>
-    <pattern>.о2д3онл</pattern>
-    <pattern>.о2д3оно</pattern>
-    <pattern>.о2д3ону</pattern>
-    <pattern>.о2д3онд</pattern>
-    <pattern>.о3д4рани</pattern>
-    <pattern>.о3д4рано</pattern>
-    <pattern>.о3д4рану</pattern>
-    <pattern>.о3д4рана</pattern>
-    <pattern>.о3д4ране</pattern>
-    <pattern>.о3д4раз</pattern>
-    <pattern>.о3д4раћ</pattern>
-    <pattern>.о3д4раж</pattern>
-    <pattern>.о3д4рапи</pattern>
-    <pattern>.о3д4рапљ</pattern>
-    <pattern>.о3д4рапа</pattern>
-    <pattern>.о3д4рачи</pattern>
-    <pattern>.о3д4рвен</pattern>
-    <pattern>.о3д4рвењ</pattern>
-    <pattern>.о3д4рвеч</pattern>
-    <pattern>.о3д4рем</pattern>
-    <pattern>.о3д4рен</pattern>
-    <pattern>.о3д4рет</pattern>
-    <pattern>.о3д4ређ</pattern>
-    <pattern>.о3д4ред</pattern>
-    <pattern>.о3д4рл</pattern>
-    <pattern>.о3д4рн</pattern>
-    <pattern>.о3д4рп</pattern>
-    <pattern>.о3д4рљ</pattern>
-    <pattern>.о3д4рт</pattern>
-    <pattern>.о3д4рж</pattern>
-    <pattern>.о3д4рин</pattern>
-    <pattern>.о3д4рињ</pattern>
-    <pattern>.о3д4риш</pattern>
-    <pattern>.о3д4рич</pattern>
-    <pattern>.о3д4риб</pattern>
-    <pattern>.о3д4риц</pattern>
-    <pattern>.о3д4рон</pattern>
-    <pattern>.о3д4роњ</pattern>
-    <pattern>.о3д4руж</pattern>
-    <pattern>.о3д4руг</pattern>
-    <pattern>.о2д3уви</pattern>
-    <pattern>.о2д3уве</pattern>
-    <pattern>.о2д3узи</pattern>
-    <pattern>.о2д3узл</pattern>
-    <pattern>.о2д3узд</pattern>
-    <pattern>.о2д3узе</pattern>
-    <pattern>.о2д3ук</pattern>
-    <pattern>.о2д3ул</pattern>
-    <pattern>.о2д3ум</pattern>
-    <pattern>.о2д3уч</pattern>
-    <pattern>.по2д3адм</pattern>
-    <pattern>.по2д3вариј</pattern>
-    <pattern>.по2д3вез</pattern>
-    <pattern>.по2д3веч</pattern>
-    <pattern>.по2д3веж</pattern>
-    <pattern>.по2д3вик</pattern>
-    <pattern>.по2д3вил</pattern>
-    <pattern>.по2д3вир</pattern>
-    <pattern>.по2д3вињ</pattern>
-    <pattern>.по2д3влас</pattern>
-    <pattern>.по2д3влаш</pattern>
-    <pattern>.по2д3воз</pattern>
-    <pattern>.по2д3вођ</pattern>
-    <pattern>.по2д3вож</pattern>
-    <pattern>.по2д3вод</pattern>
-    <pattern>.по2д3врат</pattern>
-    <pattern>.по2д3враћ</pattern>
-    <pattern>.по2д3врћ</pattern>
-    <pattern>.по2д3врж</pattern>
-    <pattern>.по2д3врг</pattern>
-    <pattern>.по2д3врис</pattern>
-    <pattern>.по2д3врс</pattern>
-    <pattern>.по2д3вућ</pattern>
-    <pattern>.по2д3игр</pattern>
-    <pattern>.по2д3изв</pattern>
-    <pattern>.по2д3ј</pattern>
-    <pattern>.по3д4јен</pattern>
-    <pattern>.по3д4јеч</pattern>
-    <pattern>.по2д3лакат</pattern>
-    <pattern>.по2д3лакт</pattern>
-    <pattern>.по2д3леп</pattern>
-    <pattern>.по2д3лет</pattern>
-    <pattern>.по2д3лећ</pattern>
-    <pattern>.по2д3леж</pattern>
-    <pattern>.по2д3лег</pattern>
-    <pattern>.по2д3лиз</pattern>
-    <pattern>.по2д3лијеп</pattern>
-    <pattern>.по2д3лијет</pattern>
-    <pattern>.по2д3лијећ</pattern>
-    <pattern>.по2д3лијеж</pattern>
-    <pattern>.по2д3лијег</pattern>
-    <pattern>.по2д3лист</pattern>
-    <pattern>.по2д3лок</pattern>
-    <pattern>.по2д3лом</pattern>
-    <pattern>.по2д3луп</pattern>
-    <pattern>.по2д3луч</pattern>
-    <pattern>.по2д3луж</pattern>
-    <pattern>.по2д3љут</pattern>
-    <pattern>.по2д3окн</pattern>
-    <pattern>.по2д3ош</pattern>
-    <pattern>.по2д3оч</pattern>
-    <pattern>.по2д3оф</pattern>
-    <pattern>.по2д3равн</pattern>
-    <pattern>.по2д3равњ</pattern>
-    <pattern>.по2д3рад</pattern>
-    <pattern>.по2д3ра2з3д</pattern>
-    <pattern>.по2д3разр</pattern>
-    <pattern>.по2д3разу</pattern>
-    <pattern>.по2д3рам</pattern>
-    <pattern>.по2д3ран</pattern>
-    <pattern>.по2д3рас</pattern>
-    <pattern>.по2д3рањ</pattern>
-    <pattern>.по2д3реп</pattern>
-    <pattern>.по2д3рес</pattern>
-    <pattern>.по2д3рез</pattern>
-    <pattern>.по2д3рик</pattern>
-    <pattern>.по2д3рит</pattern>
-    <pattern>.по2д3рон</pattern>
-    <pattern>.по2д3ров</pattern>
-    <pattern>.по2д3рож</pattern>
-    <pattern>.по2д3рук</pattern>
-    <pattern>.по2д3руб</pattern>
-    <pattern>.по2д3ручи</pattern>
-    <pattern>.по2д3ручн</pattern>
-    <pattern>.по2д3руча</pattern>
-    <pattern>.по2д3упла</pattern>
-    <pattern>.по2д3усм</pattern>
-    <pattern>.по2д3усн</pattern>
-    <pattern>.пре2д3ј</pattern>
-    <pattern>.пре2д3в</pattern>
-    <pattern>.пре3д4вај</pattern>
-    <pattern>.пре3д4вар</pattern>
-    <pattern>.пре3д4вест</pattern>
-    <pattern>.пре3д4воји</pattern>
-    <pattern>.пре3д4воја</pattern>
-    <pattern>.пре3д4воје</pattern>
-    <pattern>.пре3д4вор</pattern>
-    <pattern>.пре3д4вос</pattern>
-    <pattern>.пре3д4јен</pattern>
-    <pattern>.пре2д3игр</pattern>
-    <pattern>.пре2д3ид</pattern>
-    <pattern>.пре2д3изб</pattern>
-    <pattern>.пре2д3испи</pattern>
-    <pattern>.пре2д3исто</pattern>
-    <pattern>.пре2д3истр</pattern>
-    <pattern>.пре2д3обј</pattern>
-    <pattern>.пре2д3одре</pattern>
-    <pattern>.пре2д3окус</pattern>
-    <pattern>.пре2д3осв</pattern>
-    <pattern>.пре2д3осе</pattern>
-    <pattern>.пре2д3осје</pattern>
-    <pattern>.пре2д3рат</pattern>
-    <pattern>.пре2д3рач</pattern>
-    <pattern>.пре2д3рад</pattern>
-    <pattern>.пре2д3руч</pattern>
-    <pattern>.пре2д3убеђ</pattern>
-    <pattern>.пре2д3убијеђ</pattern>
-    <pattern>.пре2д3убјеђ</pattern>
-    <pattern>.пре2д3увер</pattern>
-    <pattern>.пре2д3увјер</pattern>
-    <pattern>.пре2д3увјет</pattern>
-    <pattern>.пре2д3угов</pattern>
-    <pattern>.пре2д3удар</pattern>
-    <pattern>.пре2д3упис</pattern>
-    <pattern>.пре2д3усло</pattern>
-    <pattern>.проти2в3акц</pattern>
-    <pattern>.проти2в3отр</pattern>
-    <pattern>.проти2в3оф</pattern>
-    <pattern>.проти2в3р</pattern>
-    <pattern>.проти2в3ус</pattern>
-    <pattern>.проти2в3уд</pattern>
-    <pattern>.ра2ж3ђ</pattern>
-    <pattern>.ра2з3б</pattern>
-    <pattern>.ра2з3д</pattern>
-    <pattern>.ра2з3е</pattern>
-    <pattern>.ра2з3г</pattern>
-    <pattern>.ра2з3и</pattern>
-    <pattern>.ра2з3ј</pattern>
-    <pattern>.ра2з3л</pattern>
-    <pattern>.ра2з3м</pattern>
-    <pattern>.ра2з3н</pattern>
-    <pattern>.ра2з3љ</pattern>
-    <pattern>.ра2з3р</pattern>
-    <pattern>.ра2з3в</pattern>
-    <pattern>.ра2з3њ</pattern>
-    <pattern>.ра2з3анал</pattern>
-    <pattern>.ра3з4бан</pattern>
-    <pattern>.ра3з4бар</pattern>
-    <pattern>.ра3з4бау</pattern>
-    <pattern>.ра3з4бад</pattern>
-    <pattern>.ра3з4башур</pattern>
-    <pattern>.ра3з4бој</pattern>
-    <pattern>.ра3з4бор</pattern>
-    <pattern>.ра3з4вал</pattern>
-    <pattern>.ра3з4веде</pattern>
-    <pattern>.ра3з4вест</pattern>
-    <pattern>.ра3з4виго</pattern>
-    <pattern>.ра3з4вију</pattern>
-    <pattern>.ра3з4вија</pattern>
-    <pattern>.ра3з4вије</pattern>
-    <pattern>.ра3з4вит</pattern>
-    <pattern>.ра3з4вић</pattern>
-    <pattern>.ра3з4вој</pattern>
-    <pattern>.ра3з4вон</pattern>
-    <pattern>.ра3з4врат</pattern>
-    <pattern>.ра3з4враћ</pattern>
-    <pattern>.ра3з4врт</pattern>
-    <pattern>.ра3з4врћ</pattern>
-    <pattern>.ра3з4гађ</pattern>
-    <pattern>.ра3з4грт</pattern>
-    <pattern>.ра3з4ев</pattern>
-    <pattern>.ра3з4иј</pattern>
-    <pattern>.ра3з4ил</pattern>
-    <pattern>.ра3з4ин</pattern>
-    <pattern>.ра3з4ир</pattern>
-    <pattern>.ра3з4ит</pattern>
-    <pattern>.ра3з4из</pattern>
-    <pattern>.ра3з4иђ</pattern>
-    <pattern>.ра3з4ић</pattern>
-    <pattern>.ра3з4ид</pattern>
-    <pattern>.ра3з4лаз</pattern>
-    <pattern>.ра3з4лаг</pattern>
-    <pattern>.ра3з4лик</pattern>
-    <pattern>.ра3з4лич</pattern>
-    <pattern>.ра3з4лоз</pattern>
-    <pattern>.ра3з4лож</pattern>
-    <pattern>.ра3з4лог</pattern>
-    <pattern>.ра3з4мет</pattern>
-    <pattern>.ра3з4мећ</pattern>
-    <pattern>.ра3з4мрск</pattern>
-    <pattern>.ра3з4нат</pattern>
-    <pattern>.ра2з3обл</pattern>
-    <pattern>.ра2з3обр</pattern>
-    <pattern>.ра2з3оба</pattern>
-    <pattern>.ра2з3од</pattern>
-    <pattern>.ра2з3орат</pattern>
-    <pattern>.ра2з3орав</pattern>
-    <pattern>.ра2з3орт</pattern>
-    <pattern>.ра2з3ору</pattern>
-    <pattern>.ра2з3от</pattern>
-    <pattern>.ра3з4ред</pattern>
-    <pattern>.ра3з4рок</pattern>
-    <pattern>.ра3з4роч</pattern>
-    <pattern>.ра2з3уве</pattern>
-    <pattern>.ра2з3уди</pattern>
-    <pattern>.ра2з3уда</pattern>
-    <pattern>.ра2з3удб</pattern>
-    <pattern>.ра2з3узи</pattern>
-    <pattern>.ра2з3узд</pattern>
-    <pattern>.ра2з3узе</pattern>
-    <pattern>.ра2з3улар</pattern>
-    <pattern>.ра2з3умр</pattern>
-    <pattern>.ра2с3ц</pattern>
-    <pattern>.ра2с3к</pattern>
-    <pattern>.ра2с3п</pattern>
-    <pattern>.ра2с3т</pattern>
-    <pattern>.ра3с4как</pattern>
-    <pattern>.ра3с4канд</pattern>
-    <pattern>.ра3с4кин</pattern>
-    <pattern>.ра3с4клап</pattern>
-    <pattern>.ра3с4клањ</pattern>
-    <pattern>.ра3с4клад</pattern>
-    <pattern>.ра3с4клон</pattern>
-    <pattern>.ра3с4клопи</pattern>
-    <pattern>.ра3с4клопљ</pattern>
-    <pattern>.ра3с4клопа</pattern>
-    <pattern>.ра3с4кош</pattern>
-    <pattern>.ра3с4кроп</pattern>
-    <pattern>.ра3с4пај</pattern>
-    <pattern>.ра3с4пав</pattern>
-    <pattern>.ра3с4пети</pattern>
-    <pattern>.ра3с4пето</pattern>
-    <pattern>.ра3с4пета</pattern>
-    <pattern>.ра3с4пете</pattern>
-    <pattern>.ра3с4пику</pattern>
-    <pattern>.ра3с4пињ</pattern>
-    <pattern>.ра3с4плин</pattern>
-    <pattern>.ра3с4плињ</pattern>
-    <pattern>.ра3с4пн</pattern>
-    <pattern>.ра3с4полож</pattern>
-    <pattern>.ра3с4пон</pattern>
-    <pattern>.ра3с4пор</pattern>
-    <pattern>.ра3с4прав</pattern>
-    <pattern>.ра3с4прем</pattern>
-    <pattern>.ра3с4рђ</pattern>
-    <pattern>.ра3с4рд</pattern>
-    <pattern>.ра3с4ре</pattern>
-    <pattern>.ра3с4тај</pattern>
-    <pattern>.ра3с4тан</pattern>
-    <pattern>.ра3с4тат</pattern>
-    <pattern>.ра3с4тав</pattern>
-    <pattern>.ра3с4тењ</pattern>
-    <pattern>.ра3с4тил</pattern>
-    <pattern>.ра3с4тир</pattern>
-    <pattern>.ра3с4тис</pattern>
-    <pattern>.ра3с4тит</pattern>
-    <pattern>.ра3с4тињ</pattern>
-    <pattern>.ра3с4тој</pattern>
-    <pattern>.ра3с4трел</pattern>
-    <pattern>.ра3с4трет</pattern>
-    <pattern>.ра3с4трој</pattern>
-    <pattern>.ра3с4трт</pattern>
-    <pattern>.ра3с4туп</pattern>
-    <pattern>.ра3с4тур</pattern>
-    <pattern>.ра3с4тућ</pattern>
-    <pattern>.ра4с5турч</pattern>
-    <pattern>.ра2ш3ћ</pattern>
-    <pattern>.ра2ш3ч</pattern>
-    <pattern>.ра3ш4ћењ</pattern>
-    <pattern>.ра3ш4чић</pattern>
-    <pattern>.у2з3б</pattern>
-    <pattern>.у2з3д</pattern>
-    <pattern>.у2з3г</pattern>
-    <pattern>.у2з3и</pattern>
-    <pattern>.у2з3ј</pattern>
-    <pattern>.у2з3л</pattern>
-    <pattern>.у2з3м</pattern>
-    <pattern>.у2з3н</pattern>
-    <pattern>.у2з3љ</pattern>
-    <pattern>.у2з3р</pattern>
-    <pattern>.у2з3в</pattern>
-    <pattern>.у2з3њ</pattern>
-    <pattern>.у3з4бор</pattern>
-    <pattern>.у3з4ван</pattern>
-    <pattern>.у3з4ват</pattern>
-    <pattern>.у3з4виж</pattern>
-    <pattern>.у3з4вијо</pattern>
-    <pattern>.у3з4вију</pattern>
-    <pattern>.у3з4вија</pattern>
-    <pattern>.у3з4вије</pattern>
-    <pattern>.у3з4вој</pattern>
-    <pattern>.у3з4диц</pattern>
-    <pattern>.у2з3игр</pattern>
-    <pattern>.у2з3инат</pattern>
-    <pattern>.у2з3искр</pattern>
-    <pattern>.у3з4лан</pattern>
-    <pattern>.у3з4лат</pattern>
-    <pattern>.у3з4лим</pattern>
-    <pattern>.у3з4лит</pattern>
-    <pattern>.у3з4лић</pattern>
-    <pattern>.у3з4лиц</pattern>
-    <pattern>.у3з4лов</pattern>
-    <pattern>.у3з4лудоб</pattern>
-    <pattern>.у3з4нак</pattern>
-    <pattern>.у3з4нач</pattern>
-    <pattern>.у3з4неве</pattern>
-    <pattern>.у3з4невје</pattern>
-    <pattern>.у3з4нич</pattern>
-    <pattern>.у3з4ниц</pattern>
-    <pattern>.у3з4ној</pattern>
-    <pattern>.у2з3обест</pattern>
-    <pattern>.у2з3обијест</pattern>
-    <pattern>.у2з3орат</pattern>
-    <pattern>.у2з3орав</pattern>
-    <pattern>.у2з3охо</pattern>
-    <pattern>.у3з4рет</pattern>
-    <pattern>.у3з4рев</pattern>
-    <pattern>.у3з4ријет</pattern>
-    <pattern>.у3з4ријев</pattern>
-    <pattern>.у3з4рн</pattern>
-    <pattern>.у3з4рњ</pattern>
-    <pattern>.у3з4роко</pattern>
-    <pattern>.у3з4року</pattern>
-    <pattern>.у3з4рока</pattern>
-    <pattern>.у3з4роч</pattern>
-    <pattern>.у3з4руј</pattern>
-    <pattern>.у2з3угар</pattern>
-    <pattern>.у2с3ц</pattern>
-    <pattern>.у2с3к</pattern>
-    <pattern>.у2с3п</pattern>
-    <pattern>.у3с4как</pattern>
-    <pattern>.у3с4клађ</pattern>
-    <pattern>.у3с4клад</pattern>
-    <pattern>.у3с4ко</pattern>
-    <pattern>.у4с5ком</pattern>
-    <pattern>.у4с5ков</pattern>
-    <pattern>.у4с5кош</pattern>
-    <pattern>.у4с5коко</pattern>
-    <pattern>.у4с5колу</pattern>
-    <pattern>.у4с5коле</pattern>
-    <pattern>.у4с5копа</pattern>
-    <pattern>.у4с5кора</pattern>
-    <pattern>.у4с5коси</pattern>
-    <pattern>.у4с5котр</pattern>
-    <pattern>.у3с4куп</pattern>
-    <pattern>.у3с4пав</pattern>
-    <pattern>.у3с4пало</pattern>
-    <pattern>.у3с4пех</pattern>
-    <pattern>.у3с4пел</pattern>
-    <pattern>.у3с4пем</pattern>
-    <pattern>.у3с4пет</pattern>
-    <pattern>.у3с4пев</pattern>
-    <pattern>.у3с4пеш</pattern>
-    <pattern>.у3с4пјех</pattern>
-    <pattern>.у3с4пјел</pattern>
-    <pattern>.у3с4пјем</pattern>
-    <pattern>.у3с4пјет</pattern>
-    <pattern>.у3с4пјев</pattern>
-    <pattern>.у3с4пјеш</pattern>
-    <pattern>.у3с4пент</pattern>
-    <pattern>.у3с4пија</pattern>
-    <pattern>.у3с4пије</pattern>
-    <pattern>.у3с4пијуш</pattern>
-    <pattern>.у3с4пикуш</pattern>
-    <pattern>.у3с4пон</pattern>
-    <pattern>.у3с4пори</pattern>
-    <pattern>.у3с4пора</pattern>
-    <pattern>.у3с4порен</pattern>
-    <pattern>.у3с4порењ</pattern>
-    <pattern>.у3с4пореч</pattern>
-    <pattern>.у3с4пособ</pattern>
-    <pattern>.у3с4преми</pattern>
-    <pattern>.у3с4према</pattern>
-    <pattern>.у3с4рк</pattern>
-    <pattern>.у3с4рн</pattern>
-    <pattern>.у3с4рп</pattern>
-    <pattern>.у3с4рљ</pattern>
-    <pattern>.у3с4рт</pattern>
-    <pattern>.у3с4рђ</pattern>
-    <pattern>.у3с4рж</pattern>
-    <pattern>.у3с4ра</pattern>
-    <pattern>.у3с4рд</pattern>
-    <pattern>.у3с4ре</pattern>
-    <pattern>.у3с4ријед</pattern>
-    <pattern>.у2с3талас</pattern>
-    <pattern>.у2с3тара</pattern>
-    <pattern>.у2с3тврђ</pattern>
-    <pattern>.у2с3тврд</pattern>
-    <pattern>.у2с3тер</pattern>
-    <pattern>.у2с3тећ</pattern>
-    <pattern>.у2с3тег</pattern>
-    <pattern>.у2с3тов</pattern>
-    <pattern>.у2с3трај</pattern>
-    <pattern>.у2с3трал</pattern>
-    <pattern>.у2с3трг</pattern>
-    <pattern>.у2с3треп</pattern>
-    <pattern>.у2с3трес</pattern>
-    <pattern>.у2с3треб</pattern>
-    <pattern>.у2с3трк</pattern>
-    <pattern>.у2с3трн</pattern>
-    <pattern>.у2с3трп</pattern>
-    <pattern>.у2с3трћ</pattern>
-    <pattern>.у2с3трч</pattern>
-    <pattern>.у2с3тум</pattern>
-    <pattern>.у2с3тур</pattern>
-    <pattern>.у2с3тућ</pattern>
-    <pattern>.у2ш3ћ</pattern>
-    <pattern>.у2ш3ч</pattern>
-    <pattern>.а2б3алиј</pattern>
-    <pattern>.а2б3анац</pattern>
-    <pattern>.а2б3евак</pattern>
-    <pattern>.а2б3ерац</pattern>
-    <pattern>.а2б3ерир</pattern>
-    <pattern>.а2б3ирит</pattern>
-    <pattern>.а2б3ју</pattern>
-    <pattern>.а2б3ла</pattern>
-    <pattern>.а2б3лег</pattern>
-    <pattern>.а2б3леп</pattern>
-    <pattern>.а2б3лок</pattern>
-    <pattern>.а2б3лу</pattern>
-    <pattern>.а2б3ориг</pattern>
-    <pattern>.а2б3реак</pattern>
-    <pattern>.а2б3рог</pattern>
-    <pattern>.а2б3узус</pattern>
-    <pattern>.а2д3ерац</pattern>
-    <pattern>.а2д3верб</pattern>
-    <pattern>.а2д3ј</pattern>
-    <pattern>.а2д3лат</pattern>
-    <pattern>.а2д3рен</pattern>
-    <pattern>.а2д3рог</pattern>
-    <pattern>.а3г2нос</pattern>
-    <pattern>.а3г2ноз</pattern>
-    <pattern>.а2набап</pattern>
-    <pattern>.а2набаз</pattern>
-    <pattern>.а2набат</pattern>
-    <pattern>.а2набио</pattern>
-    <pattern>.а2набол</pattern>
-    <pattern>.а2наген</pattern>
-    <pattern>.а2нагно</pattern>
-    <pattern>.а2н3аго</pattern>
-    <pattern>.а2награ</pattern>
-    <pattern>.а2надем</pattern>
-    <pattern>.а2надипл</pattern>
-    <pattern>.а2надоз</pattern>
-    <pattern>.а2н3а4е2ро</pattern>
-    <pattern>.а2накал</pattern>
-    <pattern>.а2накам</pattern>
-    <pattern>.а2накат</pattern>
-    <pattern>.а2накеф</pattern>
-    <pattern>.а2накла</pattern>
-    <pattern>.а2накли</pattern>
-    <pattern>.а2накој</pattern>
-    <pattern>.а2н3акуз</pattern>
-    <pattern>.а2н3алг</pattern>
-    <pattern>.а2н3алд</pattern>
-    <pattern>.а2налеп</pattern>
-    <pattern>.а2нализ</pattern>
-    <pattern>.а2налис</pattern>
-    <pattern>.а2налит</pattern>
-    <pattern>.а2н3амерт</pattern>
-    <pattern>.а2намне</pattern>
-    <pattern>.а2н3андр</pattern>
-    <pattern>.а2нанео</pattern>
-    <pattern>.а2н3ант</pattern>
-    <pattern>.а2напла</pattern>
-    <pattern>.а2напле</pattern>
-    <pattern>.а2напне</pattern>
-    <pattern>.а2напно</pattern>
-    <pattern>.а2напро</pattern>
-    <pattern>.а2напти</pattern>
-    <pattern>.а2н3апто</pattern>
-    <pattern>.а2нарт</pattern>
-    <pattern>.а2н3арх</pattern>
-    <pattern>.а2насар</pattern>
-    <pattern>.а2насеи</pattern>
-    <pattern>.а2наспаз</pattern>
-    <pattern>.а2наста</pattern>
-    <pattern>.а2настиг</pattern>
-    <pattern>.а2настом</pattern>
-    <pattern>.а2натим</pattern>
-    <pattern>.а2натом</pattern>
-    <pattern>.а2натоц</pattern>
-    <pattern>.а2натре</pattern>
-    <pattern>.а2натри</pattern>
-    <pattern>.а2натро</pattern>
-    <pattern>.а2нафаз</pattern>
-    <pattern>.а2н3афиј</pattern>
-    <pattern>.а2нафила</pattern>
-    <pattern>.а2нафон</pattern>
-    <pattern>.а2н3афрод</pattern>
-    <pattern>.а2накол</pattern>
-    <pattern>.а2накрон</pattern>
-    <pattern>.а2накру</pattern>
-    <pattern>.а2н3алфа</pattern>
-    <pattern>.а2нафор</pattern>
-    <pattern>.а2нахор</pattern>
-    <pattern>.а2нахро</pattern>
-    <pattern>.а2н3егер</pattern>
-    <pattern>.а2н3екл</pattern>
-    <pattern>.а2н3екум</pattern>
-    <pattern>.а2н3елек</pattern>
-    <pattern>.а2н3енер</pattern>
-    <pattern>.а2н3епи</pattern>
-    <pattern>.а2неор</pattern>
-    <pattern>.а2н3ерг</pattern>
-    <pattern>.а2н3ерит</pattern>
-    <pattern>.а2н3есте</pattern>
-    <pattern>.а2н3идр</pattern>
-    <pattern>.а2н3изог</pattern>
-    <pattern>.а2н3изом</pattern>
-    <pattern>.а2н3изур</pattern>
-    <pattern>.а2н3ирид</pattern>
-    <pattern>.а2н3овар</pattern>
-    <pattern>.а2н3окс</pattern>
-    <pattern>.а2н3опис</pattern>
-    <pattern>.а2н3орх</pattern>
-    <pattern>.а2н3офт</pattern>
-    <pattern>.а2н3орг</pattern>
-    <pattern>.ди2с3акор</pattern>
-    <pattern>.ди2с3јунк</pattern>
-    <pattern>.ди2с3квал</pattern>
-    <pattern>.ди2с3конт</pattern>
-    <pattern>.ди2с3корд</pattern>
-    <pattern>.ди2с3кре</pattern>
-    <pattern>.ди2с3кри</pattern>
-    <pattern>.ди2с3кур</pattern>
-    <pattern>.ди2с3ло</pattern>
-    <pattern>.ди2с3ориј</pattern>
-    <pattern>.ди2с3парит</pattern>
-    <pattern>.ди2с3поз</pattern>
-    <pattern>.ди2с3пон</pattern>
-    <pattern>.ди2с3проп</pattern>
-    <pattern>.ди2с3тон</pattern>
-    <pattern>.ди2с3трак</pattern>
-    <pattern>.и2н3абруп</pattern>
-    <pattern>.и2н3адек</pattern>
-    <pattern>.и2н3акур</pattern>
-    <pattern>.и2н3акце</pattern>
-    <pattern>.и2н3амор</pattern>
-    <pattern>.и2н3аниц</pattern>
-    <pattern>.и2н3аплик</pattern>
-    <pattern>.и2н3апст</pattern>
-    <pattern>.и2н3арт</pattern>
-    <pattern>.и2н3аугур</pattern>
-    <pattern>.и2н3аура</pattern>
-    <pattern>.и2н3афек</pattern>
-    <pattern>.и2н3евид</pattern>
-    <pattern>.и2н3ег</pattern>
-    <pattern>.и2н3ед</pattern>
-    <pattern>.и2н3екв</pattern>
-    <pattern>.и2н3екс</pattern>
-    <pattern>.и2н3елиг</pattern>
-    <pattern>.и2н3епц</pattern>
-    <pattern>.и2н3ефек</pattern>
-    <pattern>.и2н3обл</pattern>
-    <pattern>.и2ноген</pattern>
-    <pattern>.и2нокор</pattern>
-    <pattern>.и2н3окуп</pattern>
-    <pattern>.и2н3опер</pattern>
-    <pattern>.и2н3опор</pattern>
-    <pattern>.и2н3опсе</pattern>
-    <pattern>.и2н3офиц</pattern>
-    <pattern>.и2н3умбр</pattern>
-    <pattern>.и2н3унда</pattern>
-    <pattern>.и2н3унк</pattern>
-    <pattern>.и2н3утил</pattern>
-    <pattern>.инте2р3и</pattern>
-    <pattern>.инте2р3о</pattern>
-    <pattern>.инте2р3у</pattern>
-    <pattern>.инте2р3а</pattern>
-    <pattern>.инте2р3е</pattern>
-    <pattern>.инте3р4егн</pattern>
-    <pattern>.инте3р4еси</pattern>
-    <pattern>.инте3р4есн</pattern>
-    <pattern>.инте3р4есо</pattern>
-    <pattern>.инте3р4есу</pattern>
-    <pattern>.инте3р4еса</pattern>
-    <pattern>.инте3р4есе</pattern>
-    <pattern>.инте3р4ежџ</pattern>
-    <pattern>.инте3р4ије</pattern>
-    <pattern>.инте2р3је</pattern>
-    <pattern>.инте3р4огат</pattern>
-    <pattern>.јури2с3к</pattern>
-    <pattern>.јури2с3п</pattern>
-    <pattern>.ну2з3бел</pattern>
-    <pattern>.ну2з3биљ</pattern>
-    <pattern>.ну2з3љуб</pattern>
-    <pattern>.ну2з3ре</pattern>
-    <pattern>.ну2з3рје</pattern>
-    <pattern>.ну2з3уж</pattern>
-    <pattern>.ну2с3пос</pattern>
-    <pattern>.ну2с3про</pattern>
-    <pattern>.по2ст3егз</pattern>
-    <pattern>.по2ст3инду</pattern>
-    <pattern>.по2ст3лим</pattern>
-    <pattern>.по2ст3онк</pattern>
-    <pattern>.по2ст3опер</pattern>
-    <pattern>.су2б3а</pattern>
-    <pattern>.су2б3л</pattern>
-    <pattern>.су3б4аш</pattern>
-    <pattern>.су2б3инв</pattern>
-    <pattern>.су2б3јунк</pattern>
-    <pattern>.су2б3окс</pattern>
-    <pattern>.су2б3реп</pattern>
-    <pattern>.су2б3рог</pattern>
-    <pattern>.су2б3орд</pattern>
-    <pattern>.супе2р3и</pattern>
-    <pattern>.супе2р3о</pattern>
-    <pattern>.супе2р3у</pattern>
-    <pattern>.супе2р3а</pattern>
-    <pattern>.супе2р3е</pattern>
-    <pattern>.супе3р4иор</pattern>
-    <pattern>.тран2с3а</pattern>
-    <pattern>.тран2с3ц</pattern>
-    <pattern>.тран2с3е</pattern>
-    <pattern>.тран2с3к</pattern>
-    <pattern>.тран2с3л</pattern>
-    <pattern>.тран2с3м</pattern>
-    <pattern>.тран2с3н</pattern>
-    <pattern>.тран2с3о</pattern>
-    <pattern>.тран2с3п</pattern>
-    <pattern>.тран2с3т</pattern>
-    <pattern>.тран2с3у</pattern>
-    <pattern>.тран2с3в</pattern>
-    <pattern>.тран2с3њ</pattern>
-    <pattern>.тран3с4еп</pattern>
-    <pattern>.тран3с4кри</pattern>
-    <pattern>.тран3с4ум</pattern>
-    <pattern>.тран3с4уд</pattern>
+    <pattern>4р3је </pattern>
+    <pattern> бе2з3ј</pattern>
+    <pattern> бе2з3л</pattern>
+    <pattern> бе2з3м</pattern>
+    <pattern> бе2з3н</pattern>
+    <pattern> бе2з3љ</pattern>
+    <pattern> бе2з3р</pattern>
+    <pattern> бе2з3в</pattern>
+    <pattern> бе2з3њ</pattern>
+    <pattern> бе2з3б</pattern>
+    <pattern> бе2з3д</pattern>
+    <pattern> бе2з3г</pattern>
+    <pattern> бе2з3и</pattern>
+    <pattern> бе2з3о</pattern>
+    <pattern> бе2з3у</pattern>
+    <pattern> бе2з3алкохол</pattern>
+    <pattern> бе2з3атомск</pattern>
+    <pattern> бе3з4бедн</pattern>
+    <pattern> бе3з4беда</pattern>
+    <pattern> бе3з4бједн</pattern>
+    <pattern> бе3з4бједа</pattern>
+    <pattern> бе3з4бели</pattern>
+    <pattern> бе3з4бол</pattern>
+    <pattern> бе3з4вучн</pattern>
+    <pattern> бе3з4вуча</pattern>
+    <pattern> бе3з4истан</pattern>
+    <pattern> бе3з4истен</pattern>
+    <pattern> бе3з4јак</pattern>
+    <pattern> бе3з4јач</pattern>
+    <pattern> бе3з4лобн</pattern>
+    <pattern> бе3з4лоба</pattern>
+    <pattern> бе3з4начај</pattern>
+    <pattern> бе3з4рачн</pattern>
+    <pattern> бе3з4рача</pattern>
+    <pattern> бе3з4уп</pattern>
+    <pattern> бе3з4уб</pattern>
+    <pattern> бе2с3ц</pattern>
+    <pattern> бе2с3к</pattern>
+    <pattern> бе2с3п</pattern>
+    <pattern> бе2с3т</pattern>
+    <pattern> бе3с4крупул</pattern>
+    <pattern> бе3с4покојн</pattern>
+    <pattern> бе3с4покоја</pattern>
+    <pattern> бе3с4порн</pattern>
+    <pattern> бе3с4пора</pattern>
+    <pattern> бе3с4твар</pattern>
+    <pattern> бе3с4тид</pattern>
+    <pattern> бе3с4тија</pattern>
+    <pattern> бе3с4тилу</pattern>
+    <pattern> бе3с4тиљ</pattern>
+    <pattern> бе3с4трана</pattern>
+    <pattern> бе3с4трас</pattern>
+    <pattern> бес4тселер</pattern>
+    <pattern> бе2ш3ћ</pattern>
+    <pattern> бе2ш3ч</pattern>
+    <pattern> ва2н3евр</pattern>
+    <pattern> ва2н3устав</pattern>
+    <pattern> и2з3б</pattern>
+    <pattern> и2з3д</pattern>
+    <pattern> и2з3г</pattern>
+    <pattern> и2з3ј</pattern>
+    <pattern> и2з3л</pattern>
+    <pattern> и2з3м</pattern>
+    <pattern> и2з3н</pattern>
+    <pattern> и2з3љ</pattern>
+    <pattern> и2з3р</pattern>
+    <pattern> и2з3в</pattern>
+    <pattern> и2з3њ</pattern>
+    <pattern> и2з3и</pattern>
+    <pattern> и2з3о</pattern>
+    <pattern> и2з3у</pattern>
+    <pattern> и2з3бија</pattern>
+    <pattern> и2з3бива</pattern>
+    <pattern> и2з3веди</pattern>
+    <pattern> и2з3ведн</pattern>
+    <pattern> и2з3ведб</pattern>
+    <pattern> и2з3веде</pattern>
+    <pattern> и2з3дај</pattern>
+    <pattern> и2з3аба</pattern>
+    <pattern> и2з3ака</pattern>
+    <pattern> и2з3анал</pattern>
+    <pattern> и3з4бав</pattern>
+    <pattern> и3з4бичкава</pattern>
+    <pattern> и3з4блеушан</pattern>
+    <pattern> и3з4бојак</pattern>
+    <pattern> и3з4бојк</pattern>
+    <pattern> и3з4вали</pattern>
+    <pattern> и3з4валу</pattern>
+    <pattern> и3з4вала</pattern>
+    <pattern> и3з4вале</pattern>
+    <pattern> и3з4ваљи</pattern>
+    <pattern> и3з4вижд</pattern>
+    <pattern> и3з4виискр</pattern>
+    <pattern> и3з4вија</pattern>
+    <pattern> и3з4вијен</pattern>
+    <pattern> и3з4вин</pattern>
+    <pattern> и3з4вир</pattern>
+    <pattern> и3з4вињ</pattern>
+    <pattern> и3з4витоп</pattern>
+    <pattern> и3з4вјед</pattern>
+    <pattern> и3з4војац</pattern>
+    <pattern> и3з4војц</pattern>
+    <pattern> и3з4вор</pattern>
+    <pattern> и3з4гомет</pattern>
+    <pattern> и3з4гред</pattern>
+    <pattern> и3з4грн</pattern>
+    <pattern> и3з4грт</pattern>
+    <pattern> и3з4драв</pattern>
+    <pattern> и3з4иђ</pattern>
+    <pattern> и3з4ид</pattern>
+    <pattern> и3з4ими</pattern>
+    <pattern> и3з4јежљ</pattern>
+    <pattern> и3з4лоз</pattern>
+    <pattern> и3з4лож</pattern>
+    <pattern> и3з4лог</pattern>
+    <pattern> и3з4лопаћ</pattern>
+    <pattern> и3з4ним</pattern>
+    <pattern> и3з4ној</pattern>
+    <pattern> из4оанем</pattern>
+    <pattern> из4оаном</pattern>
+    <pattern> из4обат</pattern>
+    <pattern> из4оброн</pattern>
+    <pattern> из4огам</pattern>
+    <pattern> из4огео</pattern>
+    <pattern> из4оглос</pattern>
+    <pattern> из4огон</pattern>
+    <pattern> из4ограф</pattern>
+    <pattern> из4одим</pattern>
+    <pattern> из4один</pattern>
+    <pattern> из4одоз</pattern>
+    <pattern> из4оклин</pattern>
+    <pattern> из4околон</pattern>
+    <pattern> и3з4олат</pattern>
+    <pattern> и3з4олац</pattern>
+    <pattern> и3з4олир</pattern>
+    <pattern> и3з4олов</pattern>
+    <pattern> из4олекс</pattern>
+    <pattern> из4олукс</pattern>
+    <pattern> из4омер</pattern>
+    <pattern> из4ометр</pattern>
+    <pattern> из4оморф</pattern>
+    <pattern> из4онеф</pattern>
+    <pattern> из4оном</pattern>
+    <pattern> из4опат</pattern>
+    <pattern> из4опер</pattern>
+    <pattern> из4опле</pattern>
+    <pattern> из4опол</pattern>
+    <pattern> из4опсеф</pattern>
+    <pattern> из4орах</pattern>
+    <pattern> из4осеи</pattern>
+    <pattern> из4осинт</pattern>
+    <pattern> из4осист</pattern>
+    <pattern> из4оскел</pattern>
+    <pattern> из4оскоп</pattern>
+    <pattern> из4остаз</pattern>
+    <pattern> из4осте</pattern>
+    <pattern> из4отах</pattern>
+    <pattern> из4отал</pattern>
+    <pattern> из4отер</pattern>
+    <pattern> из4отон</pattern>
+    <pattern> из4отоп</pattern>
+    <pattern> из4отро</pattern>
+    <pattern> из4офон</pattern>
+    <pattern> из4офот</pattern>
+    <pattern> из4охал</pattern>
+    <pattern> из4охаз</pattern>
+    <pattern> из4охел</pattern>
+    <pattern> из4охиј</pattern>
+    <pattern> из4охим</pattern>
+    <pattern> из4охит</pattern>
+    <pattern> из4охипс</pattern>
+    <pattern> из4охор</pattern>
+    <pattern> из4охро</pattern>
+    <pattern> и3з4раел</pattern>
+    <pattern> и3з4раиљ</pattern>
+    <pattern> и3з4рачи</pattern>
+    <pattern> и3з4ун</pattern>
+    <pattern> и3з4упч</pattern>
+    <pattern> и2с3ц</pattern>
+    <pattern> и2с3к</pattern>
+    <pattern> и2с3п</pattern>
+    <pattern> и2с3т</pattern>
+    <pattern> и3с4как</pattern>
+    <pattern> и3с4кат</pattern>
+    <pattern> и3с4кањ</pattern>
+    <pattern> и3с4кариот</pattern>
+    <pattern> и3с4квас</pattern>
+    <pattern> и3с4кврч</pattern>
+    <pattern> и3с4кин</pattern>
+    <pattern> и3с4кита</pattern>
+    <pattern> и3с4конск</pattern>
+    <pattern> и3с4коч</pattern>
+    <pattern> и3с4крам</pattern>
+    <pattern> и3с4крит</pattern>
+    <pattern> и3с4криш</pattern>
+    <pattern> и3с4крич</pattern>
+    <pattern> и3с4криц</pattern>
+    <pattern> и3с4крат</pattern>
+    <pattern> и3с4крен</pattern>
+    <pattern> и3с4крењ</pattern>
+    <pattern> и3с4крој</pattern>
+    <pattern> и3с4крсн</pattern>
+    <pattern> и3с4крса</pattern>
+    <pattern> и3с4купља</pattern>
+    <pattern> и3с4лам</pattern>
+    <pattern> и3с4лаб</pattern>
+    <pattern> и3с4леђ</pattern>
+    <pattern> и3с4лед</pattern>
+    <pattern> и3с4лијеђ</pattern>
+    <pattern> и3с4лијед</pattern>
+    <pattern> и3с4љеђ</pattern>
+    <pattern> и3с4љед</pattern>
+    <pattern> и3с4лик</pattern>
+    <pattern> и3с4лин</pattern>
+    <pattern> и3с4лов</pattern>
+    <pattern> и3с4луш</pattern>
+    <pattern> и3с4луж</pattern>
+    <pattern> и3с4ме</pattern>
+    <pattern> и3с4мије</pattern>
+    <pattern> и3с4мје</pattern>
+    <pattern> и3с4пав</pattern>
+    <pattern> и3с4паљив</pattern>
+    <pattern> и3с4пира</pattern>
+    <pattern> и3с4плит</pattern>
+    <pattern> и3с4плић</pattern>
+    <pattern> и3с4покој</pattern>
+    <pattern> и3с4полин</pattern>
+    <pattern> и3с4пон</pattern>
+    <pattern> и3с4порав</pattern>
+    <pattern> и3с4прави</pattern>
+    <pattern> и3с4правк</pattern>
+    <pattern> и3с4правн</pattern>
+    <pattern> и3с4прављ</pattern>
+    <pattern> и3с4права</pattern>
+    <pattern> и3с4пупч</pattern>
+    <pattern> и3с4пур</pattern>
+    <pattern> и3с4ред</pattern>
+    <pattern> и3с4рк</pattern>
+    <pattern> и3с4тави</pattern>
+    <pattern> и3с4тављ</pattern>
+    <pattern> и3с4такн</pattern>
+    <pattern> и3с4там</pattern>
+    <pattern> и3с4тар</pattern>
+    <pattern> и3с4тас</pattern>
+    <pattern> и3с4таћ</pattern>
+    <pattern> и3с4тин</pattern>
+    <pattern> и3с4тир</pattern>
+    <pattern> и3с4тиц</pattern>
+    <pattern> и3с4тифан</pattern>
+    <pattern> и3с4ток</pattern>
+    <pattern> и3с4тори</pattern>
+    <pattern> и3с4точн</pattern>
+    <pattern> и3с4точњ</pattern>
+    <pattern> и3с4точа</pattern>
+    <pattern> и3с4трав</pattern>
+    <pattern> и3с4трад</pattern>
+    <pattern> и3с4тран</pattern>
+    <pattern> и3с4трић</pattern>
+    <pattern> и3с4триж</pattern>
+    <pattern> и3с4триц</pattern>
+    <pattern> и3с4труг</pattern>
+    <pattern> и3с4туп</pattern>
+    <pattern> и3с4ук</pattern>
+    <pattern> и3с4ус</pattern>
+    <pattern> и3с4ут</pattern>
+    <pattern> и3с4уш</pattern>
+    <pattern> и2ж3ђ</pattern>
+    <pattern> и2ш3ћ</pattern>
+    <pattern> и2ш3ч</pattern>
+    <pattern> из3бе2з3обр</pattern>
+    <pattern> из3бе2з3ум</pattern>
+    <pattern> из3ва2н3евр</pattern>
+    <pattern> на2д3л</pattern>
+    <pattern> на2д3љ</pattern>
+    <pattern> на2д3в</pattern>
+    <pattern> на3д4вал</pattern>
+    <pattern> на3д4веси</pattern>
+    <pattern> на3д4вест</pattern>
+    <pattern> на3д4виј</pattern>
+    <pattern> на3д4вит</pattern>
+    <pattern> на3д4вла</pattern>
+    <pattern> на3д4воје</pattern>
+    <pattern> на3д4вор</pattern>
+    <pattern> на2д3игр</pattern>
+    <pattern> на2д3инж</pattern>
+    <pattern> на2д3ина</pattern>
+    <pattern> на2д3иск</pattern>
+    <pattern> на2д3јах</pattern>
+    <pattern> на2д3јач</pattern>
+    <pattern> на2д3јек</pattern>
+    <pattern> на2д3јез</pattern>
+    <pattern> на2д3јеч</pattern>
+    <pattern> на2д3јун</pattern>
+    <pattern> на3д4лан</pattern>
+    <pattern> на3д4леш</pattern>
+    <pattern> на3д4леж</pattern>
+    <pattern> на2д3ора</pattern>
+    <pattern> на2д3осо</pattern>
+    <pattern> на2д3осе</pattern>
+    <pattern> на2д3осје</pattern>
+    <pattern> на2д3офи</pattern>
+    <pattern> на2д3оч</pattern>
+    <pattern> на2д3ран</pattern>
+    <pattern> на2д3рач</pattern>
+    <pattern> на2д3раст</pattern>
+    <pattern> на2д3рашћ</pattern>
+    <pattern> на2д3реал</pattern>
+    <pattern> на2д3реп</pattern>
+    <pattern> на2д3рук</pattern>
+    <pattern> на2д3руч</pattern>
+    <pattern> на2д3руг</pattern>
+    <pattern> на2д3удар</pattern>
+    <pattern> на2д3ум</pattern>
+    <pattern> на2д3уч</pattern>
+    <pattern> на2ј3а</pattern>
+    <pattern> на2ј3е</pattern>
+    <pattern> на2ј3и</pattern>
+    <pattern> на2ј3о</pattern>
+    <pattern> на2ј3у</pattern>
+    <pattern> на3ј4ави</pattern>
+    <pattern> на3ј4ављ</pattern>
+    <pattern> на3ј4ава</pattern>
+    <pattern> на3ј4аве</pattern>
+    <pattern> на3ј4ади</pattern>
+    <pattern> на3ј4ада</pattern>
+    <pattern> на3ј4аде</pattern>
+    <pattern> на3ј4ажи</pattern>
+    <pattern> на3ј4ази</pattern>
+    <pattern> на3ј4ако</pattern>
+    <pattern> на3ј4ака</pattern>
+    <pattern> на3ј4ало</pattern>
+    <pattern> на3ј4ами</pattern>
+    <pattern> на3ј4амл</pattern>
+    <pattern> на3ј4амн</pattern>
+    <pattern> на3ј4ари</pattern>
+    <pattern> на3ј4арм</pattern>
+    <pattern> на3ј4арц</pattern>
+    <pattern> на3ј4ати</pattern>
+    <pattern> на3ј4аук</pattern>
+    <pattern> на3ј4ах</pattern>
+    <pattern> на3ј4аш</pattern>
+    <pattern> на3ј4еди</pattern>
+    <pattern> на3ј4едн</pattern>
+    <pattern> на3ј4едр</pattern>
+    <pattern> на3ј4еда</pattern>
+    <pattern> на3ј4ежи</pattern>
+    <pattern> на3ј4ежу</pattern>
+    <pattern> на3ј4еже</pattern>
+    <pattern> на3ј4езн</pattern>
+    <pattern> на3ј4езд</pattern>
+    <pattern> на3ј4ести</pattern>
+    <pattern> на3ј4етк</pattern>
+    <pattern> на3ј4ец</pattern>
+    <pattern> на3ј4ури</pattern>
+    <pattern> на3ј4урен</pattern>
+    <pattern> о2б3ј</pattern>
+    <pattern> о2б3љ</pattern>
+    <pattern> о2б3р</pattern>
+    <pattern> обе2з3б</pattern>
+    <pattern> обе2з3д</pattern>
+    <pattern> обе2з3г</pattern>
+    <pattern> обе2з3ј</pattern>
+    <pattern> обе2з3л</pattern>
+    <pattern> обе2з3м</pattern>
+    <pattern> обе2з3н</pattern>
+    <pattern> обе2з3о</pattern>
+    <pattern> обе2з3љ</pattern>
+    <pattern> обе2з3р</pattern>
+    <pattern> обе2з3у</pattern>
+    <pattern> обе2з3в</pattern>
+    <pattern> обе3з4виј</pattern>
+    <pattern> обе3з4нан</pattern>
+    <pattern> обе3з4нањ</pattern>
+    <pattern> обе3з4нач</pattern>
+    <pattern> обе3з4уб</pattern>
+    <pattern> обе2с3ц</pattern>
+    <pattern> обе2с3к</pattern>
+    <pattern> обе2с3п</pattern>
+    <pattern> обе2с3т</pattern>
+    <pattern> обе3с4тан</pattern>
+    <pattern> обе3с4тиј</pattern>
+    <pattern> обе3с4тран</pattern>
+    <pattern> обе2ш3ћ</pattern>
+    <pattern> обе2ш3ч</pattern>
+    <pattern> о2б3игр</pattern>
+    <pattern> о2б3истин</pattern>
+    <pattern> о2б3истињ</pattern>
+    <pattern> о3б4јек</pattern>
+    <pattern> о3б4јер</pattern>
+    <pattern> о3б4јеси</pattern>
+    <pattern> о3б4јет</pattern>
+    <pattern> о3б4јеш</pattern>
+    <pattern> о2б3лај</pattern>
+    <pattern> о2б3лам</pattern>
+    <pattern> о2б3лакш</pattern>
+    <pattern> о2б3ласк</pattern>
+    <pattern> о2б3леп</pattern>
+    <pattern> о2б3лет</pattern>
+    <pattern> о2б3лећ</pattern>
+    <pattern> о2б3леж</pattern>
+    <pattern> о2б3лег</pattern>
+    <pattern> о2б3лијеп</pattern>
+    <pattern> о2б3лијет</pattern>
+    <pattern> о2б3лијеж</pattern>
+    <pattern> о2б3лијег</pattern>
+    <pattern> о2б3леден</pattern>
+    <pattern> о2б3лив</pattern>
+    <pattern> о2б3лизат</pattern>
+    <pattern> о2б3лизав</pattern>
+    <pattern> о2б3лизи</pattern>
+    <pattern> о2б3лист</pattern>
+    <pattern> о2б3лока</pattern>
+    <pattern> о2б3лук</pattern>
+    <pattern> о2б3луч</pattern>
+    <pattern> о3б4љан</pattern>
+    <pattern> о3б4љут</pattern>
+    <pattern> о3б4љуз</pattern>
+    <pattern> о2б3ору</pattern>
+    <pattern> о3б4раже</pattern>
+    <pattern> о3б4рази</pattern>
+    <pattern> о3б4разн</pattern>
+    <pattern> о3б4разо</pattern>
+    <pattern> о3б4разу</pattern>
+    <pattern> о3б4раза</pattern>
+    <pattern> о3б4разд</pattern>
+    <pattern> о3б4рамб</pattern>
+    <pattern> о3б4ран</pattern>
+    <pattern> о3б4рањ</pattern>
+    <pattern> о3б4рат</pattern>
+    <pattern> о3б4раћ</pattern>
+    <pattern> о3б4рашн</pattern>
+    <pattern> о3б4рашч</pattern>
+    <pattern> о3б4рв</pattern>
+    <pattern> о3б4рђ</pattern>
+    <pattern> о3б4рем</pattern>
+    <pattern> о3б4рес</pattern>
+    <pattern> о3б4ређ</pattern>
+    <pattern> о3б4реч</pattern>
+    <pattern> о3б4реж</pattern>
+    <pattern> о3б4рец</pattern>
+    <pattern> о3б4ред</pattern>
+    <pattern> о3б4рети</pattern>
+    <pattern> о3б4ретн</pattern>
+    <pattern> о3б4риј</pattern>
+    <pattern> о3б4рис</pattern>
+    <pattern> о3б4рит</pattern>
+    <pattern> о3б4рив</pattern>
+    <pattern> о3б4рич</pattern>
+    <pattern> о3б4риц</pattern>
+    <pattern> о3б4рк</pattern>
+    <pattern> о3б4рл</pattern>
+    <pattern> о3б4рн</pattern>
+    <pattern> о3б4рљ</pattern>
+    <pattern> о3б4рс</pattern>
+    <pattern> о3б4рт</pattern>
+    <pattern> о3б4рш</pattern>
+    <pattern> о3б4рч</pattern>
+    <pattern> о3б4рок</pattern>
+    <pattern> о3б4рон</pattern>
+    <pattern> о3б4роњ</pattern>
+    <pattern> о3б4роћ</pattern>
+    <pattern> о3б4роч</pattern>
+    <pattern> о3б4рова</pattern>
+    <pattern> о3б4ровц</pattern>
+    <pattern> о3б4рук</pattern>
+    <pattern> о3б4рун</pattern>
+    <pattern> о3б4рус</pattern>
+    <pattern> о3б4руњ</pattern>
+    <pattern> о3б4руш</pattern>
+    <pattern> о3б4руч</pattern>
+    <pattern> о2б3убож</pattern>
+    <pattern> о2б3уз</pattern>
+    <pattern> о2б3уж</pattern>
+    <pattern> о2б3уд</pattern>
+    <pattern> о2б3уми</pattern>
+    <pattern> о2б3умј</pattern>
+    <pattern> о2б3умр</pattern>
+    <pattern> о2б3уме</pattern>
+    <pattern> о2д3ј</pattern>
+    <pattern> о2д3л</pattern>
+    <pattern> о2д3љ</pattern>
+    <pattern> о2д3р</pattern>
+    <pattern> о2д3в</pattern>
+    <pattern> о2д3арг</pattern>
+    <pattern> о3д4вај</pattern>
+    <pattern> о3д4важ</pattern>
+    <pattern> о3д4весн</pattern>
+    <pattern> о3д4вест</pattern>
+    <pattern> о3д4веса</pattern>
+    <pattern> о3д4викав</pattern>
+    <pattern> о3д4викн</pattern>
+    <pattern> о3д4вис</pattern>
+    <pattern> о3д4вић</pattern>
+    <pattern> о3д4вој</pattern>
+    <pattern> о2д3игр</pattern>
+    <pattern> о2д3и2з3в</pattern>
+    <pattern> о2д3и2з3д</pattern>
+    <pattern> о2д3иск</pattern>
+    <pattern> о2д3исти</pattern>
+    <pattern> о3д4јел</pattern>
+    <pattern> о3д4јен</pattern>
+    <pattern> о3д4јев</pattern>
+    <pattern> о3д4јећ</pattern>
+    <pattern> о3д4лаз</pattern>
+    <pattern> о3д4лаж</pattern>
+    <pattern> о3д4лаг</pattern>
+    <pattern> о3д4лака</pattern>
+    <pattern> о3д4лук</pattern>
+    <pattern> о3д4луч</pattern>
+    <pattern> о2д3озд</pattern>
+    <pattern> о2д3озг</pattern>
+    <pattern> о2д3ок</pattern>
+    <pattern> о2д3онл</pattern>
+    <pattern> о2д3оно</pattern>
+    <pattern> о2д3ону</pattern>
+    <pattern> о2д3онд</pattern>
+    <pattern> о3д4рани</pattern>
+    <pattern> о3д4рано</pattern>
+    <pattern> о3д4рану</pattern>
+    <pattern> о3д4рана</pattern>
+    <pattern> о3д4ране</pattern>
+    <pattern> о3д4раз</pattern>
+    <pattern> о3д4раћ</pattern>
+    <pattern> о3д4раж</pattern>
+    <pattern> о3д4рапи</pattern>
+    <pattern> о3д4рапљ</pattern>
+    <pattern> о3д4рапа</pattern>
+    <pattern> о3д4рачи</pattern>
+    <pattern> о3д4рвен</pattern>
+    <pattern> о3д4рвењ</pattern>
+    <pattern> о3д4рвеч</pattern>
+    <pattern> о3д4рем</pattern>
+    <pattern> о3д4рен</pattern>
+    <pattern> о3д4рет</pattern>
+    <pattern> о3д4ређ</pattern>
+    <pattern> о3д4ред</pattern>
+    <pattern> о3д4рл</pattern>
+    <pattern> о3д4рн</pattern>
+    <pattern> о3д4рп</pattern>
+    <pattern> о3д4рљ</pattern>
+    <pattern> о3д4рт</pattern>
+    <pattern> о3д4рж</pattern>
+    <pattern> о3д4рин</pattern>
+    <pattern> о3д4рињ</pattern>
+    <pattern> о3д4риш</pattern>
+    <pattern> о3д4рич</pattern>
+    <pattern> о3д4риб</pattern>
+    <pattern> о3д4риц</pattern>
+    <pattern> о3д4рон</pattern>
+    <pattern> о3д4роњ</pattern>
+    <pattern> о3д4руж</pattern>
+    <pattern> о3д4руг</pattern>
+    <pattern> о2д3уви</pattern>
+    <pattern> о2д3уве</pattern>
+    <pattern> о2д3узи</pattern>
+    <pattern> о2д3узл</pattern>
+    <pattern> о2д3узд</pattern>
+    <pattern> о2д3узе</pattern>
+    <pattern> о2д3ук</pattern>
+    <pattern> о2д3ул</pattern>
+    <pattern> о2д3ум</pattern>
+    <pattern> о2д3уч</pattern>
+    <pattern> по2д3адм</pattern>
+    <pattern> по2д3вариј</pattern>
+    <pattern> по2д3вез</pattern>
+    <pattern> по2д3веч</pattern>
+    <pattern> по2д3веж</pattern>
+    <pattern> по2д3вик</pattern>
+    <pattern> по2д3вил</pattern>
+    <pattern> по2д3вир</pattern>
+    <pattern> по2д3вињ</pattern>
+    <pattern> по2д3влас</pattern>
+    <pattern> по2д3влаш</pattern>
+    <pattern> по2д3воз</pattern>
+    <pattern> по2д3вођ</pattern>
+    <pattern> по2д3вож</pattern>
+    <pattern> по2д3вод</pattern>
+    <pattern> по2д3врат</pattern>
+    <pattern> по2д3враћ</pattern>
+    <pattern> по2д3врћ</pattern>
+    <pattern> по2д3врж</pattern>
+    <pattern> по2д3врг</pattern>
+    <pattern> по2д3врис</pattern>
+    <pattern> по2д3врс</pattern>
+    <pattern> по2д3вућ</pattern>
+    <pattern> по2д3игр</pattern>
+    <pattern> по2д3изв</pattern>
+    <pattern> по2д3ј</pattern>
+    <pattern> по3д4јен</pattern>
+    <pattern> по3д4јеч</pattern>
+    <pattern> по2д3лакат</pattern>
+    <pattern> по2д3лакт</pattern>
+    <pattern> по2д3леп</pattern>
+    <pattern> по2д3лет</pattern>
+    <pattern> по2д3лећ</pattern>
+    <pattern> по2д3леж</pattern>
+    <pattern> по2д3лег</pattern>
+    <pattern> по2д3лиз</pattern>
+    <pattern> по2д3лијеп</pattern>
+    <pattern> по2д3лијет</pattern>
+    <pattern> по2д3лијећ</pattern>
+    <pattern> по2д3лијеж</pattern>
+    <pattern> по2д3лијег</pattern>
+    <pattern> по2д3лист</pattern>
+    <pattern> по2д3лок</pattern>
+    <pattern> по2д3лом</pattern>
+    <pattern> по2д3луп</pattern>
+    <pattern> по2д3луч</pattern>
+    <pattern> по2д3луж</pattern>
+    <pattern> по2д3љут</pattern>
+    <pattern> по2д3окн</pattern>
+    <pattern> по2д3ош</pattern>
+    <pattern> по2д3оч</pattern>
+    <pattern> по2д3оф</pattern>
+    <pattern> по2д3равн</pattern>
+    <pattern> по2д3равњ</pattern>
+    <pattern> по2д3рад</pattern>
+    <pattern> по2д3ра2з3д</pattern>
+    <pattern> по2д3разр</pattern>
+    <pattern> по2д3разу</pattern>
+    <pattern> по2д3рам</pattern>
+    <pattern> по2д3ран</pattern>
+    <pattern> по2д3рас</pattern>
+    <pattern> по2д3рањ</pattern>
+    <pattern> по2д3реп</pattern>
+    <pattern> по2д3рес</pattern>
+    <pattern> по2д3рез</pattern>
+    <pattern> по2д3рик</pattern>
+    <pattern> по2д3рит</pattern>
+    <pattern> по2д3рон</pattern>
+    <pattern> по2д3ров</pattern>
+    <pattern> по2д3рож</pattern>
+    <pattern> по2д3рук</pattern>
+    <pattern> по2д3руб</pattern>
+    <pattern> по2д3ручи</pattern>
+    <pattern> по2д3ручн</pattern>
+    <pattern> по2д3руча</pattern>
+    <pattern> по2д3упла</pattern>
+    <pattern> по2д3усм</pattern>
+    <pattern> по2д3усн</pattern>
+    <pattern> пре2д3ј</pattern>
+    <pattern> пре2д3в</pattern>
+    <pattern> пре3д4вај</pattern>
+    <pattern> пре3д4вар</pattern>
+    <pattern> пре3д4вест</pattern>
+    <pattern> пре3д4воји</pattern>
+    <pattern> пре3д4воја</pattern>
+    <pattern> пре3д4воје</pattern>
+    <pattern> пре3д4вор</pattern>
+    <pattern> пре3д4вос</pattern>
+    <pattern> пре3д4јен</pattern>
+    <pattern> пре2д3игр</pattern>
+    <pattern> пре2д3ид</pattern>
+    <pattern> пре2д3изб</pattern>
+    <pattern> пре2д3испи</pattern>
+    <pattern> пре2д3исто</pattern>
+    <pattern> пре2д3истр</pattern>
+    <pattern> пре2д3обј</pattern>
+    <pattern> пре2д3одре</pattern>
+    <pattern> пре2д3окус</pattern>
+    <pattern> пре2д3осв</pattern>
+    <pattern> пре2д3осе</pattern>
+    <pattern> пре2д3осје</pattern>
+    <pattern> пре2д3рат</pattern>
+    <pattern> пре2д3рач</pattern>
+    <pattern> пре2д3рад</pattern>
+    <pattern> пре2д3руч</pattern>
+    <pattern> пре2д3убеђ</pattern>
+    <pattern> пре2д3убијеђ</pattern>
+    <pattern> пре2д3убјеђ</pattern>
+    <pattern> пре2д3увер</pattern>
+    <pattern> пре2д3увјер</pattern>
+    <pattern> пре2д3увјет</pattern>
+    <pattern> пре2д3угов</pattern>
+    <pattern> пре2д3удар</pattern>
+    <pattern> пре2д3упис</pattern>
+    <pattern> пре2д3усло</pattern>
+    <pattern> проти2в3акц</pattern>
+    <pattern> проти2в3отр</pattern>
+    <pattern> проти2в3оф</pattern>
+    <pattern> проти2в3р</pattern>
+    <pattern> проти2в3ус</pattern>
+    <pattern> проти2в3уд</pattern>
+    <pattern> ра2ж3ђ</pattern>
+    <pattern> ра2з3б</pattern>
+    <pattern> ра2з3д</pattern>
+    <pattern> ра2з3е</pattern>
+    <pattern> ра2з3г</pattern>
+    <pattern> ра2з3и</pattern>
+    <pattern> ра2з3ј</pattern>
+    <pattern> ра2з3л</pattern>
+    <pattern> ра2з3м</pattern>
+    <pattern> ра2з3н</pattern>
+    <pattern> ра2з3љ</pattern>
+    <pattern> ра2з3р</pattern>
+    <pattern> ра2з3в</pattern>
+    <pattern> ра2з3њ</pattern>
+    <pattern> ра2з3анал</pattern>
+    <pattern> ра3з4бан</pattern>
+    <pattern> ра3з4бар</pattern>
+    <pattern> ра3з4бау</pattern>
+    <pattern> ра3з4бад</pattern>
+    <pattern> ра3з4башур</pattern>
+    <pattern> ра3з4бој</pattern>
+    <pattern> ра3з4бор</pattern>
+    <pattern> ра3з4вал</pattern>
+    <pattern> ра3з4веде</pattern>
+    <pattern> ра3з4вест</pattern>
+    <pattern> ра3з4виго</pattern>
+    <pattern> ра3з4вију</pattern>
+    <pattern> ра3з4вија</pattern>
+    <pattern> ра3з4вије</pattern>
+    <pattern> ра3з4вит</pattern>
+    <pattern> ра3з4вић</pattern>
+    <pattern> ра3з4вој</pattern>
+    <pattern> ра3з4вон</pattern>
+    <pattern> ра3з4врат</pattern>
+    <pattern> ра3з4враћ</pattern>
+    <pattern> ра3з4врт</pattern>
+    <pattern> ра3з4врћ</pattern>
+    <pattern> ра3з4гађ</pattern>
+    <pattern> ра3з4грт</pattern>
+    <pattern> ра3з4ев</pattern>
+    <pattern> ра3з4иј</pattern>
+    <pattern> ра3з4ил</pattern>
+    <pattern> ра3з4ин</pattern>
+    <pattern> ра3з4ир</pattern>
+    <pattern> ра3з4ит</pattern>
+    <pattern> ра3з4из</pattern>
+    <pattern> ра3з4иђ</pattern>
+    <pattern> ра3з4ић</pattern>
+    <pattern> ра3з4ид</pattern>
+    <pattern> ра3з4лаз</pattern>
+    <pattern> ра3з4лаг</pattern>
+    <pattern> ра3з4лик</pattern>
+    <pattern> ра3з4лич</pattern>
+    <pattern> ра3з4лоз</pattern>
+    <pattern> ра3з4лож</pattern>
+    <pattern> ра3з4лог</pattern>
+    <pattern> ра3з4мет</pattern>
+    <pattern> ра3з4мећ</pattern>
+    <pattern> ра3з4мрск</pattern>
+    <pattern> ра3з4нат</pattern>
+    <pattern> ра2з3обл</pattern>
+    <pattern> ра2з3обр</pattern>
+    <pattern> ра2з3оба</pattern>
+    <pattern> ра2з3од</pattern>
+    <pattern> ра2з3орат</pattern>
+    <pattern> ра2з3орав</pattern>
+    <pattern> ра2з3орт</pattern>
+    <pattern> ра2з3ору</pattern>
+    <pattern> ра2з3от</pattern>
+    <pattern> ра3з4ред</pattern>
+    <pattern> ра3з4рок</pattern>
+    <pattern> ра3з4роч</pattern>
+    <pattern> ра2з3уве</pattern>
+    <pattern> ра2з3уди</pattern>
+    <pattern> ра2з3уда</pattern>
+    <pattern> ра2з3удб</pattern>
+    <pattern> ра2з3узи</pattern>
+    <pattern> ра2з3узд</pattern>
+    <pattern> ра2з3узе</pattern>
+    <pattern> ра2з3улар</pattern>
+    <pattern> ра2з3умр</pattern>
+    <pattern> ра2с3ц</pattern>
+    <pattern> ра2с3к</pattern>
+    <pattern> ра2с3п</pattern>
+    <pattern> ра2с3т</pattern>
+    <pattern> ра3с4как</pattern>
+    <pattern> ра3с4канд</pattern>
+    <pattern> ра3с4кин</pattern>
+    <pattern> ра3с4клап</pattern>
+    <pattern> ра3с4клањ</pattern>
+    <pattern> ра3с4клад</pattern>
+    <pattern> ра3с4клон</pattern>
+    <pattern> ра3с4клопи</pattern>
+    <pattern> ра3с4клопљ</pattern>
+    <pattern> ра3с4клопа</pattern>
+    <pattern> ра3с4кош</pattern>
+    <pattern> ра3с4кроп</pattern>
+    <pattern> ра3с4пај</pattern>
+    <pattern> ра3с4пав</pattern>
+    <pattern> ра3с4пети</pattern>
+    <pattern> ра3с4пето</pattern>
+    <pattern> ра3с4пета</pattern>
+    <pattern> ра3с4пете</pattern>
+    <pattern> ра3с4пику</pattern>
+    <pattern> ра3с4пињ</pattern>
+    <pattern> ра3с4плин</pattern>
+    <pattern> ра3с4плињ</pattern>
+    <pattern> ра3с4пн</pattern>
+    <pattern> ра3с4полож</pattern>
+    <pattern> ра3с4пон</pattern>
+    <pattern> ра3с4пор</pattern>
+    <pattern> ра3с4прав</pattern>
+    <pattern> ра3с4прем</pattern>
+    <pattern> ра3с4рђ</pattern>
+    <pattern> ра3с4рд</pattern>
+    <pattern> ра3с4ре</pattern>
+    <pattern> ра3с4тај</pattern>
+    <pattern> ра3с4тан</pattern>
+    <pattern> ра3с4тат</pattern>
+    <pattern> ра3с4тав</pattern>
+    <pattern> ра3с4тењ</pattern>
+    <pattern> ра3с4тил</pattern>
+    <pattern> ра3с4тир</pattern>
+    <pattern> ра3с4тис</pattern>
+    <pattern> ра3с4тит</pattern>
+    <pattern> ра3с4тињ</pattern>
+    <pattern> ра3с4тој</pattern>
+    <pattern> ра3с4трел</pattern>
+    <pattern> ра3с4трет</pattern>
+    <pattern> ра3с4трој</pattern>
+    <pattern> ра3с4трт</pattern>
+    <pattern> ра3с4туп</pattern>
+    <pattern> ра3с4тур</pattern>
+    <pattern> ра3с4тућ</pattern>
+    <pattern> ра4с5турч</pattern>
+    <pattern> ра2ш3ћ</pattern>
+    <pattern> ра2ш3ч</pattern>
+    <pattern> ра3ш4ћењ</pattern>
+    <pattern> ра3ш4чић</pattern>
+    <pattern> у2з3б</pattern>
+    <pattern> у2з3д</pattern>
+    <pattern> у2з3г</pattern>
+    <pattern> у2з3и</pattern>
+    <pattern> у2з3ј</pattern>
+    <pattern> у2з3л</pattern>
+    <pattern> у2з3м</pattern>
+    <pattern> у2з3н</pattern>
+    <pattern> у2з3љ</pattern>
+    <pattern> у2з3р</pattern>
+    <pattern> у2з3в</pattern>
+    <pattern> у2з3њ</pattern>
+    <pattern> у3з4бор</pattern>
+    <pattern> у3з4ван</pattern>
+    <pattern> у3з4ват</pattern>
+    <pattern> у3з4виж</pattern>
+    <pattern> у3з4вијо</pattern>
+    <pattern> у3з4вију</pattern>
+    <pattern> у3з4вија</pattern>
+    <pattern> у3з4вије</pattern>
+    <pattern> у3з4вој</pattern>
+    <pattern> у3з4диц</pattern>
+    <pattern> у2з3игр</pattern>
+    <pattern> у2з3инат</pattern>
+    <pattern> у2з3искр</pattern>
+    <pattern> у3з4лан</pattern>
+    <pattern> у3з4лат</pattern>
+    <pattern> у3з4лим</pattern>
+    <pattern> у3з4лит</pattern>
+    <pattern> у3з4лић</pattern>
+    <pattern> у3з4лиц</pattern>
+    <pattern> у3з4лов</pattern>
+    <pattern> у3з4лудоб</pattern>
+    <pattern> у3з4нак</pattern>
+    <pattern> у3з4нач</pattern>
+    <pattern> у3з4неве</pattern>
+    <pattern> у3з4невје</pattern>
+    <pattern> у3з4нич</pattern>
+    <pattern> у3з4ниц</pattern>
+    <pattern> у3з4ној</pattern>
+    <pattern> у2з3обест</pattern>
+    <pattern> у2з3обијест</pattern>
+    <pattern> у2з3орат</pattern>
+    <pattern> у2з3орав</pattern>
+    <pattern> у2з3охо</pattern>
+    <pattern> у3з4рет</pattern>
+    <pattern> у3з4рев</pattern>
+    <pattern> у3з4ријет</pattern>
+    <pattern> у3з4ријев</pattern>
+    <pattern> у3з4рн</pattern>
+    <pattern> у3з4рњ</pattern>
+    <pattern> у3з4роко</pattern>
+    <pattern> у3з4року</pattern>
+    <pattern> у3з4рока</pattern>
+    <pattern> у3з4роч</pattern>
+    <pattern> у3з4руј</pattern>
+    <pattern> у2з3угар</pattern>
+    <pattern> у2с3ц</pattern>
+    <pattern> у2с3к</pattern>
+    <pattern> у2с3п</pattern>
+    <pattern> у3с4как</pattern>
+    <pattern> у3с4клађ</pattern>
+    <pattern> у3с4клад</pattern>
+    <pattern> у3с4ко</pattern>
+    <pattern> у4с5ком</pattern>
+    <pattern> у4с5ков</pattern>
+    <pattern> у4с5кош</pattern>
+    <pattern> у4с5коко</pattern>
+    <pattern> у4с5колу</pattern>
+    <pattern> у4с5коле</pattern>
+    <pattern> у4с5копа</pattern>
+    <pattern> у4с5кора</pattern>
+    <pattern> у4с5коси</pattern>
+    <pattern> у4с5котр</pattern>
+    <pattern> у3с4куп</pattern>
+    <pattern> у3с4пав</pattern>
+    <pattern> у3с4пало</pattern>
+    <pattern> у3с4пех</pattern>
+    <pattern> у3с4пел</pattern>
+    <pattern> у3с4пем</pattern>
+    <pattern> у3с4пет</pattern>
+    <pattern> у3с4пев</pattern>
+    <pattern> у3с4пеш</pattern>
+    <pattern> у3с4пјех</pattern>
+    <pattern> у3с4пјел</pattern>
+    <pattern> у3с4пјем</pattern>
+    <pattern> у3с4пјет</pattern>
+    <pattern> у3с4пјев</pattern>
+    <pattern> у3с4пјеш</pattern>
+    <pattern> у3с4пент</pattern>
+    <pattern> у3с4пија</pattern>
+    <pattern> у3с4пије</pattern>
+    <pattern> у3с4пијуш</pattern>
+    <pattern> у3с4пикуш</pattern>
+    <pattern> у3с4пон</pattern>
+    <pattern> у3с4пори</pattern>
+    <pattern> у3с4пора</pattern>
+    <pattern> у3с4порен</pattern>
+    <pattern> у3с4порењ</pattern>
+    <pattern> у3с4пореч</pattern>
+    <pattern> у3с4пособ</pattern>
+    <pattern> у3с4преми</pattern>
+    <pattern> у3с4према</pattern>
+    <pattern> у3с4рк</pattern>
+    <pattern> у3с4рн</pattern>
+    <pattern> у3с4рп</pattern>
+    <pattern> у3с4рљ</pattern>
+    <pattern> у3с4рт</pattern>
+    <pattern> у3с4рђ</pattern>
+    <pattern> у3с4рж</pattern>
+    <pattern> у3с4ра</pattern>
+    <pattern> у3с4рд</pattern>
+    <pattern> у3с4ре</pattern>
+    <pattern> у3с4ријед</pattern>
+    <pattern> у2с3талас</pattern>
+    <pattern> у2с3тара</pattern>
+    <pattern> у2с3тврђ</pattern>
+    <pattern> у2с3тврд</pattern>
+    <pattern> у2с3тер</pattern>
+    <pattern> у2с3тећ</pattern>
+    <pattern> у2с3тег</pattern>
+    <pattern> у2с3тов</pattern>
+    <pattern> у2с3трај</pattern>
+    <pattern> у2с3трал</pattern>
+    <pattern> у2с3трг</pattern>
+    <pattern> у2с3треп</pattern>
+    <pattern> у2с3трес</pattern>
+    <pattern> у2с3треб</pattern>
+    <pattern> у2с3трк</pattern>
+    <pattern> у2с3трн</pattern>
+    <pattern> у2с3трп</pattern>
+    <pattern> у2с3трћ</pattern>
+    <pattern> у2с3трч</pattern>
+    <pattern> у2с3тум</pattern>
+    <pattern> у2с3тур</pattern>
+    <pattern> у2с3тућ</pattern>
+    <pattern> у2ш3ћ</pattern>
+    <pattern> у2ш3ч</pattern>
+    <pattern> а2б3алиј</pattern>
+    <pattern> а2б3анац</pattern>
+    <pattern> а2б3евак</pattern>
+    <pattern> а2б3ерац</pattern>
+    <pattern> а2б3ерир</pattern>
+    <pattern> а2б3ирит</pattern>
+    <pattern> а2б3ју</pattern>
+    <pattern> а2б3ла</pattern>
+    <pattern> а2б3лег</pattern>
+    <pattern> а2б3леп</pattern>
+    <pattern> а2б3лок</pattern>
+    <pattern> а2б3лу</pattern>
+    <pattern> а2б3ориг</pattern>
+    <pattern> а2б3реак</pattern>
+    <pattern> а2б3рог</pattern>
+    <pattern> а2б3узус</pattern>
+    <pattern> а2д3ерац</pattern>
+    <pattern> а2д3верб</pattern>
+    <pattern> а2д3ј</pattern>
+    <pattern> а2д3лат</pattern>
+    <pattern> а2д3рен</pattern>
+    <pattern> а2д3рог</pattern>
+    <pattern> а3г2нос</pattern>
+    <pattern> а3г2ноз</pattern>
+    <pattern> а2набап</pattern>
+    <pattern> а2набаз</pattern>
+    <pattern> а2набат</pattern>
+    <pattern> а2набио</pattern>
+    <pattern> а2набол</pattern>
+    <pattern> а2наген</pattern>
+    <pattern> а2нагно</pattern>
+    <pattern> а2н3аго</pattern>
+    <pattern> а2награ</pattern>
+    <pattern> а2надем</pattern>
+    <pattern> а2надипл</pattern>
+    <pattern> а2надоз</pattern>
+    <pattern> а2н3а4е2ро</pattern>
+    <pattern> а2накал</pattern>
+    <pattern> а2накам</pattern>
+    <pattern> а2накат</pattern>
+    <pattern> а2накеф</pattern>
+    <pattern> а2накла</pattern>
+    <pattern> а2накли</pattern>
+    <pattern> а2накој</pattern>
+    <pattern> а2н3акуз</pattern>
+    <pattern> а2н3алг</pattern>
+    <pattern> а2н3алд</pattern>
+    <pattern> а2налеп</pattern>
+    <pattern> а2нализ</pattern>
+    <pattern> а2налис</pattern>
+    <pattern> а2налит</pattern>
+    <pattern> а2н3амерт</pattern>
+    <pattern> а2намне</pattern>
+    <pattern> а2н3андр</pattern>
+    <pattern> а2нанео</pattern>
+    <pattern> а2н3ант</pattern>
+    <pattern> а2напла</pattern>
+    <pattern> а2напле</pattern>
+    <pattern> а2напне</pattern>
+    <pattern> а2напно</pattern>
+    <pattern> а2напро</pattern>
+    <pattern> а2напти</pattern>
+    <pattern> а2н3апто</pattern>
+    <pattern> а2нарт</pattern>
+    <pattern> а2н3арх</pattern>
+    <pattern> а2насар</pattern>
+    <pattern> а2насеи</pattern>
+    <pattern> а2наспаз</pattern>
+    <pattern> а2наста</pattern>
+    <pattern> а2настиг</pattern>
+    <pattern> а2настом</pattern>
+    <pattern> а2натим</pattern>
+    <pattern> а2натом</pattern>
+    <pattern> а2натоц</pattern>
+    <pattern> а2натре</pattern>
+    <pattern> а2натри</pattern>
+    <pattern> а2натро</pattern>
+    <pattern> а2нафаз</pattern>
+    <pattern> а2н3афиј</pattern>
+    <pattern> а2нафила</pattern>
+    <pattern> а2нафон</pattern>
+    <pattern> а2н3афрод</pattern>
+    <pattern> а2накол</pattern>
+    <pattern> а2накрон</pattern>
+    <pattern> а2накру</pattern>
+    <pattern> а2н3алфа</pattern>
+    <pattern> а2нафор</pattern>
+    <pattern> а2нахор</pattern>
+    <pattern> а2нахро</pattern>
+    <pattern> а2н3егер</pattern>
+    <pattern> а2н3екл</pattern>
+    <pattern> а2н3екум</pattern>
+    <pattern> а2н3елек</pattern>
+    <pattern> а2н3енер</pattern>
+    <pattern> а2н3епи</pattern>
+    <pattern> а2неор</pattern>
+    <pattern> а2н3ерг</pattern>
+    <pattern> а2н3ерит</pattern>
+    <pattern> а2н3есте</pattern>
+    <pattern> а2н3идр</pattern>
+    <pattern> а2н3изог</pattern>
+    <pattern> а2н3изом</pattern>
+    <pattern> а2н3изур</pattern>
+    <pattern> а2н3ирид</pattern>
+    <pattern> а2н3овар</pattern>
+    <pattern> а2н3окс</pattern>
+    <pattern> а2н3опис</pattern>
+    <pattern> а2н3орх</pattern>
+    <pattern> а2н3офт</pattern>
+    <pattern> а2н3орг</pattern>
+    <pattern> ди2с3акор</pattern>
+    <pattern> ди2с3јунк</pattern>
+    <pattern> ди2с3квал</pattern>
+    <pattern> ди2с3конт</pattern>
+    <pattern> ди2с3корд</pattern>
+    <pattern> ди2с3кре</pattern>
+    <pattern> ди2с3кри</pattern>
+    <pattern> ди2с3кур</pattern>
+    <pattern> ди2с3ло</pattern>
+    <pattern> ди2с3ориј</pattern>
+    <pattern> ди2с3парит</pattern>
+    <pattern> ди2с3поз</pattern>
+    <pattern> ди2с3пон</pattern>
+    <pattern> ди2с3проп</pattern>
+    <pattern> ди2с3тон</pattern>
+    <pattern> ди2с3трак</pattern>
+    <pattern> и2н3абруп</pattern>
+    <pattern> и2н3адек</pattern>
+    <pattern> и2н3акур</pattern>
+    <pattern> и2н3акце</pattern>
+    <pattern> и2н3амор</pattern>
+    <pattern> и2н3аниц</pattern>
+    <pattern> и2н3аплик</pattern>
+    <pattern> и2н3апст</pattern>
+    <pattern> и2н3арт</pattern>
+    <pattern> и2н3аугур</pattern>
+    <pattern> и2н3аура</pattern>
+    <pattern> и2н3афек</pattern>
+    <pattern> и2н3евид</pattern>
+    <pattern> и2н3ег</pattern>
+    <pattern> и2н3ед</pattern>
+    <pattern> и2н3екв</pattern>
+    <pattern> и2н3екс</pattern>
+    <pattern> и2н3елиг</pattern>
+    <pattern> и2н3епц</pattern>
+    <pattern> и2н3ефек</pattern>
+    <pattern> и2н3обл</pattern>
+    <pattern> и2ноген</pattern>
+    <pattern> и2нокор</pattern>
+    <pattern> и2н3окуп</pattern>
+    <pattern> и2н3опер</pattern>
+    <pattern> и2н3опор</pattern>
+    <pattern> и2н3опсе</pattern>
+    <pattern> и2н3офиц</pattern>
+    <pattern> и2н3умбр</pattern>
+    <pattern> и2н3унда</pattern>
+    <pattern> и2н3унк</pattern>
+    <pattern> и2н3утил</pattern>
+    <pattern> инте2р3и</pattern>
+    <pattern> инте2р3о</pattern>
+    <pattern> инте2р3у</pattern>
+    <pattern> инте2р3а</pattern>
+    <pattern> инте2р3е</pattern>
+    <pattern> инте3р4егн</pattern>
+    <pattern> инте3р4еси</pattern>
+    <pattern> инте3р4есн</pattern>
+    <pattern> инте3р4есо</pattern>
+    <pattern> инте3р4есу</pattern>
+    <pattern> инте3р4еса</pattern>
+    <pattern> инте3р4есе</pattern>
+    <pattern> инте3р4ежџ</pattern>
+    <pattern> инте3р4ије</pattern>
+    <pattern> инте2р3је</pattern>
+    <pattern> инте3р4огат</pattern>
+    <pattern> јури2с3к</pattern>
+    <pattern> јури2с3п</pattern>
+    <pattern> ну2з3бел</pattern>
+    <pattern> ну2з3биљ</pattern>
+    <pattern> ну2з3љуб</pattern>
+    <pattern> ну2з3ре</pattern>
+    <pattern> ну2з3рје</pattern>
+    <pattern> ну2з3уж</pattern>
+    <pattern> ну2с3пос</pattern>
+    <pattern> ну2с3про</pattern>
+    <pattern> по2ст3егз</pattern>
+    <pattern> по2ст3инду</pattern>
+    <pattern> по2ст3лим</pattern>
+    <pattern> по2ст3онк</pattern>
+    <pattern> по2ст3опер</pattern>
+    <pattern> су2б3а</pattern>
+    <pattern> су2б3л</pattern>
+    <pattern> су3б4аш</pattern>
+    <pattern> су2б3инв</pattern>
+    <pattern> су2б3јунк</pattern>
+    <pattern> су2б3окс</pattern>
+    <pattern> су2б3реп</pattern>
+    <pattern> су2б3рог</pattern>
+    <pattern> су2б3орд</pattern>
+    <pattern> супе2р3и</pattern>
+    <pattern> супе2р3о</pattern>
+    <pattern> супе2р3у</pattern>
+    <pattern> супе2р3а</pattern>
+    <pattern> супе2р3е</pattern>
+    <pattern> супе3р4иор</pattern>
+    <pattern> тран2с3а</pattern>
+    <pattern> тран2с3ц</pattern>
+    <pattern> тран2с3е</pattern>
+    <pattern> тран2с3к</pattern>
+    <pattern> тран2с3л</pattern>
+    <pattern> тран2с3м</pattern>
+    <pattern> тран2с3н</pattern>
+    <pattern> тран2с3о</pattern>
+    <pattern> тран2с3п</pattern>
+    <pattern> тран2с3т</pattern>
+    <pattern> тран2с3у</pattern>
+    <pattern> тран2с3в</pattern>
+    <pattern> тран2с3њ</pattern>
+    <pattern> тран3с4еп</pattern>
+    <pattern> тран3с4кри</pattern>
+    <pattern> тран3с4ум</pattern>
+    <pattern> тран3с4уд</pattern>
 </HyphenationDescription>

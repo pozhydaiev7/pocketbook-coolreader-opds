@@ -498,28 +498,31 @@ void CRFileHistRecord::setLastPos( CRBookmark * bmk )
 bool CRFileHistRecord::convertBookmarks(ldomDocument *doc, int newDOMversion)
 {
     // The last reading position is stored separately from explicit bookmarks.
-    // Stage every pointer before modifying history: a bad range must not leave
-    // a mixture of old and normalized pointers under a new version label.
+    // Every pointer is staged before the history is modified. A pointer that is not found in the
+    // tree of the old version is kept as it is: it is found in no tree, and one such bookmark must
+    // not stop the book from being opened or leave the other positions unconverted.
     int documentVersion = doc->getDOMVersionRequested();
     LVArray<lString32> starts, ends;
-    bool valid = true;
-    for (int i = -1; i < _bookmarks.length() && valid; ++i) {
+    for (int i = -1; i < _bookmarks.length(); ++i) {
         CRBookmark *bmk = i < 0 ? &_lastpos : _bookmarks[i];
         lString32 positions[2] = {bmk->getStartPos(), bmk->getEndPos()};
         for (int j = 0; j < 2; ++j) {
             if (positions[j].empty()) continue;
             doc->setDOMVersionRequested(getDOMversion());
             ldomXPointer ptr = doc->createXPointer(positions[j]);
-            if (ptr.isNull()) { valid = false; break; }
+            if (ptr.isNull()) {
+                CRLog::warn("history: pointer %s is not found in the book, kept as it is", LCSTR(positions[j]));
+                continue;
+            }
             doc->setDOMVersionRequested(newDOMversion);
-            positions[j] = ptr.toString();
-            if (positions[j].empty()) { valid = false; break; }
+            lString32 converted = ptr.toString();
+            if (!converted.empty())
+                positions[j] = converted;
         }
         starts.add(positions[0]);
         ends.add(positions[1]);
     }
     doc->setDOMVersionRequested(documentVersion);
-    if (!valid) return false;
     for (int i = -1; i < _bookmarks.length(); ++i) {
         CRBookmark *bmk = i < 0 ? &_lastpos : _bookmarks[i];
         bmk->setStartPos(starts[i+1]);

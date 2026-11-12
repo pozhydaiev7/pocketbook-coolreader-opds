@@ -36,29 +36,31 @@
 %
 %
 -->
-<HyphenationDescription>
-    <pattern>.a2b3l</pattern>
-    <pattern>.anti1</pattern>
-    <pattern>.anti3m2n</pattern>
-    <pattern>.ari3s2to</pattern>
-    <pattern>.circu2m1</pattern>
-    <pattern>.co2n1iun</pattern>
-    <pattern>.e2x3</pattern>
-    <pattern>.exs2t</pattern>
-    <pattern>.para1i</pattern>
-    <pattern>.para1u</pattern>
-    <pattern>.peri1</pattern>
-    <pattern>.quin2c3un</pattern>
-    <pattern>.su2b3lu</pattern>
-    <pattern>.su2b3r</pattern>
-    <pattern>.s2</pattern>
-    <pattern>2s3que.</pattern>
-    <pattern>2s3dem.</pattern>
-    <pattern>.sta3g2n</pattern>
+<HyphenationDescription
+    title="Classical Latin" lang="la-x-classic"
+    lefthyphenmin="2" righthyphenmin="2">
+    <pattern> a2b3l</pattern>
+    <pattern> anti1</pattern>
+    <pattern> anti3m2n</pattern>
+    <pattern> ari3s2to</pattern>
+    <pattern> circu2m1</pattern>
+    <pattern> co2n1iun</pattern>
+    <pattern> e2x3</pattern>
+    <pattern> exs2t</pattern>
+    <pattern> para1i</pattern>
+    <pattern> para1u</pattern>
+    <pattern> peri1</pattern>
+    <pattern> quin2c3un</pattern>
+    <pattern> su2b3lu</pattern>
+    <pattern> su2b3r</pattern>
+    <pattern> s2</pattern>
+    <pattern>2s3que </pattern>
+    <pattern>2s3dem </pattern>
+    <pattern> sta3g2n</pattern>
     <pattern>3p2sic</pattern>
     <pattern>3p2neu</pattern>
-    <pattern>3ne.</pattern>
-    <pattern>2sne.</pattern>
+    <pattern>3ne </pattern>
+    <pattern>2sne </pattern>
     <pattern>a1ua</pattern>
     <pattern>a1ue</pattern>
     <pattern>a1ui</pattern>
@@ -132,43 +134,43 @@
     <pattern>o1ie</pattern>
     <pattern>o1io</pattern>
     <pattern>o1iu</pattern>
-    <pattern>2am.</pattern>
-    <pattern>2at.</pattern>
-    <pattern>2as.</pattern>
-    <pattern>2ans.</pattern>
-    <pattern>2ax.</pattern>
-    <pattern>4ant.</pattern>
-    <pattern>2es.</pattern>
-    <pattern>2et.</pattern>
-    <pattern>2em.</pattern>
-    <pattern>2ex.</pattern>
-    <pattern>e5us.</pattern>
-    <pattern>2is.</pattern>
-    <pattern>2im.</pattern>
-    <pattern>2it.</pattern>
-    <pattern>2ix.</pattern>
-    <pattern>2yx.</pattern>
-    <pattern>2ys.</pattern>
-    <pattern>2ox.</pattern>
-    <pattern>2ui.</pattern>
-    <pattern>2ux.</pattern>
-    <pattern>i3um.</pattern>
-    <pattern>i3ur.</pattern>
-    <pattern>i3unt.</pattern>
-    <pattern>i3ui.</pattern>
-    <pattern>tru5us.</pattern>
-    <pattern>tru1um.</pattern>
-    <pattern>.i2a</pattern>
-    <pattern>.i2e</pattern>
-    <pattern>.i2i</pattern>
-    <pattern>.i2o</pattern>
-    <pattern>.i2u</pattern>
-    <pattern>.iuu2a</pattern>
-    <pattern>.iuu2e</pattern>
-    <pattern>.iuu2o</pattern>
-    <pattern>.iei2u</pattern>
-    <pattern>.iai2u</pattern>
-    <pattern>.iuu2i</pattern>
+    <pattern>2am </pattern>
+    <pattern>2at </pattern>
+    <pattern>2as </pattern>
+    <pattern>2ans </pattern>
+    <pattern>2ax </pattern>
+    <pattern>4ant </pattern>
+    <pattern>2es </pattern>
+    <pattern>2et </pattern>
+    <pattern>2em </pattern>
+    <pattern>2ex </pattern>
+    <pattern>e5us </pattern>
+    <pattern>2is </pattern>
+    <pattern>2im </pattern>
+    <pattern>2it </pattern>
+    <pattern>2ix </pattern>
+    <pattern>2yx </pattern>
+    <pattern>2ys </pattern>
+    <pattern>2ox </pattern>
+    <pattern>2ui </pattern>
+    <pattern>2ux </pattern>
+    <pattern>i3um </pattern>
+    <pattern>i3ur </pattern>
+    <pattern>i3unt </pattern>
+    <pattern>i3ui </pattern>
+    <pattern>tru5us </pattern>
+    <pattern>tru1um </pattern>
+    <pattern> i2a</pattern>
+    <pattern> i2e</pattern>
+    <pattern> i2i</pattern>
+    <pattern> i2o</pattern>
+    <pattern> i2u</pattern>
+    <pattern> iuu2a</pattern>
+    <pattern> iuu2e</pattern>
+    <pattern> iuu2o</pattern>
+    <pattern> iei2u</pattern>
+    <pattern> iai2u</pattern>
+    <pattern> iuu2i</pattern>
     <pattern>i2oi2u</pattern>
     <pattern>i3u2ia</pattern>
     <pattern>i3ui3ua</pattern>
@@ -181,14 +183,14 @@
     <pattern>e1ui1uo</pattern>
     <pattern>i2y</pattern>
     <pattern>uo3u</pattern>
-    <pattern>.ua3ua</pattern>
-    <pattern>.uo3ue</pattern>
-    <pattern>.ue1io</pattern>
-    <pattern>.u2a</pattern>
-    <pattern>.u2e</pattern>
-    <pattern>.u2i</pattern>
-    <pattern>.u2o</pattern>
-    <pattern>.u2u</pattern>
+    <pattern> ua3ua</pattern>
+    <pattern> uo3ue</pattern>
+    <pattern> ue1io</pattern>
+    <pattern> u2a</pattern>
+    <pattern> u2e</pattern>
+    <pattern> u2i</pattern>
+    <pattern> u2o</pattern>
+    <pattern> u2u</pattern>
     <pattern>1b</pattern>
     <pattern>2bb</pattern>
     <pattern>2bd</pattern>
@@ -201,8 +203,8 @@
     <pattern>2bt</pattern>
     <pattern>2bs</pattern>
     <pattern>b3s2t</pattern>
-    <pattern>2b.</pattern>
-    <pattern>.b2</pattern>
+    <pattern>2b </pattern>
+    <pattern> b2</pattern>
     <pattern>1c</pattern>
     <pattern>2cc</pattern>
     <pattern>c2h2</pattern>
@@ -214,8 +216,8 @@
     <pattern>2cs</pattern>
     <pattern>2ct</pattern>
     <pattern>2cz</pattern>
-    <pattern>2c.</pattern>
-    <pattern>.c2</pattern>
+    <pattern>2c </pattern>
+    <pattern> c2</pattern>
     <pattern>1d</pattern>
     <pattern>2dd</pattern>
     <pattern>2dg</pattern>
@@ -223,16 +225,16 @@
     <pattern>2dm</pattern>
     <pattern>d2r</pattern>
     <pattern>2ds</pattern>
-    <pattern>2d.</pattern>
-    <pattern>.g2</pattern>
+    <pattern>2d </pattern>
+    <pattern> g2</pattern>
     <pattern>1f</pattern>
     <pattern>2ff</pattern>
     <pattern>f2l</pattern>
     <pattern>2fn</pattern>
     <pattern>f2r</pattern>
     <pattern>2ft</pattern>
-    <pattern>2f.</pattern>
-    <pattern>.f2</pattern>
+    <pattern>2f </pattern>
+    <pattern> f2</pattern>
     <pattern>1g</pattern>
     <pattern>2gg</pattern>
     <pattern>2gd</pattern>
@@ -242,13 +244,13 @@
     <pattern>2gn</pattern>
     <pattern>g2r</pattern>
     <pattern>2gs</pattern>
-    <pattern>2g.</pattern>
+    <pattern>2g </pattern>
     <pattern>1h</pattern>
     <pattern>2hp</pattern>
     <pattern>2ht</pattern>
-    <pattern>2h.</pattern>
-    <pattern>.hu1i2u</pattern>
-    <pattern>.h2</pattern>
+    <pattern>2h </pattern>
+    <pattern> hu1i2u</pattern>
+    <pattern> h2</pattern>
     <pattern>1k</pattern>
     <pattern>1l</pattern>
     <pattern>2lb</pattern>
@@ -266,8 +268,8 @@
     <pattern>2lr</pattern>
     <pattern>2ls</pattern>
     <pattern>2lt</pattern>
-    <pattern>2l.</pattern>
-    <pattern>.l2</pattern>
+    <pattern>2l </pattern>
+    <pattern> l2</pattern>
     <pattern>1m</pattern>
     <pattern>2mm</pattern>
     <pattern>2mb</pattern>
@@ -279,8 +281,8 @@
     <pattern>2mr</pattern>
     <pattern>2ms</pattern>
     <pattern>2mt</pattern>
-    <pattern>2m.</pattern>
-    <pattern>.m2</pattern>
+    <pattern>2m </pattern>
+    <pattern> m2</pattern>
     <pattern>1n</pattern>
     <pattern>2nb</pattern>
     <pattern>2nc</pattern>
@@ -299,8 +301,8 @@
     <pattern>n2s3f</pattern>
     <pattern>2nt</pattern>
     <pattern>2nx2</pattern>
-    <pattern>2n.</pattern>
-    <pattern>.n2</pattern>
+    <pattern>2n </pattern>
+    <pattern> n2</pattern>
     <pattern>1p</pattern>
     <pattern>p2h2</pattern>
     <pattern>p2l</pattern>
@@ -313,8 +315,8 @@
     <pattern>2pz</pattern>
     <pattern>2php</pattern>
     <pattern>2pht</pattern>
-    <pattern>2p.</pattern>
-    <pattern>.p2</pattern>
+    <pattern>2p </pattern>
+    <pattern> p2</pattern>
     <pattern>1qu2</pattern>
     <pattern>1r</pattern>
     <pattern>2rb</pattern>
@@ -332,9 +334,9 @@
     <pattern>2rs</pattern>
     <pattern>2rt</pattern>
     <pattern>2rz</pattern>
-    <pattern>2r.</pattern>
+    <pattern>2r </pattern>
     <pattern>2r1x</pattern>
-    <pattern>.r2</pattern>
+    <pattern> r2</pattern>
     <pattern>1s</pattern>
     <pattern>2s3s</pattern>
     <pattern>2sb</pattern>
@@ -358,9 +360,9 @@
     <pattern>2s2t3q</pattern>
     <pattern>2s2t3s</pattern>
     <pattern>2s2t3t</pattern>
-    <pattern>2s.</pattern>
-    <pattern>2st.</pattern>
-    <pattern>.s2m</pattern>
+    <pattern>2s </pattern>
+    <pattern>2st </pattern>
+    <pattern> s2m</pattern>
     <pattern>1t</pattern>
     <pattern>2tb</pattern>
     <pattern>2tc</pattern>
@@ -375,15 +377,15 @@
     <pattern>2tp</pattern>
     <pattern>2tq</pattern>
     <pattern>2tt</pattern>
-    <pattern>2t.</pattern>
-    <pattern>.t2</pattern>
+    <pattern>2t </pattern>
+    <pattern> t2</pattern>
     <pattern>x1</pattern>
-    <pattern>2x.</pattern>
-    <pattern>.x2</pattern>
+    <pattern>2x </pattern>
+    <pattern> x2</pattern>
     <pattern>1x2a</pattern>
     <pattern>1x2e</pattern>
     <pattern>1x2i</pattern>
-    <pattern>1x2it.</pattern>
+    <pattern>1x2it </pattern>
     <pattern>1x2o</pattern>
     <pattern>1x2y</pattern>
     <pattern>xy3s2t</pattern>
@@ -392,13 +394,13 @@
     <pattern>1xu2i</pattern>
     <pattern>1xu2o</pattern>
     <pattern>1xu2u</pattern>
-    <pattern>1x2u.</pattern>
-    <pattern>1x2um.</pattern>
-    <pattern>1x2us.</pattern>
+    <pattern>1x2u </pattern>
+    <pattern>1x2um </pattern>
+    <pattern>1x2us </pattern>
     <pattern>y3c2n</pattern>
     <pattern>1z</pattern>
-    <pattern>2z.</pattern>
-    <pattern>.z2</pattern>
+    <pattern>2z </pattern>
+    <pattern> z2</pattern>
     <pattern>a2m3ui</pattern>
     <pattern>a2n1u2a</pattern>
     <pattern>a2n1u2e</pattern>
@@ -452,329 +454,329 @@
     <pattern>u2r1u2i</pattern>
     <pattern>u2r1u2o</pattern>
     <pattern>u2r1u2u</pattern>
-    <pattern>.a2b1auu</pattern>
-    <pattern>.a2b1ali</pattern>
-    <pattern>.a2b1ic</pattern>
-    <pattern>.a2b1iec</pattern>
-    <pattern>.a2b1in1</pattern>
-    <pattern>.a2b1iu</pattern>
-    <pattern>.a2b1ol</pattern>
-    <pattern>.ab2s</pattern>
-    <pattern>.ab3si2</pattern>
-    <pattern>.ab3so</pattern>
-    <pattern>.ab3s2te</pattern>
-    <pattern>.ab3su2</pattern>
-    <pattern>.a2b1es2</pattern>
-    <pattern>.a2b1er2</pattern>
-    <pattern>.a2bfu</pattern>
-    <pattern>.a2b3ru</pattern>
-    <pattern>.ab5s2cin</pattern>
-    <pattern>.a2d1</pattern>
-    <pattern>.adsu2</pattern>
-    <pattern>.a2d1es2</pattern>
-    <pattern>.ad3si2</pattern>
-    <pattern>.a2d1er2</pattern>
-    <pattern>.a2dfu</pattern>
-    <pattern>.ad3s2t</pattern>
-    <pattern>.a3g2nas</pattern>
-    <pattern>.a3s2c</pattern>
-    <pattern>.a3s2p</pattern>
-    <pattern>.a3s2t</pattern>
-    <pattern>.ape3r2u</pattern>
-    <pattern>.ci2s3</pattern>
-    <pattern>.co1e</pattern>
-    <pattern>.co1i</pattern>
-    <pattern>.co1i2e</pattern>
-    <pattern>.coi3u</pattern>
-    <pattern>.co2e1n</pattern>
-    <pattern>.co3e2lec</pattern>
-    <pattern>.co3e2lig</pattern>
-    <pattern>.co3emen</pattern>
-    <pattern>.co3e2r</pattern>
-    <pattern>.co3e2x3</pattern>
-    <pattern>.coex3s2</pattern>
-    <pattern>.co3g2no</pattern>
-    <pattern>.co2n1</pattern>
-    <pattern>.con3ic</pattern>
-    <pattern>.co3n2if</pattern>
-    <pattern>.co3n2ig</pattern>
-    <pattern>.co3n2it</pattern>
-    <pattern>.co3n2i3ue</pattern>
-    <pattern>.coni2a</pattern>
-    <pattern>.coni2e</pattern>
-    <pattern>.coni2i</pattern>
-    <pattern>.coni2u</pattern>
-    <pattern>.con3s2cr</pattern>
-    <pattern>.con3s2p2</pattern>
-    <pattern>.con3s2t</pattern>
-    <pattern>.de3s2c</pattern>
-    <pattern>.de3s2p</pattern>
-    <pattern>.de3s2q</pattern>
-    <pattern>.de3s2t</pattern>
-    <pattern>.di3g2nosc</pattern>
-    <pattern>.di2s1i2</pattern>
-    <pattern>.di3s2ce</pattern>
-    <pattern>.di4s3cep3t</pattern>
-    <pattern>.di3s2p</pattern>
-    <pattern>.di3s2qua</pattern>
-    <pattern>.di3s2cr</pattern>
-    <pattern>.di3s2t</pattern>
-    <pattern>.di4s3ten1d</pattern>
-    <pattern>.di4s3ti4nc</pattern>
-    <pattern>.i2dci</pattern>
-    <pattern>.i3di2og</pattern>
-    <pattern>.i2n1</pattern>
-    <pattern>.in3s2p</pattern>
-    <pattern>.in3s2t</pattern>
-    <pattern>.i3n2an</pattern>
-    <pattern>.ina2b3r</pattern>
-    <pattern>.inab3s2</pattern>
-    <pattern>.i3n2it</pattern>
-    <pattern>.ina2cr</pattern>
-    <pattern>.ina2df</pattern>
-    <pattern>.i3n2ers</pattern>
-    <pattern>.i3n2ert</pattern>
-    <pattern>.ine2x3</pattern>
-    <pattern>.inexs2t</pattern>
-    <pattern>.ino2b</pattern>
-    <pattern>.inob3s2c</pattern>
-    <pattern>.ino3b2oe</pattern>
-    <pattern>.inpe2r3iur</pattern>
-    <pattern>.i3n2ul</pattern>
-    <pattern>.i4n3ulc</pattern>
-    <pattern>.inu2a</pattern>
-    <pattern>.inu2e</pattern>
-    <pattern>.inu2i</pattern>
-    <pattern>.inu2o</pattern>
-    <pattern>.inu2u</pattern>
-    <pattern>.iu2s3i2ur</pattern>
-    <pattern>.o2b1</pattern>
-    <pattern>.o3b2ed</pattern>
-    <pattern>.o3b2el</pattern>
-    <pattern>.o3b2es</pattern>
-    <pattern>.o3b2ic</pattern>
-    <pattern>.obi2a</pattern>
-    <pattern>.obi2e</pattern>
-    <pattern>.ob3i2u</pattern>
-    <pattern>.ob3s2cu</pattern>
-    <pattern>.ob3l</pattern>
-    <pattern>.ob3r</pattern>
-    <pattern>.o3b4ruz</pattern>
-    <pattern>.ob3s2c</pattern>
-    <pattern>.ob3s2t</pattern>
-    <pattern>.ob3tr</pattern>
-    <pattern>.obu2a</pattern>
-    <pattern>.obu2e</pattern>
-    <pattern>.obu2i</pattern>
-    <pattern>.obu2o</pattern>
-    <pattern>.pe2r1absu</pattern>
-    <pattern>.pe2r1ac</pattern>
-    <pattern>.pe2r1a2d1u</pattern>
-    <pattern>.pe2r1a2dp</pattern>
-    <pattern>.pe2r1ae</pattern>
-    <pattern>.pe2r3ag</pattern>
-    <pattern>.pe2r3err</pattern>
-    <pattern>.pe2r3or</pattern>
-    <pattern>.pe2r3u</pattern>
-    <pattern>.pe2r1ar</pattern>
-    <pattern>.pe2r1a2u</pattern>
-    <pattern>.pe2r1ed</pattern>
-    <pattern>.pe2r1eff</pattern>
-    <pattern>.pe2r1egr</pattern>
-    <pattern>.pe2r1el</pattern>
-    <pattern>.pe2r1em</pattern>
-    <pattern>.pe3r2enn</pattern>
-    <pattern>.pe2r1eru</pattern>
-    <pattern>.pe2r1e2x3</pattern>
-    <pattern>.pe2r3h</pattern>
-    <pattern>.pe2r1i2ac</pattern>
-    <pattern>.pe2r1i2ec</pattern>
-    <pattern>.peri3p2s</pattern>
-    <pattern>.peri3p2t</pattern>
-    <pattern>.peri3s2c</pattern>
-    <pattern>.peri3s2t</pattern>
-    <pattern>.pe2r1o2b3s2c</pattern>
-    <pattern>.pe2r1od</pattern>
-    <pattern>.pe2r1of</pattern>
-    <pattern>.pe2r1ol</pattern>
-    <pattern>.pe2r1op</pattern>
-    <pattern>.perse2u</pattern>
-    <pattern>.perse2i</pattern>
-    <pattern>.perse2o</pattern>
-    <pattern>.pe2r3s2c</pattern>
-    <pattern>.pe2r3s2p</pattern>
-    <pattern>.pe2r3s2t</pattern>
-    <pattern>.pe2r3tran2s1</pattern>
-    <pattern>.pe2r1u2a</pattern>
-    <pattern>.pe2r1u2e</pattern>
-    <pattern>.pe2r1u2i</pattern>
-    <pattern>.pe2r1u2o</pattern>
-    <pattern>.prae1</pattern>
-    <pattern>.praea2u</pattern>
-    <pattern>.prae3s2c</pattern>
-    <pattern>.prae3s2p</pattern>
-    <pattern>.prae3s2t</pattern>
-    <pattern>.praeu2a</pattern>
-    <pattern>.praeu2e</pattern>
-    <pattern>.praeu2i</pattern>
-    <pattern>.praeu2o</pattern>
-    <pattern>.praete2r1</pattern>
-    <pattern>.praeteru2e</pattern>
-    <pattern>.praeteru2o</pattern>
-    <pattern>.primi1</pattern>
-    <pattern>.primi3s2c</pattern>
-    <pattern>.pro2d1es3s</pattern>
-    <pattern>.pro2d1ig</pattern>
-    <pattern>.pro1de1amb</pattern>
-    <pattern>.pro2d1eo</pattern>
-    <pattern>.pro2d3is</pattern>
-    <pattern>.pro2d1it</pattern>
-    <pattern>.pro2d1im</pattern>
-    <pattern>.pro2d1eun</pattern>
-    <pattern>.pro2d1ir</pattern>
-    <pattern>.pro2d1ib</pattern>
-    <pattern>.pro2d1ier</pattern>
-    <pattern>.pro2d1ea</pattern>
-    <pattern>.pro3d2ito</pattern>
-    <pattern>.pro3d2iti</pattern>
-    <pattern>.pro3d2itr</pattern>
-    <pattern>.pro3g2n</pattern>
-    <pattern>.pro3in</pattern>
-    <pattern>.pro3s2c</pattern>
-    <pattern>.pro3s2p</pattern>
-    <pattern>.pro3s2t</pattern>
-    <pattern>.quo2t1an</pattern>
-    <pattern>.quo2t1en</pattern>
-    <pattern>.quo2t1i2e</pattern>
-    <pattern>.quo2t3li</pattern>
-    <pattern>.re2d1ac</pattern>
-    <pattern>.re2d1ad</pattern>
-    <pattern>.re2d1am</pattern>
-    <pattern>.re2d1an</pattern>
-    <pattern>.re2d1ar</pattern>
-    <pattern>.re2d1a2u</pattern>
-    <pattern>.re2d1em</pattern>
-    <pattern>.re2d1eo</pattern>
-    <pattern>.re2d5is</pattern>
-    <pattern>.re2d5it</pattern>
-    <pattern>.re4d3imi</pattern>
-    <pattern>.re2d1eu</pattern>
-    <pattern>.re2d1ier</pattern>
-    <pattern>.re2d1ib</pattern>
-    <pattern>.re2d1ien</pattern>
-    <pattern>.re3d2ic</pattern>
-    <pattern>.re3d2ig</pattern>
-    <pattern>.re3d2im</pattern>
-    <pattern>.re2d1in</pattern>
-    <pattern>.re2d1ol</pattern>
-    <pattern>.re2d1op</pattern>
-    <pattern>.re3d2orm</pattern>
-    <pattern>.re2d1orn</pattern>
-    <pattern>.re2d1ul</pattern>
-    <pattern>.re2d1ord</pattern>
-    <pattern>.re2d1arg</pattern>
-    <pattern>.re2d1amb</pattern>
-    <pattern>.ree2x</pattern>
-    <pattern>.re1ie</pattern>
-    <pattern>.re1in</pattern>
-    <pattern>.repa2u</pattern>
-    <pattern>.re3s2cr</pattern>
-    <pattern>.re3s2p</pattern>
-    <pattern>.re3s2tag</pattern>
-    <pattern>.re3s2ta2u</pattern>
-    <pattern>.re3s2tib</pattern>
-    <pattern>.re3s2tic</pattern>
-    <pattern>.re3s2til</pattern>
-    <pattern>.re3s2tip</pattern>
-    <pattern>.re3s2tr</pattern>
-    <pattern>.sati2s1</pattern>
-    <pattern>.sa2t1ag</pattern>
-    <pattern>.ses2c1u4n</pattern>
-    <pattern>.si2c1u4t2</pattern>
-    <pattern>.si3s2ten</pattern>
-    <pattern>.su2b1ic</pattern>
-    <pattern>.su2b1ingr</pattern>
-    <pattern>.su2b1odo</pattern>
-    <pattern>.su2b3s2t</pattern>
-    <pattern>.supe2r1ab</pattern>
-    <pattern>.supe2r1ad</pattern>
-    <pattern>.supe2r1ad3s2t</pattern>
-    <pattern>.supe2r1ae</pattern>
-    <pattern>.supe2r1ag</pattern>
-    <pattern>.supe2r1am</pattern>
-    <pattern>.supe2r1arg</pattern>
-    <pattern>.supe2r1a3s2p</pattern>
-    <pattern>.supe2r1a3s2t</pattern>
-    <pattern>.supe2r1att</pattern>
-    <pattern>.supe2r1bib</pattern>
-    <pattern>.supe2r1bif</pattern>
-    <pattern>.supe2r1bil</pattern>
-    <pattern>.supe2r1c</pattern>
-    <pattern>.supe2r1d</pattern>
-    <pattern>.supe2r1ed</pattern>
-    <pattern>.supe2r1eff</pattern>
-    <pattern>.supe2r1eg</pattern>
-    <pattern>.supe2r1em</pattern>
-    <pattern>.supe2r1en</pattern>
-    <pattern>.supe2r1er</pattern>
-    <pattern>.supe2r1eu</pattern>
-    <pattern>.supe2r1e2x3</pattern>
-    <pattern>.supe2r3h</pattern>
-    <pattern>.supe2r3i2</pattern>
-    <pattern>.supe2r1il</pattern>
-    <pattern>.supe2r1im</pattern>
-    <pattern>.supe2r1in</pattern>
-    <pattern>.supe2r1ir</pattern>
-    <pattern>.supe4r5i4ume</pattern>
-    <pattern>.supe3r4i3o</pattern>
-    <pattern>.supe3r4i3u</pattern>
-    <pattern>.supe2r1o2b1d</pattern>
-    <pattern>.supe2r1o2b3r</pattern>
-    <pattern>.supe2r1oc</pattern>
-    <pattern>.supe2r1or</pattern>
-    <pattern>.supe2r3s2c</pattern>
-    <pattern>.supe2r3s2p</pattern>
-    <pattern>.supe2r3s2t</pattern>
-    <pattern>.supe2r1sub3s2t</pattern>
-    <pattern>.supe2r3u2</pattern>
-    <pattern>3r4us.</pattern>
-    <pattern>.supra3s2c</pattern>
-    <pattern>.su3s2c</pattern>
-    <pattern>.su3s2p</pattern>
-    <pattern>.suss2cr</pattern>
-    <pattern>.tetra3e2t</pattern>
-    <pattern>.tetra3g2n</pattern>
-    <pattern>.tetra3s2t</pattern>
-    <pattern>.te2r1i2u</pattern>
-    <pattern>.te2r1un</pattern>
-    <pattern>.terp2s</pattern>
-    <pattern>.the2o</pattern>
-    <pattern>.theo3g2n</pattern>
-    <pattern>.the3s2p</pattern>
-    <pattern>.the3s2t</pattern>
-    <pattern>.thi3s2b</pattern>
-    <pattern>.tra1i2a</pattern>
-    <pattern>.tra1i2e</pattern>
-    <pattern>.tra1ii</pattern>
-    <pattern>.tran2s</pattern>
-    <pattern>.transa2</pattern>
-    <pattern>.trans1a2b1i</pattern>
-    <pattern>.trans1a2b1e2</pattern>
-    <pattern>.trans1act</pattern>
-    <pattern>.trans1a2d1</pattern>
-    <pattern>.trans3i</pattern>
-    <pattern>.trans1a2u</pattern>
-    <pattern>.tran3s2c</pattern>
-    <pattern>.tran3s2en</pattern>
-    <pattern>.trans1e</pattern>
-    <pattern>.transe2u</pattern>
-    <pattern>.trans1o2</pattern>
-    <pattern>.trans1u2</pattern>
-    <pattern>.tran3s2um</pattern>
-    <pattern>.tra2n1ue</pattern>
-    <pattern>.tri3en</pattern>
-    <pattern>.u2n1i2us</pattern>
-    <pattern>.ute2r3ui</pattern>
-    <pattern>.za2i3eu</pattern>
-    <pattern>.zeu3g2m</pattern>
+    <pattern> a2b1auu</pattern>
+    <pattern> a2b1ali</pattern>
+    <pattern> a2b1ic</pattern>
+    <pattern> a2b1iec</pattern>
+    <pattern> a2b1in1</pattern>
+    <pattern> a2b1iu</pattern>
+    <pattern> a2b1ol</pattern>
+    <pattern> ab2s</pattern>
+    <pattern> ab3si2</pattern>
+    <pattern> ab3so</pattern>
+    <pattern> ab3s2te</pattern>
+    <pattern> ab3su2</pattern>
+    <pattern> a2b1es2</pattern>
+    <pattern> a2b1er2</pattern>
+    <pattern> a2bfu</pattern>
+    <pattern> a2b3ru</pattern>
+    <pattern> ab5s2cin</pattern>
+    <pattern> a2d1</pattern>
+    <pattern> adsu2</pattern>
+    <pattern> a2d1es2</pattern>
+    <pattern> ad3si2</pattern>
+    <pattern> a2d1er2</pattern>
+    <pattern> a2dfu</pattern>
+    <pattern> ad3s2t</pattern>
+    <pattern> a3g2nas</pattern>
+    <pattern> a3s2c</pattern>
+    <pattern> a3s2p</pattern>
+    <pattern> a3s2t</pattern>
+    <pattern> ape3r2u</pattern>
+    <pattern> ci2s3</pattern>
+    <pattern> co1e</pattern>
+    <pattern> co1i</pattern>
+    <pattern> co1i2e</pattern>
+    <pattern> coi3u</pattern>
+    <pattern> co2e1n</pattern>
+    <pattern> co3e2lec</pattern>
+    <pattern> co3e2lig</pattern>
+    <pattern> co3emen</pattern>
+    <pattern> co3e2r</pattern>
+    <pattern> co3e2x3</pattern>
+    <pattern> coex3s2</pattern>
+    <pattern> co3g2no</pattern>
+    <pattern> co2n1</pattern>
+    <pattern> con3ic</pattern>
+    <pattern> co3n2if</pattern>
+    <pattern> co3n2ig</pattern>
+    <pattern> co3n2it</pattern>
+    <pattern> co3n2i3ue</pattern>
+    <pattern> coni2a</pattern>
+    <pattern> coni2e</pattern>
+    <pattern> coni2i</pattern>
+    <pattern> coni2u</pattern>
+    <pattern> con3s2cr</pattern>
+    <pattern> con3s2p2</pattern>
+    <pattern> con3s2t</pattern>
+    <pattern> de3s2c</pattern>
+    <pattern> de3s2p</pattern>
+    <pattern> de3s2q</pattern>
+    <pattern> de3s2t</pattern>
+    <pattern> di3g2nosc</pattern>
+    <pattern> di2s1i2</pattern>
+    <pattern> di3s2ce</pattern>
+    <pattern> di4s3cep3t</pattern>
+    <pattern> di3s2p</pattern>
+    <pattern> di3s2qua</pattern>
+    <pattern> di3s2cr</pattern>
+    <pattern> di3s2t</pattern>
+    <pattern> di4s3ten1d</pattern>
+    <pattern> di4s3ti4nc</pattern>
+    <pattern> i2dci</pattern>
+    <pattern> i3di2og</pattern>
+    <pattern> i2n1</pattern>
+    <pattern> in3s2p</pattern>
+    <pattern> in3s2t</pattern>
+    <pattern> i3n2an</pattern>
+    <pattern> ina2b3r</pattern>
+    <pattern> inab3s2</pattern>
+    <pattern> i3n2it</pattern>
+    <pattern> ina2cr</pattern>
+    <pattern> ina2df</pattern>
+    <pattern> i3n2ers</pattern>
+    <pattern> i3n2ert</pattern>
+    <pattern> ine2x3</pattern>
+    <pattern> inexs2t</pattern>
+    <pattern> ino2b</pattern>
+    <pattern> inob3s2c</pattern>
+    <pattern> ino3b2oe</pattern>
+    <pattern> inpe2r3iur</pattern>
+    <pattern> i3n2ul</pattern>
+    <pattern> i4n3ulc</pattern>
+    <pattern> inu2a</pattern>
+    <pattern> inu2e</pattern>
+    <pattern> inu2i</pattern>
+    <pattern> inu2o</pattern>
+    <pattern> inu2u</pattern>
+    <pattern> iu2s3i2ur</pattern>
+    <pattern> o2b1</pattern>
+    <pattern> o3b2ed</pattern>
+    <pattern> o3b2el</pattern>
+    <pattern> o3b2es</pattern>
+    <pattern> o3b2ic</pattern>
+    <pattern> obi2a</pattern>
+    <pattern> obi2e</pattern>
+    <pattern> ob3i2u</pattern>
+    <pattern> ob3s2cu</pattern>
+    <pattern> ob3l</pattern>
+    <pattern> ob3r</pattern>
+    <pattern> o3b4ruz</pattern>
+    <pattern> ob3s2c</pattern>
+    <pattern> ob3s2t</pattern>
+    <pattern> ob3tr</pattern>
+    <pattern> obu2a</pattern>
+    <pattern> obu2e</pattern>
+    <pattern> obu2i</pattern>
+    <pattern> obu2o</pattern>
+    <pattern> pe2r1absu</pattern>
+    <pattern> pe2r1ac</pattern>
+    <pattern> pe2r1a2d1u</pattern>
+    <pattern> pe2r1a2dp</pattern>
+    <pattern> pe2r1ae</pattern>
+    <pattern> pe2r3ag</pattern>
+    <pattern> pe2r3err</pattern>
+    <pattern> pe2r3or</pattern>
+    <pattern> pe2r3u</pattern>
+    <pattern> pe2r1ar</pattern>
+    <pattern> pe2r1a2u</pattern>
+    <pattern> pe2r1ed</pattern>
+    <pattern> pe2r1eff</pattern>
+    <pattern> pe2r1egr</pattern>
+    <pattern> pe2r1el</pattern>
+    <pattern> pe2r1em</pattern>
+    <pattern> pe3r2enn</pattern>
+    <pattern> pe2r1eru</pattern>
+    <pattern> pe2r1e2x3</pattern>
+    <pattern> pe2r3h</pattern>
+    <pattern> pe2r1i2ac</pattern>
+    <pattern> pe2r1i2ec</pattern>
+    <pattern> peri3p2s</pattern>
+    <pattern> peri3p2t</pattern>
+    <pattern> peri3s2c</pattern>
+    <pattern> peri3s2t</pattern>
+    <pattern> pe2r1o2b3s2c</pattern>
+    <pattern> pe2r1od</pattern>
+    <pattern> pe2r1of</pattern>
+    <pattern> pe2r1ol</pattern>
+    <pattern> pe2r1op</pattern>
+    <pattern> perse2u</pattern>
+    <pattern> perse2i</pattern>
+    <pattern> perse2o</pattern>
+    <pattern> pe2r3s2c</pattern>
+    <pattern> pe2r3s2p</pattern>
+    <pattern> pe2r3s2t</pattern>
+    <pattern> pe2r3tran2s1</pattern>
+    <pattern> pe2r1u2a</pattern>
+    <pattern> pe2r1u2e</pattern>
+    <pattern> pe2r1u2i</pattern>
+    <pattern> pe2r1u2o</pattern>
+    <pattern> prae1</pattern>
+    <pattern> praea2u</pattern>
+    <pattern> prae3s2c</pattern>
+    <pattern> prae3s2p</pattern>
+    <pattern> prae3s2t</pattern>
+    <pattern> praeu2a</pattern>
+    <pattern> praeu2e</pattern>
+    <pattern> praeu2i</pattern>
+    <pattern> praeu2o</pattern>
+    <pattern> praete2r1</pattern>
+    <pattern> praeteru2e</pattern>
+    <pattern> praeteru2o</pattern>
+    <pattern> primi1</pattern>
+    <pattern> primi3s2c</pattern>
+    <pattern> pro2d1es3s</pattern>
+    <pattern> pro2d1ig</pattern>
+    <pattern> pro1de1amb</pattern>
+    <pattern> pro2d1eo</pattern>
+    <pattern> pro2d3is</pattern>
+    <pattern> pro2d1it</pattern>
+    <pattern> pro2d1im</pattern>
+    <pattern> pro2d1eun</pattern>
+    <pattern> pro2d1ir</pattern>
+    <pattern> pro2d1ib</pattern>
+    <pattern> pro2d1ier</pattern>
+    <pattern> pro2d1ea</pattern>
+    <pattern> pro3d2ito</pattern>
+    <pattern> pro3d2iti</pattern>
+    <pattern> pro3d2itr</pattern>
+    <pattern> pro3g2n</pattern>
+    <pattern> pro3in</pattern>
+    <pattern> pro3s2c</pattern>
+    <pattern> pro3s2p</pattern>
+    <pattern> pro3s2t</pattern>
+    <pattern> quo2t1an</pattern>
+    <pattern> quo2t1en</pattern>
+    <pattern> quo2t1i2e</pattern>
+    <pattern> quo2t3li</pattern>
+    <pattern> re2d1ac</pattern>
+    <pattern> re2d1ad</pattern>
+    <pattern> re2d1am</pattern>
+    <pattern> re2d1an</pattern>
+    <pattern> re2d1ar</pattern>
+    <pattern> re2d1a2u</pattern>
+    <pattern> re2d1em</pattern>
+    <pattern> re2d1eo</pattern>
+    <pattern> re2d5is</pattern>
+    <pattern> re2d5it</pattern>
+    <pattern> re4d3imi</pattern>
+    <pattern> re2d1eu</pattern>
+    <pattern> re2d1ier</pattern>
+    <pattern> re2d1ib</pattern>
+    <pattern> re2d1ien</pattern>
+    <pattern> re3d2ic</pattern>
+    <pattern> re3d2ig</pattern>
+    <pattern> re3d2im</pattern>
+    <pattern> re2d1in</pattern>
+    <pattern> re2d1ol</pattern>
+    <pattern> re2d1op</pattern>
+    <pattern> re3d2orm</pattern>
+    <pattern> re2d1orn</pattern>
+    <pattern> re2d1ul</pattern>
+    <pattern> re2d1ord</pattern>
+    <pattern> re2d1arg</pattern>
+    <pattern> re2d1amb</pattern>
+    <pattern> ree2x</pattern>
+    <pattern> re1ie</pattern>
+    <pattern> re1in</pattern>
+    <pattern> repa2u</pattern>
+    <pattern> re3s2cr</pattern>
+    <pattern> re3s2p</pattern>
+    <pattern> re3s2tag</pattern>
+    <pattern> re3s2ta2u</pattern>
+    <pattern> re3s2tib</pattern>
+    <pattern> re3s2tic</pattern>
+    <pattern> re3s2til</pattern>
+    <pattern> re3s2tip</pattern>
+    <pattern> re3s2tr</pattern>
+    <pattern> sati2s1</pattern>
+    <pattern> sa2t1ag</pattern>
+    <pattern> ses2c1u4n</pattern>
+    <pattern> si2c1u4t2</pattern>
+    <pattern> si3s2ten</pattern>
+    <pattern> su2b1ic</pattern>
+    <pattern> su2b1ingr</pattern>
+    <pattern> su2b1odo</pattern>
+    <pattern> su2b3s2t</pattern>
+    <pattern> supe2r1ab</pattern>
+    <pattern> supe2r1ad</pattern>
+    <pattern> supe2r1ad3s2t</pattern>
+    <pattern> supe2r1ae</pattern>
+    <pattern> supe2r1ag</pattern>
+    <pattern> supe2r1am</pattern>
+    <pattern> supe2r1arg</pattern>
+    <pattern> supe2r1a3s2p</pattern>
+    <pattern> supe2r1a3s2t</pattern>
+    <pattern> supe2r1att</pattern>
+    <pattern> supe2r1bib</pattern>
+    <pattern> supe2r1bif</pattern>
+    <pattern> supe2r1bil</pattern>
+    <pattern> supe2r1c</pattern>
+    <pattern> supe2r1d</pattern>
+    <pattern> supe2r1ed</pattern>
+    <pattern> supe2r1eff</pattern>
+    <pattern> supe2r1eg</pattern>
+    <pattern> supe2r1em</pattern>
+    <pattern> supe2r1en</pattern>
+    <pattern> supe2r1er</pattern>
+    <pattern> supe2r1eu</pattern>
+    <pattern> supe2r1e2x3</pattern>
+    <pattern> supe2r3h</pattern>
+    <pattern> supe2r3i2</pattern>
+    <pattern> supe2r1il</pattern>
+    <pattern> supe2r1im</pattern>
+    <pattern> supe2r1in</pattern>
+    <pattern> supe2r1ir</pattern>
+    <pattern> supe4r5i4ume</pattern>
+    <pattern> supe3r4i3o</pattern>
+    <pattern> supe3r4i3u</pattern>
+    <pattern> supe2r1o2b1d</pattern>
+    <pattern> supe2r1o2b3r</pattern>
+    <pattern> supe2r1oc</pattern>
+    <pattern> supe2r1or</pattern>
+    <pattern> supe2r3s2c</pattern>
+    <pattern> supe2r3s2p</pattern>
+    <pattern> supe2r3s2t</pattern>
+    <pattern> supe2r1sub3s2t</pattern>
+    <pattern> supe2r3u2</pattern>
+    <pattern>3r4us </pattern>
+    <pattern> supra3s2c</pattern>
+    <pattern> su3s2c</pattern>
+    <pattern> su3s2p</pattern>
+    <pattern> suss2cr</pattern>
+    <pattern> tetra3e2t</pattern>
+    <pattern> tetra3g2n</pattern>
+    <pattern> tetra3s2t</pattern>
+    <pattern> te2r1i2u</pattern>
+    <pattern> te2r1un</pattern>
+    <pattern> terp2s</pattern>
+    <pattern> the2o</pattern>
+    <pattern> theo3g2n</pattern>
+    <pattern> the3s2p</pattern>
+    <pattern> the3s2t</pattern>
+    <pattern> thi3s2b</pattern>
+    <pattern> tra1i2a</pattern>
+    <pattern> tra1i2e</pattern>
+    <pattern> tra1ii</pattern>
+    <pattern> tran2s</pattern>
+    <pattern> transa2</pattern>
+    <pattern> trans1a2b1i</pattern>
+    <pattern> trans1a2b1e2</pattern>
+    <pattern> trans1act</pattern>
+    <pattern> trans1a2d1</pattern>
+    <pattern> trans3i</pattern>
+    <pattern> trans1a2u</pattern>
+    <pattern> tran3s2c</pattern>
+    <pattern> tran3s2en</pattern>
+    <pattern> trans1e</pattern>
+    <pattern> transe2u</pattern>
+    <pattern> trans1o2</pattern>
+    <pattern> trans1u2</pattern>
+    <pattern> tran3s2um</pattern>
+    <pattern> tra2n1ue</pattern>
+    <pattern> tri3en</pattern>
+    <pattern> u2n1i2us</pattern>
+    <pattern> ute2r3ui</pattern>
+    <pattern> za2i3eu</pattern>
+    <pattern> zeu3g2m</pattern>
 </HyphenationDescription>

@@ -99,535 +99,537 @@
 % \message{Hyphenation patterns `gahyph.tex' Version 1.0 <2004/01/22>}
 %
 -->
-<HyphenationDescription>
-    <pattern>.ab4ai</pattern>
-    <pattern>.ab6ar</pattern>
-    <pattern>.ab5r</pattern>
-    <pattern>.ac6ad</pattern>
-    <pattern>.ach6ar</pattern>
-    <pattern>.ad6aim</pattern>
-    <pattern>.ad6am</pattern>
-    <pattern>.ae5n</pattern>
-    <pattern>.ag6ar</pattern>
-    <pattern>.agh4a</pattern>
-    <pattern>.ag4ó</pattern>
-    <pattern>.ag5r</pattern>
-    <pattern>.ag6úi</pattern>
-    <pattern>.ai6c5</pattern>
-    <pattern>.ail6te</pattern>
-    <pattern>.ain3g4</pattern>
-    <pattern>.ain6te.</pattern>
-    <pattern>.ain6t5ín</pattern>
-    <pattern>.air6ní</pattern>
-    <pattern>.ais3</pattern>
-    <pattern>.aist4</pattern>
-    <pattern>.ais6te.</pattern>
-    <pattern>.aí4</pattern>
-    <pattern>.ala5m6</pattern>
-    <pattern>.al5g6</pattern>
-    <pattern>.allag6</pattern>
-    <pattern>.alm4ó</pattern>
-    <pattern>.al2t5a</pattern>
-    <pattern>.al6t5á</pattern>
-    <pattern>.am6ac</pattern>
-    <pattern>.am6á</pattern>
-    <pattern>.an2a</pattern>
-    <pattern>.ana5c</pattern>
-    <pattern>.anach6</pattern>
-    <pattern>.an2á</pattern>
-    <pattern>.anc6</pattern>
-    <pattern>.an6dór</pattern>
-    <pattern>.an6dr</pattern>
-    <pattern>.an6fa</pattern>
-    <pattern>.ang4l</pattern>
-    <pattern>.an6i</pattern>
-    <pattern>.an6lain</pattern>
-    <pattern>.an6lan</pattern>
-    <pattern>.an6ó</pattern>
-    <pattern>.an6rai</pattern>
-    <pattern>.an6sa</pattern>
-    <pattern>.an2ta</pattern>
-    <pattern>.ar2</pattern>
-    <pattern>.aral4</pattern>
-    <pattern>.aralt3</pattern>
-    <pattern>.ara5m6</pattern>
-    <pattern>.ara5s6</pattern>
-    <pattern>.ard5</pattern>
-    <pattern>.aró5</pattern>
-    <pattern>.aróc6</pattern>
-    <pattern>.art4</pattern>
-    <pattern>.as6ail</pattern>
-    <pattern>.as6aim5</pattern>
-    <pattern>.as6al.</pattern>
-    <pattern>.as6am</pattern>
-    <pattern>.asa5m6a</pattern>
-    <pattern>.asc6ar</pattern>
-    <pattern>.as6ó</pattern>
-    <pattern>.as6pa.</pattern>
-    <pattern>.as2t</pattern>
-    <pattern>.ast5ai</pattern>
-    <pattern>.ast5aí</pattern>
-    <pattern>.ast3ó</pattern>
-    <pattern>.as6tú</pattern>
-    <pattern>.as4ú</pattern>
-    <pattern>.ata6</pattern>
-    <pattern>.at5ar.</pattern>
-    <pattern>.at6á</pattern>
-    <pattern>.áil6te.</pattern>
-    <pattern>.áil6t5ea</pattern>
-    <pattern>.áir5ge</pattern>
-    <pattern>.áir5gí</pattern>
-    <pattern>.áir6s</pattern>
-    <pattern>.ál6t</pattern>
-    <pattern>.ár2a</pattern>
-    <pattern>.ár6m</pattern>
-    <pattern>.ba6d</pattern>
-    <pattern>.bad3á</pattern>
-    <pattern>.bal6b</pattern>
-    <pattern>.beo5f</pattern>
-    <pattern>.beo5g</pattern>
-    <pattern>.beo5id</pattern>
-    <pattern>.beo5im</pattern>
-    <pattern>.bh4</pattern>
-    <pattern>.bhá5ite.</pattern>
-    <pattern>.bhá5ití</pattern>
-    <pattern>.bheo5f</pattern>
-    <pattern>.bheo5id</pattern>
-    <pattern>.bheo5im</pattern>
-    <pattern>.bheo5in</pattern>
-    <pattern>.bhí5dís</pattern>
-    <pattern>.bhí5mis</pattern>
-    <pattern>.bhí5oda</pattern>
-    <pattern>.bhí5omar</pattern>
-    <pattern>.bhí5teá</pattern>
-    <pattern>.bhí5tí</pattern>
-    <pattern>.bhlí3</pattern>
-    <pattern>.bhreo5f</pattern>
-    <pattern>.bhreo5id</pattern>
-    <pattern>.bhreo5im</pattern>
-    <pattern>.bhreo5in</pattern>
-    <pattern>.bhrí3o</pattern>
-    <pattern>.blí3</pattern>
-    <pattern>.breo5f</pattern>
-    <pattern>.breo5id</pattern>
-    <pattern>.breo5im</pattern>
-    <pattern>.brí3o</pattern>
-    <pattern>.ca4</pattern>
-    <pattern>.cach5</pattern>
-    <pattern>.cacht6</pattern>
-    <pattern>.cad5á</pattern>
-    <pattern>.caí5d</pattern>
-    <pattern>.caí5gí</pattern>
-    <pattern>.caí5m</pattern>
-    <pattern>.caí5o</pattern>
-    <pattern>.car6t5ar</pattern>
-    <pattern>.ch4</pattern>
-    <pattern>.cha4</pattern>
-    <pattern>.chach5</pattern>
-    <pattern>.chad5á</pattern>
-    <pattern>.chaí5d</pattern>
-    <pattern>.chaí5gí</pattern>
-    <pattern>.chaí5m</pattern>
-    <pattern>.chaí5o</pattern>
-    <pattern>.chaí5teá</pattern>
-    <pattern>.chaí5tí</pattern>
-    <pattern>.chan5á</pattern>
-    <pattern>.char6t5ar</pattern>
-    <pattern>.char6tá</pattern>
-    <pattern>.chár5ta.</pattern>
-    <pattern>.cheil6te.</pattern>
-    <pattern>.chí6</pattern>
-    <pattern>.chló5f</pattern>
-    <pattern>.chló5id</pattern>
-    <pattern>.chló5im</pattern>
-    <pattern>.chló5inn</pattern>
-    <pattern>.chnaí3</pattern>
-    <pattern>.chnó5</pattern>
-    <pattern>.chóis5</pattern>
-    <pattern>.ci6</pattern>
-    <pattern>.cil6</pattern>
-    <pattern>.cí6</pattern>
-    <pattern>.cli6</pattern>
-    <pattern>.clip5</pattern>
-    <pattern>.cló5f</pattern>
-    <pattern>.cló5id</pattern>
-    <pattern>.cló5im</pattern>
-    <pattern>.cnaí3</pattern>
-    <pattern>.cnó5</pattern>
-    <pattern>.da6</pattern>
-    <pattern>.dh2</pattern>
-    <pattern>.dhlí5d</pattern>
-    <pattern>.dhlí5g</pattern>
-    <pattern>.dhlí5m</pattern>
-    <pattern>.dhlí3o</pattern>
-    <pattern>.dhó5ite.</pattern>
-    <pattern>.dhó5ití</pattern>
-    <pattern>.dhreach5</pattern>
-    <pattern>.dhreacht6</pattern>
-    <pattern>.dhreo5f</pattern>
-    <pattern>.dhreo5id</pattern>
-    <pattern>.dhreo5im</pattern>
-    <pattern>.dhreo5in</pattern>
-    <pattern>.dlí5d</pattern>
-    <pattern>.dlí5g</pattern>
-    <pattern>.dlí5m</pattern>
-    <pattern>.dlí5o</pattern>
-    <pattern>.dó5f</pattern>
-    <pattern>.dó5idí</pattern>
-    <pattern>.dó5im</pattern>
-    <pattern>.dó5ite.</pattern>
-    <pattern>.dó5ití</pattern>
-    <pattern>.dreach5</pattern>
-    <pattern>.dreo5f</pattern>
-    <pattern>.dreo5id</pattern>
-    <pattern>.dreo5im</pattern>
-    <pattern>.ead1</pattern>
-    <pattern>.ea6g3</pattern>
-    <pattern>.eal4t3</pattern>
-    <pattern>.earb5</pattern>
-    <pattern>.eas3tó</pattern>
-    <pattern>.ei6</pattern>
-    <pattern>.eisc3e</pattern>
-    <pattern>.eis4il</pattern>
-    <pattern>.éa6b</pattern>
-    <pattern>.éad6ar</pattern>
-    <pattern>.éa3g6ó</pattern>
-    <pattern>.éar5</pattern>
-    <pattern>.éart6</pattern>
-    <pattern>.éi5d6r</pattern>
-    <pattern>.éi5gear</pattern>
-    <pattern>.éim5í</pattern>
-    <pattern>.fa6</pattern>
-    <pattern>.fach3</pattern>
-    <pattern>.feo5f</pattern>
-    <pattern>.feo5idí</pattern>
-    <pattern>.feo5im</pattern>
-    <pattern>.fhrioch5</pattern>
-    <pattern>.fhua6fair</pattern>
-    <pattern>.fhua6fara</pattern>
-    <pattern>.fhua5im.</pattern>
-    <pattern>.fí5dí</pattern>
-    <pattern>.fí5g</pattern>
-    <pattern>.fí5m</pattern>
-    <pattern>.fí5odh</pattern>
-    <pattern>.fí5onn</pattern>
-    <pattern>.geal6t5aí</pattern>
-    <pattern>.geat5</pattern>
-    <pattern>.gh2</pattern>
-    <pattern>.ghair5t</pattern>
-    <pattern>.ghlae3</pattern>
-    <pattern>.ghrá6n</pattern>
-    <pattern>.góf5</pattern>
-    <pattern>.ha4</pattern>
-    <pattern>.hab6ai</pattern>
-    <pattern>.hab6ar</pattern>
-    <pattern>.hac6ad</pattern>
-    <pattern>.hag6ar</pattern>
-    <pattern>.hag4ó</pattern>
-    <pattern>.hail6te</pattern>
-    <pattern>.hain3g</pattern>
-    <pattern>.hain3t</pattern>
-    <pattern>.hain6te.</pattern>
-    <pattern>.hair6ní</pattern>
-    <pattern>.hais5ce</pattern>
-    <pattern>.hais5tea</pattern>
-    <pattern>.hais5t6eo</pattern>
-    <pattern>.haist6i</pattern>
-    <pattern>.hais5tig</pattern>
-    <pattern>.haí4</pattern>
-    <pattern>.hala5m6</pattern>
-    <pattern>.halm4ó</pattern>
-    <pattern>.hal4t3a</pattern>
-    <pattern>.hal6t5á</pattern>
-    <pattern>.han2a</pattern>
-    <pattern>.hana5c</pattern>
-    <pattern>.hanc6</pattern>
-    <pattern>.han6fa</pattern>
-    <pattern>.hang4l</pattern>
-    <pattern>.han6ó</pattern>
-    <pattern>.han4ta</pattern>
-    <pattern>.har2a</pattern>
-    <pattern>.har6á</pattern>
-    <pattern>.har6ó5</pattern>
-    <pattern>.haróc6</pattern>
-    <pattern>.hart6</pattern>
-    <pattern>.has6ai</pattern>
-    <pattern>.has6al.</pattern>
-    <pattern>.has6am</pattern>
-    <pattern>.has4ta</pattern>
-    <pattern>.hat6á</pattern>
-    <pattern>.há6</pattern>
-    <pattern>.háil6te.</pattern>
-    <pattern>.háil6t5ea</pattern>
-    <pattern>.háir5ge</pattern>
-    <pattern>.háir5gí</pattern>
-    <pattern>.háir6s</pattern>
-    <pattern>.hál6t</pattern>
-    <pattern>.hár4a</pattern>
-    <pattern>.hár6m</pattern>
-    <pattern>.head3</pattern>
-    <pattern>.heal4t3</pattern>
-    <pattern>.heis6il</pattern>
-    <pattern>.héad6ar</pattern>
-    <pattern>.héa3g6ó</pattern>
-    <pattern>.héid4e</pattern>
-    <pattern>.héi5dea</pattern>
-    <pattern>.hib6é</pattern>
-    <pattern>.him6ire</pattern>
-    <pattern>.hios5</pattern>
-    <pattern>.hiosc6</pattern>
-    <pattern>.hir4</pattern>
-    <pattern>.his4</pattern>
-    <pattern>.hist3</pattern>
-    <pattern>.hit6eo</pattern>
-    <pattern>.hit6r</pattern>
-    <pattern>.hí2</pattern>
-    <pattern>.híl3</pattern>
-    <pattern>.híoch5</pattern>
-    <pattern>.híocht6</pattern>
-    <pattern>.hoc4r</pattern>
-    <pattern>.hod6</pattern>
-    <pattern>.hogh6</pattern>
-    <pattern>.hoir6n5i</pattern>
-    <pattern>.hol6ac</pattern>
-    <pattern>.hom2</pattern>
-    <pattern>.hor5m</pattern>
-    <pattern>.hort4</pattern>
-    <pattern>.hó6</pattern>
-    <pattern>.hua4f</pattern>
-    <pattern>.huaf5a</pattern>
-    <pattern>.huil4e</pattern>
-    <pattern>.húd4</pattern>
-    <pattern>.ia5it</pattern>
-    <pattern>.iat6</pattern>
-    <pattern>.ib6é</pattern>
-    <pattern>.ibh5</pattern>
-    <pattern>.id2</pattern>
-    <pattern>.il3</pattern>
-    <pattern>.im6ire</pattern>
-    <pattern>.in6d5ia</pattern>
-    <pattern>.in6id</pattern>
-    <pattern>.in6ín</pattern>
-    <pattern>.in4ío</pattern>
-    <pattern>.in6ír</pattern>
-    <pattern>.in6ste.</pattern>
-    <pattern>.int6e</pattern>
-    <pattern>.iomáin5</pattern>
-    <pattern>.ios3</pattern>
-    <pattern>.iosc6</pattern>
-    <pattern>.iost4</pattern>
-    <pattern>.ir4</pattern>
-    <pattern>.is4</pattern>
-    <pattern>.ist6</pattern>
-    <pattern>.it6</pattern>
-    <pattern>.íl3</pattern>
-    <pattern>.ío6</pattern>
-    <pattern>.íoch5</pattern>
-    <pattern>.íocht6</pattern>
-    <pattern>.íos5</pattern>
-    <pattern>.la4</pattern>
-    <pattern>.lach6t5</pattern>
-    <pattern>.lad5a</pattern>
-    <pattern>.lag5á</pattern>
-    <pattern>.lait5</pattern>
-    <pattern>.lan5c</pattern>
-    <pattern>.lao5n</pattern>
-    <pattern>.lá5ití</pattern>
-    <pattern>.leab3ó</pattern>
-    <pattern>.lea6m</pattern>
-    <pattern>.leas5</pattern>
-    <pattern>.leat6aí</pattern>
-    <pattern>.leo3c</pattern>
-    <pattern>.leoch4</pattern>
-    <pattern>.lé5ann.</pattern>
-    <pattern>.lé5igí</pattern>
-    <pattern>.li6</pattern>
-    <pattern>.lib5é</pattern>
-    <pattern>.lim5</pattern>
-    <pattern>.lint6</pattern>
-    <pattern>.lip5</pattern>
-    <pattern>.lí5d</pattern>
-    <pattern>.lí5g</pattern>
-    <pattern>.lí5mi</pattern>
-    <pattern>.lí5od</pattern>
-    <pattern>.lí5omar</pattern>
-    <pattern>.lí5onn</pattern>
-    <pattern>.lí6t</pattern>
-    <pattern>.lít5i</pattern>
-    <pattern>.lú2</pattern>
-    <pattern>.mad5a</pattern>
-    <pattern>.mair5tí.</pattern>
-    <pattern>.maí5d</pattern>
-    <pattern>.maí5gí</pattern>
-    <pattern>.maí5mi</pattern>
-    <pattern>.maí5od</pattern>
-    <pattern>.maí5oma</pattern>
-    <pattern>.maí5on</pattern>
-    <pattern>.maí5teá</pattern>
-    <pattern>.maí5tí</pattern>
-    <pattern>.mam5</pattern>
-    <pattern>.man2t</pattern>
-    <pattern>.ma6r</pattern>
-    <pattern>.mar6l5</pattern>
-    <pattern>.mar6s5ac</pattern>
-    <pattern>.mar6s5ai</pattern>
-    <pattern>.mar5ta</pattern>
-    <pattern>.mar5ú</pattern>
-    <pattern>.ma6t</pattern>
-    <pattern>.mat3á</pattern>
-    <pattern>.mead5a</pattern>
-    <pattern>.meat5á</pattern>
-    <pattern>.mh2</pattern>
-    <pattern>.mhad5a</pattern>
-    <pattern>.mhais6te.</pattern>
-    <pattern>.mhais6tí.</pattern>
-    <pattern>.mhaí5d</pattern>
-    <pattern>.mhaí5gí</pattern>
-    <pattern>.mhaí5mi</pattern>
-    <pattern>.mhaí5od</pattern>
-    <pattern>.mhaí5oma</pattern>
-    <pattern>.mhaí5on</pattern>
-    <pattern>.mhaí5te.</pattern>
-    <pattern>.mhaí5teá</pattern>
-    <pattern>.mhaí5tí</pattern>
-    <pattern>.mhan4t3</pattern>
-    <pattern>.mhar6l5</pattern>
-    <pattern>.mhar6sa.</pattern>
-    <pattern>.mhion6t5a</pattern>
-    <pattern>.mhí6oc</pattern>
-    <pattern>.mhú6</pattern>
-    <pattern>.mhúch5</pattern>
-    <pattern>.mí6oc</pattern>
-    <pattern>.mí5st</pattern>
-    <pattern>.nair5</pattern>
-    <pattern>.nais5</pattern>
-    <pattern>.naí3</pattern>
-    <pattern>.naío5l6</pattern>
-    <pattern>.nar5</pattern>
-    <pattern>.nd6</pattern>
-    <pattern>.ndó5f</pattern>
-    <pattern>.ndó5idí</pattern>
-    <pattern>.ndó5im</pattern>
-    <pattern>.ndó5in</pattern>
-    <pattern>.neach6</pattern>
-    <pattern>.neacht5</pattern>
-    <pattern>.neá6</pattern>
-    <pattern>.neád5</pattern>
-    <pattern>.ng4</pattern>
-    <pattern>.ngóf5</pattern>
-    <pattern>.nit6</pattern>
-    <pattern>.ní5d</pattern>
-    <pattern>.ní5gí</pattern>
-    <pattern>.ní5m</pattern>
-    <pattern>.ní6oc</pattern>
-    <pattern>.ní5od</pattern>
-    <pattern>.ní5om</pattern>
-    <pattern>.ní5on</pattern>
-    <pattern>.nom6</pattern>
-    <pattern>.och6t5</pattern>
-    <pattern>.oc4r</pattern>
-    <pattern>.od6</pattern>
-    <pattern>.ogh6</pattern>
-    <pattern>.oilt6</pattern>
-    <pattern>.oir4n3e</pattern>
-    <pattern>.oir6n5i</pattern>
-    <pattern>.oir6ní</pattern>
-    <pattern>.oir5t</pattern>
-    <pattern>.ol6ac</pattern>
-    <pattern>.om6a</pattern>
-    <pattern>.or6ai</pattern>
-    <pattern>.ort4</pattern>
-    <pattern>.or6thu</pattern>
-    <pattern>.os6ló.</pattern>
-    <pattern>.ost5a</pattern>
-    <pattern>.óp6</pattern>
-    <pattern>.ór4á</pattern>
-    <pattern>.phor5t6r</pattern>
-    <pattern>.pist6</pattern>
-    <pattern>.ra4</pattern>
-    <pattern>.rad5a</pattern>
-    <pattern>.rad5ó</pattern>
-    <pattern>.raf6t5</pattern>
-    <pattern>.rai6</pattern>
-    <pattern>.rat5á</pattern>
-    <pattern>.rá6</pattern>
-    <pattern>.reas5</pattern>
-    <pattern>.reo5f</pattern>
-    <pattern>.reo5id</pattern>
-    <pattern>.reo5im</pattern>
-    <pattern>.reo5in</pattern>
-    <pattern>.réim5i</pattern>
-    <pattern>.rí5dí</pattern>
-    <pattern>.rí5gí</pattern>
-    <pattern>.rí5mi</pattern>
-    <pattern>.rí6ocha</pattern>
-    <pattern>.rí5od</pattern>
-    <pattern>.rí5oma</pattern>
-    <pattern>.rí5onn</pattern>
-    <pattern>.rób5a</pattern>
-    <pattern>.ró5c</pattern>
-    <pattern>.róch6</pattern>
-    <pattern>.róst5</pattern>
-    <pattern>.rua5im.</pattern>
-    <pattern>.rúm5</pattern>
-    <pattern>.sa6l</pattern>
-    <pattern>.sal5a</pattern>
-    <pattern>.sá5ití</pattern>
-    <pattern>.sc6</pattern>
-    <pattern>.sca6</pattern>
-    <pattern>.scad5á</pattern>
-    <pattern>.scar5</pattern>
-    <pattern>.scart6</pattern>
-    <pattern>.searbh5</pattern>
-    <pattern>.séa5l6ain</pattern>
-    <pattern>.shá5inn.</pattern>
-    <pattern>.si4</pattern>
-    <pattern>.sim3</pattern>
-    <pattern>.siún4</pattern>
-    <pattern>.siúnt3</pattern>
-    <pattern>.sí4o</pattern>
-    <pattern>.slios5</pattern>
-    <pattern>.sm4</pattern>
-    <pattern>.sní5d</pattern>
-    <pattern>.sní5g</pattern>
-    <pattern>.sní5m</pattern>
-    <pattern>.sní5od</pattern>
-    <pattern>.sní5oma</pattern>
-    <pattern>.sní5on</pattern>
-    <pattern>.só5f</pattern>
-    <pattern>.só5idí</pattern>
-    <pattern>.só5im</pattern>
-    <pattern>.só5inn</pattern>
-    <pattern>.spléach5</pattern>
-    <pattern>.st4</pattern>
-    <pattern>.steam5</pattern>
-    <pattern>.ta6</pattern>
-    <pattern>.tach6t5</pattern>
-    <pattern>.tan5g</pattern>
-    <pattern>.tap5</pattern>
-    <pattern>.tar5ta</pattern>
-    <pattern>.téit5e</pattern>
-    <pattern>.th2</pattern>
-    <pattern>.théit5ea</pattern>
-    <pattern>.thrá5ití</pattern>
-    <pattern>.thróf5</pattern>
-    <pattern>.ti6</pattern>
-    <pattern>.tróf5</pattern>
-    <pattern>.tsí6o</pattern>
-    <pattern>.tua5im</pattern>
-    <pattern>.ua4f</pattern>
-    <pattern>.uaf5a</pattern>
-    <pattern>.ua6i</pattern>
-    <pattern>.uas6ala</pattern>
-    <pattern>.uil2e</pattern>
-    <pattern>.uir6t</pattern>
-    <pattern>.uirthi5</pattern>
-    <pattern>.un6s5</pattern>
-    <pattern>.ur5b</pattern>
-    <pattern>.ur3n4</pattern>
-    <pattern>.úd2</pattern>
-    <pattern>.úm5</pattern>
-    <pattern>.úr6ái</pattern>
+<HyphenationDescription
+    title="Irish" lang="ga"
+    lefthyphenmin="2" righthyphenmin="3">
+    <pattern> ab4ai</pattern>
+    <pattern> ab6ar</pattern>
+    <pattern> ab5r</pattern>
+    <pattern> ac6ad</pattern>
+    <pattern> ach6ar</pattern>
+    <pattern> ad6aim</pattern>
+    <pattern> ad6am</pattern>
+    <pattern> ae5n</pattern>
+    <pattern> ag6ar</pattern>
+    <pattern> agh4a</pattern>
+    <pattern> ag4ó</pattern>
+    <pattern> ag5r</pattern>
+    <pattern> ag6úi</pattern>
+    <pattern> ai6c5</pattern>
+    <pattern> ail6te</pattern>
+    <pattern> ain3g4</pattern>
+    <pattern> ain6te </pattern>
+    <pattern> ain6t5ín</pattern>
+    <pattern> air6ní</pattern>
+    <pattern> ais3</pattern>
+    <pattern> aist4</pattern>
+    <pattern> ais6te </pattern>
+    <pattern> aí4</pattern>
+    <pattern> ala5m6</pattern>
+    <pattern> al5g6</pattern>
+    <pattern> allag6</pattern>
+    <pattern> alm4ó</pattern>
+    <pattern> al2t5a</pattern>
+    <pattern> al6t5á</pattern>
+    <pattern> am6ac</pattern>
+    <pattern> am6á</pattern>
+    <pattern> an2a</pattern>
+    <pattern> ana5c</pattern>
+    <pattern> anach6</pattern>
+    <pattern> an2á</pattern>
+    <pattern> anc6</pattern>
+    <pattern> an6dór</pattern>
+    <pattern> an6dr</pattern>
+    <pattern> an6fa</pattern>
+    <pattern> ang4l</pattern>
+    <pattern> an6i</pattern>
+    <pattern> an6lain</pattern>
+    <pattern> an6lan</pattern>
+    <pattern> an6ó</pattern>
+    <pattern> an6rai</pattern>
+    <pattern> an6sa</pattern>
+    <pattern> an2ta</pattern>
+    <pattern> ar2</pattern>
+    <pattern> aral4</pattern>
+    <pattern> aralt3</pattern>
+    <pattern> ara5m6</pattern>
+    <pattern> ara5s6</pattern>
+    <pattern> ard5</pattern>
+    <pattern> aró5</pattern>
+    <pattern> aróc6</pattern>
+    <pattern> art4</pattern>
+    <pattern> as6ail</pattern>
+    <pattern> as6aim5</pattern>
+    <pattern> as6al </pattern>
+    <pattern> as6am</pattern>
+    <pattern> asa5m6a</pattern>
+    <pattern> asc6ar</pattern>
+    <pattern> as6ó</pattern>
+    <pattern> as6pa </pattern>
+    <pattern> as2t</pattern>
+    <pattern> ast5ai</pattern>
+    <pattern> ast5aí</pattern>
+    <pattern> ast3ó</pattern>
+    <pattern> as6tú</pattern>
+    <pattern> as4ú</pattern>
+    <pattern> ata6</pattern>
+    <pattern> at5ar </pattern>
+    <pattern> at6á</pattern>
+    <pattern> áil6te </pattern>
+    <pattern> áil6t5ea</pattern>
+    <pattern> áir5ge</pattern>
+    <pattern> áir5gí</pattern>
+    <pattern> áir6s</pattern>
+    <pattern> ál6t</pattern>
+    <pattern> ár2a</pattern>
+    <pattern> ár6m</pattern>
+    <pattern> ba6d</pattern>
+    <pattern> bad3á</pattern>
+    <pattern> bal6b</pattern>
+    <pattern> beo5f</pattern>
+    <pattern> beo5g</pattern>
+    <pattern> beo5id</pattern>
+    <pattern> beo5im</pattern>
+    <pattern> bh4</pattern>
+    <pattern> bhá5ite </pattern>
+    <pattern> bhá5ití</pattern>
+    <pattern> bheo5f</pattern>
+    <pattern> bheo5id</pattern>
+    <pattern> bheo5im</pattern>
+    <pattern> bheo5in</pattern>
+    <pattern> bhí5dís</pattern>
+    <pattern> bhí5mis</pattern>
+    <pattern> bhí5oda</pattern>
+    <pattern> bhí5omar</pattern>
+    <pattern> bhí5teá</pattern>
+    <pattern> bhí5tí</pattern>
+    <pattern> bhlí3</pattern>
+    <pattern> bhreo5f</pattern>
+    <pattern> bhreo5id</pattern>
+    <pattern> bhreo5im</pattern>
+    <pattern> bhreo5in</pattern>
+    <pattern> bhrí3o</pattern>
+    <pattern> blí3</pattern>
+    <pattern> breo5f</pattern>
+    <pattern> breo5id</pattern>
+    <pattern> breo5im</pattern>
+    <pattern> brí3o</pattern>
+    <pattern> ca4</pattern>
+    <pattern> cach5</pattern>
+    <pattern> cacht6</pattern>
+    <pattern> cad5á</pattern>
+    <pattern> caí5d</pattern>
+    <pattern> caí5gí</pattern>
+    <pattern> caí5m</pattern>
+    <pattern> caí5o</pattern>
+    <pattern> car6t5ar</pattern>
+    <pattern> ch4</pattern>
+    <pattern> cha4</pattern>
+    <pattern> chach5</pattern>
+    <pattern> chad5á</pattern>
+    <pattern> chaí5d</pattern>
+    <pattern> chaí5gí</pattern>
+    <pattern> chaí5m</pattern>
+    <pattern> chaí5o</pattern>
+    <pattern> chaí5teá</pattern>
+    <pattern> chaí5tí</pattern>
+    <pattern> chan5á</pattern>
+    <pattern> char6t5ar</pattern>
+    <pattern> char6tá</pattern>
+    <pattern> chár5ta </pattern>
+    <pattern> cheil6te </pattern>
+    <pattern> chí6</pattern>
+    <pattern> chló5f</pattern>
+    <pattern> chló5id</pattern>
+    <pattern> chló5im</pattern>
+    <pattern> chló5inn</pattern>
+    <pattern> chnaí3</pattern>
+    <pattern> chnó5</pattern>
+    <pattern> chóis5</pattern>
+    <pattern> ci6</pattern>
+    <pattern> cil6</pattern>
+    <pattern> cí6</pattern>
+    <pattern> cli6</pattern>
+    <pattern> clip5</pattern>
+    <pattern> cló5f</pattern>
+    <pattern> cló5id</pattern>
+    <pattern> cló5im</pattern>
+    <pattern> cnaí3</pattern>
+    <pattern> cnó5</pattern>
+    <pattern> da6</pattern>
+    <pattern> dh2</pattern>
+    <pattern> dhlí5d</pattern>
+    <pattern> dhlí5g</pattern>
+    <pattern> dhlí5m</pattern>
+    <pattern> dhlí3o</pattern>
+    <pattern> dhó5ite </pattern>
+    <pattern> dhó5ití</pattern>
+    <pattern> dhreach5</pattern>
+    <pattern> dhreacht6</pattern>
+    <pattern> dhreo5f</pattern>
+    <pattern> dhreo5id</pattern>
+    <pattern> dhreo5im</pattern>
+    <pattern> dhreo5in</pattern>
+    <pattern> dlí5d</pattern>
+    <pattern> dlí5g</pattern>
+    <pattern> dlí5m</pattern>
+    <pattern> dlí5o</pattern>
+    <pattern> dó5f</pattern>
+    <pattern> dó5idí</pattern>
+    <pattern> dó5im</pattern>
+    <pattern> dó5ite </pattern>
+    <pattern> dó5ití</pattern>
+    <pattern> dreach5</pattern>
+    <pattern> dreo5f</pattern>
+    <pattern> dreo5id</pattern>
+    <pattern> dreo5im</pattern>
+    <pattern> ead1</pattern>
+    <pattern> ea6g3</pattern>
+    <pattern> eal4t3</pattern>
+    <pattern> earb5</pattern>
+    <pattern> eas3tó</pattern>
+    <pattern> ei6</pattern>
+    <pattern> eisc3e</pattern>
+    <pattern> eis4il</pattern>
+    <pattern> éa6b</pattern>
+    <pattern> éad6ar</pattern>
+    <pattern> éa3g6ó</pattern>
+    <pattern> éar5</pattern>
+    <pattern> éart6</pattern>
+    <pattern> éi5d6r</pattern>
+    <pattern> éi5gear</pattern>
+    <pattern> éim5í</pattern>
+    <pattern> fa6</pattern>
+    <pattern> fach3</pattern>
+    <pattern> feo5f</pattern>
+    <pattern> feo5idí</pattern>
+    <pattern> feo5im</pattern>
+    <pattern> fhrioch5</pattern>
+    <pattern> fhua6fair</pattern>
+    <pattern> fhua6fara</pattern>
+    <pattern> fhua5im </pattern>
+    <pattern> fí5dí</pattern>
+    <pattern> fí5g</pattern>
+    <pattern> fí5m</pattern>
+    <pattern> fí5odh</pattern>
+    <pattern> fí5onn</pattern>
+    <pattern> geal6t5aí</pattern>
+    <pattern> geat5</pattern>
+    <pattern> gh2</pattern>
+    <pattern> ghair5t</pattern>
+    <pattern> ghlae3</pattern>
+    <pattern> ghrá6n</pattern>
+    <pattern> góf5</pattern>
+    <pattern> ha4</pattern>
+    <pattern> hab6ai</pattern>
+    <pattern> hab6ar</pattern>
+    <pattern> hac6ad</pattern>
+    <pattern> hag6ar</pattern>
+    <pattern> hag4ó</pattern>
+    <pattern> hail6te</pattern>
+    <pattern> hain3g</pattern>
+    <pattern> hain3t</pattern>
+    <pattern> hain6te </pattern>
+    <pattern> hair6ní</pattern>
+    <pattern> hais5ce</pattern>
+    <pattern> hais5tea</pattern>
+    <pattern> hais5t6eo</pattern>
+    <pattern> haist6i</pattern>
+    <pattern> hais5tig</pattern>
+    <pattern> haí4</pattern>
+    <pattern> hala5m6</pattern>
+    <pattern> halm4ó</pattern>
+    <pattern> hal4t3a</pattern>
+    <pattern> hal6t5á</pattern>
+    <pattern> han2a</pattern>
+    <pattern> hana5c</pattern>
+    <pattern> hanc6</pattern>
+    <pattern> han6fa</pattern>
+    <pattern> hang4l</pattern>
+    <pattern> han6ó</pattern>
+    <pattern> han4ta</pattern>
+    <pattern> har2a</pattern>
+    <pattern> har6á</pattern>
+    <pattern> har6ó5</pattern>
+    <pattern> haróc6</pattern>
+    <pattern> hart6</pattern>
+    <pattern> has6ai</pattern>
+    <pattern> has6al </pattern>
+    <pattern> has6am</pattern>
+    <pattern> has4ta</pattern>
+    <pattern> hat6á</pattern>
+    <pattern> há6</pattern>
+    <pattern> háil6te </pattern>
+    <pattern> háil6t5ea</pattern>
+    <pattern> háir5ge</pattern>
+    <pattern> háir5gí</pattern>
+    <pattern> háir6s</pattern>
+    <pattern> hál6t</pattern>
+    <pattern> hár4a</pattern>
+    <pattern> hár6m</pattern>
+    <pattern> head3</pattern>
+    <pattern> heal4t3</pattern>
+    <pattern> heis6il</pattern>
+    <pattern> héad6ar</pattern>
+    <pattern> héa3g6ó</pattern>
+    <pattern> héid4e</pattern>
+    <pattern> héi5dea</pattern>
+    <pattern> hib6é</pattern>
+    <pattern> him6ire</pattern>
+    <pattern> hios5</pattern>
+    <pattern> hiosc6</pattern>
+    <pattern> hir4</pattern>
+    <pattern> his4</pattern>
+    <pattern> hist3</pattern>
+    <pattern> hit6eo</pattern>
+    <pattern> hit6r</pattern>
+    <pattern> hí2</pattern>
+    <pattern> híl3</pattern>
+    <pattern> híoch5</pattern>
+    <pattern> híocht6</pattern>
+    <pattern> hoc4r</pattern>
+    <pattern> hod6</pattern>
+    <pattern> hogh6</pattern>
+    <pattern> hoir6n5i</pattern>
+    <pattern> hol6ac</pattern>
+    <pattern> hom2</pattern>
+    <pattern> hor5m</pattern>
+    <pattern> hort4</pattern>
+    <pattern> hó6</pattern>
+    <pattern> hua4f</pattern>
+    <pattern> huaf5a</pattern>
+    <pattern> huil4e</pattern>
+    <pattern> húd4</pattern>
+    <pattern> ia5it</pattern>
+    <pattern> iat6</pattern>
+    <pattern> ib6é</pattern>
+    <pattern> ibh5</pattern>
+    <pattern> id2</pattern>
+    <pattern> il3</pattern>
+    <pattern> im6ire</pattern>
+    <pattern> in6d5ia</pattern>
+    <pattern> in6id</pattern>
+    <pattern> in6ín</pattern>
+    <pattern> in4ío</pattern>
+    <pattern> in6ír</pattern>
+    <pattern> in6ste </pattern>
+    <pattern> int6e</pattern>
+    <pattern> iomáin5</pattern>
+    <pattern> ios3</pattern>
+    <pattern> iosc6</pattern>
+    <pattern> iost4</pattern>
+    <pattern> ir4</pattern>
+    <pattern> is4</pattern>
+    <pattern> ist6</pattern>
+    <pattern> it6</pattern>
+    <pattern> íl3</pattern>
+    <pattern> ío6</pattern>
+    <pattern> íoch5</pattern>
+    <pattern> íocht6</pattern>
+    <pattern> íos5</pattern>
+    <pattern> la4</pattern>
+    <pattern> lach6t5</pattern>
+    <pattern> lad5a</pattern>
+    <pattern> lag5á</pattern>
+    <pattern> lait5</pattern>
+    <pattern> lan5c</pattern>
+    <pattern> lao5n</pattern>
+    <pattern> lá5ití</pattern>
+    <pattern> leab3ó</pattern>
+    <pattern> lea6m</pattern>
+    <pattern> leas5</pattern>
+    <pattern> leat6aí</pattern>
+    <pattern> leo3c</pattern>
+    <pattern> leoch4</pattern>
+    <pattern> lé5ann </pattern>
+    <pattern> lé5igí</pattern>
+    <pattern> li6</pattern>
+    <pattern> lib5é</pattern>
+    <pattern> lim5</pattern>
+    <pattern> lint6</pattern>
+    <pattern> lip5</pattern>
+    <pattern> lí5d</pattern>
+    <pattern> lí5g</pattern>
+    <pattern> lí5mi</pattern>
+    <pattern> lí5od</pattern>
+    <pattern> lí5omar</pattern>
+    <pattern> lí5onn</pattern>
+    <pattern> lí6t</pattern>
+    <pattern> lít5i</pattern>
+    <pattern> lú2</pattern>
+    <pattern> mad5a</pattern>
+    <pattern> mair5tí </pattern>
+    <pattern> maí5d</pattern>
+    <pattern> maí5gí</pattern>
+    <pattern> maí5mi</pattern>
+    <pattern> maí5od</pattern>
+    <pattern> maí5oma</pattern>
+    <pattern> maí5on</pattern>
+    <pattern> maí5teá</pattern>
+    <pattern> maí5tí</pattern>
+    <pattern> mam5</pattern>
+    <pattern> man2t</pattern>
+    <pattern> ma6r</pattern>
+    <pattern> mar6l5</pattern>
+    <pattern> mar6s5ac</pattern>
+    <pattern> mar6s5ai</pattern>
+    <pattern> mar5ta</pattern>
+    <pattern> mar5ú</pattern>
+    <pattern> ma6t</pattern>
+    <pattern> mat3á</pattern>
+    <pattern> mead5a</pattern>
+    <pattern> meat5á</pattern>
+    <pattern> mh2</pattern>
+    <pattern> mhad5a</pattern>
+    <pattern> mhais6te </pattern>
+    <pattern> mhais6tí </pattern>
+    <pattern> mhaí5d</pattern>
+    <pattern> mhaí5gí</pattern>
+    <pattern> mhaí5mi</pattern>
+    <pattern> mhaí5od</pattern>
+    <pattern> mhaí5oma</pattern>
+    <pattern> mhaí5on</pattern>
+    <pattern> mhaí5te </pattern>
+    <pattern> mhaí5teá</pattern>
+    <pattern> mhaí5tí</pattern>
+    <pattern> mhan4t3</pattern>
+    <pattern> mhar6l5</pattern>
+    <pattern> mhar6sa </pattern>
+    <pattern> mhion6t5a</pattern>
+    <pattern> mhí6oc</pattern>
+    <pattern> mhú6</pattern>
+    <pattern> mhúch5</pattern>
+    <pattern> mí6oc</pattern>
+    <pattern> mí5st</pattern>
+    <pattern> nair5</pattern>
+    <pattern> nais5</pattern>
+    <pattern> naí3</pattern>
+    <pattern> naío5l6</pattern>
+    <pattern> nar5</pattern>
+    <pattern> nd6</pattern>
+    <pattern> ndó5f</pattern>
+    <pattern> ndó5idí</pattern>
+    <pattern> ndó5im</pattern>
+    <pattern> ndó5in</pattern>
+    <pattern> neach6</pattern>
+    <pattern> neacht5</pattern>
+    <pattern> neá6</pattern>
+    <pattern> neád5</pattern>
+    <pattern> ng4</pattern>
+    <pattern> ngóf5</pattern>
+    <pattern> nit6</pattern>
+    <pattern> ní5d</pattern>
+    <pattern> ní5gí</pattern>
+    <pattern> ní5m</pattern>
+    <pattern> ní6oc</pattern>
+    <pattern> ní5od</pattern>
+    <pattern> ní5om</pattern>
+    <pattern> ní5on</pattern>
+    <pattern> nom6</pattern>
+    <pattern> och6t5</pattern>
+    <pattern> oc4r</pattern>
+    <pattern> od6</pattern>
+    <pattern> ogh6</pattern>
+    <pattern> oilt6</pattern>
+    <pattern> oir4n3e</pattern>
+    <pattern> oir6n5i</pattern>
+    <pattern> oir6ní</pattern>
+    <pattern> oir5t</pattern>
+    <pattern> ol6ac</pattern>
+    <pattern> om6a</pattern>
+    <pattern> or6ai</pattern>
+    <pattern> ort4</pattern>
+    <pattern> or6thu</pattern>
+    <pattern> os6ló </pattern>
+    <pattern> ost5a</pattern>
+    <pattern> óp6</pattern>
+    <pattern> ór4á</pattern>
+    <pattern> phor5t6r</pattern>
+    <pattern> pist6</pattern>
+    <pattern> ra4</pattern>
+    <pattern> rad5a</pattern>
+    <pattern> rad5ó</pattern>
+    <pattern> raf6t5</pattern>
+    <pattern> rai6</pattern>
+    <pattern> rat5á</pattern>
+    <pattern> rá6</pattern>
+    <pattern> reas5</pattern>
+    <pattern> reo5f</pattern>
+    <pattern> reo5id</pattern>
+    <pattern> reo5im</pattern>
+    <pattern> reo5in</pattern>
+    <pattern> réim5i</pattern>
+    <pattern> rí5dí</pattern>
+    <pattern> rí5gí</pattern>
+    <pattern> rí5mi</pattern>
+    <pattern> rí6ocha</pattern>
+    <pattern> rí5od</pattern>
+    <pattern> rí5oma</pattern>
+    <pattern> rí5onn</pattern>
+    <pattern> rób5a</pattern>
+    <pattern> ró5c</pattern>
+    <pattern> róch6</pattern>
+    <pattern> róst5</pattern>
+    <pattern> rua5im </pattern>
+    <pattern> rúm5</pattern>
+    <pattern> sa6l</pattern>
+    <pattern> sal5a</pattern>
+    <pattern> sá5ití</pattern>
+    <pattern> sc6</pattern>
+    <pattern> sca6</pattern>
+    <pattern> scad5á</pattern>
+    <pattern> scar5</pattern>
+    <pattern> scart6</pattern>
+    <pattern> searbh5</pattern>
+    <pattern> séa5l6ain</pattern>
+    <pattern> shá5inn </pattern>
+    <pattern> si4</pattern>
+    <pattern> sim3</pattern>
+    <pattern> siún4</pattern>
+    <pattern> siúnt3</pattern>
+    <pattern> sí4o</pattern>
+    <pattern> slios5</pattern>
+    <pattern> sm4</pattern>
+    <pattern> sní5d</pattern>
+    <pattern> sní5g</pattern>
+    <pattern> sní5m</pattern>
+    <pattern> sní5od</pattern>
+    <pattern> sní5oma</pattern>
+    <pattern> sní5on</pattern>
+    <pattern> só5f</pattern>
+    <pattern> só5idí</pattern>
+    <pattern> só5im</pattern>
+    <pattern> só5inn</pattern>
+    <pattern> spléach5</pattern>
+    <pattern> st4</pattern>
+    <pattern> steam5</pattern>
+    <pattern> ta6</pattern>
+    <pattern> tach6t5</pattern>
+    <pattern> tan5g</pattern>
+    <pattern> tap5</pattern>
+    <pattern> tar5ta</pattern>
+    <pattern> téit5e</pattern>
+    <pattern> th2</pattern>
+    <pattern> théit5ea</pattern>
+    <pattern> thrá5ití</pattern>
+    <pattern> thróf5</pattern>
+    <pattern> ti6</pattern>
+    <pattern> tróf5</pattern>
+    <pattern> tsí6o</pattern>
+    <pattern> tua5im</pattern>
+    <pattern> ua4f</pattern>
+    <pattern> uaf5a</pattern>
+    <pattern> ua6i</pattern>
+    <pattern> uas6ala</pattern>
+    <pattern> uil2e</pattern>
+    <pattern> uir6t</pattern>
+    <pattern> uirthi5</pattern>
+    <pattern> un6s5</pattern>
+    <pattern> ur5b</pattern>
+    <pattern> ur3n4</pattern>
+    <pattern> úd2</pattern>
+    <pattern> úm5</pattern>
+    <pattern> úr6ái</pattern>
     <pattern>ab1a</pattern>
     <pattern>abac6</pattern>
     <pattern>aba5ca</pattern>
@@ -645,7 +647,7 @@
     <pattern>abh2t</pattern>
     <pattern>a5bi</pattern>
     <pattern>ab1l</pattern>
-    <pattern>a5bó.</pattern>
+    <pattern>a5bó </pattern>
     <pattern>ab3óig</pattern>
     <pattern>a5bón</pattern>
     <pattern>a1br</pattern>
@@ -665,7 +667,7 @@
     <pattern>acár5</pattern>
     <pattern>ac5é</pattern>
     <pattern>ach1a</pattern>
-    <pattern>a4cha.</pattern>
+    <pattern>a4cha </pattern>
     <pattern>acha6d5á</pattern>
     <pattern>achar5</pattern>
     <pattern>ach4arf</pattern>
@@ -794,7 +796,7 @@
     <pattern>air4b5r</pattern>
     <pattern>air4dé</pattern>
     <pattern>airf5ean</pattern>
-    <pattern>air6f5in.</pattern>
+    <pattern>air6f5in </pattern>
     <pattern>airf3í</pattern>
     <pattern>air4fín</pattern>
     <pattern>4airisc</pattern>
@@ -808,7 +810,7 @@
     <pattern>4aisp</pattern>
     <pattern>ais5teog</pattern>
     <pattern>ais6ti5s</pattern>
-    <pattern>ais5t6ín.</pattern>
+    <pattern>ais5t6ín </pattern>
     <pattern>4aitei</pattern>
     <pattern>ai5t6il</pattern>
     <pattern>aits3e</pattern>
@@ -914,7 +916,7 @@
     <pattern>ang3a</pattern>
     <pattern>anga3rú</pattern>
     <pattern>ang3á</pattern>
-    <pattern>an5gó.</pattern>
+    <pattern>an5gó </pattern>
     <pattern>anin5</pattern>
     <pattern>an4ma</pattern>
     <pattern>ann5</pattern>
@@ -935,7 +937,7 @@
     <pattern>6aod</pattern>
     <pattern>ao5dar</pattern>
     <pattern>ao5idís</pattern>
-    <pattern>ao5im.</pattern>
+    <pattern>ao5im </pattern>
     <pattern>ao3imi</pattern>
     <pattern>aoin6s</pattern>
     <pattern>aoin3t2</pattern>
@@ -952,7 +954,7 @@
     <pattern>aplais6</pattern>
     <pattern>ar1a</pattern>
     <pattern>ara3bú</pattern>
-    <pattern>ar6ac.</pattern>
+    <pattern>ar6ac </pattern>
     <pattern>ara3c6á</pattern>
     <pattern>arach6t5</pattern>
     <pattern>ara5có</pattern>
@@ -960,7 +962,7 @@
     <pattern>araic6í</pattern>
     <pattern>ara5l4á</pattern>
     <pattern>ara3p4</pattern>
-    <pattern>ar5as.</pattern>
+    <pattern>ar5as </pattern>
     <pattern>ara5só</pattern>
     <pattern>ara3tó</pattern>
     <pattern>ar1á</pattern>
@@ -1013,11 +1015,11 @@
     <pattern>a3s4ól</pattern>
     <pattern>as1ta</pattern>
     <pattern>as6t5ais</pattern>
-    <pattern>ast4aí.</pattern>
+    <pattern>ast4aí </pattern>
     <pattern>ast3al</pattern>
     <pattern>asta5r6ó</pattern>
     <pattern>as6tas</pattern>
-    <pattern>as3tán.</pattern>
+    <pattern>as3tán </pattern>
     <pattern>as5té</pattern>
     <pattern>as3ti</pattern>
     <pattern>as5to</pattern>
@@ -1095,7 +1097,7 @@
     <pattern>ádh3a</pattern>
     <pattern>ádh5ú</pattern>
     <pattern>á1fa</pattern>
-    <pattern>á4fa.</pattern>
+    <pattern>á4fa </pattern>
     <pattern>á6f3ac</pattern>
     <pattern>áf5air</pattern>
     <pattern>áf5ara</pattern>
@@ -1116,7 +1118,7 @@
     <pattern>áilt6eá</pattern>
     <pattern>áilt3i</pattern>
     <pattern>ái6m</pattern>
-    <pattern>á3im.</pattern>
+    <pattern>á3im </pattern>
     <pattern>áim5é</pattern>
     <pattern>á6imh</pattern>
     <pattern>á1imi</pattern>
@@ -1205,7 +1207,7 @@
     <pattern>bascarn5</pattern>
     <pattern>bat5a</pattern>
     <pattern>bá5inn</pattern>
-    <pattern>bá5ite.</pattern>
+    <pattern>bá5ite </pattern>
     <pattern>bá5iteá</pattern>
     <pattern>bá5ití</pattern>
     <pattern>bá5í6</pattern>
@@ -1237,7 +1239,7 @@
     <pattern>3béit</pattern>
     <pattern>b1f</pattern>
     <pattern>b3gh</pattern>
-    <pattern>6bh.</pattern>
+    <pattern>6bh </pattern>
     <pattern>b4ha</pattern>
     <pattern>bha6d3á</pattern>
     <pattern>bha3g4á</pattern>
@@ -1255,7 +1257,7 @@
     <pattern>bhárth5</pattern>
     <pattern>bhc6á</pattern>
     <pattern>b4he</pattern>
-    <pattern>4bhe.</pattern>
+    <pattern>4bhe </pattern>
     <pattern>bh5eam</pattern>
     <pattern>3bh4ear</pattern>
     <pattern>2bh1eá</pattern>
@@ -1269,7 +1271,7 @@
     <pattern>bhéal5</pattern>
     <pattern>bhéalt6</pattern>
     <pattern>bhé5ann</pattern>
-    <pattern>bhia5ta.</pattern>
+    <pattern>bhia5ta </pattern>
     <pattern>bhia5tac</pattern>
     <pattern>3bh4id</pattern>
     <pattern>bh3im</pattern>
@@ -1292,14 +1294,14 @@
     <pattern>bhláf5</pattern>
     <pattern>bhlead5</pattern>
     <pattern>1bho</pattern>
-    <pattern>bhol6ta.</pattern>
+    <pattern>bhol6ta </pattern>
     <pattern>bhol6t5aí</pattern>
     <pattern>bhol6tá</pattern>
     <pattern>bh1ó</pattern>
     <pattern>bhói5s6</pattern>
     <pattern>bhó5l6ac</pattern>
     <pattern>bhran6d5</pattern>
-    <pattern>6bhre.</pattern>
+    <pattern>6bhre </pattern>
     <pattern>bh6réa</pattern>
     <pattern>bh6ric</pattern>
     <pattern>bhrí3oc</pattern>
@@ -1310,7 +1312,7 @@
     <pattern>bh4ua</pattern>
     <pattern>bhua5da</pattern>
     <pattern>bhua5im</pattern>
-    <pattern>bhua5ite.</pattern>
+    <pattern>bhua5ite </pattern>
     <pattern>bhual5</pattern>
     <pattern>4bhuit</pattern>
     <pattern>bh3uith</pattern>
@@ -1321,7 +1323,7 @@
     <pattern>bhúis5</pattern>
     <pattern>bhúm5</pattern>
     <pattern>bia3l</pattern>
-    <pattern>bia5ta.</pattern>
+    <pattern>bia5ta </pattern>
     <pattern>bia5t6ac</pattern>
     <pattern>bia5t6aig</pattern>
     <pattern>bia5t6aí</pattern>
@@ -1359,7 +1361,7 @@
     <pattern>b3ní</pattern>
     <pattern>bod3ó</pattern>
     <pattern>bol4s</pattern>
-    <pattern>bol6ta.</pattern>
+    <pattern>bol6ta </pattern>
     <pattern>bol6t5aí</pattern>
     <pattern>bol4tá</pattern>
     <pattern>bord3</pattern>
@@ -1386,7 +1388,7 @@
     <pattern>bua5da</pattern>
     <pattern>bua3im</pattern>
     <pattern>buair3</pattern>
-    <pattern>bua5ite.</pattern>
+    <pattern>bua5ite </pattern>
     <pattern>bua5itear</pattern>
     <pattern>buin6t</pattern>
     <pattern>bun1</pattern>
@@ -1447,7 +1449,7 @@
     <pattern>cáin6t5eac</pattern>
     <pattern>cáin6ti</pattern>
     <pattern>c6ánn</pattern>
-    <pattern>cár5ta.</pattern>
+    <pattern>cár5ta </pattern>
     <pattern>c2át</pattern>
     <pattern>c3bh6</pattern>
     <pattern>c3dh</pattern>
@@ -1470,7 +1472,7 @@
     <pattern>ceast5ó</pattern>
     <pattern>cea3sú</pattern>
     <pattern>c1eá</pattern>
-    <pattern>5ceá.</pattern>
+    <pattern>5ceá </pattern>
     <pattern>ceá6f5</pattern>
     <pattern>ceá3n4</pattern>
     <pattern>3c4eána</pattern>
@@ -1489,7 +1491,7 @@
     <pattern>2c1f</pattern>
     <pattern>c3gh</pattern>
     <pattern>c2h</pattern>
-    <pattern>4ch.</pattern>
+    <pattern>4ch </pattern>
     <pattern>6ch5acha</pattern>
     <pattern>chacht6</pattern>
     <pattern>ch1ad</pattern>
@@ -1497,7 +1499,7 @@
     <pattern>chair6d5</pattern>
     <pattern>chais5t6</pattern>
     <pattern>5ch6aite</pattern>
-    <pattern>ch5al.</pattern>
+    <pattern>ch5al </pattern>
     <pattern>chal4m</pattern>
     <pattern>5champ</pattern>
     <pattern>chan5c6</pattern>
@@ -1515,7 +1517,7 @@
     <pattern>ch1ál</pattern>
     <pattern>ch1án</pattern>
     <pattern>5chár</pattern>
-    <pattern>2che.</pattern>
+    <pattern>2che </pattern>
     <pattern>chear3b</pattern>
     <pattern>chearbh6</pattern>
     <pattern>cheas6t5</pattern>
@@ -1550,11 +1552,11 @@
     <pattern>chorn5</pattern>
     <pattern>chor6p3</pattern>
     <pattern>chor5t6</pattern>
-    <pattern>5chó.</pattern>
+    <pattern>5chó </pattern>
     <pattern>5chóc</pattern>
     <pattern>5chóda</pattern>
     <pattern>ch3ódh</pattern>
-    <pattern>ch3óg.</pattern>
+    <pattern>ch3óg </pattern>
     <pattern>ch3óig</pattern>
     <pattern>3chóip</pattern>
     <pattern>chó1m</pattern>
@@ -1593,7 +1595,7 @@
     <pattern>chúl5</pattern>
     <pattern>ch3ús</pattern>
     <pattern>cia6f5</pattern>
-    <pattern>c3iam.</pattern>
+    <pattern>c3iam </pattern>
     <pattern>cid5i</pattern>
     <pattern>c1idí</pattern>
     <pattern>c3igh</pattern>
@@ -1613,17 +1615,17 @@
     <pattern>cis5tear</pattern>
     <pattern>cis5teá</pattern>
     <pattern>cis3t6in</pattern>
-    <pattern>c3iú.</pattern>
+    <pattern>c3iú </pattern>
     <pattern>c3iúl</pattern>
     <pattern>ci5v</pattern>
-    <pattern>2cí.</pattern>
+    <pattern>2cí </pattern>
     <pattern>cíl5</pattern>
     <pattern>c1ím</pattern>
     <pattern>2c1ín</pattern>
     <pattern>3cír</pattern>
     <pattern>cít6</pattern>
-    <pattern>3c4ít.</pattern>
-    <pattern>3c4íte.</pattern>
+    <pattern>3c4ít </pattern>
+    <pattern>3c4íte </pattern>
     <pattern>cí6th</pattern>
     <pattern>cla4</pattern>
     <pattern>clad5á</pattern>
@@ -1638,7 +1640,7 @@
     <pattern>clocht6</pattern>
     <pattern>clód4</pattern>
     <pattern>cló3dó</pattern>
-    <pattern>cló5im.</pattern>
+    <pattern>cló5im </pattern>
     <pattern>cló5ití</pattern>
     <pattern>4clu</pattern>
     <pattern>c1m2</pattern>
@@ -1677,7 +1679,7 @@
     <pattern>cór5</pattern>
     <pattern>5c6ót3</pattern>
     <pattern>c1p</pattern>
-    <pattern>c3ra.</pattern>
+    <pattern>c3ra </pattern>
     <pattern>crag5</pattern>
     <pattern>crai3l4</pattern>
     <pattern>crais4</pattern>
@@ -1709,7 +1711,7 @@
     <pattern>crua5im</pattern>
     <pattern>crua5itea</pattern>
     <pattern>crú5ití</pattern>
-    <pattern>c6se.</pattern>
+    <pattern>c6se </pattern>
     <pattern>csea5g6</pattern>
     <pattern>c6s5eal</pattern>
     <pattern>c4sic</pattern>
@@ -1725,7 +1727,7 @@
     <pattern>c6s5tar</pattern>
     <pattern>cs3ú</pattern>
     <pattern>2c1t</pattern>
-    <pattern>c6te.</pattern>
+    <pattern>c6te </pattern>
     <pattern>c4t3eac</pattern>
     <pattern>c6t5ean</pattern>
     <pattern>c6teái</pattern>
@@ -1747,7 +1749,7 @@
     <pattern>cus3</pattern>
     <pattern>cú6i</pattern>
     <pattern>cúl5</pattern>
-    <pattern>c3úla.</pattern>
+    <pattern>c3úla </pattern>
     <pattern>c4ún</pattern>
     <pattern>3cúr</pattern>
     <pattern>da6b</pattern>
@@ -1813,7 +1815,7 @@
     <pattern>deá4</pattern>
     <pattern>deáth3</pattern>
     <pattern>deilbh5</pattern>
-    <pattern>deil6te.</pattern>
+    <pattern>deil6te </pattern>
     <pattern>3d4eir</pattern>
     <pattern>d6em</pattern>
     <pattern>d1eo</pattern>
@@ -1825,7 +1827,7 @@
     <pattern>2d1f</pattern>
     <pattern>d1g</pattern>
     <pattern>d2h</pattern>
-    <pattern>6dh.</pattern>
+    <pattern>6dh </pattern>
     <pattern>dh4ao</pattern>
     <pattern>dhar3t4</pattern>
     <pattern>dhas5</pattern>
@@ -1841,7 +1843,7 @@
     <pattern>dhear5t6</pattern>
     <pattern>dheá6</pattern>
     <pattern>dheilbh5</pattern>
-    <pattern>dheil6te.</pattern>
+    <pattern>dheil6te </pattern>
     <pattern>3d6hé</pattern>
     <pattern>dh5f</pattern>
     <pattern>dhia5f</pattern>
@@ -1887,7 +1889,7 @@
     <pattern>dhú5rú</pattern>
     <pattern>dhú3s</pattern>
     <pattern>dia5f6</pattern>
-    <pattern>6d5iam.</pattern>
+    <pattern>6d5iam </pattern>
     <pattern>dia3mh</pattern>
     <pattern>4dib</pattern>
     <pattern>dic4</pattern>
@@ -1918,7 +1920,7 @@
     <pattern>dív3</pattern>
     <pattern>d1la</pattern>
     <pattern>d4l3ad</pattern>
-    <pattern>dlam5pa.</pattern>
+    <pattern>dlam5pa </pattern>
     <pattern>d3lan</pattern>
     <pattern>5d6lá</pattern>
     <pattern>d1lé</pattern>
@@ -1962,13 +1964,13 @@
     <pattern>do3t</pattern>
     <pattern>doth4</pattern>
     <pattern>do6th5a</pattern>
-    <pattern>3dó.</pattern>
+    <pattern>3dó </pattern>
     <pattern>3d4óc</pattern>
     <pattern>d1óf</pattern>
     <pattern>2d1óg</pattern>
     <pattern>5d6óic</pattern>
     <pattern>5d6óigh</pattern>
-    <pattern>dó5im.</pattern>
+    <pattern>dó5im </pattern>
     <pattern>2d3óirs</pattern>
     <pattern>5dóiv</pattern>
     <pattern>dó5m6</pattern>
@@ -2025,7 +2027,7 @@
     <pattern>each3ó</pattern>
     <pattern>ea5c6ló</pattern>
     <pattern>ea5co</pattern>
-    <pattern>ea5có.</pattern>
+    <pattern>ea5có </pattern>
     <pattern>ead1á</pattern>
     <pattern>ea6dh</pattern>
     <pattern>ea4d3óin</pattern>
@@ -2058,7 +2060,7 @@
     <pattern>ear3f4</pattern>
     <pattern>ear1m2</pattern>
     <pattern>earn3</pattern>
-    <pattern>6earta.</pattern>
+    <pattern>6earta </pattern>
     <pattern>ea3rúi</pattern>
     <pattern>eas3a</pattern>
     <pattern>ea3s4áir</pattern>
@@ -2066,9 +2068,9 @@
     <pattern>4easm</pattern>
     <pattern>ea3s2tr</pattern>
     <pattern>4easú</pattern>
-    <pattern>ea4tá.</pattern>
+    <pattern>ea4tá </pattern>
     <pattern>ea5táir</pattern>
-    <pattern>2eá.</pattern>
+    <pattern>2eá </pattern>
     <pattern>eá5g</pattern>
     <pattern>4eáib</pattern>
     <pattern>eá3id</pattern>
@@ -2126,7 +2128,7 @@
     <pattern>ei4s</pattern>
     <pattern>eisc5eac</pattern>
     <pattern>eis5cir</pattern>
-    <pattern>eis6ean.</pattern>
+    <pattern>eis6ean </pattern>
     <pattern>eis6ilid</pattern>
     <pattern>eis5in4</pattern>
     <pattern>eist3</pattern>
@@ -2152,7 +2154,7 @@
     <pattern>eog4acht</pattern>
     <pattern>eo1gh</pattern>
     <pattern>eoi3f</pattern>
-    <pattern>eo3im.</pattern>
+    <pattern>eo3im </pattern>
     <pattern>eo5itear</pattern>
     <pattern>eo3iteá</pattern>
     <pattern>eo3ití</pattern>
@@ -2215,12 +2217,12 @@
     <pattern>éi3ghn</pattern>
     <pattern>éi5g6ia</pattern>
     <pattern>éi3g4il</pattern>
-    <pattern>éig3in.</pattern>
+    <pattern>éig3in </pattern>
     <pattern>éi3g4rí</pattern>
     <pattern>éil5g</pattern>
     <pattern>éilips3</pattern>
     <pattern>éil4t3</pattern>
-    <pattern>é6im.</pattern>
+    <pattern>é6im </pattern>
     <pattern>éim5ir</pattern>
     <pattern>é6in</pattern>
     <pattern>éint3</pattern>
@@ -2234,7 +2236,7 @@
     <pattern>éi6se</pattern>
     <pattern>éist3e</pattern>
     <pattern>éist3i</pattern>
-    <pattern>é6ite.</pattern>
+    <pattern>é6ite </pattern>
     <pattern>é3iteá</pattern>
     <pattern>éit3é</pattern>
     <pattern>éit6ir</pattern>
@@ -2253,12 +2255,12 @@
     <pattern>fab3r</pattern>
     <pattern>facht2</pattern>
     <pattern>facht5a</pattern>
-    <pattern>f6ain.</pattern>
+    <pattern>f6ain </pattern>
     <pattern>faist3</pattern>
     <pattern>faisti3</pattern>
     <pattern>faistic4</pattern>
     <pattern>fal3c4</pattern>
-    <pattern>f6an.</pattern>
+    <pattern>f6an </pattern>
     <pattern>faois3</pattern>
     <pattern>far6am</pattern>
     <pattern>far6at</pattern>
@@ -2273,7 +2275,7 @@
     <pattern>f6eadh</pattern>
     <pattern>4fean</pattern>
     <pattern>fear5t6a</pattern>
-    <pattern>feil6te.</pattern>
+    <pattern>feil6te </pattern>
     <pattern>feis5c6</pattern>
     <pattern>f4e3l4</pattern>
     <pattern>feo5itea</pattern>
@@ -2299,7 +2301,7 @@
     <pattern>f4he</pattern>
     <pattern>fhead5a</pattern>
     <pattern>fhear5t6a</pattern>
-    <pattern>fheil6te.</pattern>
+    <pattern>fheil6te </pattern>
     <pattern>fheis5c6</pattern>
     <pattern>fheo5f</pattern>
     <pattern>fheo5idí</pattern>
@@ -2322,7 +2324,7 @@
     <pattern>fho3dh</pattern>
     <pattern>fhoil5</pattern>
     <pattern>fhoin6</pattern>
-    <pattern>fhol6ta.</pattern>
+    <pattern>fhol6ta </pattern>
     <pattern>fhor5b6</pattern>
     <pattern>fhor5n6</pattern>
     <pattern>fhómh3</pattern>
@@ -2356,7 +2358,7 @@
     <pattern>foin6</pattern>
     <pattern>foirn4</pattern>
     <pattern>fo3le</pattern>
-    <pattern>fol6ta.</pattern>
+    <pattern>fol6ta </pattern>
     <pattern>fol3u</pattern>
     <pattern>f4or</pattern>
     <pattern>for3b6</pattern>
@@ -2383,7 +2385,7 @@
     <pattern>fuad3</pattern>
     <pattern>fua6fair</pattern>
     <pattern>fua6f5ara</pattern>
-    <pattern>fua5im.</pattern>
+    <pattern>fua5im </pattern>
     <pattern>fua5itea</pattern>
     <pattern>fuir2s3</pattern>
     <pattern>fúith6</pattern>
@@ -2403,7 +2405,7 @@
     <pattern>gais5tea</pattern>
     <pattern>gais5teá</pattern>
     <pattern>gai3té</pattern>
-    <pattern>g3al.</pattern>
+    <pattern>g3al </pattern>
     <pattern>5galm6</pattern>
     <pattern>4g5amar</pattern>
     <pattern>gana3</pattern>
@@ -2413,7 +2415,7 @@
     <pattern>g6a5p6</pattern>
     <pattern>garbh5á</pattern>
     <pattern>gard3</pattern>
-    <pattern>gar5ma.</pattern>
+    <pattern>gar5ma </pattern>
     <pattern>gar1n2</pattern>
     <pattern>gar6tú</pattern>
     <pattern>gas5c6ar</pattern>
@@ -2465,10 +2467,10 @@
     <pattern>g6eaf</pattern>
     <pattern>geal5a</pattern>
     <pattern>geal5b</pattern>
-    <pattern>geal6ta.</pattern>
+    <pattern>geal6ta </pattern>
     <pattern>gea3nam</pattern>
-    <pattern>6gear.</pattern>
-    <pattern>5g6eart.</pattern>
+    <pattern>6gear </pattern>
+    <pattern>5g6eart </pattern>
     <pattern>gea3st</pattern>
     <pattern>geat5a</pattern>
     <pattern>g1eá</pattern>
@@ -2480,20 +2482,20 @@
     <pattern>5g6éas</pattern>
     <pattern>2g1f</pattern>
     <pattern>g2h</pattern>
-    <pattern>4gh.</pattern>
+    <pattern>4gh </pattern>
     <pattern>ghabh3</pattern>
     <pattern>ghabht4</pattern>
     <pattern>ghair4n5e</pattern>
     <pattern>ghais5tea</pattern>
     <pattern>ghais5teá</pattern>
-    <pattern>gh6am.</pattern>
+    <pattern>gh6am </pattern>
     <pattern>gharbh5á</pattern>
     <pattern>gháir5</pattern>
     <pattern>gh5c6</pattern>
     <pattern>6ghd</pattern>
     <pattern>ghd3ac</pattern>
     <pattern>ghd3á</pattern>
-    <pattern>gh4de.</pattern>
+    <pattern>gh4de </pattern>
     <pattern>gh2di</pattern>
     <pattern>gheal5a</pattern>
     <pattern>gheit5</pattern>
@@ -2505,24 +2507,24 @@
     <pattern>3gho</pattern>
     <pattern>ghoin5</pattern>
     <pattern>ghó6f5</pattern>
-    <pattern>ghrá5inn.</pattern>
+    <pattern>ghrá5inn </pattern>
     <pattern>ghrá5ití</pattern>
     <pattern>ghrá3m</pattern>
     <pattern>ghrámh4</pattern>
     <pattern>3ghrú6</pattern>
-    <pattern>6ghrú.</pattern>
+    <pattern>6ghrú </pattern>
     <pattern>gh4s3á</pattern>
     <pattern>ght4</pattern>
     <pattern>ghual5</pattern>
     <pattern>g1id</pattern>
-    <pattern>3g4id.</pattern>
+    <pattern>3g4id </pattern>
     <pattern>g1ig</pattern>
     <pattern>gild5</pattern>
     <pattern>g4ili</pattern>
     <pattern>g1im</pattern>
     <pattern>3gine</pattern>
     <pattern>3giní</pattern>
-    <pattern>g3inn.</pattern>
+    <pattern>g3inn </pattern>
     <pattern>3ginnt</pattern>
     <pattern>gin5t6í</pattern>
     <pattern>1gio</pattern>
@@ -2563,8 +2565,8 @@
     <pattern>g3óinn</pattern>
     <pattern>góint3</pattern>
     <pattern>g4ól</pattern>
-    <pattern>g3óra.</pattern>
-    <pattern>g3ra.</pattern>
+    <pattern>g3óra </pattern>
+    <pattern>g3ra </pattern>
     <pattern>g1rac</pattern>
     <pattern>1g4raf</pattern>
     <pattern>3graif</pattern>
@@ -2575,7 +2577,7 @@
     <pattern>grama5d6</pattern>
     <pattern>g5ras</pattern>
     <pattern>3grád</pattern>
-    <pattern>grá5inn.</pattern>
+    <pattern>grá5inn </pattern>
     <pattern>grá5ití</pattern>
     <pattern>grá3m</pattern>
     <pattern>grámh4</pattern>
@@ -2592,7 +2594,7 @@
     <pattern>g3uir</pattern>
     <pattern>1gum</pattern>
     <pattern>gust5a</pattern>
-    <pattern>4gú.</pattern>
+    <pattern>4gú </pattern>
     <pattern>g5wa</pattern>
     <pattern>hab3r</pattern>
     <pattern>ha4c</pattern>
@@ -2602,7 +2604,7 @@
     <pattern>had6aimh</pattern>
     <pattern>had6amh</pattern>
     <pattern>ha3dái</pattern>
-    <pattern>ha3dán.</pattern>
+    <pattern>ha3dán </pattern>
     <pattern>hae5nn</pattern>
     <pattern>hagá5l</pattern>
     <pattern>hag5r</pattern>
@@ -2634,7 +2636,7 @@
     <pattern>han6lain</pattern>
     <pattern>han6lan</pattern>
     <pattern>han6rai</pattern>
-    <pattern>han6sa.</pattern>
+    <pattern>han6sa </pattern>
     <pattern>han6sac</pattern>
     <pattern>han3t4á</pattern>
     <pattern>haof3</pattern>
@@ -2644,7 +2646,7 @@
     <pattern>haralt3</pattern>
     <pattern>hard3á</pattern>
     <pattern>h4arg</pattern>
-    <pattern>har5ma.</pattern>
+    <pattern>har5ma </pattern>
     <pattern>har3n4ó</pattern>
     <pattern>h6arr</pattern>
     <pattern>har6s5ac</pattern>
@@ -2656,11 +2658,11 @@
     <pattern>ha5s6ár</pattern>
     <pattern>hasc6ar</pattern>
     <pattern>has5car6n5</pattern>
-    <pattern>has6pa.</pattern>
+    <pattern>has6pa </pattern>
     <pattern>has6p5aí</pattern>
     <pattern>hast5ait</pattern>
-    <pattern>has6tú.</pattern>
-    <pattern>hat5ar.</pattern>
+    <pattern>has6tú </pattern>
+    <pattern>hat5ar </pattern>
     <pattern>hat5ra</pattern>
     <pattern>hat5ú</pattern>
     <pattern>hách1</pattern>
@@ -2704,7 +2706,7 @@
     <pattern>h3eacn</pattern>
     <pattern>hea6g</pattern>
     <pattern>heag5r</pattern>
-    <pattern>heal6ta.</pattern>
+    <pattern>heal6ta </pattern>
     <pattern>heana6</pattern>
     <pattern>heanad5</pattern>
     <pattern>h4eang</pattern>
@@ -2750,7 +2752,7 @@
     <pattern>hiach5t6</pattern>
     <pattern>hiat6ac</pattern>
     <pattern>hia5t6aig</pattern>
-    <pattern>hia5t6aí.</pattern>
+    <pattern>hia5t6aí </pattern>
     <pattern>hi6b</pattern>
     <pattern>hibh5</pattern>
     <pattern>h1id</pattern>
@@ -2766,7 +2768,7 @@
     <pattern>hin6ín</pattern>
     <pattern>hin4íon</pattern>
     <pattern>hin6ír</pattern>
-    <pattern>hin6ste.</pattern>
+    <pattern>hin6ste </pattern>
     <pattern>hint4e</pattern>
     <pattern>hin5teá</pattern>
     <pattern>hin4t5iú</pattern>
@@ -2776,7 +2778,7 @@
     <pattern>hipi5c6</pattern>
     <pattern>hip6id</pattern>
     <pattern>hirim5</pattern>
-    <pattern>hir6im.</pattern>
+    <pattern>hir6im </pattern>
     <pattern>hir6ime</pattern>
     <pattern>hir6n</pattern>
     <pattern>his5tear</pattern>
@@ -2818,13 +2820,13 @@
     <pattern>hlin4</pattern>
     <pattern>hlip5</pattern>
     <pattern>h1lí</pattern>
-    <pattern>hló5im.</pattern>
+    <pattern>hló5im </pattern>
     <pattern>hló5ití</pattern>
     <pattern>hl6ú</pattern>
     <pattern>hma6</pattern>
     <pattern>hm4ad</pattern>
     <pattern>hmad5ó</pattern>
-    <pattern>hm4aid.</pattern>
+    <pattern>hm4aid </pattern>
     <pattern>hm4ain</pattern>
     <pattern>hm5ainn</pattern>
     <pattern>hm3an</pattern>
@@ -2840,7 +2842,7 @@
     <pattern>hniúch6</pattern>
     <pattern>h1ní</pattern>
     <pattern>h1nó</pattern>
-    <pattern>h6nó.</pattern>
+    <pattern>h6nó </pattern>
     <pattern>hnó5l6</pattern>
     <pattern>h4nr</pattern>
     <pattern>hn5t</pattern>
@@ -2872,13 +2874,13 @@
     <pattern>host5áin</pattern>
     <pattern>host5án</pattern>
     <pattern>h1óf</pattern>
-    <pattern>hó5im.</pattern>
+    <pattern>hó5im </pattern>
     <pattern>hóin4s</pattern>
     <pattern>hóint6</pattern>
     <pattern>hóist6</pattern>
     <pattern>hó5l6ain</pattern>
     <pattern>hó5l6an</pattern>
-    <pattern>hó6ma.</pattern>
+    <pattern>hó6ma </pattern>
     <pattern>hó6maí</pattern>
     <pattern>hóp6a</pattern>
     <pattern>hó6s</pattern>
@@ -2889,7 +2891,7 @@
     <pattern>h2p1e</pattern>
     <pattern>h6p5i</pattern>
     <pattern>h6pí</pattern>
-    <pattern>h1ra.</pattern>
+    <pattern>h1ra </pattern>
     <pattern>hrad5á</pattern>
     <pattern>h1raí</pattern>
     <pattern>hra6m</pattern>
@@ -2897,7 +2899,7 @@
     <pattern>hran5g6ó</pattern>
     <pattern>hrat5ó</pattern>
     <pattern>hrá3th4ó</pattern>
-    <pattern>h3re.</pattern>
+    <pattern>h3re </pattern>
     <pattern>hré6i</pattern>
     <pattern>h4rio</pattern>
     <pattern>hrioch5t6á</pattern>
@@ -2941,7 +2943,7 @@
     <pattern>húd5aí</pattern>
     <pattern>húin5t</pattern>
     <pattern>h6úis</pattern>
-    <pattern>hú5ite.</pattern>
+    <pattern>hú5ite </pattern>
     <pattern>húst5</pattern>
     <pattern>hút5ó</pattern>
     <pattern>h3vó</pattern>
@@ -2956,7 +2958,7 @@
     <pattern>ia3idís</pattern>
     <pattern>ia3igí</pattern>
     <pattern>4iail</pattern>
-    <pattern>ia5im.</pattern>
+    <pattern>ia5im </pattern>
     <pattern>ia3imi</pattern>
     <pattern>ia5inn</pattern>
     <pattern>ia3ite</pattern>
@@ -3005,7 +3007,7 @@
     <pattern>i5ch6a</pattern>
     <pattern>i3chr</pattern>
     <pattern>icim4</pattern>
-    <pattern>ic6iú.</pattern>
+    <pattern>ic6iú </pattern>
     <pattern>i3c4íd</pattern>
     <pattern>icí5tea</pattern>
     <pattern>ic4ri</pattern>
@@ -3034,7 +3036,7 @@
     <pattern>i5éa</pattern>
     <pattern>if1</pattern>
     <pattern>i6fe</pattern>
-    <pattern>if5in.</pattern>
+    <pattern>if5in </pattern>
     <pattern>ifini5</pattern>
     <pattern>ifinid6</pattern>
     <pattern>ifin6t</pattern>
@@ -3098,7 +3100,7 @@
     <pattern>im5írí</pattern>
     <pattern>in3á</pattern>
     <pattern>ind3eá</pattern>
-    <pattern>ind5ia.</pattern>
+    <pattern>ind5ia </pattern>
     <pattern>ind3iai</pattern>
     <pattern>ind3ib</pattern>
     <pattern>indí6</pattern>
@@ -3124,7 +3126,7 @@
     <pattern>in3o</pattern>
     <pattern>in4scn</pattern>
     <pattern>int3ean</pattern>
-    <pattern>in2tí.</pattern>
+    <pattern>in2tí </pattern>
     <pattern>ioch5t4óg</pattern>
     <pattern>ioch5t6óig</pattern>
     <pattern>ioc5s6</pattern>
@@ -3185,8 +3187,8 @@
     <pattern>i3sint</pattern>
     <pattern>6isis</pattern>
     <pattern>is1í</pattern>
-    <pattern>i5s6ít.</pattern>
-    <pattern>i5s6íte.</pattern>
+    <pattern>i5s6ít </pattern>
+    <pattern>i5s6íte </pattern>
     <pattern>is3o</pattern>
     <pattern>is5pí</pattern>
     <pattern>is1ta</pattern>
@@ -3253,7 +3255,7 @@
     <pattern>íd3ín</pattern>
     <pattern>íd1ío</pattern>
     <pattern>í1f</pattern>
-    <pattern>í6fe.</pattern>
+    <pattern>í6fe </pattern>
     <pattern>íf5ean</pattern>
     <pattern>í6f5ir</pattern>
     <pattern>í6f5is</pattern>
@@ -3266,7 +3268,7 @@
     <pattern>í1h</pattern>
     <pattern>íl3a</pattern>
     <pattern>í1lá</pattern>
-    <pattern>í6le.</pattern>
+    <pattern>í6le </pattern>
     <pattern>íl1ea</pattern>
     <pattern>íleá5cha</pattern>
     <pattern>íleá5ic</pattern>
@@ -3301,7 +3303,7 @@
     <pattern>íoga3dá</pattern>
     <pattern>íomh3</pattern>
     <pattern>ío4mhe</pattern>
-    <pattern>í3onna.</pattern>
+    <pattern>í3onna </pattern>
     <pattern>6íop</pattern>
     <pattern>2íor1</pattern>
     <pattern>íorg4</pattern>
@@ -3383,7 +3385,7 @@
     <pattern>l5ang</pattern>
     <pattern>lao3f</pattern>
     <pattern>lao5inn</pattern>
-    <pattern>lao5ire.</pattern>
+    <pattern>lao5ire </pattern>
     <pattern>lao5irí</pattern>
     <pattern>lao5itea</pattern>
     <pattern>lao5iteá</pattern>
@@ -3395,7 +3397,7 @@
     <pattern>lasar3</pattern>
     <pattern>lasarn4</pattern>
     <pattern>l4asb</pattern>
-    <pattern>las6pa.</pattern>
+    <pattern>las6pa </pattern>
     <pattern>las5tó</pattern>
     <pattern>lat3á</pattern>
     <pattern>lat3ó</pattern>
@@ -3407,7 +3409,7 @@
     <pattern>lá5inn</pattern>
     <pattern>láint4</pattern>
     <pattern>lá5iteá</pattern>
-    <pattern>lá5ití.</pattern>
+    <pattern>lá5ití </pattern>
     <pattern>1lál</pattern>
     <pattern>lámhach5</pattern>
     <pattern>lámhacht6</pattern>
@@ -3422,8 +3424,8 @@
     <pattern>lbh3ait</pattern>
     <pattern>l5bhan</pattern>
     <pattern>l1bhá</pattern>
-    <pattern>l4bh5áin.</pattern>
-    <pattern>l6bh5án.</pattern>
+    <pattern>l4bh5áin </pattern>
+    <pattern>l6bh5án </pattern>
     <pattern>lbh5ead</pattern>
     <pattern>lbh5ean</pattern>
     <pattern>lbh3eo</pattern>
@@ -3431,7 +3433,7 @@
     <pattern>lbh3f</pattern>
     <pattern>l6bh5id</pattern>
     <pattern>lbhin4</pattern>
-    <pattern>lbh5ir.</pattern>
+    <pattern>lbh5ir </pattern>
     <pattern>lbh5ith</pattern>
     <pattern>lbh1í</pattern>
     <pattern>l1bhr</pattern>
@@ -3484,7 +3486,7 @@
     <pattern>léalaim5</pattern>
     <pattern>lé3idís</pattern>
     <pattern>lé1if4</pattern>
-    <pattern>lé5imid.</pattern>
+    <pattern>lé5imid </pattern>
     <pattern>lé5imis</pattern>
     <pattern>léint6</pattern>
     <pattern>lé3itea</pattern>
@@ -3515,7 +3517,7 @@
     <pattern>l4ibh</pattern>
     <pattern>li3bhe</pattern>
     <pattern>li5b6il</pattern>
-    <pattern>li5bí.</pattern>
+    <pattern>li5bí </pattern>
     <pattern>li5b6ío</pattern>
     <pattern>lic6s5</pattern>
     <pattern>l1id</pattern>
@@ -3528,7 +3530,7 @@
     <pattern>lim5ir</pattern>
     <pattern>limp3í</pattern>
     <pattern>li5n6é</pattern>
-    <pattern>ling6te.</pattern>
+    <pattern>ling6te </pattern>
     <pattern>lin4s</pattern>
     <pattern>lint3e</pattern>
     <pattern>4liona</pattern>
@@ -3541,7 +3543,7 @@
     <pattern>li3té</pattern>
     <pattern>li3tiú</pattern>
     <pattern>liú5d6ar</pattern>
-    <pattern>liú5ití.</pattern>
+    <pattern>liú5ití </pattern>
     <pattern>liú5ma</pattern>
     <pattern>liú3st</pattern>
     <pattern>lí3bhé</pattern>
@@ -3570,7 +3572,7 @@
     <pattern>lmh2</pattern>
     <pattern>l6mia</pattern>
     <pattern>lm6í</pattern>
-    <pattern>l6mí.</pattern>
+    <pattern>l6mí </pattern>
     <pattern>lm4óg</pattern>
     <pattern>lm6óig</pattern>
     <pattern>l4ms</pattern>
@@ -3590,7 +3592,7 @@
     <pattern>5l6óip</pattern>
     <pattern>ló3l4</pattern>
     <pattern>ló5mh</pattern>
-    <pattern>5lóp.</pattern>
+    <pattern>5lóp </pattern>
     <pattern>ló1s</pattern>
     <pattern>lót3a</pattern>
     <pattern>lóth3</pattern>
@@ -3652,7 +3654,7 @@
     <pattern>m3ab</pattern>
     <pattern>mabh6</pattern>
     <pattern>m1ac</pattern>
-    <pattern>5m6ac.</pattern>
+    <pattern>5m6ac </pattern>
     <pattern>mac5a</pattern>
     <pattern>m1ad</pattern>
     <pattern>m5adar</pattern>
@@ -3680,10 +3682,10 @@
     <pattern>mai3té</pattern>
     <pattern>m2aiti</pattern>
     <pattern>m1aí</pattern>
-    <pattern>maí5te.</pattern>
+    <pattern>maí5te </pattern>
     <pattern>maít5eac</pattern>
     <pattern>maí6ti</pattern>
-    <pattern>m5al.</pattern>
+    <pattern>m5al </pattern>
     <pattern>ma3l6an</pattern>
     <pattern>m4alá</pattern>
     <pattern>mal5g6</pattern>
@@ -3702,7 +3704,7 @@
     <pattern>mar6f5</pattern>
     <pattern>mar3m6</pattern>
     <pattern>m3ars</pattern>
-    <pattern>mar6sa.</pattern>
+    <pattern>mar6sa </pattern>
     <pattern>m3art</pattern>
     <pattern>m3a3rú</pattern>
     <pattern>m1as</pattern>
@@ -3758,27 +3760,27 @@
     <pattern>6m5é5ac</pattern>
     <pattern>m5éam</pattern>
     <pattern>m3éar</pattern>
-    <pattern>4méar.</pattern>
+    <pattern>4méar </pattern>
     <pattern>mé5ic</pattern>
     <pattern>mé5igh</pattern>
     <pattern>méin6t</pattern>
     <pattern>m5éis</pattern>
     <pattern>2m1f</pattern>
-    <pattern>m6fe.</pattern>
+    <pattern>m6fe </pattern>
     <pattern>m1g</pattern>
-    <pattern>2mh.</pattern>
+    <pattern>2mh </pattern>
     <pattern>3mh4ac5a</pattern>
-    <pattern>mh4ad.</pattern>
+    <pattern>mh4ad </pattern>
     <pattern>mhadh4</pattern>
     <pattern>mh4ag</pattern>
-    <pattern>mh4aid.</pattern>
+    <pattern>mh4aid </pattern>
     <pattern>mhaini5c4</pattern>
     <pattern>mhain5te</pattern>
     <pattern>mhain5ti</pattern>
     <pattern>mhais3</pattern>
     <pattern>mhais6c</pattern>
     <pattern>mhaist4</pattern>
-    <pattern>mh6am.</pattern>
+    <pattern>mh6am </pattern>
     <pattern>mhar6b</pattern>
     <pattern>mharbh5</pattern>
     <pattern>mhar6ca</pattern>
@@ -3788,7 +3790,7 @@
     <pattern>mhar3m6</pattern>
     <pattern>mhar3t4a</pattern>
     <pattern>mh3asf</pattern>
-    <pattern>mh6at.</pattern>
+    <pattern>mh6at </pattern>
     <pattern>mhat3á</pattern>
     <pattern>mhat5ó</pattern>
     <pattern>mh6ats</pattern>
@@ -3804,7 +3806,7 @@
     <pattern>mh4éal</pattern>
     <pattern>mh1f</pattern>
     <pattern>mh4ill</pattern>
-    <pattern>mhion6ta.</pattern>
+    <pattern>mhion6ta </pattern>
     <pattern>mhion6t5aí</pattern>
     <pattern>mhis3</pattern>
     <pattern>mhist6</pattern>
@@ -3872,10 +3874,10 @@
     <pattern>mí3lít</pattern>
     <pattern>mí6na</pattern>
     <pattern>míos5</pattern>
-    <pattern>5míre.</pattern>
+    <pattern>5míre </pattern>
     <pattern>mí3ré</pattern>
-    <pattern>3m4ít.</pattern>
-    <pattern>3m4íte.</pattern>
+    <pattern>3m4ít </pattern>
+    <pattern>3m4íte </pattern>
     <pattern>mí3teac</pattern>
     <pattern>mít6i</pattern>
     <pattern>m1l</pattern>
@@ -3898,12 +3900,12 @@
     <pattern>mors5</pattern>
     <pattern>m1ó</pattern>
     <pattern>4móf</pattern>
-    <pattern>m4óin.</pattern>
+    <pattern>m4óin </pattern>
     <pattern>m6óiní</pattern>
     <pattern>móint6</pattern>
     <pattern>mó5m</pattern>
     <pattern>m2ón</pattern>
-    <pattern>3món.</pattern>
+    <pattern>3món </pattern>
     <pattern>mór5</pattern>
     <pattern>5m6óró</pattern>
     <pattern>m4ós</pattern>
@@ -3912,7 +3914,7 @@
     <pattern>m3p4arn</pattern>
     <pattern>m1pe</pattern>
     <pattern>mp3eann</pattern>
-    <pattern>m5pé.</pattern>
+    <pattern>m5pé </pattern>
     <pattern>m5péar</pattern>
     <pattern>mp5éid</pattern>
     <pattern>m5péir</pattern>
@@ -3991,7 +3993,7 @@
     <pattern>na5tam</pattern>
     <pattern>na3tó</pattern>
     <pattern>nava5</pattern>
-    <pattern>4ná.</pattern>
+    <pattern>4ná </pattern>
     <pattern>ná4f3</pattern>
     <pattern>ná6i</pattern>
     <pattern>n1áid</pattern>
@@ -4014,7 +4016,7 @@
     <pattern>nc5aig</pattern>
     <pattern>nc5an</pattern>
     <pattern>ncar5</pattern>
-    <pattern>n5c6ar.</pattern>
+    <pattern>n5c6ar </pattern>
     <pattern>ncarn6</pattern>
     <pattern>n2cá</pattern>
     <pattern>n3c4ás</pattern>
@@ -4043,14 +4045,14 @@
     <pattern>n4diai</pattern>
     <pattern>ndic5</pattern>
     <pattern>n6dis</pattern>
-    <pattern>nd5is.</pattern>
+    <pattern>nd5is </pattern>
     <pattern>nd5ise</pattern>
     <pattern>ndlí5d</pattern>
     <pattern>ndlí5g</pattern>
     <pattern>ndlí5m</pattern>
     <pattern>ndlí3o</pattern>
     <pattern>nd3óg</pattern>
-    <pattern>ndó5ite.</pattern>
+    <pattern>ndó5ite </pattern>
     <pattern>ndó5ití</pattern>
     <pattern>ndreach5</pattern>
     <pattern>ndreacht6</pattern>
@@ -4060,7 +4062,7 @@
     <pattern>ndreo5in</pattern>
     <pattern>nd6ró</pattern>
     <pattern>nea3g4á</pattern>
-    <pattern>nea5ma.</pattern>
+    <pattern>nea5ma </pattern>
     <pattern>nea5s6ár</pattern>
     <pattern>neat5</pattern>
     <pattern>neá5cha</pattern>
@@ -4076,7 +4078,7 @@
     <pattern>néalt4</pattern>
     <pattern>4néas</pattern>
     <pattern>n1f</pattern>
-    <pattern>n6fa.</pattern>
+    <pattern>n6fa </pattern>
     <pattern>nfair6</pattern>
     <pattern>nfairt5</pattern>
     <pattern>2ng</pattern>
@@ -4098,7 +4100,7 @@
     <pattern>ng6íne</pattern>
     <pattern>ng6íoc</pattern>
     <pattern>ng6lí</pattern>
-    <pattern>ng6óid.</pattern>
+    <pattern>ng6óid </pattern>
     <pattern>ng6óide</pattern>
     <pattern>ng6ór</pattern>
     <pattern>ngt4</pattern>
@@ -4113,7 +4115,7 @@
     <pattern>ni3f</pattern>
     <pattern>n5igí</pattern>
     <pattern>n3il</pattern>
-    <pattern>6n5im.</pattern>
+    <pattern>6n5im </pattern>
     <pattern>ni6m5é</pattern>
     <pattern>4n3imi</pattern>
     <pattern>n5in</pattern>
@@ -4148,7 +4150,7 @@
     <pattern>n6mí</pattern>
     <pattern>nm4ó</pattern>
     <pattern>n2n1</pattern>
-    <pattern>2nn.</pattern>
+    <pattern>2nn </pattern>
     <pattern>nna3b4</pattern>
     <pattern>6nnac</pattern>
     <pattern>nn3t2</pattern>
@@ -4177,7 +4179,7 @@
     <pattern>n5ri</pattern>
     <pattern>nroch5</pattern>
     <pattern>nrocht6</pattern>
-    <pattern>n6ró.</pattern>
+    <pattern>n6ró </pattern>
     <pattern>nr6ú</pattern>
     <pattern>n1s2</pattern>
     <pattern>nsab6</pattern>
@@ -4207,12 +4209,12 @@
     <pattern>nta5mó</pattern>
     <pattern>nta3p</pattern>
     <pattern>nt5art</pattern>
-    <pattern>n5tá.</pattern>
+    <pattern>n5tá </pattern>
     <pattern>nt4ead</pattern>
     <pattern>nt3eag</pattern>
     <pattern>n5tear</pattern>
     <pattern>n2t1eá</pattern>
-    <pattern>n5teá.</pattern>
+    <pattern>n5teá </pattern>
     <pattern>n5t6eán</pattern>
     <pattern>nt6eog</pattern>
     <pattern>nt4eol</pattern>
@@ -4225,7 +4227,7 @@
     <pattern>nt5iúir</pattern>
     <pattern>n4t3iúr</pattern>
     <pattern>n4t3íl</pattern>
-    <pattern>nt4ín.</pattern>
+    <pattern>nt4ín </pattern>
     <pattern>nt6íni</pattern>
     <pattern>nt4íní</pattern>
     <pattern>nt4íoc</pattern>
@@ -4245,7 +4247,7 @@
     <pattern>nua5itea</pattern>
     <pattern>nuan6</pattern>
     <pattern>n5uar</pattern>
-    <pattern>n6uas.</pattern>
+    <pattern>n6uas </pattern>
     <pattern>nua5t</pattern>
     <pattern>n1ui</pattern>
     <pattern>nú5í</pattern>
@@ -4268,7 +4270,7 @@
     <pattern>ob1ó</pattern>
     <pattern>ob1r</pattern>
     <pattern>ob3ú</pattern>
-    <pattern>4oc.</pattern>
+    <pattern>4oc </pattern>
     <pattern>2oc1a</pattern>
     <pattern>ocan4</pattern>
     <pattern>oca3t</pattern>
@@ -4331,7 +4333,7 @@
     <pattern>oid1i</pattern>
     <pattern>oif3</pattern>
     <pattern>oift4</pattern>
-    <pattern>o3igí.</pattern>
+    <pattern>o3igí </pattern>
     <pattern>oil5e</pattern>
     <pattern>oimead5</pattern>
     <pattern>oim3ir</pattern>
@@ -4340,7 +4342,7 @@
     <pattern>6oinn</pattern>
     <pattern>oint3é</pattern>
     <pattern>oi6p5</pattern>
-    <pattern>6oir.</pattern>
+    <pattern>6oir </pattern>
     <pattern>oir6bhig</pattern>
     <pattern>oir4bhí</pattern>
     <pattern>oir3d4</pattern>
@@ -4364,7 +4366,7 @@
     <pattern>oí2c</pattern>
     <pattern>oíche5</pattern>
     <pattern>oíl4</pattern>
-    <pattern>oí4te.</pattern>
+    <pattern>oí4te </pattern>
     <pattern>ol1a</pattern>
     <pattern>o5l6ab</pattern>
     <pattern>ola3dá</pattern>
@@ -4555,17 +4557,17 @@
     <pattern>óg1</pattern>
     <pattern>óg3a</pattern>
     <pattern>óga3l4</pattern>
-    <pattern>ó5gó.</pattern>
+    <pattern>ó5gó </pattern>
     <pattern>6ógt</pattern>
     <pattern>4óia</pattern>
     <pattern>óib5é</pattern>
     <pattern>óid3i</pattern>
     <pattern>ó6igh</pattern>
-    <pattern>ó3igí.</pattern>
+    <pattern>ó3igí </pattern>
     <pattern>óillí4</pattern>
     <pattern>ói4m5é</pattern>
     <pattern>6ói1mh2</pattern>
-    <pattern>óin6se.</pattern>
+    <pattern>óin6se </pattern>
     <pattern>óin5si</pattern>
     <pattern>óin5sí</pattern>
     <pattern>óin3t</pattern>
@@ -4577,7 +4579,7 @@
     <pattern>óis5teo</pattern>
     <pattern>óis6té</pattern>
     <pattern>ó3itear</pattern>
-    <pattern>ó3iteá.</pattern>
+    <pattern>ó3iteá </pattern>
     <pattern>óit3é</pattern>
     <pattern>óits3</pattern>
     <pattern>6óiv</pattern>
@@ -4598,7 +4600,7 @@
     <pattern>ómh3á</pattern>
     <pattern>ón1</pattern>
     <pattern>ón2as</pattern>
-    <pattern>ón3as.</pattern>
+    <pattern>ón3as </pattern>
     <pattern>óng2</pattern>
     <pattern>2ó1nn</pattern>
     <pattern>ó3n4o</pattern>
@@ -4661,7 +4663,7 @@
     <pattern>pás5</pattern>
     <pattern>p1c</pattern>
     <pattern>p5c6í</pattern>
-    <pattern>4pe.</pattern>
+    <pattern>4pe </pattern>
     <pattern>peacht6</pattern>
     <pattern>peal5a</pattern>
     <pattern>peam6</pattern>
@@ -4696,7 +4698,7 @@
     <pattern>phéin6t</pattern>
     <pattern>phéir6s</pattern>
     <pattern>ph4i</pattern>
-    <pattern>phin6se.</pattern>
+    <pattern>phin6se </pattern>
     <pattern>phion6t5</pattern>
     <pattern>phis5t6</pattern>
     <pattern>ph6l</pattern>
@@ -4720,7 +4722,7 @@
     <pattern>pid5i</pattern>
     <pattern>pi3le</pattern>
     <pattern>p3im</pattern>
-    <pattern>pin6se.</pattern>
+    <pattern>pin6se </pattern>
     <pattern>pion6t5</pattern>
     <pattern>pios5</pattern>
     <pattern>piost6</pattern>
@@ -4777,18 +4779,18 @@
     <pattern>próis5</pattern>
     <pattern>p1s</pattern>
     <pattern>ps4a</pattern>
-    <pattern>p6sa.</pattern>
+    <pattern>p6sa </pattern>
     <pattern>psain6</pattern>
     <pattern>ps5ean</pattern>
     <pattern>p5s6im</pattern>
     <pattern>p5sis</pattern>
     <pattern>p1t</pattern>
-    <pattern>p4te.</pattern>
+    <pattern>p4te </pattern>
     <pattern>pt3ean</pattern>
     <pattern>pth4</pattern>
     <pattern>pt4ig</pattern>
     <pattern>pt3is</pattern>
-    <pattern>6pu.</pattern>
+    <pattern>6pu </pattern>
     <pattern>puin2</pattern>
     <pattern>pun4</pattern>
     <pattern>punt3</pattern>
@@ -4846,7 +4848,7 @@
     <pattern>rba3cá</pattern>
     <pattern>rb3adh</pattern>
     <pattern>r3bair</pattern>
-    <pattern>rb5ais.</pattern>
+    <pattern>rb5ais </pattern>
     <pattern>r5bait</pattern>
     <pattern>rb3am</pattern>
     <pattern>rb3ann</pattern>
@@ -4889,7 +4891,7 @@
     <pattern>rchar5t6</pattern>
     <pattern>rch4á</pattern>
     <pattern>rch6i</pattern>
-    <pattern>rch5la.</pattern>
+    <pattern>rch5la </pattern>
     <pattern>rch6n</pattern>
     <pattern>rch3ra</pattern>
     <pattern>r2c1i</pattern>
@@ -4899,7 +4901,7 @@
     <pattern>rc1l</pattern>
     <pattern>r4cm</pattern>
     <pattern>rc3n</pattern>
-    <pattern>r6cra.</pattern>
+    <pattern>r6cra </pattern>
     <pattern>rc3rá</pattern>
     <pattern>rc3s</pattern>
     <pattern>rc5ú</pattern>
@@ -4914,7 +4916,7 @@
     <pattern>rdhó5ití</pattern>
     <pattern>r2d1i6</pattern>
     <pattern>rdin5é</pattern>
-    <pattern>r4dí.</pattern>
+    <pattern>r4dí </pattern>
     <pattern>r6d5íd</pattern>
     <pattern>r6d5íg</pattern>
     <pattern>r4dím</pattern>
@@ -4940,12 +4942,12 @@
     <pattern>reá3ir</pattern>
     <pattern>reic5t6</pattern>
     <pattern>reo3dó</pattern>
-    <pattern>reo5ite.</pattern>
+    <pattern>reo5ite </pattern>
     <pattern>reo1m</pattern>
     <pattern>ré5adh</pattern>
     <pattern>réal5a</pattern>
     <pattern>réal2t</pattern>
-    <pattern>ré5ann.</pattern>
+    <pattern>ré5ann </pattern>
     <pattern>r6éas</pattern>
     <pattern>ré5ife</pattern>
     <pattern>réig3</pattern>
@@ -5063,7 +5065,7 @@
     <pattern>rn6íni</pattern>
     <pattern>r3no</pattern>
     <pattern>rn1ó</pattern>
-    <pattern>r5n6óin.</pattern>
+    <pattern>r5n6óin </pattern>
     <pattern>r5n6ón</pattern>
     <pattern>rn3ú</pattern>
     <pattern>ro4c</pattern>
@@ -5091,13 +5093,13 @@
     <pattern>rós6tá</pattern>
     <pattern>rót1</pattern>
     <pattern>rót5a</pattern>
-    <pattern>r5pa.</pattern>
+    <pattern>r5pa </pattern>
     <pattern>r5paí</pattern>
     <pattern>rp3ar</pattern>
     <pattern>r3pán</pattern>
     <pattern>r4p3e</pattern>
     <pattern>r4p3i</pattern>
-    <pattern>r6p5óg.</pattern>
+    <pattern>r6p5óg </pattern>
     <pattern>r5póga</pattern>
     <pattern>rp1r</pattern>
     <pattern>r2r1</pattern>
@@ -5123,14 +5125,14 @@
     <pattern>rt4agá</pattern>
     <pattern>r5t6ail</pattern>
     <pattern>rt6ainí</pattern>
-    <pattern>r3tair.</pattern>
+    <pattern>r3tair </pattern>
     <pattern>rt5aío</pattern>
     <pattern>r3t4al</pattern>
     <pattern>r3tana</pattern>
     <pattern>r1tar</pattern>
     <pattern>rt6asó</pattern>
     <pattern>rt1á</pattern>
-    <pattern>r5tá.</pattern>
+    <pattern>r5tá </pattern>
     <pattern>r4tc</pattern>
     <pattern>r2te</pattern>
     <pattern>rt3eac</pattern>
@@ -5138,7 +5140,7 @@
     <pattern>rt3eam</pattern>
     <pattern>rt3ean</pattern>
     <pattern>r3t4ear</pattern>
-    <pattern>r3t4eá.</pattern>
+    <pattern>r3t4eá </pattern>
     <pattern>r1th2</pattern>
     <pattern>rtha3t</pattern>
     <pattern>rthéad6</pattern>
@@ -5176,13 +5178,13 @@
     <pattern>rus4t5</pattern>
     <pattern>rúch6t5</pattern>
     <pattern>4rúd</pattern>
-    <pattern>rú3d4ar.</pattern>
+    <pattern>rú3d4ar </pattern>
     <pattern>rú3idí</pattern>
     <pattern>rú1im</pattern>
     <pattern>r5úine</pattern>
     <pattern>rú3inn</pattern>
     <pattern>rú3itea</pattern>
-    <pattern>rú5ití.</pattern>
+    <pattern>rú5ití </pattern>
     <pattern>r1úl</pattern>
     <pattern>rú3mar</pattern>
     <pattern>rúst3a</pattern>
@@ -5208,30 +5210,30 @@
     <pattern>s6a5mat</pattern>
     <pattern>s2amh</pattern>
     <pattern>s6ams</pattern>
-    <pattern>3s4an.</pattern>
+    <pattern>3s4an </pattern>
     <pattern>san2á</pattern>
     <pattern>sant4</pattern>
-    <pattern>5s6ao.</pattern>
+    <pattern>5s6ao </pattern>
     <pattern>sar3b</pattern>
     <pattern>sar5c</pattern>
     <pattern>s4arl</pattern>
     <pattern>sa3r4ó</pattern>
-    <pattern>s6at.</pattern>
+    <pattern>s6at </pattern>
     <pattern>sat5a</pattern>
     <pattern>sa5tá</pattern>
     <pattern>sat5ra</pattern>
     <pattern>s6ats</pattern>
     <pattern>s1á</pattern>
     <pattern>s6áili</pattern>
-    <pattern>sá5inn.</pattern>
+    <pattern>sá5inn </pattern>
     <pattern>sáin6t</pattern>
-    <pattern>sá5ite.</pattern>
-    <pattern>sá5iteá.</pattern>
+    <pattern>sá5ite </pattern>
+    <pattern>sá5iteá </pattern>
     <pattern>s1b</pattern>
     <pattern>sb6a</pattern>
     <pattern>sbh6</pattern>
     <pattern>sbheir5</pattern>
-    <pattern>6sc.</pattern>
+    <pattern>6sc </pattern>
     <pattern>sca6b</pattern>
     <pattern>scach6</pattern>
     <pattern>sca5chá</pattern>
@@ -5254,12 +5256,12 @@
     <pattern>sc3it</pattern>
     <pattern>sc3iúil</pattern>
     <pattern>2sc1í</pattern>
-    <pattern>s6cí.</pattern>
+    <pattern>s6cí </pattern>
     <pattern>sc1n</pattern>
     <pattern>scoir5</pattern>
     <pattern>s4cor</pattern>
     <pattern>scor3b4</pattern>
-    <pattern>s3có.</pattern>
+    <pattern>s3có </pattern>
     <pattern>s6cói</pattern>
     <pattern>3scóip</pattern>
     <pattern>s3cól</pattern>
@@ -5286,7 +5288,7 @@
     <pattern>seana6</pattern>
     <pattern>seanad5</pattern>
     <pattern>sean5m</pattern>
-    <pattern>s5eanna.</pattern>
+    <pattern>s5eanna </pattern>
     <pattern>seas5t</pattern>
     <pattern>s4eat</pattern>
     <pattern>5seáib</pattern>
@@ -5296,7 +5298,7 @@
     <pattern>seil6f</pattern>
     <pattern>seir4f3</pattern>
     <pattern>seit5s</pattern>
-    <pattern>6seo.</pattern>
+    <pattern>6seo </pattern>
     <pattern>seod3</pattern>
     <pattern>séalt6</pattern>
     <pattern>séar3</pattern>
@@ -5315,8 +5317,8 @@
     <pattern>shair5d6</pattern>
     <pattern>shant6</pattern>
     <pattern>shar5</pattern>
-    <pattern>shá5ite.</pattern>
-    <pattern>shá5iteá.</pattern>
+    <pattern>shá5ite </pattern>
+    <pattern>shá5iteá </pattern>
     <pattern>shá5ití</pattern>
     <pattern>sheach6t5a</pattern>
     <pattern>sheal5a</pattern>
@@ -5363,9 +5365,9 @@
     <pattern>shú5c</pattern>
     <pattern>shúch6</pattern>
     <pattern>shú5d6ar</pattern>
-    <pattern>shú5im.</pattern>
+    <pattern>shú5im </pattern>
     <pattern>shú5in</pattern>
-    <pattern>shú5ití.</pattern>
+    <pattern>shú5ití </pattern>
     <pattern>shú5mar</pattern>
     <pattern>shús5</pattern>
     <pattern>s1ia</pattern>
@@ -5452,7 +5454,7 @@
     <pattern>s1óf</pattern>
     <pattern>s1óg</pattern>
     <pattern>sóin4</pattern>
-    <pattern>3s4óin.</pattern>
+    <pattern>3s4óin </pattern>
     <pattern>s6óine</pattern>
     <pattern>s6óiní</pattern>
     <pattern>só5ití</pattern>
@@ -5476,7 +5478,7 @@
     <pattern>spuir6</pattern>
     <pattern>s1r</pattern>
     <pattern>sr6ú</pattern>
-    <pattern>6st.</pattern>
+    <pattern>6st </pattern>
     <pattern>sta5dá</pattern>
     <pattern>s1tag</pattern>
     <pattern>stai6</pattern>
@@ -5494,10 +5496,10 @@
     <pattern>s1té</pattern>
     <pattern>3stéig</pattern>
     <pattern>s4téin</pattern>
-    <pattern>6sti.</pattern>
+    <pattern>6sti </pattern>
     <pattern>s3tice</pattern>
     <pattern>s5ticig</pattern>
-    <pattern>s5tile.</pattern>
+    <pattern>s5tile </pattern>
     <pattern>st1im</pattern>
     <pattern>s6tio</pattern>
     <pattern>s3t4ir</pattern>
@@ -5519,11 +5521,11 @@
     <pattern>sú5d6ar</pattern>
     <pattern>s4úf</pattern>
     <pattern>s6úig</pattern>
-    <pattern>sú5im.</pattern>
+    <pattern>sú5im </pattern>
     <pattern>sú5inn</pattern>
     <pattern>s4úit</pattern>
-    <pattern>sú5ite.</pattern>
-    <pattern>sú5ití.</pattern>
+    <pattern>sú5ite </pattern>
+    <pattern>sú5ití </pattern>
     <pattern>sú5mar</pattern>
     <pattern>s1ún</pattern>
     <pattern>sús5</pattern>
@@ -5532,7 +5534,7 @@
     <pattern>tach6tá</pattern>
     <pattern>ta3cr</pattern>
     <pattern>ta5dái</pattern>
-    <pattern>t3adh.</pattern>
+    <pattern>t3adh </pattern>
     <pattern>tae5n</pattern>
     <pattern>3t4aga</pattern>
     <pattern>ta3g4á</pattern>
@@ -5540,7 +5542,7 @@
     <pattern>tagh4</pattern>
     <pattern>taghd3</pattern>
     <pattern>ta1gó</pattern>
-    <pattern>5t6aig.</pattern>
+    <pattern>5t6aig </pattern>
     <pattern>5t6aige</pattern>
     <pattern>3t4ainia</pattern>
     <pattern>tain4t3</pattern>
@@ -5566,7 +5568,7 @@
     <pattern>5tanb</pattern>
     <pattern>tan3gó</pattern>
     <pattern>t3ann</pattern>
-    <pattern>4tanna.</pattern>
+    <pattern>4tanna </pattern>
     <pattern>t6annac</pattern>
     <pattern>t6annai</pattern>
     <pattern>ta5no</pattern>
@@ -5577,7 +5579,7 @@
     <pattern>tar5d6</pattern>
     <pattern>tar3g4</pattern>
     <pattern>tart4a</pattern>
-    <pattern>tar5ta.</pattern>
+    <pattern>tar5ta </pattern>
     <pattern>ta3s4l</pattern>
     <pattern>ta3s4t</pattern>
     <pattern>tas5tr</pattern>
@@ -5585,10 +5587,10 @@
     <pattern>5tata</pattern>
     <pattern>4ta3to</pattern>
     <pattern>tat5ú</pattern>
-    <pattern>3tá.</pattern>
+    <pattern>3tá </pattern>
     <pattern>tá6d5</pattern>
     <pattern>t1áil</pattern>
-    <pattern>tá6im.</pattern>
+    <pattern>tá6im </pattern>
     <pattern>táir4s3</pattern>
     <pattern>táir5t</pattern>
     <pattern>t6áit</pattern>
@@ -5606,7 +5608,7 @@
     <pattern>tea5fa</pattern>
     <pattern>tea3g4á</pattern>
     <pattern>tea3gr</pattern>
-    <pattern>t3eal.</pattern>
+    <pattern>t3eal </pattern>
     <pattern>t3eala</pattern>
     <pattern>tea5lain</pattern>
     <pattern>tea3lan</pattern>
@@ -5637,7 +5639,7 @@
     <pattern>2t1f</pattern>
     <pattern>t1g</pattern>
     <pattern>t2h</pattern>
-    <pattern>4th.</pattern>
+    <pattern>4th </pattern>
     <pattern>t6ha</pattern>
     <pattern>6thab</pattern>
     <pattern>thach6t5</pattern>
@@ -5646,11 +5648,11 @@
     <pattern>thair4b</pattern>
     <pattern>thairbh5</pattern>
     <pattern>thair6g</pattern>
-    <pattern>thair6is.</pattern>
+    <pattern>thair6is </pattern>
     <pattern>thair4n</pattern>
     <pattern>thairn5e</pattern>
     <pattern>thaist5</pattern>
-    <pattern>th5am.</pattern>
+    <pattern>th5am </pattern>
     <pattern>than3g</pattern>
     <pattern>than2t3</pattern>
     <pattern>tha6p5</pattern>
@@ -5674,7 +5676,7 @@
     <pattern>théa3la</pattern>
     <pattern>thé3if</pattern>
     <pattern>th1f</pattern>
-    <pattern>th5in.</pattern>
+    <pattern>th5in </pattern>
     <pattern>thin6i</pattern>
     <pattern>thit3e</pattern>
     <pattern>thí6f5</pattern>
@@ -5706,7 +5708,7 @@
     <pattern>5thuig</pattern>
     <pattern>3thur</pattern>
     <pattern>thu5sa</pattern>
-    <pattern>6ti.</pattern>
+    <pattern>6ti </pattern>
     <pattern>tia5g</pattern>
     <pattern>6t5iam</pattern>
     <pattern>t1ib2</pattern>
@@ -5740,7 +5742,7 @@
     <pattern>6t5iteo</pattern>
     <pattern>ti5té</pattern>
     <pattern>ti3tiú</pattern>
-    <pattern>t1iú.</pattern>
+    <pattern>t1iú </pattern>
     <pattern>t3iúl</pattern>
     <pattern>3tiún</pattern>
     <pattern>t1í</pattern>
@@ -5838,14 +5840,14 @@
     <pattern>ua3chl</pattern>
     <pattern>uad3á</pattern>
     <pattern>ua1f2</pattern>
-    <pattern>ua6fa.</pattern>
+    <pattern>ua6fa </pattern>
     <pattern>6uaid</pattern>
     <pattern>ua3idí</pattern>
     <pattern>uai5g6é</pattern>
-    <pattern>ua3igí.</pattern>
+    <pattern>ua3igí </pattern>
     <pattern>ua3imid</pattern>
     <pattern>ua3imis</pattern>
-    <pattern>ua3inn.</pattern>
+    <pattern>ua3inn </pattern>
     <pattern>uains6</pattern>
     <pattern>uain5t4</pattern>
     <pattern>uair3c4í</pattern>
@@ -5855,7 +5857,7 @@
     <pattern>uaist2</pattern>
     <pattern>ua3iteá</pattern>
     <pattern>uaith6i5s</pattern>
-    <pattern>ua3ití.</pattern>
+    <pattern>ua3ití </pattern>
     <pattern>uait5s</pattern>
     <pattern>uala5t</pattern>
     <pattern>ualath6</pattern>
@@ -5870,7 +5872,7 @@
     <pattern>uar3g4</pattern>
     <pattern>uart4</pattern>
     <pattern>uar5tai</pattern>
-    <pattern>uar5taí.</pattern>
+    <pattern>uar5taí </pattern>
     <pattern>uar5tan</pattern>
     <pattern>ub1a</pattern>
     <pattern>ub5á</pattern>
@@ -5949,7 +5951,7 @@
     <pattern>un5gá</pattern>
     <pattern>un3o</pattern>
     <pattern>un1ó</pattern>
-    <pattern>un6sa.</pattern>
+    <pattern>un6sa </pattern>
     <pattern>un6s5aí</pattern>
     <pattern>un3ú</pattern>
     <pattern>unúd4</pattern>
@@ -5975,7 +5977,7 @@
     <pattern>ur3t4</pattern>
     <pattern>ur5u</pattern>
     <pattern>ur3ú</pattern>
-    <pattern>6us.</pattern>
+    <pattern>6us </pattern>
     <pattern>usc5ai</pattern>
     <pattern>usc3l</pattern>
     <pattern>us3cr</pattern>
@@ -5994,7 +5996,7 @@
     <pattern>uz3a</pattern>
     <pattern>ú5an</pattern>
     <pattern>ú1á</pattern>
-    <pattern>ú4áil.</pattern>
+    <pattern>ú4áil </pattern>
     <pattern>úb1</pattern>
     <pattern>úba5dá</pattern>
     <pattern>úbail4</pattern>
@@ -6036,7 +6038,7 @@
     <pattern>úisc3</pattern>
     <pattern>úis3c4é</pattern>
     <pattern>ú5itear</pattern>
-    <pattern>ú3iteá.</pattern>
+    <pattern>ú3iteá </pattern>
     <pattern>úithi5s</pattern>
     <pattern>ú6itín</pattern>
     <pattern>úits3eá</pattern>

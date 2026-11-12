@@ -44,7 +44,9 @@
 % according to the rules.
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Basque" lang="eu"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>1ba</pattern>
     <pattern>1be</pattern>
     <pattern>1bo</pattern>

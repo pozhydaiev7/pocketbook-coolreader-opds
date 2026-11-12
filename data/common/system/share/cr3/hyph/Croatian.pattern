@@ -19,7 +19,9 @@
 % - LPPL licence added on 06.06.2011.
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Croatian" lang="hr"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>a1a2</pattern>
     <pattern>a1e2</pattern>
     <pattern>a1i2</pattern>
@@ -681,22 +683,22 @@
     <pattern>b1g</pattern>
     <pattern>b1h</pattern>
     <pattern>1bj</pattern>
-    <pattern>2bj.</pattern>
+    <pattern>2bj </pattern>
     <pattern>b1k</pattern>
     <pattern>1bl</pattern>
-    <pattern>2bl.</pattern>
+    <pattern>2bl </pattern>
     <pattern>2b1lj</pattern>
     <pattern>b1m</pattern>
     <pattern>b1n</pattern>
     <pattern>b1nj</pattern>
     <pattern>b1p</pattern>
     <pattern>1br</pattern>
-    <pattern>2br.</pattern>
+    <pattern>2br </pattern>
     <pattern>b1s</pattern>
     <pattern>b1š</pattern>
     <pattern>b1t</pattern>
     <pattern>1bv</pattern>
-    <pattern>2bv.</pattern>
+    <pattern>2bv </pattern>
     <pattern>b1z</pattern>
     <pattern>b1ž</pattern>
     <pattern>c1b</pattern>
@@ -710,22 +712,22 @@
     <pattern>c1g</pattern>
     <pattern>c1h</pattern>
     <pattern>1cj</pattern>
-    <pattern>2cj.</pattern>
+    <pattern>2cj </pattern>
     <pattern>c1k</pattern>
     <pattern>1cl</pattern>
-    <pattern>2cl.</pattern>
+    <pattern>2cl </pattern>
     <pattern>2c1lj</pattern>
     <pattern>c1m</pattern>
     <pattern>c1n</pattern>
     <pattern>c1nj</pattern>
     <pattern>c1p</pattern>
     <pattern>1cr</pattern>
-    <pattern>2cr.</pattern>
+    <pattern>2cr </pattern>
     <pattern>c1s</pattern>
     <pattern>c1š</pattern>
     <pattern>c1t</pattern>
     <pattern>1cv</pattern>
-    <pattern>2cv.</pattern>
+    <pattern>2cv </pattern>
     <pattern>c1z</pattern>
     <pattern>c1ž</pattern>
     <pattern>č1b</pattern>
@@ -739,22 +741,22 @@
     <pattern>č1g</pattern>
     <pattern>č1h</pattern>
     <pattern>1čj</pattern>
-    <pattern>2čj.</pattern>
+    <pattern>2čj </pattern>
     <pattern>č1k</pattern>
     <pattern>1čl</pattern>
-    <pattern>2čl.</pattern>
+    <pattern>2čl </pattern>
     <pattern>2č1lj</pattern>
     <pattern>č1m</pattern>
     <pattern>č1n</pattern>
     <pattern>č1nj</pattern>
     <pattern>č1p</pattern>
     <pattern>1čr</pattern>
-    <pattern>2čr.</pattern>
+    <pattern>2čr </pattern>
     <pattern>č1s</pattern>
     <pattern>č1š</pattern>
     <pattern>č1t</pattern>
     <pattern>1čv</pattern>
-    <pattern>2čv.</pattern>
+    <pattern>2čv </pattern>
     <pattern>č1z</pattern>
     <pattern>č1ž</pattern>
     <pattern>ć1b</pattern>
@@ -770,19 +772,19 @@
     <pattern>ć1j</pattern>
     <pattern>ć1k</pattern>
     <pattern>1ćl</pattern>
-    <pattern>2ćl.</pattern>
+    <pattern>2ćl </pattern>
     <pattern>2ć1lj</pattern>
     <pattern>ć1m</pattern>
     <pattern>ć1n</pattern>
     <pattern>ć1nj</pattern>
     <pattern>ć1p</pattern>
     <pattern>1ćr</pattern>
-    <pattern>2ćr.</pattern>
+    <pattern>2ćr </pattern>
     <pattern>ć1s</pattern>
     <pattern>ć1š</pattern>
     <pattern>ć1t</pattern>
     <pattern>1ćv</pattern>
-    <pattern>2ćv.</pattern>
+    <pattern>2ćv </pattern>
     <pattern>ć1z</pattern>
     <pattern>ć1ž</pattern>
     <pattern>d1b</pattern>
@@ -796,7 +798,7 @@
     <pattern>2d1g</pattern>
     <pattern>d1h</pattern>
     <pattern>1dj</pattern>
-    <pattern>2dj.</pattern>
+    <pattern>2dj </pattern>
     <pattern>d1k</pattern>
     <pattern>2d1l</pattern>
     <pattern>2d1lj</pattern>
@@ -805,12 +807,12 @@
     <pattern>d1nj</pattern>
     <pattern>d1p</pattern>
     <pattern>1dr</pattern>
-    <pattern>2dr.</pattern>
+    <pattern>2dr </pattern>
     <pattern>d1s</pattern>
     <pattern>d1š</pattern>
     <pattern>d1t</pattern>
     <pattern>1dv</pattern>
-    <pattern>2dv.</pattern>
+    <pattern>2dv </pattern>
     <pattern>d1z</pattern>
     <pattern>dž1b</pattern>
     <pattern>dž1c</pattern>
@@ -823,22 +825,22 @@
     <pattern>dž1g</pattern>
     <pattern>dž1h</pattern>
     <pattern>1džj</pattern>
-    <pattern>2džj.</pattern>
+    <pattern>2džj </pattern>
     <pattern>dž1k</pattern>
     <pattern>1džl</pattern>
-    <pattern>2džl.</pattern>
+    <pattern>2džl </pattern>
     <pattern>2dž1lj</pattern>
     <pattern>dž1m</pattern>
     <pattern>dž1n</pattern>
     <pattern>dž1nj</pattern>
     <pattern>dž1p</pattern>
     <pattern>1džr</pattern>
-    <pattern>2džr.</pattern>
+    <pattern>2džr </pattern>
     <pattern>dž1s</pattern>
     <pattern>dž1š</pattern>
     <pattern>dž1t</pattern>
     <pattern>1džv</pattern>
-    <pattern>2džv.</pattern>
+    <pattern>2džv </pattern>
     <pattern>dž1z</pattern>
     <pattern>dž1ž</pattern>
     <pattern>đ1b</pattern>
@@ -852,22 +854,22 @@
     <pattern>đ1g</pattern>
     <pattern>đ1h</pattern>
     <pattern>1đj</pattern>
-    <pattern>2đj.</pattern>
+    <pattern>2đj </pattern>
     <pattern>đ1k</pattern>
     <pattern>1đl</pattern>
-    <pattern>2đl.</pattern>
+    <pattern>2đl </pattern>
     <pattern>2đ1lj</pattern>
     <pattern>đ1m</pattern>
     <pattern>đ1n</pattern>
     <pattern>đ1nj</pattern>
     <pattern>đ1p</pattern>
     <pattern>1đr</pattern>
-    <pattern>2đr.</pattern>
+    <pattern>2đr </pattern>
     <pattern>đ1s</pattern>
     <pattern>đ1š</pattern>
     <pattern>đ1t</pattern>
     <pattern>1đv</pattern>
-    <pattern>2đv.</pattern>
+    <pattern>2đv </pattern>
     <pattern>đ1z</pattern>
     <pattern>đ1ž</pattern>
     <pattern>f1b</pattern>
@@ -881,22 +883,22 @@
     <pattern>f1g</pattern>
     <pattern>f1h</pattern>
     <pattern>1fj</pattern>
-    <pattern>2fj.</pattern>
+    <pattern>2fj </pattern>
     <pattern>f1k</pattern>
     <pattern>1fl</pattern>
-    <pattern>2fl.</pattern>
+    <pattern>2fl </pattern>
     <pattern>2f1lj</pattern>
     <pattern>f1m</pattern>
     <pattern>f1n</pattern>
     <pattern>f1nj</pattern>
     <pattern>f1p</pattern>
     <pattern>1fr</pattern>
-    <pattern>2fr.</pattern>
+    <pattern>2fr </pattern>
     <pattern>f1s</pattern>
     <pattern>f1š</pattern>
     <pattern>f1t</pattern>
     <pattern>1fv</pattern>
-    <pattern>2fv.</pattern>
+    <pattern>2fv </pattern>
     <pattern>f1z</pattern>
     <pattern>f1ž</pattern>
     <pattern>g1b</pattern>
@@ -910,22 +912,22 @@
     <pattern>g1g</pattern>
     <pattern>g1h</pattern>
     <pattern>1gj</pattern>
-    <pattern>2gj.</pattern>
+    <pattern>2gj </pattern>
     <pattern>g1k</pattern>
     <pattern>1gl</pattern>
-    <pattern>2gl.</pattern>
+    <pattern>2gl </pattern>
     <pattern>2g1lj</pattern>
     <pattern>g1m</pattern>
     <pattern>g1n</pattern>
     <pattern>g1nj</pattern>
     <pattern>g1p</pattern>
     <pattern>1gr</pattern>
-    <pattern>2gr.</pattern>
+    <pattern>2gr </pattern>
     <pattern>g1s</pattern>
     <pattern>g1š</pattern>
     <pattern>g1t</pattern>
     <pattern>1gv</pattern>
-    <pattern>2gv.</pattern>
+    <pattern>2gv </pattern>
     <pattern>g1z</pattern>
     <pattern>g1ž</pattern>
     <pattern>h1b</pattern>
@@ -939,22 +941,22 @@
     <pattern>h1g</pattern>
     <pattern>h1h</pattern>
     <pattern>1hj</pattern>
-    <pattern>2hj.</pattern>
+    <pattern>2hj </pattern>
     <pattern>h1k</pattern>
     <pattern>1hl</pattern>
-    <pattern>2hl.</pattern>
+    <pattern>2hl </pattern>
     <pattern>2h1lj</pattern>
     <pattern>h1m</pattern>
     <pattern>h1n</pattern>
     <pattern>h1nj</pattern>
     <pattern>h1p</pattern>
     <pattern>1hr</pattern>
-    <pattern>2hr.</pattern>
+    <pattern>2hr </pattern>
     <pattern>h1s</pattern>
     <pattern>h1š</pattern>
     <pattern>h1t</pattern>
     <pattern>1hv</pattern>
-    <pattern>2hv.</pattern>
+    <pattern>2hv </pattern>
     <pattern>h1z</pattern>
     <pattern>h1ž</pattern>
     <pattern>j1b</pattern>
@@ -993,17 +995,17 @@
     <pattern>k1g</pattern>
     <pattern>k1h</pattern>
     <pattern>1kj</pattern>
-    <pattern>2kj.</pattern>
+    <pattern>2kj </pattern>
     <pattern>k1k</pattern>
     <pattern>k1l</pattern>
     <pattern>1k2lj</pattern>
-    <pattern>2klj.</pattern>
+    <pattern>2klj </pattern>
     <pattern>k1m</pattern>
     <pattern>k1n</pattern>
     <pattern>k1nj</pattern>
     <pattern>k1p</pattern>
     <pattern>1kr</pattern>
-    <pattern>2kr.</pattern>
+    <pattern>2kr </pattern>
     <pattern>k1s</pattern>
     <pattern>k1š</pattern>
     <pattern>k1t</pattern>
@@ -1046,19 +1048,19 @@
     <pattern>lj1h</pattern>
     <pattern>lj1k</pattern>
     <pattern>1ljl</pattern>
-    <pattern>2ljl.</pattern>
+    <pattern>2ljl </pattern>
     <pattern>lj1lj</pattern>
     <pattern>lj1m</pattern>
     <pattern>lj1n</pattern>
     <pattern>lj1nj</pattern>
     <pattern>lj1p</pattern>
     <pattern>1ljr</pattern>
-    <pattern>2ljr.</pattern>
+    <pattern>2ljr </pattern>
     <pattern>lj1s</pattern>
     <pattern>lj1š</pattern>
     <pattern>lj1t</pattern>
     <pattern>1ljv</pattern>
-    <pattern>2ljv.</pattern>
+    <pattern>2ljv </pattern>
     <pattern>lj1z</pattern>
     <pattern>lj1ž</pattern>
     <pattern>m1b</pattern>
@@ -1072,22 +1074,22 @@
     <pattern>m1g</pattern>
     <pattern>m1h</pattern>
     <pattern>1mj</pattern>
-    <pattern>2mj.</pattern>
+    <pattern>2mj </pattern>
     <pattern>m1k</pattern>
     <pattern>1ml</pattern>
-    <pattern>2ml.</pattern>
+    <pattern>2ml </pattern>
     <pattern>2m1lj</pattern>
     <pattern>m1m</pattern>
     <pattern>m1n</pattern>
     <pattern>m1nj</pattern>
     <pattern>m1p</pattern>
     <pattern>1mr</pattern>
-    <pattern>2mr.</pattern>
+    <pattern>2mr </pattern>
     <pattern>m1s</pattern>
     <pattern>m1š</pattern>
     <pattern>m1t</pattern>
     <pattern>1mv</pattern>
-    <pattern>2mv.</pattern>
+    <pattern>2mv </pattern>
     <pattern>m1z</pattern>
     <pattern>m1ž</pattern>
     <pattern>n1b</pattern>
@@ -1100,10 +1102,10 @@
     <pattern>n1f</pattern>
     <pattern>n1g</pattern>
     <pattern>n1h</pattern>
-    <pattern>2nj.</pattern>
+    <pattern>2nj </pattern>
     <pattern>n1k</pattern>
     <pattern>1nl</pattern>
-    <pattern>2nl.</pattern>
+    <pattern>2nl </pattern>
     <pattern>2n1lj</pattern>
     <pattern>n1m</pattern>
     <pattern>n1n</pattern>
@@ -1114,7 +1116,7 @@
     <pattern>n1š</pattern>
     <pattern>n1t</pattern>
     <pattern>1nv</pattern>
-    <pattern>2nv.</pattern>
+    <pattern>2nv </pattern>
     <pattern>n1z</pattern>
     <pattern>n1ž</pattern>
     <pattern>nj1b</pattern>
@@ -1128,22 +1130,22 @@
     <pattern>nj1g</pattern>
     <pattern>nj1h</pattern>
     <pattern>1njj</pattern>
-    <pattern>2njj.</pattern>
+    <pattern>2njj </pattern>
     <pattern>nj1k</pattern>
     <pattern>1njl</pattern>
-    <pattern>2njl.</pattern>
+    <pattern>2njl </pattern>
     <pattern>2nj1lj</pattern>
     <pattern>nj1m</pattern>
     <pattern>nj1n</pattern>
     <pattern>nj1nj</pattern>
     <pattern>nj1p</pattern>
     <pattern>1njr</pattern>
-    <pattern>2njr.</pattern>
+    <pattern>2njr </pattern>
     <pattern>nj1s</pattern>
     <pattern>nj1š</pattern>
     <pattern>nj1t</pattern>
     <pattern>1njv</pattern>
-    <pattern>2njv.</pattern>
+    <pattern>2njv </pattern>
     <pattern>nj1z</pattern>
     <pattern>nj1ž</pattern>
     <pattern>p1b</pattern>
@@ -1157,22 +1159,22 @@
     <pattern>p1g</pattern>
     <pattern>2p1h</pattern>
     <pattern>1pj</pattern>
-    <pattern>2pj.</pattern>
+    <pattern>2pj </pattern>
     <pattern>p1k</pattern>
     <pattern>1pl</pattern>
-    <pattern>2pl.</pattern>
+    <pattern>2pl </pattern>
     <pattern>2p1lj</pattern>
     <pattern>p1m</pattern>
     <pattern>p1n</pattern>
     <pattern>p1nj</pattern>
     <pattern>p1p</pattern>
     <pattern>1pr</pattern>
-    <pattern>2pr.</pattern>
+    <pattern>2pr </pattern>
     <pattern>p1s</pattern>
     <pattern>p1š</pattern>
     <pattern>p1t</pattern>
     <pattern>1pv</pattern>
-    <pattern>2pv.</pattern>
+    <pattern>2pv </pattern>
     <pattern>p1z</pattern>
     <pattern>p1ž</pattern>
     <pattern>r1b</pattern>
@@ -1201,95 +1203,95 @@
     <pattern>r1z</pattern>
     <pattern>r1ž</pattern>
     <pattern>1sb</pattern>
-    <pattern>2sb.</pattern>
+    <pattern>2sb </pattern>
     <pattern>s1c</pattern>
     <pattern>1sč</pattern>
-    <pattern>2sč.</pattern>
+    <pattern>2sč </pattern>
     <pattern>1sć</pattern>
-    <pattern>2sć.</pattern>
+    <pattern>2sć </pattern>
     <pattern>1sd</pattern>
-    <pattern>2sd.</pattern>
+    <pattern>2sd </pattern>
     <pattern>1sdž</pattern>
-    <pattern>2sdž.</pattern>
+    <pattern>2sdž </pattern>
     <pattern>1sđ</pattern>
-    <pattern>2sđ.</pattern>
+    <pattern>2sđ </pattern>
     <pattern>1sf</pattern>
-    <pattern>2sf.</pattern>
+    <pattern>2sf </pattern>
     <pattern>1sg</pattern>
-    <pattern>2sg.</pattern>
+    <pattern>2sg </pattern>
     <pattern>1sh</pattern>
-    <pattern>2sh.</pattern>
+    <pattern>2sh </pattern>
     <pattern>1sj</pattern>
-    <pattern>2sj.</pattern>
+    <pattern>2sj </pattern>
     <pattern>1sk</pattern>
-    <pattern>2sk.</pattern>
+    <pattern>2sk </pattern>
     <pattern>s1l</pattern>
     <pattern>1slj</pattern>
-    <pattern>2slj.</pattern>
+    <pattern>2slj </pattern>
     <pattern>1sm</pattern>
-    <pattern>2sm.</pattern>
+    <pattern>2sm </pattern>
     <pattern>s1n</pattern>
-    <pattern>2sn.</pattern>
+    <pattern>2sn </pattern>
     <pattern>1snj</pattern>
-    <pattern>2snj.</pattern>
+    <pattern>2snj </pattern>
     <pattern>s1p</pattern>
     <pattern>1sr</pattern>
-    <pattern>2sr.</pattern>
+    <pattern>2sr </pattern>
     <pattern>1ss</pattern>
-    <pattern>2ss.</pattern>
+    <pattern>2ss </pattern>
     <pattern>1sš</pattern>
-    <pattern>2sš.</pattern>
+    <pattern>2sš </pattern>
     <pattern>s1t</pattern>
-    <pattern>2st.</pattern>
+    <pattern>2st </pattern>
     <pattern>1sv</pattern>
-    <pattern>2sv.</pattern>
+    <pattern>2sv </pattern>
     <pattern>1sz</pattern>
-    <pattern>2sz.</pattern>
+    <pattern>2sz </pattern>
     <pattern>1sž</pattern>
-    <pattern>2sž.</pattern>
+    <pattern>2sž </pattern>
     <pattern>1šb</pattern>
-    <pattern>2šb.</pattern>
+    <pattern>2šb </pattern>
     <pattern>š1c</pattern>
     <pattern>š1č</pattern>
     <pattern>š1ć</pattern>
     <pattern>1šd</pattern>
-    <pattern>2šd.</pattern>
+    <pattern>2šd </pattern>
     <pattern>1šdž</pattern>
-    <pattern>2šdž.</pattern>
+    <pattern>2šdž </pattern>
     <pattern>1šđ</pattern>
-    <pattern>2šđ.</pattern>
+    <pattern>2šđ </pattern>
     <pattern>1šf</pattern>
-    <pattern>2šf.</pattern>
+    <pattern>2šf </pattern>
     <pattern>1šg</pattern>
-    <pattern>2šg.</pattern>
+    <pattern>2šg </pattern>
     <pattern>1šh</pattern>
-    <pattern>2šh.</pattern>
+    <pattern>2šh </pattern>
     <pattern>1šj</pattern>
-    <pattern>2šj.</pattern>
+    <pattern>2šj </pattern>
     <pattern>1šk</pattern>
-    <pattern>2šk.</pattern>
+    <pattern>2šk </pattern>
     <pattern>š1l</pattern>
     <pattern>2š1lj</pattern>
     <pattern>1šm</pattern>
-    <pattern>2šm.</pattern>
+    <pattern>2šm </pattern>
     <pattern>š1n</pattern>
     <pattern>2š1nj</pattern>
     <pattern>1šp</pattern>
-    <pattern>2šp.</pattern>
+    <pattern>2šp </pattern>
     <pattern>1šr</pattern>
-    <pattern>2šr.</pattern>
+    <pattern>2šr </pattern>
     <pattern>1šs</pattern>
-    <pattern>2šs.</pattern>
+    <pattern>2šs </pattern>
     <pattern>1šš</pattern>
-    <pattern>2šš.</pattern>
+    <pattern>2šš </pattern>
     <pattern>1št</pattern>
-    <pattern>2št.</pattern>
+    <pattern>2št </pattern>
     <pattern>1šv</pattern>
-    <pattern>2šv.</pattern>
+    <pattern>2šv </pattern>
     <pattern>1šz</pattern>
-    <pattern>2šz.</pattern>
+    <pattern>2šz </pattern>
     <pattern>1šž</pattern>
-    <pattern>2šž.</pattern>
+    <pattern>2šž </pattern>
     <pattern>t1b</pattern>
     <pattern>t1c</pattern>
     <pattern>t1č</pattern>
@@ -1301,22 +1303,22 @@
     <pattern>t1g</pattern>
     <pattern>t1h</pattern>
     <pattern>1tj</pattern>
-    <pattern>2tj.</pattern>
+    <pattern>2tj </pattern>
     <pattern>t1k</pattern>
     <pattern>1tl</pattern>
-    <pattern>2tl.</pattern>
+    <pattern>2tl </pattern>
     <pattern>2t1lj</pattern>
     <pattern>t1m</pattern>
     <pattern>t1n</pattern>
     <pattern>t1nj</pattern>
     <pattern>t1p</pattern>
     <pattern>1tr</pattern>
-    <pattern>2tr.</pattern>
+    <pattern>2tr </pattern>
     <pattern>t1s</pattern>
     <pattern>t1š</pattern>
     <pattern>t1t</pattern>
     <pattern>1tv</pattern>
-    <pattern>2tv.</pattern>
+    <pattern>2tv </pattern>
     <pattern>t1z</pattern>
     <pattern>t1ž</pattern>
     <pattern>v1b</pattern>
@@ -1331,7 +1333,7 @@
     <pattern>v1h</pattern>
     <pattern>v1j</pattern>
     <pattern>1v2je</pattern>
-    <pattern>vj.</pattern>
+    <pattern>vj </pattern>
     <pattern>v1k</pattern>
     <pattern>v1l</pattern>
     <pattern>2v1lj</pattern>
@@ -1348,92 +1350,92 @@
     <pattern>v1ž</pattern>
     <pattern>z1b</pattern>
     <pattern>1zc</pattern>
-    <pattern>2zc.</pattern>
+    <pattern>2zc </pattern>
     <pattern>1zč</pattern>
-    <pattern>2zč.</pattern>
+    <pattern>2zč </pattern>
     <pattern>1zć</pattern>
-    <pattern>2zć.</pattern>
+    <pattern>2zć </pattern>
     <pattern>z1d</pattern>
     <pattern>1zdž</pattern>
-    <pattern>2zdž.</pattern>
+    <pattern>2zdž </pattern>
     <pattern>1zđ</pattern>
-    <pattern>2zđ.</pattern>
+    <pattern>2zđ </pattern>
     <pattern>1zf</pattern>
-    <pattern>2zf.</pattern>
+    <pattern>2zf </pattern>
     <pattern>z1g</pattern>
     <pattern>1zh</pattern>
-    <pattern>2zh.</pattern>
+    <pattern>2zh </pattern>
     <pattern>1zj</pattern>
-    <pattern>2zj.</pattern>
+    <pattern>2zj </pattern>
     <pattern>1zk</pattern>
-    <pattern>2zk.</pattern>
+    <pattern>2zk </pattern>
     <pattern>z1l</pattern>
     <pattern>2z1lj</pattern>
     <pattern>z1m</pattern>
     <pattern>z1n</pattern>
     <pattern>1znj</pattern>
-    <pattern>2znj.</pattern>
+    <pattern>2znj </pattern>
     <pattern>1zp</pattern>
-    <pattern>2zp.</pattern>
+    <pattern>2zp </pattern>
     <pattern>z1r</pattern>
     <pattern>z1s</pattern>
     <pattern>1zš</pattern>
-    <pattern>2zš.</pattern>
+    <pattern>2zš </pattern>
     <pattern>1zt</pattern>
-    <pattern>2zt.</pattern>
+    <pattern>2zt </pattern>
     <pattern>1zv</pattern>
-    <pattern>2zv.</pattern>
+    <pattern>2zv </pattern>
     <pattern>1zz</pattern>
-    <pattern>2zz.</pattern>
+    <pattern>2zz </pattern>
     <pattern>1zž</pattern>
-    <pattern>2zž.</pattern>
+    <pattern>2zž </pattern>
     <pattern>ž1b</pattern>
-    <pattern>2žb.</pattern>
+    <pattern>2žb </pattern>
     <pattern>1žc</pattern>
-    <pattern>2žc.</pattern>
+    <pattern>2žc </pattern>
     <pattern>1žč</pattern>
-    <pattern>2žč.</pattern>
+    <pattern>2žč </pattern>
     <pattern>1žć</pattern>
-    <pattern>2žć.</pattern>
+    <pattern>2žć </pattern>
     <pattern>1žd</pattern>
-    <pattern>2žd.</pattern>
+    <pattern>2žd </pattern>
     <pattern>1ždž</pattern>
-    <pattern>2ždž.</pattern>
+    <pattern>2ždž </pattern>
     <pattern>1žđ</pattern>
-    <pattern>2žđ.</pattern>
+    <pattern>2žđ </pattern>
     <pattern>1žf</pattern>
-    <pattern>2žf.</pattern>
+    <pattern>2žf </pattern>
     <pattern>1žg</pattern>
-    <pattern>2žg.</pattern>
+    <pattern>2žg </pattern>
     <pattern>1žh</pattern>
-    <pattern>2žh.</pattern>
+    <pattern>2žh </pattern>
     <pattern>ž1j</pattern>
     <pattern>1žk</pattern>
-    <pattern>2žk.</pattern>
+    <pattern>2žk </pattern>
     <pattern>1žl</pattern>
-    <pattern>2žl.</pattern>
+    <pattern>2žl </pattern>
     <pattern>ž1lj</pattern>
     <pattern>1žm</pattern>
-    <pattern>2žm.</pattern>
+    <pattern>2žm </pattern>
     <pattern>ž1n</pattern>
-    <pattern>2žn.</pattern>
+    <pattern>2žn </pattern>
     <pattern>2ž1nj</pattern>
     <pattern>1žp</pattern>
-    <pattern>2žp.</pattern>
+    <pattern>2žp </pattern>
     <pattern>1žr</pattern>
-    <pattern>2žr.</pattern>
+    <pattern>2žr </pattern>
     <pattern>1žs</pattern>
-    <pattern>2žs.</pattern>
+    <pattern>2žs </pattern>
     <pattern>1žš</pattern>
-    <pattern>2žš.</pattern>
+    <pattern>2žš </pattern>
     <pattern>1žt</pattern>
-    <pattern>2žt.</pattern>
+    <pattern>2žt </pattern>
     <pattern>1žv</pattern>
-    <pattern>2žv.</pattern>
+    <pattern>2žv </pattern>
     <pattern>1žz</pattern>
-    <pattern>2žz.</pattern>
+    <pattern>2žz </pattern>
     <pattern>1žž</pattern>
-    <pattern>2žž.</pattern>
+    <pattern>2žž </pattern>
     <pattern>2d1vj</pattern>
     <pattern>2d1vr</pattern>
     <pattern>z1g2nj</pattern>
@@ -1456,7 +1458,7 @@
     <pattern>s2p1n</pattern>
     <pattern>j1s2l</pattern>
     <pattern>r2d1n</pattern>
-    <pattern>.zg2</pattern>
+    <pattern> zg2</pattern>
     <pattern>r2dž1b</pattern>
     <pattern>2š1tv</pattern>
     <pattern>r2t1s</pattern>
@@ -1478,18 +1480,18 @@
     <pattern>s1k2l</pattern>
     <pattern>n2t1n</pattern>
     <pattern>2d1ja</pattern>
-    <pattern>2rt.</pattern>
+    <pattern>2rt </pattern>
     <pattern>z1r2j</pattern>
     <pattern>d1s2t</pattern>
     <pattern>n2k1c</pattern>
     <pattern>r2t1k</pattern>
     <pattern>r2g1n</pattern>
     <pattern>r2h1t</pattern>
-    <pattern>.na2j1</pattern>
-    <pattern>.be2z1</pattern>
-    <pattern>.iz1</pattern>
-    <pattern>.is1</pattern>
-    <pattern>.ne2o3</pattern>
+    <pattern> na2j1</pattern>
+    <pattern> be2z1</pattern>
+    <pattern> iz1</pattern>
+    <pattern> is1</pattern>
+    <pattern> ne2o3</pattern>
     <pattern>r2t1n</pattern>
     <pattern>r2v1n</pattern>
     <pattern>r1s2t</pattern>

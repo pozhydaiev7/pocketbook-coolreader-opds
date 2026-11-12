@@ -26,384 +26,386 @@
 % - 2008 - inclusion into hyph-utf8 and file rename (cyhyph.tex -> hyph-cy.tex)
 % - June 2011 - added LPPL licence
 -->
-<HyphenationDescription>
-    <pattern>.ac4t</pattern>
-    <pattern>.ad3ae</pattern>
-    <pattern>.add5as</pattern>
-    <pattern>.add3o</pattern>
-    <pattern>.ad4eg</pattern>
-    <pattern>.ad4eny</pattern>
-    <pattern>.ad4fer</pattern>
-    <pattern>.adl4</pattern>
-    <pattern>.ad3r</pattern>
-    <pattern>.ae3a</pattern>
-    <pattern>.af3a</pattern>
-    <pattern>.af4an</pattern>
-    <pattern>.aff3</pattern>
-    <pattern>.afl4u</pattern>
-    <pattern>.af5lw</pattern>
-    <pattern>.ag3w</pattern>
-    <pattern>.am4le</pattern>
-    <pattern>.am3s</pattern>
-    <pattern>.an5ad</pattern>
-    <pattern>.an4g3</pattern>
-    <pattern>.anghen5a</pattern>
-    <pattern>.anghen4r</pattern>
-    <pattern>.an2o</pattern>
-    <pattern>.anrhyd4</pattern>
-    <pattern>.ansodd4e</pattern>
-    <pattern>.an5te</pattern>
-    <pattern>.an3w4</pattern>
-    <pattern>.an5we</pattern>
-    <pattern>.ar4bo</pattern>
-    <pattern>.ar4cha</pattern>
-    <pattern>.ar5ddel</pattern>
-    <pattern>.ared4</pattern>
-    <pattern>.ar4en</pattern>
-    <pattern>.arff4</pattern>
-    <pattern>.ar4ge</pattern>
-    <pattern>.ar2i</pattern>
-    <pattern>.ar3we</pattern>
-    <pattern>.ar4wed</pattern>
-    <pattern>.as3g</pattern>
-    <pattern>.as3t</pattern>
-    <pattern>.aw4e</pattern>
-    <pattern>.ban4as</pattern>
-    <pattern>.ban4ed</pattern>
-    <pattern>.bara5t</pattern>
-    <pattern>.bel3y</pattern>
-    <pattern>.be3t4a</pattern>
-    <pattern>.bl2</pattern>
-    <pattern>.bl4e</pattern>
-    <pattern>.br2</pattern>
-    <pattern>.br4e</pattern>
-    <pattern>.call5</pattern>
-    <pattern>.ce4n</pattern>
-    <pattern>.ch2</pattern>
-    <pattern>.ch4e</pattern>
-    <pattern>.ch4l</pattern>
-    <pattern>.ch4o</pattern>
-    <pattern>.chollad4</pattern>
-    <pattern>.chr2</pattern>
-    <pattern>.chwyn5</pattern>
-    <pattern>.cl2</pattern>
-    <pattern>.cr2</pattern>
-    <pattern>.cy5we</pattern>
-    <pattern>.dad3r</pattern>
-    <pattern>.dd2</pattern>
-    <pattern>.ddefn5</pattern>
-    <pattern>.dd4i</pattern>
-    <pattern>.ddi5an</pattern>
-    <pattern>.ddi5dd</pattern>
-    <pattern>.ddi3e</pattern>
-    <pattern>.ddill5adas</pattern>
-    <pattern>.ddill5ade</pattern>
-    <pattern>.ddill5ado</pattern>
-    <pattern>.ddill5adw</pattern>
-    <pattern>.ddin4</pattern>
-    <pattern>.ddiw5eddas</pattern>
-    <pattern>.ddiw5edde</pattern>
-    <pattern>.ddiw5eddo</pattern>
-    <pattern>.ddiw5eddw</pattern>
-    <pattern>.ddwl3</pattern>
-    <pattern>.ddy5fala</pattern>
-    <pattern>.ddy5fale</pattern>
-    <pattern>.ddy5falo</pattern>
-    <pattern>.ddy5falw</pattern>
-    <pattern>.ddylad4</pattern>
-    <pattern>.deallad4</pattern>
-    <pattern>.defn3</pattern>
-    <pattern>.der4w</pattern>
-    <pattern>.deth5</pattern>
-    <pattern>.di5an</pattern>
-    <pattern>.di5dd</pattern>
-    <pattern>.di3e</pattern>
-    <pattern>.di3gy</pattern>
-    <pattern>.dill5adas</pattern>
-    <pattern>.dill5ade</pattern>
-    <pattern>.dill5ado</pattern>
-    <pattern>.dill5adw</pattern>
-    <pattern>.din4</pattern>
-    <pattern>.diw5eddas</pattern>
-    <pattern>.diw5edde</pattern>
-    <pattern>.diw5eddo</pattern>
-    <pattern>.diw5eddw</pattern>
-    <pattern>.dr4e</pattern>
-    <pattern>.dwl3</pattern>
-    <pattern>.dy5fala</pattern>
-    <pattern>.dy5fale</pattern>
-    <pattern>.dy5falo</pattern>
-    <pattern>.dy5falw</pattern>
-    <pattern>.dy5fo</pattern>
-    <pattern>.dylad4</pattern>
-    <pattern>.dyrchafad4</pattern>
-    <pattern>.eb2</pattern>
-    <pattern>.eb3r</pattern>
-    <pattern>.eb4rw</pattern>
-    <pattern>.ec2</pattern>
-    <pattern>.ed2</pattern>
-    <pattern>.edl4</pattern>
-    <pattern>.edr4</pattern>
-    <pattern>.eg2</pattern>
-    <pattern>.egn3</pattern>
-    <pattern>.el4or</pattern>
-    <pattern>.els4</pattern>
-    <pattern>.en3as</pattern>
-    <pattern>.eny5na</pattern>
-    <pattern>.er2</pattern>
-    <pattern>.erfy5na</pattern>
-    <pattern>.ern4</pattern>
-    <pattern>.ewy5na</pattern>
-    <pattern>.fadd3</pattern>
-    <pattern>.falch5</pattern>
-    <pattern>.fan3a</pattern>
-    <pattern>.farn4ais.</pattern>
-    <pattern>.fasg4</pattern>
-    <pattern>.fas5ge</pattern>
-    <pattern>.ff2</pattern>
-    <pattern>.ff4a</pattern>
-    <pattern>.ffer4a</pattern>
-    <pattern>.ffe5ras</pattern>
-    <pattern>.ffer4e</pattern>
-    <pattern>.ff4o</pattern>
-    <pattern>.ffor5t</pattern>
-    <pattern>.ff4y</pattern>
-    <pattern>.ffydd5</pattern>
-    <pattern>.ffynad4</pattern>
-    <pattern>.ffy5nas</pattern>
-    <pattern>.fign5</pattern>
-    <pattern>.fis5g</pattern>
-    <pattern>.fon4edi</pattern>
-    <pattern>.fordd4</pattern>
-    <pattern>.for4o</pattern>
-    <pattern>.for4w</pattern>
-    <pattern>.for4y</pattern>
-    <pattern>.fr4i</pattern>
-    <pattern>.fryn4d</pattern>
-    <pattern>.fydd5</pattern>
-    <pattern>.fyn5as</pattern>
-    <pattern>.fyw3</pattern>
-    <pattern>.gal3e</pattern>
-    <pattern>.gal5o</pattern>
-    <pattern>.gan3l</pattern>
-    <pattern>.gan5olas</pattern>
-    <pattern>.gan5ole</pattern>
-    <pattern>.gen5as</pattern>
-    <pattern>.ger5b</pattern>
-    <pattern>.geu5d</pattern>
-    <pattern>.ghwy5na</pattern>
-    <pattern>.gl2</pattern>
-    <pattern>.glaf5y</pattern>
-    <pattern>.gl4e</pattern>
-    <pattern>.gleid4</pattern>
-    <pattern>.gl4y</pattern>
-    <pattern>.glyn3</pattern>
-    <pattern>.glywad4</pattern>
-    <pattern>.god3y</pattern>
-    <pattern>.gof3a</pattern>
-    <pattern>.goffad4wy</pattern>
-    <pattern>.gollad4</pattern>
-    <pattern>.gr2</pattern>
-    <pattern>.grynho4em</pattern>
-    <pattern>.grynho4wn</pattern>
-    <pattern>.gwedd4er</pattern>
-    <pattern>.gyd3</pattern>
-    <pattern>.gyf5al</pattern>
-    <pattern>.gyf5arc</pattern>
-    <pattern>.gyfer5byna</pattern>
-    <pattern>.gyfer5byni</pattern>
-    <pattern>.gyfer5bynn</pattern>
-    <pattern>.gyffel5</pattern>
-    <pattern>.gym3o</pattern>
-    <pattern>.gyn3a</pattern>
-    <pattern>.gyn5e</pattern>
-    <pattern>.gynef5</pattern>
-    <pattern>.gyth5ru</pattern>
-    <pattern>.gy5we</pattern>
-    <pattern>.hac4</pattern>
-    <pattern>.hadl4</pattern>
-    <pattern>.haf4a</pattern>
-    <pattern>.haf3l4</pattern>
-    <pattern>.hagr3</pattern>
-    <pattern>.ham4le</pattern>
-    <pattern>.han5as</pattern>
-    <pattern>.han4g5</pattern>
-    <pattern>.hanghen5a</pattern>
-    <pattern>.han5t</pattern>
-    <pattern>.han5w4</pattern>
-    <pattern>.har5ddel</pattern>
-    <pattern>.hared4</pattern>
-    <pattern>.har4en</pattern>
-    <pattern>.har3n</pattern>
-    <pattern>.harn4a</pattern>
-    <pattern>.har3w</pattern>
-    <pattern>.has3g</pattern>
-    <pattern>.haw4</pattern>
-    <pattern>.heb2</pattern>
-    <pattern>.hec2</pattern>
-    <pattern>.hed2</pattern>
-    <pattern>.hedl4</pattern>
-    <pattern>.he4o</pattern>
-    <pattern>.herfy5na</pattern>
-    <pattern>.her4w</pattern>
-    <pattern>.heur5</pattern>
-    <pattern>.hof4r3</pattern>
-    <pattern>.hol4y</pattern>
-    <pattern>.holyn5</pattern>
-    <pattern>.hw2</pattern>
-    <pattern>.hwn4</pattern>
-    <pattern>.hwyl5u</pattern>
-    <pattern>.hwyn5a</pattern>
-    <pattern>.hwyr5</pattern>
-    <pattern>.hwyth4au</pattern>
-    <pattern>.hyd4</pattern>
-    <pattern>.hydr4</pattern>
-    <pattern>.hy3ff</pattern>
-    <pattern>.hyf4od</pattern>
-    <pattern>.hy5fry</pattern>
-    <pattern>.hy3g</pattern>
-    <pattern>.hyl4</pattern>
-    <pattern>.hym3e</pattern>
-    <pattern>.hym4u</pattern>
-    <pattern>.hym4y</pattern>
-    <pattern>.hymy5na</pattern>
-    <pattern>.hymysg4</pattern>
-    <pattern>.hyn2</pattern>
-    <pattern>.hy3no</pattern>
-    <pattern>.hy3rw</pattern>
-    <pattern>.iach4</pattern>
-    <pattern>.iac5has</pattern>
-    <pattern>.iac5he</pattern>
-    <pattern>.iac5hw</pattern>
-    <pattern>.ir3</pattern>
-    <pattern>.ladr3</pattern>
-    <pattern>.ledr4e</pattern>
-    <pattern>.le3na</pattern>
-    <pattern>.le3o</pattern>
-    <pattern>.lest4</pattern>
-    <pattern>.lin3</pattern>
-    <pattern>.ll2</pattern>
-    <pattern>.llaw4e</pattern>
-    <pattern>.lle5na</pattern>
-    <pattern>.llo5nas</pattern>
-    <pattern>.llon4e</pattern>
-    <pattern>.llythr5</pattern>
-    <pattern>.lo3na</pattern>
-    <pattern>.lon4e</pattern>
-    <pattern>.ludd3</pattern>
-    <pattern>.lygr3</pattern>
-    <pattern>.lyn3a</pattern>
-    <pattern>.lythr5</pattern>
-    <pattern>.man4ed</pattern>
-    <pattern>.mant4a</pattern>
-    <pattern>.mar4f</pattern>
-    <pattern>.mign5</pattern>
-    <pattern>.mis5g</pattern>
-    <pattern>.mol3</pattern>
-    <pattern>.mon4edi</pattern>
-    <pattern>.mwyth5a</pattern>
-    <pattern>.mwyth5w</pattern>
-    <pattern>.myn5as</pattern>
-    <pattern>.neilltu4ad</pattern>
-    <pattern>.neis4i</pattern>
-    <pattern>.nen3a</pattern>
-    <pattern>.ner4w</pattern>
-    <pattern>.ng2</pattern>
-    <pattern>.ngen5as</pattern>
-    <pattern>.nghyt5u</pattern>
-    <pattern>.nghy5wa</pattern>
-    <pattern>.ngl4</pattern>
-    <pattern>.ng4w</pattern>
-    <pattern>.ngy4</pattern>
-    <pattern>.ni5an</pattern>
-    <pattern>.ni3e</pattern>
-    <pattern>.ni5fei</pattern>
-    <pattern>.nig2</pattern>
-    <pattern>.ni5ga</pattern>
-    <pattern>.ni3ge</pattern>
-    <pattern>.ni3gw</pattern>
-    <pattern>.ni3gy</pattern>
-    <pattern>.ni5re</pattern>
-    <pattern>.ni3wa</pattern>
-    <pattern>.niwl5</pattern>
-    <pattern>.no4e</pattern>
-    <pattern>.no4w</pattern>
-    <pattern>.nwl3</pattern>
-    <pattern>.nwyn3</pattern>
-    <pattern>.oddefad4</pattern>
-    <pattern>.od4l</pattern>
-    <pattern>.of3a</pattern>
-    <pattern>.of4o</pattern>
-    <pattern>.of4u</pattern>
-    <pattern>.og2</pattern>
-    <pattern>.og4l4</pattern>
-    <pattern>.ol2</pattern>
-    <pattern>.oll3</pattern>
-    <pattern>.ol5yga</pattern>
-    <pattern>.ol5yge</pattern>
-    <pattern>.olyn3</pattern>
-    <pattern>.or1</pattern>
-    <pattern>.orddad4</pattern>
-    <pattern>.pl4a</pattern>
-    <pattern>.pl4e</pattern>
-    <pattern>.rad3r</pattern>
-    <pattern>.rag3l</pattern>
-    <pattern>.ra3na</pattern>
-    <pattern>.ran5d4</pattern>
-    <pattern>.rew3</pattern>
-    <pattern>.rhi5a</pattern>
-    <pattern>.ria4</pattern>
-    <pattern>.rin4t</pattern>
-    <pattern>.rug4l5</pattern>
-    <pattern>.ry3n4a</pattern>
-    <pattern>.ryn4e</pattern>
-    <pattern>.sas4</pattern>
-    <pattern>.ses4</pattern>
-    <pattern>.st2</pattern>
-    <pattern>.sych3</pattern>
-    <pattern>.sych5e</pattern>
-    <pattern>.talad4</pattern>
-    <pattern>.tan4e</pattern>
-    <pattern>.th2</pattern>
-    <pattern>.thag5</pattern>
-    <pattern>.th4i</pattern>
-    <pattern>.tho5e</pattern>
-    <pattern>.th4r4</pattern>
-    <pattern>.thrad4</pattern>
-    <pattern>.th4u</pattern>
-    <pattern>.torad4</pattern>
-    <pattern>.tr2</pattern>
-    <pattern>.tr4a</pattern>
-    <pattern>.trad4</pattern>
-    <pattern>.tr4o</pattern>
-    <pattern>.tro4en</pattern>
-    <pattern>.uch2</pattern>
-    <pattern>.wa5r4as</pattern>
-    <pattern>.war4es</pattern>
-    <pattern>.wedd4er</pattern>
-    <pattern>.weithiad4</pattern>
-    <pattern>.welad4</pattern>
-    <pattern>.wen3a</pattern>
-    <pattern>.west4</pattern>
-    <pattern>.wn4io</pattern>
-    <pattern>.wobr3</pattern>
-    <pattern>.wybr4</pattern>
-    <pattern>.wy3by</pattern>
-    <pattern>.wy4r</pattern>
-    <pattern>.wyw3</pattern>
-    <pattern>.ydd4</pattern>
-    <pattern>.yd4l</pattern>
-    <pattern>.yf4ar</pattern>
-    <pattern>.ym4adw</pattern>
-    <pattern>.ym3e</pattern>
-    <pattern>.ym4yl</pattern>
-    <pattern>.ymysg4</pattern>
-    <pattern>.yn4d</pattern>
-    <pattern>.ys4b</pattern>
-    <pattern>.ysg4</pattern>
-    <pattern>.ys4i</pattern>
-    <pattern>.ys4n</pattern>
-    <pattern>.ys4t</pattern>
+<HyphenationDescription
+    title="Welsh" lang="cy"
+    lefthyphenmin="2" righthyphenmin="3">
+    <pattern> ac4t</pattern>
+    <pattern> ad3ae</pattern>
+    <pattern> add5as</pattern>
+    <pattern> add3o</pattern>
+    <pattern> ad4eg</pattern>
+    <pattern> ad4eny</pattern>
+    <pattern> ad4fer</pattern>
+    <pattern> adl4</pattern>
+    <pattern> ad3r</pattern>
+    <pattern> ae3a</pattern>
+    <pattern> af3a</pattern>
+    <pattern> af4an</pattern>
+    <pattern> aff3</pattern>
+    <pattern> afl4u</pattern>
+    <pattern> af5lw</pattern>
+    <pattern> ag3w</pattern>
+    <pattern> am4le</pattern>
+    <pattern> am3s</pattern>
+    <pattern> an5ad</pattern>
+    <pattern> an4g3</pattern>
+    <pattern> anghen5a</pattern>
+    <pattern> anghen4r</pattern>
+    <pattern> an2o</pattern>
+    <pattern> anrhyd4</pattern>
+    <pattern> ansodd4e</pattern>
+    <pattern> an5te</pattern>
+    <pattern> an3w4</pattern>
+    <pattern> an5we</pattern>
+    <pattern> ar4bo</pattern>
+    <pattern> ar4cha</pattern>
+    <pattern> ar5ddel</pattern>
+    <pattern> ared4</pattern>
+    <pattern> ar4en</pattern>
+    <pattern> arff4</pattern>
+    <pattern> ar4ge</pattern>
+    <pattern> ar2i</pattern>
+    <pattern> ar3we</pattern>
+    <pattern> ar4wed</pattern>
+    <pattern> as3g</pattern>
+    <pattern> as3t</pattern>
+    <pattern> aw4e</pattern>
+    <pattern> ban4as</pattern>
+    <pattern> ban4ed</pattern>
+    <pattern> bara5t</pattern>
+    <pattern> bel3y</pattern>
+    <pattern> be3t4a</pattern>
+    <pattern> bl2</pattern>
+    <pattern> bl4e</pattern>
+    <pattern> br2</pattern>
+    <pattern> br4e</pattern>
+    <pattern> call5</pattern>
+    <pattern> ce4n</pattern>
+    <pattern> ch2</pattern>
+    <pattern> ch4e</pattern>
+    <pattern> ch4l</pattern>
+    <pattern> ch4o</pattern>
+    <pattern> chollad4</pattern>
+    <pattern> chr2</pattern>
+    <pattern> chwyn5</pattern>
+    <pattern> cl2</pattern>
+    <pattern> cr2</pattern>
+    <pattern> cy5we</pattern>
+    <pattern> dad3r</pattern>
+    <pattern> dd2</pattern>
+    <pattern> ddefn5</pattern>
+    <pattern> dd4i</pattern>
+    <pattern> ddi5an</pattern>
+    <pattern> ddi5dd</pattern>
+    <pattern> ddi3e</pattern>
+    <pattern> ddill5adas</pattern>
+    <pattern> ddill5ade</pattern>
+    <pattern> ddill5ado</pattern>
+    <pattern> ddill5adw</pattern>
+    <pattern> ddin4</pattern>
+    <pattern> ddiw5eddas</pattern>
+    <pattern> ddiw5edde</pattern>
+    <pattern> ddiw5eddo</pattern>
+    <pattern> ddiw5eddw</pattern>
+    <pattern> ddwl3</pattern>
+    <pattern> ddy5fala</pattern>
+    <pattern> ddy5fale</pattern>
+    <pattern> ddy5falo</pattern>
+    <pattern> ddy5falw</pattern>
+    <pattern> ddylad4</pattern>
+    <pattern> deallad4</pattern>
+    <pattern> defn3</pattern>
+    <pattern> der4w</pattern>
+    <pattern> deth5</pattern>
+    <pattern> di5an</pattern>
+    <pattern> di5dd</pattern>
+    <pattern> di3e</pattern>
+    <pattern> di3gy</pattern>
+    <pattern> dill5adas</pattern>
+    <pattern> dill5ade</pattern>
+    <pattern> dill5ado</pattern>
+    <pattern> dill5adw</pattern>
+    <pattern> din4</pattern>
+    <pattern> diw5eddas</pattern>
+    <pattern> diw5edde</pattern>
+    <pattern> diw5eddo</pattern>
+    <pattern> diw5eddw</pattern>
+    <pattern> dr4e</pattern>
+    <pattern> dwl3</pattern>
+    <pattern> dy5fala</pattern>
+    <pattern> dy5fale</pattern>
+    <pattern> dy5falo</pattern>
+    <pattern> dy5falw</pattern>
+    <pattern> dy5fo</pattern>
+    <pattern> dylad4</pattern>
+    <pattern> dyrchafad4</pattern>
+    <pattern> eb2</pattern>
+    <pattern> eb3r</pattern>
+    <pattern> eb4rw</pattern>
+    <pattern> ec2</pattern>
+    <pattern> ed2</pattern>
+    <pattern> edl4</pattern>
+    <pattern> edr4</pattern>
+    <pattern> eg2</pattern>
+    <pattern> egn3</pattern>
+    <pattern> el4or</pattern>
+    <pattern> els4</pattern>
+    <pattern> en3as</pattern>
+    <pattern> eny5na</pattern>
+    <pattern> er2</pattern>
+    <pattern> erfy5na</pattern>
+    <pattern> ern4</pattern>
+    <pattern> ewy5na</pattern>
+    <pattern> fadd3</pattern>
+    <pattern> falch5</pattern>
+    <pattern> fan3a</pattern>
+    <pattern> farn4ais </pattern>
+    <pattern> fasg4</pattern>
+    <pattern> fas5ge</pattern>
+    <pattern> ff2</pattern>
+    <pattern> ff4a</pattern>
+    <pattern> ffer4a</pattern>
+    <pattern> ffe5ras</pattern>
+    <pattern> ffer4e</pattern>
+    <pattern> ff4o</pattern>
+    <pattern> ffor5t</pattern>
+    <pattern> ff4y</pattern>
+    <pattern> ffydd5</pattern>
+    <pattern> ffynad4</pattern>
+    <pattern> ffy5nas</pattern>
+    <pattern> fign5</pattern>
+    <pattern> fis5g</pattern>
+    <pattern> fon4edi</pattern>
+    <pattern> fordd4</pattern>
+    <pattern> for4o</pattern>
+    <pattern> for4w</pattern>
+    <pattern> for4y</pattern>
+    <pattern> fr4i</pattern>
+    <pattern> fryn4d</pattern>
+    <pattern> fydd5</pattern>
+    <pattern> fyn5as</pattern>
+    <pattern> fyw3</pattern>
+    <pattern> gal3e</pattern>
+    <pattern> gal5o</pattern>
+    <pattern> gan3l</pattern>
+    <pattern> gan5olas</pattern>
+    <pattern> gan5ole</pattern>
+    <pattern> gen5as</pattern>
+    <pattern> ger5b</pattern>
+    <pattern> geu5d</pattern>
+    <pattern> ghwy5na</pattern>
+    <pattern> gl2</pattern>
+    <pattern> glaf5y</pattern>
+    <pattern> gl4e</pattern>
+    <pattern> gleid4</pattern>
+    <pattern> gl4y</pattern>
+    <pattern> glyn3</pattern>
+    <pattern> glywad4</pattern>
+    <pattern> god3y</pattern>
+    <pattern> gof3a</pattern>
+    <pattern> goffad4wy</pattern>
+    <pattern> gollad4</pattern>
+    <pattern> gr2</pattern>
+    <pattern> grynho4em</pattern>
+    <pattern> grynho4wn</pattern>
+    <pattern> gwedd4er</pattern>
+    <pattern> gyd3</pattern>
+    <pattern> gyf5al</pattern>
+    <pattern> gyf5arc</pattern>
+    <pattern> gyfer5byna</pattern>
+    <pattern> gyfer5byni</pattern>
+    <pattern> gyfer5bynn</pattern>
+    <pattern> gyffel5</pattern>
+    <pattern> gym3o</pattern>
+    <pattern> gyn3a</pattern>
+    <pattern> gyn5e</pattern>
+    <pattern> gynef5</pattern>
+    <pattern> gyth5ru</pattern>
+    <pattern> gy5we</pattern>
+    <pattern> hac4</pattern>
+    <pattern> hadl4</pattern>
+    <pattern> haf4a</pattern>
+    <pattern> haf3l4</pattern>
+    <pattern> hagr3</pattern>
+    <pattern> ham4le</pattern>
+    <pattern> han5as</pattern>
+    <pattern> han4g5</pattern>
+    <pattern> hanghen5a</pattern>
+    <pattern> han5t</pattern>
+    <pattern> han5w4</pattern>
+    <pattern> har5ddel</pattern>
+    <pattern> hared4</pattern>
+    <pattern> har4en</pattern>
+    <pattern> har3n</pattern>
+    <pattern> harn4a</pattern>
+    <pattern> har3w</pattern>
+    <pattern> has3g</pattern>
+    <pattern> haw4</pattern>
+    <pattern> heb2</pattern>
+    <pattern> hec2</pattern>
+    <pattern> hed2</pattern>
+    <pattern> hedl4</pattern>
+    <pattern> he4o</pattern>
+    <pattern> herfy5na</pattern>
+    <pattern> her4w</pattern>
+    <pattern> heur5</pattern>
+    <pattern> hof4r3</pattern>
+    <pattern> hol4y</pattern>
+    <pattern> holyn5</pattern>
+    <pattern> hw2</pattern>
+    <pattern> hwn4</pattern>
+    <pattern> hwyl5u</pattern>
+    <pattern> hwyn5a</pattern>
+    <pattern> hwyr5</pattern>
+    <pattern> hwyth4au</pattern>
+    <pattern> hyd4</pattern>
+    <pattern> hydr4</pattern>
+    <pattern> hy3ff</pattern>
+    <pattern> hyf4od</pattern>
+    <pattern> hy5fry</pattern>
+    <pattern> hy3g</pattern>
+    <pattern> hyl4</pattern>
+    <pattern> hym3e</pattern>
+    <pattern> hym4u</pattern>
+    <pattern> hym4y</pattern>
+    <pattern> hymy5na</pattern>
+    <pattern> hymysg4</pattern>
+    <pattern> hyn2</pattern>
+    <pattern> hy3no</pattern>
+    <pattern> hy3rw</pattern>
+    <pattern> iach4</pattern>
+    <pattern> iac5has</pattern>
+    <pattern> iac5he</pattern>
+    <pattern> iac5hw</pattern>
+    <pattern> ir3</pattern>
+    <pattern> ladr3</pattern>
+    <pattern> ledr4e</pattern>
+    <pattern> le3na</pattern>
+    <pattern> le3o</pattern>
+    <pattern> lest4</pattern>
+    <pattern> lin3</pattern>
+    <pattern> ll2</pattern>
+    <pattern> llaw4e</pattern>
+    <pattern> lle5na</pattern>
+    <pattern> llo5nas</pattern>
+    <pattern> llon4e</pattern>
+    <pattern> llythr5</pattern>
+    <pattern> lo3na</pattern>
+    <pattern> lon4e</pattern>
+    <pattern> ludd3</pattern>
+    <pattern> lygr3</pattern>
+    <pattern> lyn3a</pattern>
+    <pattern> lythr5</pattern>
+    <pattern> man4ed</pattern>
+    <pattern> mant4a</pattern>
+    <pattern> mar4f</pattern>
+    <pattern> mign5</pattern>
+    <pattern> mis5g</pattern>
+    <pattern> mol3</pattern>
+    <pattern> mon4edi</pattern>
+    <pattern> mwyth5a</pattern>
+    <pattern> mwyth5w</pattern>
+    <pattern> myn5as</pattern>
+    <pattern> neilltu4ad</pattern>
+    <pattern> neis4i</pattern>
+    <pattern> nen3a</pattern>
+    <pattern> ner4w</pattern>
+    <pattern> ng2</pattern>
+    <pattern> ngen5as</pattern>
+    <pattern> nghyt5u</pattern>
+    <pattern> nghy5wa</pattern>
+    <pattern> ngl4</pattern>
+    <pattern> ng4w</pattern>
+    <pattern> ngy4</pattern>
+    <pattern> ni5an</pattern>
+    <pattern> ni3e</pattern>
+    <pattern> ni5fei</pattern>
+    <pattern> nig2</pattern>
+    <pattern> ni5ga</pattern>
+    <pattern> ni3ge</pattern>
+    <pattern> ni3gw</pattern>
+    <pattern> ni3gy</pattern>
+    <pattern> ni5re</pattern>
+    <pattern> ni3wa</pattern>
+    <pattern> niwl5</pattern>
+    <pattern> no4e</pattern>
+    <pattern> no4w</pattern>
+    <pattern> nwl3</pattern>
+    <pattern> nwyn3</pattern>
+    <pattern> oddefad4</pattern>
+    <pattern> od4l</pattern>
+    <pattern> of3a</pattern>
+    <pattern> of4o</pattern>
+    <pattern> of4u</pattern>
+    <pattern> og2</pattern>
+    <pattern> og4l4</pattern>
+    <pattern> ol2</pattern>
+    <pattern> oll3</pattern>
+    <pattern> ol5yga</pattern>
+    <pattern> ol5yge</pattern>
+    <pattern> olyn3</pattern>
+    <pattern> or1</pattern>
+    <pattern> orddad4</pattern>
+    <pattern> pl4a</pattern>
+    <pattern> pl4e</pattern>
+    <pattern> rad3r</pattern>
+    <pattern> rag3l</pattern>
+    <pattern> ra3na</pattern>
+    <pattern> ran5d4</pattern>
+    <pattern> rew3</pattern>
+    <pattern> rhi5a</pattern>
+    <pattern> ria4</pattern>
+    <pattern> rin4t</pattern>
+    <pattern> rug4l5</pattern>
+    <pattern> ry3n4a</pattern>
+    <pattern> ryn4e</pattern>
+    <pattern> sas4</pattern>
+    <pattern> ses4</pattern>
+    <pattern> st2</pattern>
+    <pattern> sych3</pattern>
+    <pattern> sych5e</pattern>
+    <pattern> talad4</pattern>
+    <pattern> tan4e</pattern>
+    <pattern> th2</pattern>
+    <pattern> thag5</pattern>
+    <pattern> th4i</pattern>
+    <pattern> tho5e</pattern>
+    <pattern> th4r4</pattern>
+    <pattern> thrad4</pattern>
+    <pattern> th4u</pattern>
+    <pattern> torad4</pattern>
+    <pattern> tr2</pattern>
+    <pattern> tr4a</pattern>
+    <pattern> trad4</pattern>
+    <pattern> tr4o</pattern>
+    <pattern> tro4en</pattern>
+    <pattern> uch2</pattern>
+    <pattern> wa5r4as</pattern>
+    <pattern> war4es</pattern>
+    <pattern> wedd4er</pattern>
+    <pattern> weithiad4</pattern>
+    <pattern> welad4</pattern>
+    <pattern> wen3a</pattern>
+    <pattern> west4</pattern>
+    <pattern> wn4io</pattern>
+    <pattern> wobr3</pattern>
+    <pattern> wybr4</pattern>
+    <pattern> wy3by</pattern>
+    <pattern> wy4r</pattern>
+    <pattern> wyw3</pattern>
+    <pattern> ydd4</pattern>
+    <pattern> yd4l</pattern>
+    <pattern> yf4ar</pattern>
+    <pattern> ym4adw</pattern>
+    <pattern> ym3e</pattern>
+    <pattern> ym4yl</pattern>
+    <pattern> ymysg4</pattern>
+    <pattern> yn4d</pattern>
+    <pattern> ys4b</pattern>
+    <pattern> ysg4</pattern>
+    <pattern> ys4i</pattern>
+    <pattern> ys4n</pattern>
+    <pattern> ys4t</pattern>
     <pattern>a1a</pattern>
     <pattern>a3ar2</pattern>
     <pattern>2ab</pattern>
@@ -417,7 +419,7 @@
     <pattern>ab4or</pattern>
     <pattern>abr3</pattern>
     <pattern>a1bu</pattern>
-    <pattern>a4bu.</pattern>
+    <pattern>a4bu </pattern>
     <pattern>a4bum</pattern>
     <pattern>2ac</pattern>
     <pattern>ac1a</pattern>
@@ -426,9 +428,9 @@
     <pattern>ac4aol</pattern>
     <pattern>ac3ei</pattern>
     <pattern>ace3ne</pattern>
-    <pattern>ac5enni.</pattern>
+    <pattern>ac5enni </pattern>
     <pattern>ach1</pattern>
-    <pattern>a4ch.</pattern>
+    <pattern>a4ch </pattern>
     <pattern>ach5ac</pattern>
     <pattern>ach5aw</pattern>
     <pattern>a5chef</pattern>
@@ -448,7 +450,7 @@
     <pattern>ad5afa</pattern>
     <pattern>ad3arf</pattern>
     <pattern>adar4g</pattern>
-    <pattern>a4dd.</pattern>
+    <pattern>a4dd </pattern>
     <pattern>add3ad</pattern>
     <pattern>ad3dal</pattern>
     <pattern>ad3dd</pattern>
@@ -464,7 +466,7 @@
     <pattern>2ad1e</pattern>
     <pattern>ad3eg</pattern>
     <pattern>ad3el</pattern>
-    <pattern>ad4el.</pattern>
+    <pattern>ad4el </pattern>
     <pattern>ad4ena</pattern>
     <pattern>ad4ene</pattern>
     <pattern>ad4eni</pattern>
@@ -483,7 +485,7 @@
     <pattern>ad3od</pattern>
     <pattern>ad3of</pattern>
     <pattern>ad3on</pattern>
-    <pattern>4adr.</pattern>
+    <pattern>4adr </pattern>
     <pattern>ad4red</pattern>
     <pattern>ad3ri</pattern>
     <pattern>adr4od</pattern>
@@ -492,9 +494,9 @@
     <pattern>4adunia</pattern>
     <pattern>ad5uniad</pattern>
     <pattern>ad5uro</pattern>
-    <pattern>adwel4ed.</pattern>
+    <pattern>adwel4ed </pattern>
     <pattern>ad3wi</pattern>
-    <pattern>ad5wr.</pattern>
+    <pattern>ad5wr </pattern>
     <pattern>3ad3wys</pattern>
     <pattern>ad5wyt</pattern>
     <pattern>ad1y</pattern>
@@ -502,7 +504,7 @@
     <pattern>ad4yrn</pattern>
     <pattern>2aea</pattern>
     <pattern>ae4ada</pattern>
-    <pattern>ae5an.</pattern>
+    <pattern>ae5an </pattern>
     <pattern>aedd3</pattern>
     <pattern>ae3i</pattern>
     <pattern>ael1</pattern>
@@ -611,7 +613,7 @@
     <pattern>al3ei</pattern>
     <pattern>al3en</pattern>
     <pattern>al4ena</pattern>
-    <pattern>al4es.</pattern>
+    <pattern>al4es </pattern>
     <pattern>al2fo</pattern>
     <pattern>al3fy</pattern>
     <pattern>al3i</pattern>
@@ -637,7 +639,7 @@
     <pattern>4alwr</pattern>
     <pattern>al5wst</pattern>
     <pattern>al3wy</pattern>
-    <pattern>4alwy.</pattern>
+    <pattern>4alwy </pattern>
     <pattern>al1y</pattern>
     <pattern>2am</pattern>
     <pattern>ambl3</pattern>
@@ -665,7 +667,7 @@
     <pattern>am3wyt</pattern>
     <pattern>amyn3</pattern>
     <pattern>a2n</pattern>
-    <pattern>2an.</pattern>
+    <pattern>2an </pattern>
     <pattern>an1a</pattern>
     <pattern>a4nab</pattern>
     <pattern>anadl3</pattern>
@@ -685,14 +687,14 @@
     <pattern>an2do</pattern>
     <pattern>an1e</pattern>
     <pattern>an2ed</pattern>
-    <pattern>an3ed.</pattern>
+    <pattern>an3ed </pattern>
     <pattern>an5eda</pattern>
-    <pattern>an5edd.</pattern>
+    <pattern>an5edd </pattern>
     <pattern>an5edo</pattern>
     <pattern>a4n3eg</pattern>
     <pattern>a4nel</pattern>
     <pattern>an3eli</pattern>
-    <pattern>an5er.</pattern>
+    <pattern>an5er </pattern>
     <pattern>an5ewi</pattern>
     <pattern>2anf</pattern>
     <pattern>an3fy</pattern>
@@ -720,12 +722,12 @@
     <pattern>an3igi</pattern>
     <pattern>4annau</pattern>
     <pattern>an3oc</pattern>
-    <pattern>an3od.</pattern>
+    <pattern>an3od </pattern>
     <pattern>an3odd</pattern>
-    <pattern>an5og.</pattern>
+    <pattern>an5og </pattern>
     <pattern>an5og4ae</pattern>
     <pattern>4anol</pattern>
-    <pattern>an3ol.</pattern>
+    <pattern>an3ol </pattern>
     <pattern>an3om</pattern>
     <pattern>an3ont</pattern>
     <pattern>an3or</pattern>
@@ -760,10 +762,10 @@
     <pattern>ar3ab</pattern>
     <pattern>aradr3</pattern>
     <pattern>arae3</pattern>
-    <pattern>ar3af.</pattern>
+    <pattern>ar3af </pattern>
     <pattern>ara5ff</pattern>
     <pattern>ar3an</pattern>
-    <pattern>ar4an.</pattern>
+    <pattern>ar4an </pattern>
     <pattern>aran3a</pattern>
     <pattern>aran3e</pattern>
     <pattern>arat4</pattern>
@@ -791,20 +793,20 @@
     <pattern>ar1i</pattern>
     <pattern>ar4ian</pattern>
     <pattern>ar2m</pattern>
-    <pattern>4arn.</pattern>
-    <pattern>arn5adwy.</pattern>
+    <pattern>4arn </pattern>
+    <pattern>arn5adwy </pattern>
     <pattern>ar4nd</pattern>
     <pattern>3arnh</pattern>
     <pattern>ar4no</pattern>
     <pattern>ar4nw</pattern>
     <pattern>ar4ny</pattern>
     <pattern>ar1o</pattern>
-    <pattern>ar4od.</pattern>
+    <pattern>ar4od </pattern>
     <pattern>ar4odi</pattern>
     <pattern>arogl3</pattern>
     <pattern>3aror</pattern>
     <pattern>ar3os</pattern>
-    <pattern>5aros.</pattern>
+    <pattern>5aros </pattern>
     <pattern>ar4p3as</pattern>
     <pattern>arp3w</pattern>
     <pattern>ar3sy</pattern>
@@ -820,12 +822,12 @@
     <pattern>ar3wed</pattern>
     <pattern>3ar3wi</pattern>
     <pattern>arw3n</pattern>
-    <pattern>ar3wn.</pattern>
+    <pattern>ar3wn </pattern>
     <pattern>ar3wni</pattern>
     <pattern>ar3wy</pattern>
     <pattern>4arwyn</pattern>
     <pattern>ar3y</pattern>
-    <pattern>2as.</pattern>
+    <pattern>2as </pattern>
     <pattern>2asas</pattern>
     <pattern>as5awr</pattern>
     <pattern>1asb</pattern>
@@ -845,7 +847,7 @@
     <pattern>2asl</pattern>
     <pattern>2asn</pattern>
     <pattern>as4ny</pattern>
-    <pattern>as4od.</pattern>
+    <pattern>as4od </pattern>
     <pattern>2asoe</pattern>
     <pattern>2asr</pattern>
     <pattern>2ast</pattern>
@@ -857,7 +859,7 @@
     <pattern>as4tr</pattern>
     <pattern>as5trus</pattern>
     <pattern>ast2w</pattern>
-    <pattern>as5ty.</pattern>
+    <pattern>as5ty </pattern>
     <pattern>as3tyl</pattern>
     <pattern>astyn3</pattern>
     <pattern>2asu</pattern>
@@ -910,7 +912,7 @@
     <pattern>awr1</pattern>
     <pattern>awr3d</pattern>
     <pattern>awy4r3</pattern>
-    <pattern>3áu.</pattern>
+    <pattern>3áu </pattern>
     <pattern>1â</pattern>
     <pattern>bab4i</pattern>
     <pattern>bab5yd</pattern>
@@ -929,7 +931,7 @@
     <pattern>ban3o</pattern>
     <pattern>5barch</pattern>
     <pattern>bar4f</pattern>
-    <pattern>bar4lys.</pattern>
+    <pattern>bar4lys </pattern>
     <pattern>barn3</pattern>
     <pattern>bar4wy</pattern>
     <pattern>b1as</pattern>
@@ -952,7 +954,7 @@
     <pattern>bengl4</pattern>
     <pattern>bens4</pattern>
     <pattern>bent4</pattern>
-    <pattern>b3ent.</pattern>
+    <pattern>b3ent </pattern>
     <pattern>ben3w</pattern>
     <pattern>benwy5na</pattern>
     <pattern>b3ert</pattern>
@@ -979,12 +981,12 @@
     <pattern>2blau</pattern>
     <pattern>bl5awd</pattern>
     <pattern>bl3ec</pattern>
-    <pattern>bl4enni.</pattern>
+    <pattern>bl4enni </pattern>
     <pattern>blew3</pattern>
     <pattern>4blwr</pattern>
     <pattern>b4lyc</pattern>
     <pattern>4blyn</pattern>
-    <pattern>bl5yn.</pattern>
+    <pattern>bl5yn </pattern>
     <pattern>bo4b4l</pattern>
     <pattern>b1oc</pattern>
     <pattern>4b3odd</pattern>
@@ -1009,7 +1011,7 @@
     <pattern>b1s2</pattern>
     <pattern>bse3na</pattern>
     <pattern>bse5ne</pattern>
-    <pattern>2bu.</pattern>
+    <pattern>2bu </pattern>
     <pattern>1bua</pattern>
     <pattern>budd4l</pattern>
     <pattern>bu4lo</pattern>
@@ -1021,13 +1023,13 @@
     <pattern>b4wns</pattern>
     <pattern>bwr1</pattern>
     <pattern>4bwyd</pattern>
-    <pattern>b3wyd.</pattern>
+    <pattern>b3wyd </pattern>
     <pattern>4b3wyf</pattern>
     <pattern>bwyllt4</pattern>
     <pattern>3bwyn</pattern>
     <pattern>bwy4r3</pattern>
     <pattern>2by</pattern>
-    <pattern>b3ych.</pattern>
+    <pattern>b3ych </pattern>
     <pattern>bydd5i</pattern>
     <pattern>b2yl</pattern>
     <pattern>3bylla</pattern>
@@ -1036,7 +1038,7 @@
     <pattern>by3nes</pattern>
     <pattern>byrf4</pattern>
     <pattern>b4yrw</pattern>
-    <pattern>3byst.</pattern>
+    <pattern>3byst </pattern>
     <pattern>byw3</pattern>
     <pattern>cabl4en</pattern>
     <pattern>c1ad</pattern>
@@ -1060,7 +1062,7 @@
     <pattern>c3ant</pattern>
     <pattern>can4yd</pattern>
     <pattern>car4en</pattern>
-    <pattern>car4ped.</pattern>
+    <pattern>car4ped </pattern>
     <pattern>c1as</pattern>
     <pattern>casg4e</pattern>
     <pattern>3cat</pattern>
@@ -1083,7 +1085,7 @@
     <pattern>ceu4l</pattern>
     <pattern>c3ff</pattern>
     <pattern>3chae</pattern>
-    <pattern>ch3af.</pattern>
+    <pattern>ch3af </pattern>
     <pattern>ch4afb</pattern>
     <pattern>ch4afi</pattern>
     <pattern>chan3a</pattern>
@@ -1097,13 +1099,13 @@
     <pattern>ch3ebo</pattern>
     <pattern>ch3ebw</pattern>
     <pattern>ch3ech</pattern>
-    <pattern>ch3ed.</pattern>
+    <pattern>ch3ed </pattern>
     <pattern>ch3edi</pattern>
     <pattern>5chein</pattern>
     <pattern>chelad4</pattern>
     <pattern>ch3ent</pattern>
     <pattern>chen3y</pattern>
-    <pattern>ch3er.</pattern>
+    <pattern>ch3er </pattern>
     <pattern>cher4f</pattern>
     <pattern>ch3esg</pattern>
     <pattern>3chest</pattern>
@@ -1112,7 +1114,7 @@
     <pattern>4chestwa</pattern>
     <pattern>4chestwe</pattern>
     <pattern>ch3eta</pattern>
-    <pattern>ch5ig.</pattern>
+    <pattern>ch5ig </pattern>
     <pattern>chleid4</pattern>
     <pattern>chl5ent</pattern>
     <pattern>4chmyni</pattern>
@@ -1126,14 +1128,14 @@
     <pattern>chon4y</pattern>
     <pattern>chra4</pattern>
     <pattern>ch4ro</pattern>
-    <pattern>4chu.</pattern>
+    <pattern>4chu </pattern>
     <pattern>ch4ub</pattern>
     <pattern>4chus</pattern>
     <pattern>5chwant</pattern>
     <pattern>ch3wch</pattern>
     <pattern>chw4f</pattern>
     <pattern>ch4wi</pattern>
-    <pattern>ch3wn.</pattern>
+    <pattern>ch3wn </pattern>
     <pattern>ch3wyf</pattern>
     <pattern>chyd3</pattern>
     <pattern>chym4an</pattern>
@@ -1146,7 +1148,7 @@
     <pattern>cib3</pattern>
     <pattern>cig1</pattern>
     <pattern>c3in</pattern>
-    <pattern>ci3od.</pattern>
+    <pattern>ci3od </pattern>
     <pattern>cl2e</pattern>
     <pattern>cleid4</pattern>
     <pattern>cl2i</pattern>
@@ -1242,7 +1244,7 @@
     <pattern>cy3wy</pattern>
     <pattern>d1a2</pattern>
     <pattern>dach3</pattern>
-    <pattern>d3ach.</pattern>
+    <pattern>d3ach </pattern>
     <pattern>d5achwr</pattern>
     <pattern>d2ad</pattern>
     <pattern>dad3u</pattern>
@@ -1260,7 +1262,7 @@
     <pattern>4dail</pattern>
     <pattern>da5ion</pattern>
     <pattern>d4ait</pattern>
-    <pattern>d4al.</pattern>
+    <pattern>d4al </pattern>
     <pattern>d4ald</pattern>
     <pattern>d4aln</pattern>
     <pattern>d4alr</pattern>
@@ -1282,7 +1284,7 @@
     <pattern>2dau</pattern>
     <pattern>2daw</pattern>
     <pattern>dawd3</pattern>
-    <pattern>d5awd.</pattern>
+    <pattern>d5awd </pattern>
     <pattern>d1b</pattern>
     <pattern>ddad3r</pattern>
     <pattern>4ddaf</pattern>
@@ -1300,19 +1302,19 @@
     <pattern>dd3dr</pattern>
     <pattern>dd4du</pattern>
     <pattern>dd4dy</pattern>
-    <pattern>dd5dy.</pattern>
-    <pattern>dd3er.</pattern>
+    <pattern>dd5dy </pattern>
+    <pattern>dd3er </pattern>
     <pattern>ddeth5</pattern>
     <pattern>ddeuad4</pattern>
     <pattern>dd4eug</pattern>
     <pattern>dd4ew</pattern>
     <pattern>dd2f</pattern>
     <pattern>dd4fg</pattern>
-    <pattern>2ddi.</pattern>
+    <pattern>2ddi </pattern>
     <pattern>dd4ic</pattern>
     <pattern>dd4if</pattern>
     <pattern>ddif3a</pattern>
-    <pattern>dd4ig.</pattern>
+    <pattern>dd4ig </pattern>
     <pattern>ddi3gy</pattern>
     <pattern>dd4il</pattern>
     <pattern>dd4im</pattern>
@@ -1320,7 +1322,7 @@
     <pattern>4ddit</pattern>
     <pattern>dd1l2</pattern>
     <pattern>dd5len</pattern>
-    <pattern>2ddo.</pattern>
+    <pattern>2ddo </pattern>
     <pattern>4ddoc</pattern>
     <pattern>dd3odd</pattern>
     <pattern>4ddom</pattern>
@@ -1335,7 +1337,7 @@
     <pattern>dd4ry</pattern>
     <pattern>d2du</pattern>
     <pattern>4dd3un</pattern>
-    <pattern>dd5us.</pattern>
+    <pattern>dd5us </pattern>
     <pattern>dd5waw</pattern>
     <pattern>4ddwc</pattern>
     <pattern>dd2we</pattern>
@@ -1346,23 +1348,23 @@
     <pattern>dd2y</pattern>
     <pattern>4ddyc</pattern>
     <pattern>dd4ydd</pattern>
-    <pattern>dd5yf.</pattern>
+    <pattern>dd5yf </pattern>
     <pattern>ddym4d</pattern>
     <pattern>dd4yn</pattern>
     <pattern>ddy5nad</pattern>
     <pattern>5ddyni</pattern>
     <pattern>4ddynt</pattern>
     <pattern>3ddyr</pattern>
-    <pattern>3deb.</pattern>
+    <pattern>3deb </pattern>
     <pattern>debr3</pattern>
     <pattern>d1ec</pattern>
     <pattern>dech4a</pattern>
     <pattern>d1ed</pattern>
-    <pattern>d5edd.</pattern>
+    <pattern>d5edd </pattern>
     <pattern>deddf3</pattern>
     <pattern>def3a</pattern>
     <pattern>d1eg</pattern>
-    <pattern>d5egol.</pattern>
+    <pattern>d5egol </pattern>
     <pattern>de1h</pattern>
     <pattern>deheu5</pattern>
     <pattern>d2eil</pattern>
@@ -1376,7 +1378,7 @@
     <pattern>d3ellw</pattern>
     <pattern>del3o</pattern>
     <pattern>d1em</pattern>
-    <pattern>d3em.</pattern>
+    <pattern>d3em </pattern>
     <pattern>2d1en1</pattern>
     <pattern>d4eng</pattern>
     <pattern>d3ent</pattern>
@@ -1415,7 +1417,7 @@
     <pattern>dfwr2</pattern>
     <pattern>d4fyd</pattern>
     <pattern>dfyn3a</pattern>
-    <pattern>dfyn4ed.</pattern>
+    <pattern>dfyn4ed </pattern>
     <pattern>d1g2</pattern>
     <pattern>dgam2</pattern>
     <pattern>dgan5e</pattern>
@@ -1466,13 +1468,13 @@
     <pattern>di3lu</pattern>
     <pattern>dil2w</pattern>
     <pattern>di3lys</pattern>
-    <pattern>d3in.</pattern>
+    <pattern>d3in </pattern>
     <pattern>di5niw</pattern>
     <pattern>di3nod</pattern>
     <pattern>d4inoe</pattern>
     <pattern>di3or</pattern>
     <pattern>d2ir</pattern>
-    <pattern>d3ir.</pattern>
+    <pattern>d3ir </pattern>
     <pattern>di3ra</pattern>
     <pattern>d4i3r2e</pattern>
     <pattern>di5rif</pattern>
@@ -1484,9 +1486,9 @@
     <pattern>dis3t</pattern>
     <pattern>di3sw</pattern>
     <pattern>di3sy</pattern>
-    <pattern>4d3it.</pattern>
+    <pattern>4d3it </pattern>
     <pattern>d2iw2</pattern>
-    <pattern>d4iw.</pattern>
+    <pattern>d4iw </pattern>
     <pattern>di3w4a</pattern>
     <pattern>d4iwe</pattern>
     <pattern>di5wen</pattern>
@@ -1499,7 +1501,7 @@
     <pattern>d4lau</pattern>
     <pattern>dl3ed</pattern>
     <pattern>d3l4ei</pattern>
-    <pattern>d4len.</pattern>
+    <pattern>d4len </pattern>
     <pattern>dle3na</pattern>
     <pattern>dle5ne</pattern>
     <pattern>d4lent</pattern>
@@ -1514,7 +1516,7 @@
     <pattern>dludd3</pattern>
     <pattern>d2lw</pattern>
     <pattern>dl3yc</pattern>
-    <pattern>d3lyd.</pattern>
+    <pattern>d3lyd </pattern>
     <pattern>d3lyn</pattern>
     <pattern>dl4yr</pattern>
     <pattern>d3lyw</pattern>
@@ -1531,14 +1533,14 @@
     <pattern>d2n3ed</pattern>
     <pattern>dn3es</pattern>
     <pattern>d2ni</pattern>
-    <pattern>d3ni.</pattern>
+    <pattern>d3ni </pattern>
     <pattern>dno2i</pattern>
     <pattern>d3nos</pattern>
     <pattern>d2n1w</pattern>
     <pattern>d2ny</pattern>
     <pattern>d1o</pattern>
     <pattern>d3och</pattern>
-    <pattern>d2od.</pattern>
+    <pattern>d2od </pattern>
     <pattern>d2odi</pattern>
     <pattern>d4odia</pattern>
     <pattern>dod3r</pattern>
@@ -1546,7 +1548,7 @@
     <pattern>do4en</pattern>
     <pattern>d2of</pattern>
     <pattern>dof5yddio</pattern>
-    <pattern>d3ol.</pattern>
+    <pattern>d3ol </pattern>
     <pattern>d4oll</pattern>
     <pattern>dol4wg</pattern>
     <pattern>d3om</pattern>
@@ -1558,9 +1560,9 @@
     <pattern>dor5we</pattern>
     <pattern>dos3</pattern>
     <pattern>do2w</pattern>
-    <pattern>2dr.</pattern>
-    <pattern>3dra.</pattern>
-    <pattern>dr3ad.</pattern>
+    <pattern>2dr </pattern>
+    <pattern>3dra </pattern>
+    <pattern>dr3ad </pattern>
     <pattern>dr3ada</pattern>
     <pattern>dradd3</pattern>
     <pattern>dr3adw</pattern>
@@ -1568,12 +1570,12 @@
     <pattern>dr5aid</pattern>
     <pattern>dr5ain</pattern>
     <pattern>dram4g</pattern>
-    <pattern>dr4an.</pattern>
+    <pattern>dr4an </pattern>
     <pattern>dra3na</pattern>
     <pattern>dra3ne</pattern>
     <pattern>dr4ann</pattern>
     <pattern>dr3ant</pattern>
-    <pattern>dr5au.</pattern>
+    <pattern>dr5au </pattern>
     <pattern>dr3c</pattern>
     <pattern>dr3ed</pattern>
     <pattern>dr4edo</pattern>
@@ -1590,19 +1592,19 @@
     <pattern>4drog</pattern>
     <pattern>drog4e</pattern>
     <pattern>dr3ol</pattern>
-    <pattern>dr5ol.</pattern>
-    <pattern>dr3on.</pattern>
+    <pattern>dr5ol </pattern>
+    <pattern>dr3on </pattern>
     <pattern>dron3a</pattern>
     <pattern>dr3ont</pattern>
     <pattern>d4rwg</pattern>
     <pattern>dr3wn</pattern>
     <pattern>dr3wyf</pattern>
     <pattern>dr3yd</pattern>
-    <pattern>dr3yn.</pattern>
+    <pattern>dr3yn </pattern>
     <pattern>d3ryw</pattern>
     <pattern>d1s2</pattern>
     <pattern>d1ug1</pattern>
-    <pattern>d4un.</pattern>
+    <pattern>d4un </pattern>
     <pattern>dun3a</pattern>
     <pattern>d4unia</pattern>
     <pattern>d1ur</pattern>
@@ -1635,13 +1637,13 @@
     <pattern>dwy3b</pattern>
     <pattern>d4wyc</pattern>
     <pattern>dwyn3</pattern>
-    <pattern>dwy4on.</pattern>
+    <pattern>dwy4on </pattern>
     <pattern>d2wyr</pattern>
-    <pattern>3dy.</pattern>
+    <pattern>3dy </pattern>
     <pattern>d1yc</pattern>
-    <pattern>d5ych.</pattern>
+    <pattern>d5ych </pattern>
     <pattern>d1yd</pattern>
-    <pattern>d3yd.</pattern>
+    <pattern>d3yd </pattern>
     <pattern>4dydd</pattern>
     <pattern>dyd2w</pattern>
     <pattern>dydw5y</pattern>
@@ -1653,7 +1655,7 @@
     <pattern>dy5fodi</pattern>
     <pattern>dyf2r3</pattern>
     <pattern>dyfrad4</pattern>
-    <pattern>d3yg.</pattern>
+    <pattern>d3yg </pattern>
     <pattern>d3ygl</pattern>
     <pattern>dy3gy</pattern>
     <pattern>d2yl</pattern>
@@ -1672,7 +1674,7 @@
     <pattern>dyr2e</pattern>
     <pattern>dy3ri</pattern>
     <pattern>dy5ryd</pattern>
-    <pattern>2dys.</pattern>
+    <pattern>2dys </pattern>
     <pattern>4dysa</pattern>
     <pattern>dys4g</pattern>
     <pattern>dysg5a</pattern>
@@ -1682,7 +1684,7 @@
     <pattern>e4adf</pattern>
     <pattern>e4adl</pattern>
     <pattern>eaf1</pattern>
-    <pattern>e3af.</pattern>
+    <pattern>e3af </pattern>
     <pattern>ea4fa</pattern>
     <pattern>e4afg</pattern>
     <pattern>e1ai</pattern>
@@ -1696,7 +1698,7 @@
     <pattern>e1au</pattern>
     <pattern>e3aw</pattern>
     <pattern>eb3ad</pattern>
-    <pattern>eb5ar.</pattern>
+    <pattern>eb5ar </pattern>
     <pattern>eb1e</pattern>
     <pattern>ebl2</pattern>
     <pattern>eb1o</pattern>
@@ -1765,7 +1767,7 @@
     <pattern>3edï</pattern>
     <pattern>2edl1</pattern>
     <pattern>ed4lo</pattern>
-    <pattern>4edr.</pattern>
+    <pattern>4edr </pattern>
     <pattern>edr3e</pattern>
     <pattern>edr3o</pattern>
     <pattern>edr4yd</pattern>
@@ -1777,9 +1779,9 @@
     <pattern>ed3y</pattern>
     <pattern>edym4</pattern>
     <pattern>2e1e</pattern>
-    <pattern>ef5adwy.</pattern>
+    <pattern>ef5adwy </pattern>
     <pattern>ef3an</pattern>
-    <pattern>ef5an.</pattern>
+    <pattern>ef5an </pattern>
     <pattern>ef3ar3</pattern>
     <pattern>ef3au</pattern>
     <pattern>ef1e</pattern>
@@ -1807,21 +1809,21 @@
     <pattern>efy3na</pattern>
     <pattern>efy5ne</pattern>
     <pattern>e2g1</pattern>
-    <pattern>4eg5an.</pattern>
+    <pattern>4eg5an </pattern>
     <pattern>eg4ana</pattern>
     <pattern>egar3</pattern>
     <pattern>egeir4</pattern>
     <pattern>eg5ell</pattern>
-    <pattern>4egen.</pattern>
+    <pattern>4egen </pattern>
     <pattern>2egf</pattern>
-    <pattern>eg5ig.</pattern>
+    <pattern>eg5ig </pattern>
     <pattern>egl3a</pattern>
     <pattern>egl3e</pattern>
     <pattern>egl3o</pattern>
     <pattern>2ego</pattern>
-    <pattern>eg4on.</pattern>
+    <pattern>eg4on </pattern>
     <pattern>4egos</pattern>
-    <pattern>eg5os.</pattern>
+    <pattern>eg5os </pattern>
     <pattern>egr3a</pattern>
     <pattern>egr3e</pattern>
     <pattern>egr3i</pattern>
@@ -1854,7 +1856,7 @@
     <pattern>eigl3w</pattern>
     <pattern>ei4gr</pattern>
     <pattern>3eilad</pattern>
-    <pattern>4eiladwy.</pattern>
+    <pattern>4eiladwy </pattern>
     <pattern>eil5ec</pattern>
     <pattern>eil5eg</pattern>
     <pattern>eil3es</pattern>
@@ -1909,7 +1911,7 @@
     <pattern>el5ybr</pattern>
     <pattern>el3yc</pattern>
     <pattern>4elyd</pattern>
-    <pattern>el5yd.</pattern>
+    <pattern>el5yd </pattern>
     <pattern>el3ydd</pattern>
     <pattern>elyn3</pattern>
     <pattern>el3yna</pattern>
@@ -1950,7 +1952,7 @@
     <pattern>endig3</pattern>
     <pattern>endr4</pattern>
     <pattern>en3ec</pattern>
-    <pattern>en3ed.</pattern>
+    <pattern>en3ed </pattern>
     <pattern>en5edd</pattern>
     <pattern>en3el</pattern>
     <pattern>en3em</pattern>
@@ -1983,12 +1985,12 @@
     <pattern>en3wyd</pattern>
     <pattern>en3wyf</pattern>
     <pattern>en3yc</pattern>
-    <pattern>en5ych.</pattern>
+    <pattern>en5ych </pattern>
     <pattern>en5ychase</pattern>
     <pattern>en5ychia</pattern>
     <pattern>en4yg</pattern>
     <pattern>2eo</pattern>
-    <pattern>e5och.</pattern>
+    <pattern>e5och </pattern>
     <pattern>e1od</pattern>
     <pattern>e1oe</pattern>
     <pattern>e4olae</pattern>
@@ -2023,8 +2025,8 @@
     <pattern>er4ic</pattern>
     <pattern>er4il</pattern>
     <pattern>erin3</pattern>
-    <pattern>er5ir.</pattern>
-    <pattern>er5it.</pattern>
+    <pattern>er5ir </pattern>
+    <pattern>er5it </pattern>
     <pattern>er2l</pattern>
     <pattern>er5lys</pattern>
     <pattern>er4md</pattern>
@@ -2077,20 +2079,20 @@
     <pattern>2estl</pattern>
     <pattern>est5ol</pattern>
     <pattern>4estu</pattern>
-    <pattern>es5tyll.</pattern>
+    <pattern>es5tyll </pattern>
     <pattern>esty5na</pattern>
     <pattern>esty5ne</pattern>
     <pattern>2esu</pattern>
     <pattern>esurad4</pattern>
-    <pattern>es4yd.</pattern>
+    <pattern>es4yd </pattern>
     <pattern>es3yn3</pattern>
     <pattern>e2t</pattern>
     <pattern>et3ac</pattern>
     <pattern>et3ad</pattern>
     <pattern>e3tae</pattern>
-    <pattern>et5eg.</pattern>
+    <pattern>et5eg </pattern>
     <pattern>eter4</pattern>
-    <pattern>et3er.</pattern>
+    <pattern>et3er </pattern>
     <pattern>eth1</pattern>
     <pattern>eth3e</pattern>
     <pattern>eth3i</pattern>
@@ -2100,7 +2102,7 @@
     <pattern>eth3w</pattern>
     <pattern>et5iro</pattern>
     <pattern>et1o</pattern>
-    <pattern>et5re.</pattern>
+    <pattern>et5re </pattern>
     <pattern>et5swy</pattern>
     <pattern>et1w</pattern>
     <pattern>4etwr</pattern>
@@ -2138,13 +2140,13 @@
     <pattern>ewl1</pattern>
     <pattern>ew3o</pattern>
     <pattern>ew5par</pattern>
-    <pattern>e3wyd.</pattern>
+    <pattern>e3wyd </pattern>
     <pattern>e3wyf</pattern>
     <pattern>2ey</pattern>
     <pattern>e1yc</pattern>
     <pattern>ey4en</pattern>
     <pattern>1ë</pattern>
-    <pattern>3fa.</pattern>
+    <pattern>3fa </pattern>
     <pattern>fab3</pattern>
     <pattern>fab4i</pattern>
     <pattern>fach3</pattern>
@@ -2162,7 +2164,7 @@
     <pattern>f4al5on</pattern>
     <pattern>f4alu</pattern>
     <pattern>f3am</pattern>
-    <pattern>f4an.</pattern>
+    <pattern>f4an </pattern>
     <pattern>fan3d</pattern>
     <pattern>fan5edd</pattern>
     <pattern>fan4es</pattern>
@@ -2192,8 +2194,8 @@
     <pattern>f1d2</pattern>
     <pattern>fdd2</pattern>
     <pattern>f2dw</pattern>
-    <pattern>fd5wr.</pattern>
-    <pattern>f4eb.</pattern>
+    <pattern>fd5wr </pattern>
+    <pattern>f4eb </pattern>
     <pattern>febr3</pattern>
     <pattern>f1ec</pattern>
     <pattern>fed4n</pattern>
@@ -2204,7 +2206,7 @@
     <pattern>feiriad4u</pattern>
     <pattern>feith3</pattern>
     <pattern>fe4iw</pattern>
-    <pattern>f4el.</pattern>
+    <pattern>f4el </pattern>
     <pattern>f3ell</pattern>
     <pattern>fel5yno</pattern>
     <pattern>f1em</pattern>
@@ -2226,7 +2228,7 @@
     <pattern>f4er3y</pattern>
     <pattern>f1es</pattern>
     <pattern>feth3</pattern>
-    <pattern>f4eth.</pattern>
+    <pattern>f4eth </pattern>
     <pattern>f4etha</pattern>
     <pattern>feu1</pattern>
     <pattern>3fey</pattern>
@@ -2235,13 +2237,13 @@
     <pattern>ff3ant</pattern>
     <pattern>ff4at</pattern>
     <pattern>ff3au</pattern>
-    <pattern>ff3ed.</pattern>
+    <pattern>ff3ed </pattern>
     <pattern>ff5edig</pattern>
     <pattern>ff5eio</pattern>
-    <pattern>ff5el.</pattern>
+    <pattern>ff5el </pattern>
     <pattern>ffen5ed</pattern>
     <pattern>ff3ent</pattern>
-    <pattern>ff3er.</pattern>
+    <pattern>ff3er </pattern>
     <pattern>3ffert</pattern>
     <pattern>ff3esu</pattern>
     <pattern>ffet4</pattern>
@@ -2257,12 +2259,12 @@
     <pattern>ff3od</pattern>
     <pattern>ffod5e</pattern>
     <pattern>ff4odi</pattern>
-    <pattern>3ffon.</pattern>
+    <pattern>3ffon </pattern>
     <pattern>ffo3n4a</pattern>
     <pattern>ffo3n4e</pattern>
     <pattern>ff3ont</pattern>
     <pattern>ff2or</pattern>
-    <pattern>5ffor.</pattern>
+    <pattern>5ffor </pattern>
     <pattern>ff4os</pattern>
     <pattern>ff2ra</pattern>
     <pattern>ff2ri</pattern>
@@ -2273,7 +2275,7 @@
     <pattern>ff2t</pattern>
     <pattern>5ffurf3</pattern>
     <pattern>ff5wyf</pattern>
-    <pattern>ff5yl.</pattern>
+    <pattern>ff5yl </pattern>
     <pattern>f1g</pattern>
     <pattern>fg4wr</pattern>
     <pattern>f1h2</pattern>
@@ -2283,11 +2285,11 @@
     <pattern>2fic</pattern>
     <pattern>fic4e</pattern>
     <pattern>f2id</pattern>
-    <pattern>f3id.</pattern>
-    <pattern>fig4en.</pattern>
+    <pattern>f3id </pattern>
+    <pattern>fig4en </pattern>
     <pattern>fil3y</pattern>
     <pattern>fin3</pattern>
-    <pattern>f4in.</pattern>
+    <pattern>f4in </pattern>
     <pattern>f3ind</pattern>
     <pattern>fin4t</pattern>
     <pattern>fisg4</pattern>
@@ -2332,7 +2334,7 @@
     <pattern>f3nif</pattern>
     <pattern>fn3ig</pattern>
     <pattern>f3nith</pattern>
-    <pattern>fn5lu.</pattern>
+    <pattern>fn5lu </pattern>
     <pattern>f4n3oc</pattern>
     <pattern>f4n3om</pattern>
     <pattern>f4n3on</pattern>
@@ -2355,7 +2357,7 @@
     <pattern>fon4d</pattern>
     <pattern>5fonog</pattern>
     <pattern>f4ony</pattern>
-    <pattern>f4or.</pattern>
+    <pattern>f4or </pattern>
     <pattern>for4c</pattern>
     <pattern>f4ord</pattern>
     <pattern>for3f</pattern>
@@ -2375,7 +2377,7 @@
     <pattern>frdd2</pattern>
     <pattern>fre2</pattern>
     <pattern>f2rec</pattern>
-    <pattern>f4red.</pattern>
+    <pattern>f4red </pattern>
     <pattern>f4reg</pattern>
     <pattern>freg3y</pattern>
     <pattern>f2rem</pattern>
@@ -2385,7 +2387,7 @@
     <pattern>fr3f</pattern>
     <pattern>f2rh</pattern>
     <pattern>f2rid</pattern>
-    <pattern>fr3id.</pattern>
+    <pattern>fr3id </pattern>
     <pattern>f2rir</pattern>
     <pattern>f4rit</pattern>
     <pattern>fr2o</pattern>
@@ -2420,15 +2422,15 @@
     <pattern>f1wc</pattern>
     <pattern>fwd3</pattern>
     <pattern>f1we</pattern>
-    <pattern>4fwl.</pattern>
+    <pattern>4fwl </pattern>
     <pattern>f1wn2</pattern>
-    <pattern>f3wr.</pattern>
+    <pattern>f3wr </pattern>
     <pattern>fwr5ne</pattern>
-    <pattern>f4wy.</pattern>
+    <pattern>f4wy </pattern>
     <pattern>f3wyd</pattern>
     <pattern>fwyllt4</pattern>
     <pattern>fwyn3</pattern>
-    <pattern>f4wyn.</pattern>
+    <pattern>f4wyn </pattern>
     <pattern>f4wys</pattern>
     <pattern>f1yc</pattern>
     <pattern>fyd2</pattern>
@@ -2441,9 +2443,9 @@
     <pattern>3fyf</pattern>
     <pattern>fyf4y</pattern>
     <pattern>f1yl</pattern>
-    <pattern>f4yl.</pattern>
+    <pattern>f4yl </pattern>
     <pattern>f2yn</pattern>
-    <pattern>4fyn.</pattern>
+    <pattern>4fyn </pattern>
     <pattern>f3yng</pattern>
     <pattern>fyn3o</pattern>
     <pattern>fyn5od</pattern>
@@ -2457,7 +2459,7 @@
     <pattern>fystyr4o</pattern>
     <pattern>fys4w</pattern>
     <pattern>gabl4en</pattern>
-    <pattern>g5ach.</pattern>
+    <pattern>g5ach </pattern>
     <pattern>gad1</pattern>
     <pattern>gad3a</pattern>
     <pattern>5gadar</pattern>
@@ -2466,7 +2468,7 @@
     <pattern>g4adwr</pattern>
     <pattern>g1ae</pattern>
     <pattern>gae3a</pattern>
-    <pattern>g3af.</pattern>
+    <pattern>g3af </pattern>
     <pattern>gaf3a</pattern>
     <pattern>gaf4r3</pattern>
     <pattern>g1ai</pattern>
@@ -2509,12 +2511,12 @@
     <pattern>gdo3ra</pattern>
     <pattern>gdo5r4e</pattern>
     <pattern>g2dw</pattern>
-    <pattern>gd5wr.</pattern>
+    <pattern>gd5wr </pattern>
     <pattern>g1ec</pattern>
     <pattern>g1ed</pattern>
     <pattern>gedd3</pattern>
     <pattern>g2ede</pattern>
-    <pattern>g4edi.</pattern>
+    <pattern>g4edi </pattern>
     <pattern>g4edid</pattern>
     <pattern>g4edir</pattern>
     <pattern>g4edit</pattern>
@@ -2523,18 +2525,18 @@
     <pattern>g4edyc</pattern>
     <pattern>geg3</pattern>
     <pattern>g2egy</pattern>
-    <pattern>g2ei.</pattern>
+    <pattern>g2ei </pattern>
     <pattern>g3eid</pattern>
-    <pattern>g4el.</pattern>
+    <pattern>g4el </pattern>
     <pattern>gell5a</pattern>
     <pattern>gel3o</pattern>
     <pattern>g1em</pattern>
     <pattern>gen4d</pattern>
-    <pattern>g5enni.</pattern>
+    <pattern>g5enni </pattern>
     <pattern>gen2r</pattern>
     <pattern>g3ent</pattern>
     <pattern>g4enu</pattern>
-    <pattern>g3er.</pattern>
+    <pattern>g3er </pattern>
     <pattern>3g4erd</pattern>
     <pattern>ger4f</pattern>
     <pattern>ger3y</pattern>
@@ -2573,7 +2575,7 @@
     <pattern>g1i</pattern>
     <pattern>gib3</pattern>
     <pattern>g4ida</pattern>
-    <pattern>gi5en.</pattern>
+    <pattern>gi5en </pattern>
     <pattern>g2ig1</pattern>
     <pattern>3gil</pattern>
     <pattern>1gip</pattern>
@@ -2585,11 +2587,11 @@
     <pattern>glan5e</pattern>
     <pattern>gl3ant</pattern>
     <pattern>glas3</pattern>
-    <pattern>g5las.</pattern>
+    <pattern>g5las </pattern>
     <pattern>g3lat</pattern>
-    <pattern>gl5au.</pattern>
+    <pattern>gl5au </pattern>
     <pattern>gl2e</pattern>
-    <pattern>g3le.</pattern>
+    <pattern>g3le </pattern>
     <pattern>gl3ech</pattern>
     <pattern>gl3edi</pattern>
     <pattern>g5leisiaso</pattern>
@@ -2606,13 +2608,13 @@
     <pattern>gl4of</pattern>
     <pattern>5gl4oga</pattern>
     <pattern>glo2i</pattern>
-    <pattern>g4lu.</pattern>
+    <pattern>g4lu </pattern>
     <pattern>g4lwc</pattern>
     <pattern>g4l4wm</pattern>
     <pattern>g4l3wn</pattern>
     <pattern>g4lwyf</pattern>
     <pattern>gl3yc</pattern>
-    <pattern>g3lyd.</pattern>
+    <pattern>g3lyd </pattern>
     <pattern>gl4ym</pattern>
     <pattern>gl4ys</pattern>
     <pattern>gl4yw</pattern>
@@ -2642,14 +2644,14 @@
     <pattern>gog3e</pattern>
     <pattern>gog4l4</pattern>
     <pattern>go5gyn</pattern>
-    <pattern>g3ol.</pattern>
+    <pattern>g3ol </pattern>
     <pattern>goleu5</pattern>
     <pattern>3g4oll3</pattern>
     <pattern>go4lw</pattern>
     <pattern>gol5yga</pattern>
     <pattern>gol5yge</pattern>
     <pattern>gol5ygwy</pattern>
-    <pattern>g3om.</pattern>
+    <pattern>g3om </pattern>
     <pattern>go3me</pattern>
     <pattern>gon5ad</pattern>
     <pattern>g4one</pattern>
@@ -2680,7 +2682,7 @@
     <pattern>gr3ie</pattern>
     <pattern>gring4</pattern>
     <pattern>g4r3ir</pattern>
-    <pattern>g4rit.</pattern>
+    <pattern>g4rit </pattern>
     <pattern>gr2o</pattern>
     <pattern>gr3od</pattern>
     <pattern>gr4oe</pattern>
@@ -2722,11 +2724,11 @@
     <pattern>gwn4a</pattern>
     <pattern>gw4n4e</pattern>
     <pattern>gwobr3</pattern>
-    <pattern>g3wr.</pattern>
+    <pattern>g3wr </pattern>
     <pattern>g4wrd</pattern>
-    <pattern>g5wth.</pattern>
+    <pattern>g5wth </pattern>
     <pattern>gwy3by</pattern>
-    <pattern>g3wyd.</pattern>
+    <pattern>g3wyd </pattern>
     <pattern>gwydr5</pattern>
     <pattern>g3wyf</pattern>
     <pattern>gwy4r</pattern>
@@ -2814,7 +2816,7 @@
     <pattern>han5olwy</pattern>
     <pattern>hanrhyd4</pattern>
     <pattern>hansodd4ei</pattern>
-    <pattern>har5adwy.</pattern>
+    <pattern>har5adwy </pattern>
     <pattern>hara3t</pattern>
     <pattern>harato4en</pattern>
     <pattern>har4bwr</pattern>
@@ -2846,7 +2848,7 @@
     <pattern>hdr5wyd</pattern>
     <pattern>h4dwr</pattern>
     <pattern>h2eb</pattern>
-    <pattern>h3eb.</pattern>
+    <pattern>h3eb </pattern>
     <pattern>heb3ra</pattern>
     <pattern>hedd3</pattern>
     <pattern>hedd4fo</pattern>
@@ -2869,7 +2871,7 @@
     <pattern>h4e3ia</pattern>
     <pattern>h4eil</pattern>
     <pattern>heimlad4w</pattern>
-    <pattern>h4el.</pattern>
+    <pattern>h4el </pattern>
     <pattern>4helad</pattern>
     <pattern>4helaf</pattern>
     <pattern>4helai</pattern>
@@ -2933,11 +2935,11 @@
     <pattern>hl5adw</pattern>
     <pattern>hl4am</pattern>
     <pattern>hla3na</pattern>
-    <pattern>h5las.</pattern>
+    <pattern>h5las </pattern>
     <pattern>hl3asi</pattern>
     <pattern>hl3aso</pattern>
     <pattern>hl4aw</pattern>
-    <pattern>hl5ech.</pattern>
+    <pattern>hl5ech </pattern>
     <pattern>hl5edig</pattern>
     <pattern>hledr5</pattern>
     <pattern>h3lef</pattern>
@@ -2949,16 +2951,16 @@
     <pattern>hlon5e</pattern>
     <pattern>h4lus</pattern>
     <pattern>h4lwm</pattern>
-    <pattern>h5lyd.</pattern>
+    <pattern>h5lyd </pattern>
     <pattern>hl3ydd</pattern>
     <pattern>hlym4u</pattern>
     <pattern>h4lyn</pattern>
-    <pattern>hl3yn.</pattern>
+    <pattern>hl3yn </pattern>
     <pattern>hlywad4</pattern>
     <pattern>h1m2</pattern>
     <pattern>h3myg</pattern>
     <pattern>hmygad4</pattern>
-    <pattern>h3myn.</pattern>
+    <pattern>h3myn </pattern>
     <pattern>hmy3na</pattern>
     <pattern>hmy5ne</pattern>
     <pattern>h5myni</pattern>
@@ -2972,25 +2974,25 @@
     <pattern>h2nol</pattern>
     <pattern>hn5ole</pattern>
     <pattern>hn4yw</pattern>
-    <pattern>ho4ad.</pattern>
+    <pattern>ho4ad </pattern>
     <pattern>ho4bl</pattern>
     <pattern>hod4l</pattern>
     <pattern>ho4dy</pattern>
     <pattern>ho4en</pattern>
     <pattern>hoffad4wy</pattern>
-    <pattern>h3og.</pattern>
+    <pattern>h3og </pattern>
     <pattern>h3o4ga</pattern>
     <pattern>hog5lu</pattern>
     <pattern>ho2h</pattern>
     <pattern>h2ol</pattern>
-    <pattern>h3ol.</pattern>
+    <pattern>h3ol </pattern>
     <pattern>hol5ud</pattern>
     <pattern>h1om</pattern>
     <pattern>h2or</pattern>
-    <pattern>h3or.</pattern>
+    <pattern>h3or </pattern>
     <pattern>hor4c</pattern>
     <pattern>horn4an</pattern>
-    <pattern>h4os.</pattern>
+    <pattern>h4os </pattern>
     <pattern>hosb3</pattern>
     <pattern>hos3o</pattern>
     <pattern>h2ow</pattern>
@@ -2998,17 +3000,17 @@
     <pattern>h2r</pattern>
     <pattern>hra3dd</pattern>
     <pattern>hr3adw</pattern>
-    <pattern>hr3af.</pattern>
+    <pattern>hr3af </pattern>
     <pattern>hra3g</pattern>
-    <pattern>hr4aid.</pattern>
+    <pattern>hr4aid </pattern>
     <pattern>hr3ant</pattern>
     <pattern>h5raul</pattern>
     <pattern>hr5edig</pattern>
-    <pattern>hr3em.</pattern>
+    <pattern>hr3em </pattern>
     <pattern>hr3f</pattern>
     <pattern>hr2i</pattern>
     <pattern>hr3ia</pattern>
-    <pattern>hr3id.</pattern>
+    <pattern>hr3id </pattern>
     <pattern>hrid4a</pattern>
     <pattern>hr3ie</pattern>
     <pattern>hring4</pattern>
@@ -3018,19 +3020,19 @@
     <pattern>hr3iwy</pattern>
     <pattern>hr2o</pattern>
     <pattern>hro4ad4</pattern>
-    <pattern>hr5och.</pattern>
+    <pattern>hr5och </pattern>
     <pattern>hr3odd</pattern>
     <pattern>hrog3</pattern>
-    <pattern>hr3om.</pattern>
+    <pattern>hr3om </pattern>
     <pattern>hron4a</pattern>
     <pattern>hro5nas</pattern>
     <pattern>hron4e</pattern>
     <pattern>hrong5</pattern>
     <pattern>hr3ont</pattern>
     <pattern>hr4ud</pattern>
-    <pattern>hr3wn.</pattern>
-    <pattern>hr5wyd.</pattern>
-    <pattern>h5rwydd.</pattern>
+    <pattern>hr3wn </pattern>
+    <pattern>hr5wyd </pattern>
+    <pattern>h5rwydd </pattern>
     <pattern>hr3wyf</pattern>
     <pattern>h4ryc</pattern>
     <pattern>hryg3</pattern>
@@ -3055,8 +3057,8 @@
     <pattern>hug4l</pattern>
     <pattern>hun3ad</pattern>
     <pattern>h4unn</pattern>
-    <pattern>h3ur.</pattern>
-    <pattern>h3us.</pattern>
+    <pattern>h3ur </pattern>
+    <pattern>h3us </pattern>
     <pattern>h4use</pattern>
     <pattern>h4ust</pattern>
     <pattern>h4usw</pattern>
@@ -3067,7 +3069,7 @@
     <pattern>hw2e</pattern>
     <pattern>hwedl5</pattern>
     <pattern>h3wei</pattern>
-    <pattern>h4wel.</pattern>
+    <pattern>h4wel </pattern>
     <pattern>hwen3</pattern>
     <pattern>hwen4y</pattern>
     <pattern>hwe5nychaso</pattern>
@@ -3078,9 +3080,9 @@
     <pattern>hwiw5g</pattern>
     <pattern>hwm3</pattern>
     <pattern>hwn4e</pattern>
-    <pattern>h3wr.</pattern>
+    <pattern>h3wr </pattern>
     <pattern>h2wy</pattern>
-    <pattern>h4wy.</pattern>
+    <pattern>h4wy </pattern>
     <pattern>h4wya</pattern>
     <pattern>hwybr4</pattern>
     <pattern>hw4yc</pattern>
@@ -3103,7 +3105,7 @@
     <pattern>hyfar5f</pattern>
     <pattern>hyfer3</pattern>
     <pattern>hyffel5</pattern>
-    <pattern>hyffred4in.</pattern>
+    <pattern>hyffred4in </pattern>
     <pattern>hyf4iai</pattern>
     <pattern>hy4ga</pattern>
     <pattern>hygl4o</pattern>
@@ -3113,7 +3115,7 @@
     <pattern>hym4adw</pattern>
     <pattern>hym4ant</pattern>
     <pattern>hym5el</pattern>
-    <pattern>hym4en.</pattern>
+    <pattern>hym4en </pattern>
     <pattern>hymerad4</pattern>
     <pattern>hym3o</pattern>
     <pattern>hymp4</pattern>
@@ -3149,7 +3151,7 @@
     <pattern>iach2</pattern>
     <pattern>iad3</pattern>
     <pattern>i4ada</pattern>
-    <pattern>5iadaeth.</pattern>
+    <pattern>5iadaeth </pattern>
     <pattern>iad4lo</pattern>
     <pattern>5iaduro</pattern>
     <pattern>i3ael</pattern>
@@ -3190,7 +3192,7 @@
     <pattern>ibl3e</pattern>
     <pattern>ibl3o</pattern>
     <pattern>ibl3w</pattern>
-    <pattern>ib5og.</pattern>
+    <pattern>ib5og </pattern>
     <pattern>ib3on</pattern>
     <pattern>ibr3a</pattern>
     <pattern>ibr3w</pattern>
@@ -3249,7 +3251,7 @@
     <pattern>id2ym</pattern>
     <pattern>1ie</pattern>
     <pattern>4iedd</pattern>
-    <pattern>4iedi.</pattern>
+    <pattern>4iedi </pattern>
     <pattern>iedif5</pattern>
     <pattern>ied4yl</pattern>
     <pattern>2i3ef</pattern>
@@ -3258,7 +3260,7 @@
     <pattern>2iei</pattern>
     <pattern>i3eid</pattern>
     <pattern>ieis4</pattern>
-    <pattern>4ien.</pattern>
+    <pattern>4ien </pattern>
     <pattern>ien4a</pattern>
     <pattern>ien4c</pattern>
     <pattern>4iend</pattern>
@@ -3282,14 +3284,14 @@
     <pattern>if4aw</pattern>
     <pattern>if5bin</pattern>
     <pattern>i4fec</pattern>
-    <pattern>i4fed.</pattern>
+    <pattern>i4fed </pattern>
     <pattern>i4fedi</pattern>
     <pattern>i5feio</pattern>
     <pattern>i5feiw</pattern>
     <pattern>i4fem</pattern>
     <pattern>ife4n</pattern>
     <pattern>i4fent</pattern>
-    <pattern>i4fer.</pattern>
+    <pattern>i4fer </pattern>
     <pattern>i3fery</pattern>
     <pattern>i4fesi</pattern>
     <pattern>i3fet</pattern>
@@ -3300,7 +3302,7 @@
     <pattern>iffy5ne</pattern>
     <pattern>if3i</pattern>
     <pattern>i3flas</pattern>
-    <pattern>if4on.</pattern>
+    <pattern>if4on </pattern>
     <pattern>i3fre</pattern>
     <pattern>i3fry</pattern>
     <pattern>i1fu</pattern>
@@ -3322,7 +3324,7 @@
     <pattern>ig3es</pattern>
     <pattern>ig5hal4</pattern>
     <pattern>2ig3i</pattern>
-    <pattern>ig5lan.</pattern>
+    <pattern>ig5lan </pattern>
     <pattern>ig5lann</pattern>
     <pattern>ig5law</pattern>
     <pattern>ig5let</pattern>
@@ -3349,7 +3351,7 @@
     <pattern>ig4wrn</pattern>
     <pattern>2ig1y</pattern>
     <pattern>igyff4</pattern>
-    <pattern>ig5yn.</pattern>
+    <pattern>ig5yn </pattern>
     <pattern>ig4yna</pattern>
     <pattern>ig4yr</pattern>
     <pattern>igys4</pattern>
@@ -3365,11 +3367,11 @@
     <pattern>i3iw</pattern>
     <pattern>2i2l</pattern>
     <pattern>il3a</pattern>
-    <pattern>5ilau.</pattern>
+    <pattern>5ilau </pattern>
     <pattern>ilc2</pattern>
     <pattern>ild5ir</pattern>
     <pattern>il3ed</pattern>
-    <pattern>il5en.</pattern>
+    <pattern>il5en </pattern>
     <pattern>ilew4</pattern>
     <pattern>il1f</pattern>
     <pattern>ilf4y</pattern>
@@ -3393,7 +3395,7 @@
     <pattern>il4ws</pattern>
     <pattern>il3yd</pattern>
     <pattern>il3yg4</pattern>
-    <pattern>il3yn.</pattern>
+    <pattern>il3yn </pattern>
     <pattern>ily3na</pattern>
     <pattern>ily5ne</pattern>
     <pattern>i4lysia</pattern>
@@ -3445,8 +3447,8 @@
     <pattern>in5wyc</pattern>
     <pattern>in1y</pattern>
     <pattern>1io</pattern>
-    <pattern>3io.</pattern>
-    <pattern>2iod.</pattern>
+    <pattern>3io </pattern>
+    <pattern>2iod </pattern>
     <pattern>i3odde</pattern>
     <pattern>iod5le</pattern>
     <pattern>iod5wy</pattern>
@@ -3482,7 +3484,7 @@
     <pattern>ir4li</pattern>
     <pattern>ir4ll</pattern>
     <pattern>ir3na</pattern>
-    <pattern>irnad4wy.</pattern>
+    <pattern>irnad4wy </pattern>
     <pattern>ir3no</pattern>
     <pattern>irn4y</pattern>
     <pattern>2ir3o</pattern>
@@ -3497,7 +3499,7 @@
     <pattern>is3b</pattern>
     <pattern>is5eld</pattern>
     <pattern>is2er</pattern>
-    <pattern>is5er.</pattern>
+    <pattern>is5er </pattern>
     <pattern>is4gam</pattern>
     <pattern>is4ge</pattern>
     <pattern>isg3o</pattern>
@@ -3515,10 +3517,10 @@
     <pattern>is5tol</pattern>
     <pattern>is2w</pattern>
     <pattern>is3wn</pattern>
-    <pattern>is5wyd.</pattern>
+    <pattern>is5wyd </pattern>
     <pattern>is4yc</pattern>
     <pattern>is4yr</pattern>
-    <pattern>1it.</pattern>
+    <pattern>1it </pattern>
     <pattern>3it2a</pattern>
     <pattern>2ith1</pattern>
     <pattern>ith3a</pattern>
@@ -3528,7 +3530,7 @@
     <pattern>ith5or</pattern>
     <pattern>ith3w</pattern>
     <pattern>ith3y</pattern>
-    <pattern>2iw.</pattern>
+    <pattern>2iw </pattern>
     <pattern>iw3adw</pattern>
     <pattern>iw3af</pattern>
     <pattern>i4wair</pattern>
@@ -3539,7 +3541,7 @@
     <pattern>iw4ch</pattern>
     <pattern>2iw1d2</pattern>
     <pattern>iwd4i</pattern>
-    <pattern>iw5edd.</pattern>
+    <pattern>iw5edd </pattern>
     <pattern>iw3edi</pattern>
     <pattern>iw3eid</pattern>
     <pattern>iwg4w</pattern>
@@ -3572,20 +3574,20 @@
     <pattern>ï2i</pattern>
     <pattern>l1ac</pattern>
     <pattern>lach3</pattern>
-    <pattern>2lad.</pattern>
+    <pattern>2lad </pattern>
     <pattern>l4ad4d3</pattern>
     <pattern>lad2m</pattern>
     <pattern>lad2o</pattern>
     <pattern>lad3r4w</pattern>
     <pattern>4laen</pattern>
-    <pattern>l3af.</pattern>
+    <pattern>l3af </pattern>
     <pattern>5lafar</pattern>
     <pattern>l1ai</pattern>
     <pattern>l4ain</pattern>
     <pattern>l4air</pattern>
     <pattern>l4ait</pattern>
     <pattern>lam3</pattern>
-    <pattern>l4an.</pattern>
+    <pattern>l4an </pattern>
     <pattern>lan5ced</pattern>
     <pattern>lan5de</pattern>
     <pattern>landr3</pattern>
@@ -3598,11 +3600,11 @@
     <pattern>lar4ia</pattern>
     <pattern>lar3n</pattern>
     <pattern>l1as</pattern>
-    <pattern>l4as.</pattern>
+    <pattern>l4as </pattern>
     <pattern>lasg4</pattern>
     <pattern>last2</pattern>
     <pattern>las5ta</pattern>
-    <pattern>4lat.</pattern>
+    <pattern>4lat </pattern>
     <pattern>lathr3</pattern>
     <pattern>lats5i</pattern>
     <pattern>2l3au</pattern>
@@ -3620,9 +3622,9 @@
     <pattern>lch5io</pattern>
     <pattern>lch5iw</pattern>
     <pattern>lch3r</pattern>
-    <pattern>lch5wyd.</pattern>
+    <pattern>lch5wyd </pattern>
     <pattern>l3co</pattern>
-    <pattern>lc3yn.</pattern>
+    <pattern>lc3yn </pattern>
     <pattern>2l1d2</pattern>
     <pattern>ldd2</pattern>
     <pattern>ld3i</pattern>
@@ -3630,13 +3632,13 @@
     <pattern>ldro3</pattern>
     <pattern>ldy5na</pattern>
     <pattern>ldy5ne</pattern>
-    <pattern>1le.</pattern>
+    <pattern>1le </pattern>
     <pattern>le3a</pattern>
-    <pattern>le4ad.</pattern>
+    <pattern>le4ad </pattern>
     <pattern>le4ada</pattern>
     <pattern>lebr3</pattern>
     <pattern>lech3</pattern>
-    <pattern>l3ed.</pattern>
+    <pattern>l3ed </pattern>
     <pattern>leddf5</pattern>
     <pattern>l4eddog</pattern>
     <pattern>led5fy</pattern>
@@ -3646,18 +3648,18 @@
     <pattern>lef3e</pattern>
     <pattern>lef3y</pattern>
     <pattern>l2ega</pattern>
-    <pattern>leg5ar.</pattern>
+    <pattern>leg5ar </pattern>
     <pattern>l2egw</pattern>
     <pattern>leg5yr</pattern>
     <pattern>le5iau</pattern>
-    <pattern>le3id.</pattern>
+    <pattern>le3id </pattern>
     <pattern>lei3l4</pattern>
-    <pattern>le3ir.</pattern>
-    <pattern>le3it.</pattern>
+    <pattern>le3ir </pattern>
+    <pattern>le3it </pattern>
     <pattern>le4iw</pattern>
     <pattern>l3el</pattern>
     <pattern>2l1em</pattern>
-    <pattern>l3em.</pattern>
+    <pattern>l3em </pattern>
     <pattern>l2ema</pattern>
     <pattern>len2d</pattern>
     <pattern>len5di</pattern>
@@ -3666,8 +3668,8 @@
     <pattern>len3y</pattern>
     <pattern>1leo</pattern>
     <pattern>le3oc</pattern>
-    <pattern>le4on.</pattern>
-    <pattern>l3er.</pattern>
+    <pattern>le4on </pattern>
+    <pattern>l3er </pattern>
     <pattern>l4erau</pattern>
     <pattern>ler5ig</pattern>
     <pattern>lesg5e</pattern>
@@ -3677,7 +3679,7 @@
     <pattern>l4euad</pattern>
     <pattern>l4euh</pattern>
     <pattern>4leuon</pattern>
-    <pattern>l5euon.</pattern>
+    <pattern>l5euon </pattern>
     <pattern>le3wch</pattern>
     <pattern>le3wn</pattern>
     <pattern>lew3yn</pattern>
@@ -3712,20 +3714,20 @@
     <pattern>li3de</pattern>
     <pattern>1lif1</pattern>
     <pattern>li4fr</pattern>
-    <pattern>4lio.</pattern>
+    <pattern>4lio </pattern>
     <pattern>li5oed</pattern>
     <pattern>li5pal</pattern>
     <pattern>2lir</pattern>
-    <pattern>l3ir.</pattern>
+    <pattern>l3ir </pattern>
     <pattern>lis4g3</pattern>
-    <pattern>l3it.</pattern>
+    <pattern>l3it </pattern>
     <pattern>lith4r3</pattern>
-    <pattern>l4iw.</pattern>
+    <pattern>l4iw </pattern>
     <pattern>l2l</pattern>
-    <pattern>2ll.</pattern>
+    <pattern>2ll </pattern>
     <pattern>ll4ada</pattern>
     <pattern>lladr3</pattern>
-    <pattern>ll5adwy.</pattern>
+    <pattern>ll5adwy </pattern>
     <pattern>ll3ant</pattern>
     <pattern>ll5arn</pattern>
     <pattern>lledr4e</pattern>
@@ -3743,7 +3745,7 @@
     <pattern>llw2</pattern>
     <pattern>ll3wa</pattern>
     <pattern>llw4e</pattern>
-    <pattern>5llyd.</pattern>
+    <pattern>5llyd </pattern>
     <pattern>llygr3</pattern>
     <pattern>ll4ynn</pattern>
     <pattern>ll4yr2</pattern>
@@ -3759,25 +3761,25 @@
     <pattern>lm3w</pattern>
     <pattern>lm4yn</pattern>
     <pattern>l1n</pattern>
-    <pattern>2lo.</pattern>
+    <pattern>2lo </pattern>
     <pattern>lob5yn</pattern>
     <pattern>2loc</pattern>
     <pattern>loch3</pattern>
     <pattern>2lod</pattern>
     <pattern>lodd3</pattern>
-    <pattern>lo3ed.</pattern>
+    <pattern>lo3ed </pattern>
     <pattern>l1og3</pattern>
     <pattern>logl2</pattern>
     <pattern>l1ol</pattern>
     <pattern>lol2w</pattern>
     <pattern>lolyg4</pattern>
     <pattern>2l1om</pattern>
-    <pattern>l3om.</pattern>
+    <pattern>l3om </pattern>
     <pattern>lon2a</pattern>
     <pattern>lon3d</pattern>
     <pattern>lon4es</pattern>
     <pattern>4l3ont</pattern>
-    <pattern>l3or.</pattern>
+    <pattern>l3or </pattern>
     <pattern>l4orau</pattern>
     <pattern>l4org</pattern>
     <pattern>l4ory</pattern>
@@ -3791,7 +3793,7 @@
     <pattern>l4syn</pattern>
     <pattern>l2t</pattern>
     <pattern>lt3ad</pattern>
-    <pattern>lt5eg.</pattern>
+    <pattern>lt5eg </pattern>
     <pattern>lt3em</pattern>
     <pattern>l5tera</pattern>
     <pattern>l5tero</pattern>
@@ -3802,15 +3804,15 @@
     <pattern>l3tra</pattern>
     <pattern>ltr4e</pattern>
     <pattern>l3tu</pattern>
-    <pattern>l4tu.</pattern>
+    <pattern>l4tu </pattern>
     <pattern>lt1w</pattern>
-    <pattern>2lu.</pattern>
+    <pattern>2lu </pattern>
     <pattern>l2ud</pattern>
     <pattern>ludd5y</pattern>
     <pattern>lud3w</pattern>
     <pattern>lu4edd</pattern>
     <pattern>l2un3</pattern>
-    <pattern>l4un.</pattern>
+    <pattern>l4un </pattern>
     <pattern>lur5ig</pattern>
     <pattern>lust5l</pattern>
     <pattern>lw1a</pattern>
@@ -3827,7 +3829,7 @@
     <pattern>lw1i</pattern>
     <pattern>lw4ig</pattern>
     <pattern>l1wn</pattern>
-    <pattern>l3wn.</pattern>
+    <pattern>l3wn </pattern>
     <pattern>lw3o</pattern>
     <pattern>l1wr1</pattern>
     <pattern>4lwre</pattern>
@@ -3839,9 +3841,9 @@
     <pattern>3l4wyt</pattern>
     <pattern>lyb3</pattern>
     <pattern>2lyc</pattern>
-    <pattern>l3ych.</pattern>
+    <pattern>l3ych </pattern>
     <pattern>lyd2</pattern>
-    <pattern>l4yd.</pattern>
+    <pattern>l4yd </pattern>
     <pattern>2lydd</pattern>
     <pattern>lydn3</pattern>
     <pattern>lydr3</pattern>
@@ -3849,7 +3851,7 @@
     <pattern>lyf5an5</pattern>
     <pattern>lyf4n3</pattern>
     <pattern>lyf4r3</pattern>
-    <pattern>5lyfr.</pattern>
+    <pattern>5lyfr </pattern>
     <pattern>l2yg</pattern>
     <pattern>4lygedd</pattern>
     <pattern>4lygia</pattern>
@@ -3859,7 +3861,7 @@
     <pattern>l4yn3y</pattern>
     <pattern>lyr3a</pattern>
     <pattern>4lysau</pattern>
-    <pattern>4lysen.</pattern>
+    <pattern>4lysen </pattern>
     <pattern>lys3ga</pattern>
     <pattern>lys3ge</pattern>
     <pattern>l4ysl</pattern>
@@ -3892,7 +3894,7 @@
     <pattern>m4anf</pattern>
     <pattern>man2o</pattern>
     <pattern>m3ar</pattern>
-    <pattern>m4ar.</pattern>
+    <pattern>m4ar </pattern>
     <pattern>mar4ch3</pattern>
     <pattern>m4are</pattern>
     <pattern>m4ari</pattern>
@@ -3920,7 +3922,7 @@
     <pattern>mddadl4</pattern>
     <pattern>mddef3</pattern>
     <pattern>mddi4d</pattern>
-    <pattern>m5der.</pattern>
+    <pattern>m5der </pattern>
     <pattern>m4dera</pattern>
     <pattern>mdog4aetho</pattern>
     <pattern>mdo3na</pattern>
@@ -3946,9 +3948,9 @@
     <pattern>5menty</pattern>
     <pattern>men5yd</pattern>
     <pattern>m2er</pattern>
-    <pattern>m3er.</pattern>
+    <pattern>m3er </pattern>
     <pattern>m3erad</pattern>
-    <pattern>m4eradwy.</pattern>
+    <pattern>m4eradwy </pattern>
     <pattern>m4eraf</pattern>
     <pattern>m4erai</pattern>
     <pattern>m4eran</pattern>
@@ -4035,7 +4037,7 @@
     <pattern>mod3r</pattern>
     <pattern>mof5yd</pattern>
     <pattern>m3og</pattern>
-    <pattern>m4on.</pattern>
+    <pattern>m4on </pattern>
     <pattern>mon3a</pattern>
     <pattern>mon4d</pattern>
     <pattern>m4onï</pattern>
@@ -4120,18 +4122,18 @@
     <pattern>mydr3</pattern>
     <pattern>myd3y</pattern>
     <pattern>myf4y</pattern>
-    <pattern>m4yl.</pattern>
+    <pattern>m4yl </pattern>
     <pattern>myl3a</pattern>
     <pattern>m4yln</pattern>
     <pattern>m3ym</pattern>
-    <pattern>myn4ai.</pattern>
+    <pattern>myn4ai </pattern>
     <pattern>m3yr</pattern>
     <pattern>myr4as</pattern>
     <pattern>myr5asa</pattern>
     <pattern>myr4edi</pattern>
     <pattern>myrf4</pattern>
     <pattern>m3ys</pattern>
-    <pattern>m4ysg.</pattern>
+    <pattern>m4ysg </pattern>
     <pattern>mys4w</pattern>
     <pattern>myw3y</pattern>
     <pattern>3na3b2</pattern>
@@ -4178,14 +4180,14 @@
     <pattern>nc5des</pattern>
     <pattern>nc4ed</pattern>
     <pattern>nc2ei</pattern>
-    <pattern>nc5en.</pattern>
+    <pattern>nc5en </pattern>
     <pattern>n3ch</pattern>
     <pattern>nchwiliad4</pattern>
     <pattern>n4cia</pattern>
     <pattern>n4cid</pattern>
     <pattern>n4cie</pattern>
     <pattern>n4cio</pattern>
-    <pattern>n5ciod.</pattern>
+    <pattern>n5ciod </pattern>
     <pattern>n4cir</pattern>
     <pattern>n4cit</pattern>
     <pattern>n4ciw</pattern>
@@ -4193,7 +4195,7 @@
     <pattern>n3cl</pattern>
     <pattern>ncr1</pattern>
     <pattern>nct1</pattern>
-    <pattern>n5cyd.</pattern>
+    <pattern>n5cyd </pattern>
     <pattern>n5cyny</pattern>
     <pattern>n1d2</pattern>
     <pattern>nd3as</pattern>
@@ -4242,7 +4244,7 @@
     <pattern>n3eidd</pattern>
     <pattern>n2eis</pattern>
     <pattern>n1el</pattern>
-    <pattern>3nel.</pattern>
+    <pattern>3nel </pattern>
     <pattern>nel5yn</pattern>
     <pattern>3nenty</pattern>
     <pattern>ner3a</pattern>
@@ -4264,7 +4266,7 @@
     <pattern>n4euf</pattern>
     <pattern>neul4</pattern>
     <pattern>3new</pattern>
-    <pattern>new5yll.</pattern>
+    <pattern>new5yll </pattern>
     <pattern>newyn3</pattern>
     <pattern>n1f2</pattern>
     <pattern>nfadd4</pattern>
@@ -4289,10 +4291,10 @@
     <pattern>nf4ri</pattern>
     <pattern>nf4wy</pattern>
     <pattern>n2fy</pattern>
-    <pattern>n5fyd.</pattern>
+    <pattern>n5fyd </pattern>
     <pattern>nfyd3a</pattern>
     <pattern>ng2ad</pattern>
-    <pattern>ng5adwy.</pattern>
+    <pattern>ng5adwy </pattern>
     <pattern>n4gai</pattern>
     <pattern>ngal4</pattern>
     <pattern>n3gam</pattern>
@@ -4333,7 +4335,7 @@
     <pattern>nho5esi</pattern>
     <pattern>nho3n4a</pattern>
     <pattern>nhon4e</pattern>
-    <pattern>nhudd4ed.</pattern>
+    <pattern>nhudd4ed </pattern>
     <pattern>nhu4e</pattern>
     <pattern>nhyc4</pattern>
     <pattern>nhyd2</pattern>
@@ -4363,11 +4365,11 @@
     <pattern>n5igam</pattern>
     <pattern>nige5na</pattern>
     <pattern>4nigiad</pattern>
-    <pattern>n5igiad.</pattern>
+    <pattern>n5igiad </pattern>
     <pattern>n5igiada</pattern>
     <pattern>5nigiadw</pattern>
     <pattern>4nigion</pattern>
-    <pattern>n5igion.</pattern>
+    <pattern>n5igion </pattern>
     <pattern>5nigiont</pattern>
     <pattern>4n5igiwr</pattern>
     <pattern>nigl4</pattern>
@@ -4439,7 +4441,7 @@
     <pattern>nn4yw</pattern>
     <pattern>no4ada</pattern>
     <pattern>n3ob</pattern>
-    <pattern>n2od.</pattern>
+    <pattern>n2od </pattern>
     <pattern>n2odo</pattern>
     <pattern>nod3r</pattern>
     <pattern>n2oe</pattern>
@@ -4458,7 +4460,7 @@
     <pattern>norch4</pattern>
     <pattern>nor4f</pattern>
     <pattern>2nos3</pattern>
-    <pattern>nö5es.</pattern>
+    <pattern>nö5es </pattern>
     <pattern>np4et</pattern>
     <pattern>n1r2</pattern>
     <pattern>nre4o</pattern>
@@ -4476,7 +4478,7 @@
     <pattern>nsy3na</pattern>
     <pattern>nsy3ne</pattern>
     <pattern>nt3ad</pattern>
-    <pattern>nt5af.</pattern>
+    <pattern>nt5af </pattern>
     <pattern>nt5aid</pattern>
     <pattern>nt4ana</pattern>
     <pattern>nt3aw</pattern>
@@ -4484,16 +4486,16 @@
     <pattern>n3tei</pattern>
     <pattern>nt3el</pattern>
     <pattern>nt3em</pattern>
-    <pattern>nt3er.</pattern>
+    <pattern>nt3er </pattern>
     <pattern>ntew3</pattern>
     <pattern>nth2</pattern>
     <pattern>n4tia</pattern>
-    <pattern>nt5il.</pattern>
+    <pattern>nt5il </pattern>
     <pattern>nt4in</pattern>
     <pattern>n3tis</pattern>
     <pattern>nt3oc</pattern>
     <pattern>nt3od</pattern>
-    <pattern>nt5od.</pattern>
+    <pattern>nt5od </pattern>
     <pattern>nt3oe</pattern>
     <pattern>n4t3or</pattern>
     <pattern>n1tr</pattern>
@@ -4509,7 +4511,7 @@
     <pattern>n3wait</pattern>
     <pattern>nw3an</pattern>
     <pattern>n3war</pattern>
-    <pattern>nwar4ed.</pattern>
+    <pattern>nwar4ed </pattern>
     <pattern>nw3as</pattern>
     <pattern>nwbl4</pattern>
     <pattern>nwb5le</pattern>
@@ -4523,16 +4525,16 @@
     <pattern>nw4ia</pattern>
     <pattern>nw3id</pattern>
     <pattern>nwir4</pattern>
-    <pattern>nw3ir.</pattern>
+    <pattern>nw3ir </pattern>
     <pattern>n3wis</pattern>
     <pattern>nw3o</pattern>
     <pattern>nwr5ei</pattern>
-    <pattern>n4wy.</pattern>
+    <pattern>n4wy </pattern>
     <pattern>nwybod4a</pattern>
     <pattern>n4wyc</pattern>
     <pattern>n3wyl</pattern>
     <pattern>n2wyn</pattern>
-    <pattern>n4wyn.</pattern>
+    <pattern>n4wyn </pattern>
     <pattern>n3wyt</pattern>
     <pattern>nych3</pattern>
     <pattern>nyf2</pattern>
@@ -4557,7 +4559,7 @@
     <pattern>nyrchafad4</pattern>
     <pattern>ny3ri</pattern>
     <pattern>n1ys</pattern>
-    <pattern>n4ys.</pattern>
+    <pattern>n4ys </pattern>
     <pattern>nys4g</pattern>
     <pattern>n3yw</pattern>
     <pattern>2o1a</pattern>
@@ -4567,9 +4569,9 @@
     <pattern>ob5ant</pattern>
     <pattern>ob3ed</pattern>
     <pattern>ob3el</pattern>
-    <pattern>ob5en.</pattern>
+    <pattern>ob5en </pattern>
     <pattern>oben5y</pattern>
-    <pattern>ob5er.</pattern>
+    <pattern>ob5er </pattern>
     <pattern>obl3a</pattern>
     <pattern>obl5ed</pattern>
     <pattern>ob3ler</pattern>
@@ -4632,7 +4634,7 @@
     <pattern>odr5ec</pattern>
     <pattern>odr5em</pattern>
     <pattern>odr3o</pattern>
-    <pattern>odr5wyd.</pattern>
+    <pattern>odr5wyd </pattern>
     <pattern>od4ry</pattern>
     <pattern>odr5yc</pattern>
     <pattern>2odw</pattern>
@@ -4659,7 +4661,7 @@
     <pattern>oesg4o</pattern>
     <pattern>oet5an</pattern>
     <pattern>oetr3</pattern>
-    <pattern>2of.</pattern>
+    <pattern>2of </pattern>
     <pattern>of3ad</pattern>
     <pattern>of3ai</pattern>
     <pattern>ofan3</pattern>
@@ -4671,7 +4673,7 @@
     <pattern>of3el</pattern>
     <pattern>of3en</pattern>
     <pattern>of4enn</pattern>
-    <pattern>of3er.</pattern>
+    <pattern>of3er </pattern>
     <pattern>o4ferl</pattern>
     <pattern>o4fery</pattern>
     <pattern>of4f3a</pattern>
@@ -4765,7 +4767,7 @@
     <pattern>om2e</pattern>
     <pattern>om5eda</pattern>
     <pattern>om5edi</pattern>
-    <pattern>om5eg.</pattern>
+    <pattern>om5eg </pattern>
     <pattern>om3ei</pattern>
     <pattern>om3en</pattern>
     <pattern>om5isi</pattern>
@@ -4774,21 +4776,21 @@
     <pattern>2omp</pattern>
     <pattern>om5pre</pattern>
     <pattern>on1</pattern>
-    <pattern>on5ach.</pattern>
+    <pattern>on5ach </pattern>
     <pattern>on5adu</pattern>
     <pattern>on3af</pattern>
     <pattern>o4n3ai</pattern>
     <pattern>4onair</pattern>
     <pattern>on3an</pattern>
     <pattern>o4n3au</pattern>
-    <pattern>on5au.</pattern>
+    <pattern>on5au </pattern>
     <pattern>2onb</pattern>
     <pattern>on5cyf</pattern>
     <pattern>2ond</pattern>
     <pattern>on5did</pattern>
     <pattern>on2do</pattern>
     <pattern>2one</pattern>
-    <pattern>on5edd.</pattern>
+    <pattern>on5edd </pattern>
     <pattern>on3el</pattern>
     <pattern>onest3</pattern>
     <pattern>2onf</pattern>
@@ -4799,7 +4801,7 @@
     <pattern>2oni</pattern>
     <pattern>2onn</pattern>
     <pattern>4onnu</pattern>
-    <pattern>on5of.</pattern>
+    <pattern>on5of </pattern>
     <pattern>2onog</pattern>
     <pattern>on2t</pattern>
     <pattern>4onto</pattern>
@@ -4815,7 +4817,7 @@
     <pattern>or1a</pattern>
     <pattern>4orac</pattern>
     <pattern>or3ach</pattern>
-    <pattern>or5aeth.</pattern>
+    <pattern>or5aeth </pattern>
     <pattern>or5aetha</pattern>
     <pattern>or3af</pattern>
     <pattern>or3ai</pattern>
@@ -4855,12 +4857,12 @@
     <pattern>or4oh</pattern>
     <pattern>oron5a</pattern>
     <pattern>or3one</pattern>
-    <pattern>or5oni.</pattern>
+    <pattern>or5oni </pattern>
     <pattern>or5onid</pattern>
     <pattern>or5onir</pattern>
     <pattern>or5onit</pattern>
     <pattern>or5pws</pattern>
-    <pattern>4orth.</pattern>
+    <pattern>4orth </pattern>
     <pattern>ort4i</pattern>
     <pattern>or4ty</pattern>
     <pattern>or5uwc</pattern>
@@ -4897,7 +4899,7 @@
     <pattern>os3w</pattern>
     <pattern>os3y</pattern>
     <pattern>2ot1</pattern>
-    <pattern>3ot.</pattern>
+    <pattern>3ot </pattern>
     <pattern>ot3e</pattern>
     <pattern>ot5esa</pattern>
     <pattern>oth3</pattern>
@@ -4933,7 +4935,7 @@
     <pattern>4p5edig</pattern>
     <pattern>p2ei</pattern>
     <pattern>peir4a</pattern>
-    <pattern>p5eli.</pattern>
+    <pattern>p5eli </pattern>
     <pattern>pel3y</pattern>
     <pattern>2pem</pattern>
     <pattern>pengl4</pattern>
@@ -4980,7 +4982,7 @@
     <pattern>pw2</pattern>
     <pattern>pwd3</pattern>
     <pattern>pwr1</pattern>
-    <pattern>p4wy.</pattern>
+    <pattern>p4wy </pattern>
     <pattern>pydr3</pattern>
     <pattern>p2yr</pattern>
     <pattern>r4abe</pattern>
@@ -5018,7 +5020,7 @@
     <pattern>ran2e</pattern>
     <pattern>r4anf</pattern>
     <pattern>ran3o</pattern>
-    <pattern>r4anod.</pattern>
+    <pattern>r4anod </pattern>
     <pattern>ra5phe</pattern>
     <pattern>r3ar3</pattern>
     <pattern>rar4c</pattern>
@@ -5050,7 +5052,7 @@
     <pattern>rbyd3</pattern>
     <pattern>rc2a</pattern>
     <pattern>rc5adw</pattern>
-    <pattern>rc5af.</pattern>
+    <pattern>rc5af </pattern>
     <pattern>r3car</pattern>
     <pattern>rc3e</pattern>
     <pattern>rc4er</pattern>
@@ -5079,7 +5081,7 @@
     <pattern>r1da</pattern>
     <pattern>r3dai</pattern>
     <pattern>rdan3</pattern>
-    <pattern>rd5au.</pattern>
+    <pattern>rd5au </pattern>
     <pattern>r2dd</pattern>
     <pattern>rdd3ad</pattern>
     <pattern>rdd5as</pattern>
@@ -5087,10 +5089,10 @@
     <pattern>rdd5in</pattern>
     <pattern>rdd5iwy</pattern>
     <pattern>rdd3o</pattern>
-    <pattern>rdd4od.</pattern>
+    <pattern>rdd4od </pattern>
     <pattern>r5ddodi</pattern>
     <pattern>r3dd4u</pattern>
-    <pattern>r4ddu.</pattern>
+    <pattern>r4ddu </pattern>
     <pattern>rddw4</pattern>
     <pattern>rdd3yc</pattern>
     <pattern>r5ddychw</pattern>
@@ -5101,14 +5103,14 @@
     <pattern>rd4in</pattern>
     <pattern>rd4ir</pattern>
     <pattern>r1do</pattern>
-    <pattern>r5dod.</pattern>
+    <pattern>r5dod </pattern>
     <pattern>r1dr</pattern>
     <pattern>rdro3</pattern>
     <pattern>rdro4ada</pattern>
     <pattern>r3dw</pattern>
     <pattern>r1dy</pattern>
     <pattern>rdy4n</pattern>
-    <pattern>rd3yn.</pattern>
+    <pattern>rd3yn </pattern>
     <pattern>re3a</pattern>
     <pattern>r3ebai</pattern>
     <pattern>r3ebas</pattern>
@@ -5119,26 +5121,26 @@
     <pattern>rech3</pattern>
     <pattern>rec3i</pattern>
     <pattern>4redd</pattern>
-    <pattern>r5edd.</pattern>
+    <pattern>r5edd </pattern>
     <pattern>r4edio</pattern>
     <pattern>r4edol</pattern>
     <pattern>r4edwr</pattern>
-    <pattern>red4yn.</pattern>
+    <pattern>red4yn </pattern>
     <pattern>re4fa</pattern>
     <pattern>refn5y</pattern>
     <pattern>ref3y</pattern>
     <pattern>r4egl</pattern>
-    <pattern>r5egl.</pattern>
+    <pattern>r5egl </pattern>
     <pattern>r4egog</pattern>
     <pattern>re5iau</pattern>
     <pattern>r4eic</pattern>
-    <pattern>re5id.</pattern>
+    <pattern>re5id </pattern>
     <pattern>reidd5</pattern>
     <pattern>r4eig</pattern>
     <pattern>r4eil</pattern>
     <pattern>r4eine</pattern>
-    <pattern>re5ir.</pattern>
-    <pattern>re5it.</pattern>
+    <pattern>re5ir </pattern>
+    <pattern>re5it </pattern>
     <pattern>re4iw</pattern>
     <pattern>r3ell</pattern>
     <pattern>r4emi</pattern>
@@ -5158,12 +5160,12 @@
     <pattern>r2euy</pattern>
     <pattern>re4wi</pattern>
     <pattern>rew5id</pattern>
-    <pattern>re5wn.</pattern>
+    <pattern>re5wn </pattern>
     <pattern>rew5ynn</pattern>
     <pattern>2r2f</pattern>
     <pattern>r1fa</pattern>
     <pattern>r4f3ad</pattern>
-    <pattern>r4faeth.</pattern>
+    <pattern>r4faeth </pattern>
     <pattern>r4faf</pattern>
     <pattern>r4fai</pattern>
     <pattern>rf4ao</pattern>
@@ -5175,18 +5177,18 @@
     <pattern>rf3en</pattern>
     <pattern>rf4eny</pattern>
     <pattern>rf4ey</pattern>
-    <pattern>r4ff.</pattern>
+    <pattern>r4ff </pattern>
     <pattern>rff3i</pattern>
     <pattern>rff3l</pattern>
     <pattern>rff3o</pattern>
     <pattern>r3ffw</pattern>
     <pattern>rff3y</pattern>
     <pattern>rf3id</pattern>
-    <pattern>r5fil.</pattern>
+    <pattern>r5fil </pattern>
     <pattern>r3fl</pattern>
     <pattern>rf3lu</pattern>
     <pattern>rfodad4</pattern>
-    <pattern>rf5ol.</pattern>
+    <pattern>rf5ol </pattern>
     <pattern>rf3on</pattern>
     <pattern>rfor2</pattern>
     <pattern>rf5ord</pattern>
@@ -5293,7 +5295,7 @@
     <pattern>2riw</pattern>
     <pattern>ri4wa</pattern>
     <pattern>riw3l4</pattern>
-    <pattern>r5iwr.</pattern>
+    <pattern>r5iwr </pattern>
     <pattern>2r3iy</pattern>
     <pattern>r1l2</pattern>
     <pattern>rla3na</pattern>
@@ -5303,17 +5305,17 @@
     <pattern>rl3ie</pattern>
     <pattern>rl3io</pattern>
     <pattern>r3ll</pattern>
-    <pattern>r4ll.</pattern>
+    <pattern>r4ll </pattern>
     <pattern>rll4e</pattern>
     <pattern>rllen3</pattern>
     <pattern>rl4l4w</pattern>
-    <pattern>rl5og.</pattern>
+    <pattern>rl5og </pattern>
     <pattern>r3lon</pattern>
     <pattern>rludd4</pattern>
     <pattern>r3lw</pattern>
     <pattern>r2lym</pattern>
     <pattern>rlyn3</pattern>
-    <pattern>rl5yn.</pattern>
+    <pattern>rl5yn </pattern>
     <pattern>r1m2</pattern>
     <pattern>r2ma</pattern>
     <pattern>rm4ac</pattern>
@@ -5323,9 +5325,9 @@
     <pattern>rm4od</pattern>
     <pattern>r3my</pattern>
     <pattern>2r2n1</pattern>
-    <pattern>r4nai.</pattern>
+    <pattern>r4nai </pattern>
     <pattern>r4nau</pattern>
-    <pattern>rn4es.</pattern>
+    <pattern>rn4es </pattern>
     <pattern>rn4esa</pattern>
     <pattern>r5nest</pattern>
     <pattern>rng4e</pattern>
@@ -5353,9 +5355,9 @@
     <pattern>ro3er</pattern>
     <pattern>r2of</pattern>
     <pattern>rof3l4</pattern>
-    <pattern>rofun4ed.</pattern>
+    <pattern>rofun4ed </pattern>
     <pattern>rof3w</pattern>
-    <pattern>r3og.</pattern>
+    <pattern>r3og </pattern>
     <pattern>r4ogae</pattern>
     <pattern>ro4ge</pattern>
     <pattern>rol3</pattern>
@@ -5364,7 +5366,7 @@
     <pattern>rongl4</pattern>
     <pattern>rong5lwy</pattern>
     <pattern>ron3i</pattern>
-    <pattern>r4os.</pattern>
+    <pattern>r4os </pattern>
     <pattern>r4osf</pattern>
     <pattern>rosg4</pattern>
     <pattern>ros3o</pattern>
@@ -5375,10 +5377,10 @@
     <pattern>rpar3</pattern>
     <pattern>r1pe</pattern>
     <pattern>rp5ech</pattern>
-    <pattern>rp5em.</pattern>
+    <pattern>rp5em </pattern>
     <pattern>r2pen</pattern>
     <pattern>rp5ent</pattern>
-    <pattern>rp5er.</pattern>
+    <pattern>rp5er </pattern>
     <pattern>rp5esi</pattern>
     <pattern>rp3i</pattern>
     <pattern>rp3o</pattern>
@@ -5393,7 +5395,7 @@
     <pattern>r2s3en</pattern>
     <pattern>rs3i</pattern>
     <pattern>rs4in</pattern>
-    <pattern>rs5li.</pattern>
+    <pattern>rs5li </pattern>
     <pattern>r2s3t2</pattern>
     <pattern>r2sy</pattern>
     <pattern>r1t2a</pattern>
@@ -5411,7 +5413,7 @@
     <pattern>rth5ru</pattern>
     <pattern>r5thryc</pattern>
     <pattern>r4thw</pattern>
-    <pattern>rth5wyon.</pattern>
+    <pattern>rth5wyon </pattern>
     <pattern>rth5ydd</pattern>
     <pattern>rt4iy</pattern>
     <pattern>r1tr</pattern>
@@ -5422,7 +5424,7 @@
     <pattern>rub4a</pattern>
     <pattern>r3uc</pattern>
     <pattern>rudd3</pattern>
-    <pattern>3rudd.</pattern>
+    <pattern>3rudd </pattern>
     <pattern>run4i</pattern>
     <pattern>r1us</pattern>
     <pattern>rw2a</pattern>
@@ -5456,7 +5458,7 @@
     <pattern>rwr4iaetho</pattern>
     <pattern>rw2y</pattern>
     <pattern>r4wyb</pattern>
-    <pattern>r5wydden.</pattern>
+    <pattern>r5wydden </pattern>
     <pattern>rwydd4iad4u</pattern>
     <pattern>r4wyde</pattern>
     <pattern>r4wydo</pattern>
@@ -5465,14 +5467,14 @@
     <pattern>3rwym</pattern>
     <pattern>rwyn3</pattern>
     <pattern>r4wys</pattern>
-    <pattern>3ry.</pattern>
+    <pattern>3ry </pattern>
     <pattern>3rybl</pattern>
     <pattern>ry3bo</pattern>
     <pattern>rych5wai</pattern>
     <pattern>r2yd</pattern>
-    <pattern>r4yd.</pattern>
+    <pattern>r4yd </pattern>
     <pattern>ry5dano</pattern>
-    <pattern>rydd4on.</pattern>
+    <pattern>rydd4on </pattern>
     <pattern>rydl4</pattern>
     <pattern>ry3f4a</pattern>
     <pattern>ryf2e</pattern>
@@ -5550,17 +5552,17 @@
     <pattern>s5gedo</pattern>
     <pattern>s5gedw</pattern>
     <pattern>sgel4</pattern>
-    <pattern>sg5en.</pattern>
+    <pattern>sg5en </pattern>
     <pattern>s3ge3na</pattern>
     <pattern>sge5ne</pattern>
     <pattern>s4gia</pattern>
-    <pattern>s4gl.</pattern>
+    <pattern>s4gl </pattern>
     <pattern>sgl3a</pattern>
     <pattern>sgl3o</pattern>
     <pattern>s3gn</pattern>
     <pattern>sg3ni</pattern>
     <pattern>sg3od</pattern>
-    <pattern>sg4od.</pattern>
+    <pattern>sg4od </pattern>
     <pattern>sgo4g3</pattern>
     <pattern>sg4ol</pattern>
     <pattern>sg3om</pattern>
@@ -5575,7 +5577,7 @@
     <pattern>sgy3na</pattern>
     <pattern>sgy5nes</pattern>
     <pattern>2si</pattern>
-    <pattern>s5ial.</pattern>
+    <pattern>s5ial </pattern>
     <pattern>s5ialu</pattern>
     <pattern>si4am</pattern>
     <pattern>5siand</pattern>
@@ -5585,11 +5587,11 @@
     <pattern>s3ie</pattern>
     <pattern>s4iet</pattern>
     <pattern>s2ig</pattern>
-    <pattern>s3ig.</pattern>
+    <pattern>s3ig </pattern>
     <pattern>si4ga</pattern>
     <pattern>s3ige</pattern>
     <pattern>sigl3</pattern>
-    <pattern>5sigl.</pattern>
+    <pattern>5sigl </pattern>
     <pattern>s3igr</pattern>
     <pattern>s5igyn</pattern>
     <pattern>sil4f</pattern>
@@ -5623,7 +5625,7 @@
     <pattern>2s3og3</pattern>
     <pattern>s3om3</pattern>
     <pattern>son3</pattern>
-    <pattern>s4on.</pattern>
+    <pattern>s4on </pattern>
     <pattern>s4onau</pattern>
     <pattern>son4deba</pattern>
     <pattern>son4der</pattern>
@@ -5651,11 +5653,11 @@
     <pattern>stl3o</pattern>
     <pattern>st5lyt</pattern>
     <pattern>st2o</pattern>
-    <pattern>s3tod.</pattern>
+    <pattern>s3tod </pattern>
     <pattern>sto3ra</pattern>
     <pattern>sto3r4e</pattern>
     <pattern>st4ra</pattern>
-    <pattern>s3tra.</pattern>
+    <pattern>s3tra </pattern>
     <pattern>str3ec</pattern>
     <pattern>str3es</pattern>
     <pattern>str3oc</pattern>
@@ -5664,7 +5666,7 @@
     <pattern>str3yc</pattern>
     <pattern>st2u</pattern>
     <pattern>st3ur</pattern>
-    <pattern>st5us.</pattern>
+    <pattern>st5us </pattern>
     <pattern>s5twyi</pattern>
     <pattern>styr3</pattern>
     <pattern>s2u</pattern>
@@ -5684,7 +5686,7 @@
     <pattern>swy4r</pattern>
     <pattern>s2y</pattern>
     <pattern>s3yc</pattern>
-    <pattern>s5ych.</pattern>
+    <pattern>s5ych </pattern>
     <pattern>s3yd</pattern>
     <pattern>syf4l3</pattern>
     <pattern>2syg</pattern>
@@ -5692,7 +5694,7 @@
     <pattern>syllt3</pattern>
     <pattern>sym4l3</pattern>
     <pattern>symudad4</pattern>
-    <pattern>2s3yn.</pattern>
+    <pattern>2s3yn </pattern>
     <pattern>syn4fe</pattern>
     <pattern>s3yr</pattern>
     <pattern>syr2a</pattern>
@@ -5730,12 +5732,12 @@
     <pattern>t1ec</pattern>
     <pattern>t1ed</pattern>
     <pattern>tedd3</pattern>
-    <pattern>4teg.</pattern>
+    <pattern>4teg </pattern>
     <pattern>4tegio</pattern>
     <pattern>t3eidi</pattern>
     <pattern>teimlad4w</pattern>
     <pattern>tel4y</pattern>
-    <pattern>t3em.</pattern>
+    <pattern>t3em </pattern>
     <pattern>t4emi</pattern>
     <pattern>t1en</pattern>
     <pattern>ten4d</pattern>
@@ -5747,7 +5749,7 @@
     <pattern>tes4io</pattern>
     <pattern>tet4a</pattern>
     <pattern>3tew</pattern>
-    <pattern>4tew.</pattern>
+    <pattern>4tew </pattern>
     <pattern>4tewc</pattern>
     <pattern>tew5id</pattern>
     <pattern>t1f</pattern>
@@ -5763,7 +5765,7 @@
     <pattern>tgl4a</pattern>
     <pattern>tgn2</pattern>
     <pattern>t2gor</pattern>
-    <pattern>t5gor.</pattern>
+    <pattern>t5gor </pattern>
     <pattern>t5goria</pattern>
     <pattern>t5gorn</pattern>
     <pattern>tg4wc</pattern>
@@ -5825,17 +5827,17 @@
     <pattern>t4ino</pattern>
     <pattern>tion4</pattern>
     <pattern>t4iono</pattern>
-    <pattern>tï5ol.</pattern>
+    <pattern>tï5ol </pattern>
     <pattern>tl3a</pattern>
     <pattern>tl4ae</pattern>
     <pattern>tl1e</pattern>
-    <pattern>tl4en.</pattern>
+    <pattern>tl4en </pattern>
     <pattern>tl3on</pattern>
     <pattern>tl3wy</pattern>
     <pattern>t3lyd</pattern>
     <pattern>t1n2</pattern>
     <pattern>t3och</pattern>
-    <pattern>t4od.</pattern>
+    <pattern>t4od </pattern>
     <pattern>t3odd</pattern>
     <pattern>to4ec</pattern>
     <pattern>to3edi</pattern>
@@ -5848,7 +5850,7 @@
     <pattern>tollt4</pattern>
     <pattern>tol3y</pattern>
     <pattern>t1om</pattern>
-    <pattern>t3om.</pattern>
+    <pattern>t3om </pattern>
     <pattern>t1on</pattern>
     <pattern>ton4e</pattern>
     <pattern>t3ont</pattern>
@@ -5861,7 +5863,7 @@
     <pattern>tra3c</pattern>
     <pattern>tra3dd</pattern>
     <pattern>tr3adw</pattern>
-    <pattern>tr3af.</pattern>
+    <pattern>tr3af </pattern>
     <pattern>tra3g</pattern>
     <pattern>tra3na</pattern>
     <pattern>tra5ne</pattern>
@@ -5872,11 +5874,11 @@
     <pattern>tref5a</pattern>
     <pattern>tref3l</pattern>
     <pattern>4treg</pattern>
-    <pattern>tr3em.</pattern>
+    <pattern>tr3em </pattern>
     <pattern>tr3ent</pattern>
     <pattern>3trew</pattern>
     <pattern>tr3id4</pattern>
-    <pattern>tr5ig.</pattern>
+    <pattern>tr5ig </pattern>
     <pattern>tro4ada</pattern>
     <pattern>tr3odd</pattern>
     <pattern>tro5fa</pattern>
@@ -5888,14 +5890,14 @@
     <pattern>2trw</pattern>
     <pattern>tr4wm</pattern>
     <pattern>tr3wn</pattern>
-    <pattern>tr5wyd.</pattern>
+    <pattern>tr5wyd </pattern>
     <pattern>t5r4wydd</pattern>
     <pattern>tr3wyf</pattern>
     <pattern>try3da</pattern>
     <pattern>tryd4y</pattern>
     <pattern>try3f</pattern>
     <pattern>try3l</pattern>
-    <pattern>tr5yn.</pattern>
+    <pattern>tr5yn </pattern>
     <pattern>3tryw</pattern>
     <pattern>ts2</pattern>
     <pattern>ts5ach</pattern>
@@ -5927,7 +5929,7 @@
     <pattern>ty5gar</pattern>
     <pattern>ty3li</pattern>
     <pattern>tymp4</pattern>
-    <pattern>4t3yn.</pattern>
+    <pattern>4t3yn </pattern>
     <pattern>tyng5ad</pattern>
     <pattern>1tyr</pattern>
     <pattern>tyr2a</pattern>
@@ -5964,11 +5966,11 @@
     <pattern>ud3yn</pattern>
     <pattern>u1e</pattern>
     <pattern>uedd3</pattern>
-    <pattern>u4estai.</pattern>
+    <pattern>u4estai </pattern>
     <pattern>u4estau</pattern>
     <pattern>u4estwr</pattern>
     <pattern>u4esty</pattern>
-    <pattern>uf5au.</pattern>
+    <pattern>uf5au </pattern>
     <pattern>uff4y</pattern>
     <pattern>uf3y</pattern>
     <pattern>ug3ad</pattern>
@@ -5987,7 +5989,7 @@
     <pattern>u1i</pattern>
     <pattern>ul3ad</pattern>
     <pattern>ul3af</pattern>
-    <pattern>u5lan.</pattern>
+    <pattern>u5lan </pattern>
     <pattern>u5lann</pattern>
     <pattern>ul3ant</pattern>
     <pattern>u5lath</pattern>
@@ -6008,12 +6010,12 @@
     <pattern>un1</pattern>
     <pattern>un4edy</pattern>
     <pattern>un5ell</pattern>
-    <pattern>un5es.</pattern>
+    <pattern>un5es </pattern>
     <pattern>un3i</pattern>
     <pattern>unig3</pattern>
-    <pattern>un5od.</pattern>
+    <pattern>un5od </pattern>
     <pattern>un2ol</pattern>
-    <pattern>un5ol.</pattern>
+    <pattern>un5ol </pattern>
     <pattern>2u1o</pattern>
     <pattern>uog3</pattern>
     <pattern>u3os3</pattern>
@@ -6025,7 +6027,7 @@
     <pattern>ur5fau</pattern>
     <pattern>ur4fl</pattern>
     <pattern>ur2gy</pattern>
-    <pattern>4urn.</pattern>
+    <pattern>4urn </pattern>
     <pattern>urof4</pattern>
     <pattern>ur2s3</pattern>
     <pattern>ur4ty</pattern>
@@ -6033,11 +6035,11 @@
     <pattern>u5rwydd</pattern>
     <pattern>ur3y</pattern>
     <pattern>ur4yw</pattern>
-    <pattern>1us.</pattern>
+    <pattern>1us </pattern>
     <pattern>us4edda</pattern>
     <pattern>us5end</pattern>
     <pattern>usg1</pattern>
-    <pattern>4usi.</pattern>
+    <pattern>4usi </pattern>
     <pattern>us3o</pattern>
     <pattern>3usr</pattern>
     <pattern>us3ter</pattern>
@@ -6058,18 +6060,18 @@
     <pattern>wac5ew</pattern>
     <pattern>wadd3</pattern>
     <pattern>wad2n3</pattern>
-    <pattern>w5adwy.</pattern>
+    <pattern>w5adwy </pattern>
     <pattern>waen4i</pattern>
     <pattern>waer2</pattern>
     <pattern>wag1</pattern>
     <pattern>w1ai</pattern>
-    <pattern>w3ai.</pattern>
+    <pattern>w3ai </pattern>
     <pattern>w3aid</pattern>
     <pattern>w2air</pattern>
     <pattern>w3ais</pattern>
     <pattern>w4ait</pattern>
     <pattern>wallt5</pattern>
-    <pattern>w4an.</pattern>
+    <pattern>w4an </pattern>
     <pattern>wan3a</pattern>
     <pattern>wan3e</pattern>
     <pattern>wan3o</pattern>
@@ -6083,7 +6085,7 @@
     <pattern>wart5hi</pattern>
     <pattern>wart5hw</pattern>
     <pattern>war3w</pattern>
-    <pattern>3w4as.</pattern>
+    <pattern>3w4as </pattern>
     <pattern>w3ase</pattern>
     <pattern>was4g</pattern>
     <pattern>w3asi</pattern>
@@ -6112,14 +6114,14 @@
     <pattern>wd3i</pattern>
     <pattern>wd4ih</pattern>
     <pattern>wd3ly</pattern>
-    <pattern>w3dod.</pattern>
+    <pattern>w3dod </pattern>
     <pattern>wdr1</pattern>
     <pattern>wd4ra</pattern>
     <pattern>wdry4</pattern>
     <pattern>wd2u</pattern>
     <pattern>w1eb3</pattern>
     <pattern>2w1ec</pattern>
-    <pattern>2w3ed.</pattern>
+    <pattern>2w3ed </pattern>
     <pattern>w4eda</pattern>
     <pattern>4weddf</pattern>
     <pattern>4weddi</pattern>
@@ -6137,7 +6139,7 @@
     <pattern>2w3ent</pattern>
     <pattern>wenwyn5</pattern>
     <pattern>wen3y</pattern>
-    <pattern>2w3er.</pattern>
+    <pattern>2w3er </pattern>
     <pattern>wer4i</pattern>
     <pattern>wer5id</pattern>
     <pattern>w4ers</pattern>
@@ -6146,7 +6148,7 @@
     <pattern>4w3esi</pattern>
     <pattern>w4esir</pattern>
     <pattern>w4esit</pattern>
-    <pattern>5west.</pattern>
+    <pattern>5west </pattern>
     <pattern>west4ai</pattern>
     <pattern>w1et</pattern>
     <pattern>w4eth</pattern>
@@ -6165,8 +6167,8 @@
     <pattern>wf4wy</pattern>
     <pattern>w3fy</pattern>
     <pattern>wg1</pattern>
-    <pattern>2wg.</pattern>
-    <pattern>w5gig.</pattern>
+    <pattern>2wg </pattern>
+    <pattern>w5gig </pattern>
     <pattern>2wgl</pattern>
     <pattern>wg3n</pattern>
     <pattern>2w1h2</pattern>
@@ -6190,16 +6192,16 @@
     <pattern>wir3</pattern>
     <pattern>wisg3</pattern>
     <pattern>w1it</pattern>
-    <pattern>3wiw.</pattern>
+    <pattern>3wiw </pattern>
     <pattern>wiw4e</pattern>
     <pattern>2wl</pattern>
-    <pattern>3wlad.</pattern>
+    <pattern>3wlad </pattern>
     <pattern>wlan3</pattern>
     <pattern>wl4co</pattern>
     <pattern>wl3in</pattern>
     <pattern>w4lip</pattern>
     <pattern>wll5yn</pattern>
-    <pattern>wl5ws.</pattern>
+    <pattern>wl5ws </pattern>
     <pattern>wl4yc</pattern>
     <pattern>2wm</pattern>
     <pattern>wm3a</pattern>
@@ -6210,7 +6212,7 @@
     <pattern>wm5ian</pattern>
     <pattern>wm4wl</pattern>
     <pattern>wn1</pattern>
-    <pattern>wn5adwy.</pattern>
+    <pattern>wn5adwy </pattern>
     <pattern>wn2ae</pattern>
     <pattern>2wnd</pattern>
     <pattern>wn3de</pattern>
@@ -6232,10 +6234,10 @@
     <pattern>2wnw</pattern>
     <pattern>2w1o</pattern>
     <pattern>w2od</pattern>
-    <pattern>w3od.</pattern>
+    <pattern>w3od </pattern>
     <pattern>w3odd</pattern>
     <pattern>w2ol</pattern>
-    <pattern>w3ol.</pattern>
+    <pattern>w3ol </pattern>
     <pattern>w3olae</pattern>
     <pattern>w2or</pattern>
     <pattern>2wp</pattern>
@@ -6258,9 +6260,9 @@
     <pattern>wr3f</pattern>
     <pattern>wr5fau</pattern>
     <pattern>wr4fi</pattern>
-    <pattern>4wri.</pattern>
+    <pattern>4wri </pattern>
     <pattern>wrid3</pattern>
-    <pattern>wr3id.</pattern>
+    <pattern>wr3id </pattern>
     <pattern>wr3ie</pattern>
     <pattern>wr3l</pattern>
     <pattern>wr4ll</pattern>
@@ -6282,7 +6284,7 @@
     <pattern>ws4og</pattern>
     <pattern>ws4ta</pattern>
     <pattern>wst5an</pattern>
-    <pattern>ws5ter.</pattern>
+    <pattern>ws5ter </pattern>
     <pattern>wstr3</pattern>
     <pattern>ws4us</pattern>
     <pattern>ws3wa</pattern>
@@ -6292,7 +6294,7 @@
     <pattern>wt3em</pattern>
     <pattern>wt5ery</pattern>
     <pattern>wth1</pattern>
-    <pattern>4wth.</pattern>
+    <pattern>4wth </pattern>
     <pattern>wth3w</pattern>
     <pattern>wt3od</pattern>
     <pattern>wt3wy</pattern>
@@ -6318,7 +6320,7 @@
     <pattern>2wyl</pattern>
     <pattern>wyl4deb</pattern>
     <pattern>wyll3a</pattern>
-    <pattern>wyn5ad.</pattern>
+    <pattern>wyn5ad </pattern>
     <pattern>4wynd</pattern>
     <pattern>wyn3eg</pattern>
     <pattern>wyn3f</pattern>
@@ -6329,7 +6331,7 @@
     <pattern>2wyo</pattern>
     <pattern>wyr3ad</pattern>
     <pattern>wy3ran</pattern>
-    <pattern>5wyrdd.</pattern>
+    <pattern>5wyrdd </pattern>
     <pattern>wyrl3i</pattern>
     <pattern>2wys</pattern>
     <pattern>2wyt</pattern>
@@ -6339,7 +6341,7 @@
     <pattern>2wyy</pattern>
     <pattern>2y1a</pattern>
     <pattern>y3ar3</pattern>
-    <pattern>y4ar.</pattern>
+    <pattern>y4ar </pattern>
     <pattern>y4arn</pattern>
     <pattern>2yb</pattern>
     <pattern>yb4ac</pattern>
@@ -6360,7 +6362,7 @@
     <pattern>ychwy5na</pattern>
     <pattern>ychwy5ne</pattern>
     <pattern>ycl3</pattern>
-    <pattern>2yd.</pattern>
+    <pattern>2yd </pattern>
     <pattern>2yda</pattern>
     <pattern>yd3ad</pattern>
     <pattern>yd4al</pattern>
@@ -6377,9 +6379,9 @@
     <pattern>yd4de</pattern>
     <pattern>yd4df4</pattern>
     <pattern>yd4di4</pattern>
-    <pattern>ydd4in.</pattern>
+    <pattern>ydd4in </pattern>
     <pattern>ydd4of</pattern>
-    <pattern>ydd5yn.</pattern>
+    <pattern>ydd5yn </pattern>
     <pattern>yddy5ne</pattern>
     <pattern>ydd4ysg</pattern>
     <pattern>2yde</pattern>
@@ -6398,7 +6400,7 @@
     <pattern>yd2ne</pattern>
     <pattern>ydne5b</pattern>
     <pattern>2yd3o</pattern>
-    <pattern>yd4od.</pattern>
+    <pattern>yd4od </pattern>
     <pattern>ydol3</pattern>
     <pattern>yd4os</pattern>
     <pattern>4ydrau</pattern>
@@ -6410,7 +6412,7 @@
     <pattern>4ydria</pattern>
     <pattern>ydr3oc</pattern>
     <pattern>4ydrol</pattern>
-    <pattern>ydr5wyd.</pattern>
+    <pattern>ydr5wyd </pattern>
     <pattern>yd5rwydd</pattern>
     <pattern>4ydry</pattern>
     <pattern>ydr3yc</pattern>
@@ -6465,7 +6467,7 @@
     <pattern>yf3no</pattern>
     <pattern>yf3ny</pattern>
     <pattern>yf3o</pattern>
-    <pattern>yf5od.</pattern>
+    <pattern>yf5od </pattern>
     <pattern>yfogl4</pattern>
     <pattern>yf5rait</pattern>
     <pattern>yfra5ne</pattern>
@@ -6473,7 +6475,7 @@
     <pattern>yf3u</pattern>
     <pattern>yf5wng</pattern>
     <pattern>yf3yg</pattern>
-    <pattern>yf5yn.</pattern>
+    <pattern>yf5yn </pattern>
     <pattern>yfy3na</pattern>
     <pattern>yfy5ne</pattern>
     <pattern>yfyng5</pattern>
@@ -6506,12 +6508,12 @@
     <pattern>yhe3w</pattern>
     <pattern>y1i</pattern>
     <pattern>y3ie</pattern>
-    <pattern>yl3ad.</pattern>
-    <pattern>yl5adwy.</pattern>
+    <pattern>yl3ad </pattern>
+    <pattern>yl5adwy </pattern>
     <pattern>yl3af</pattern>
     <pattern>ylan3</pattern>
     <pattern>yl3ant</pattern>
-    <pattern>y5law.</pattern>
+    <pattern>y5law </pattern>
     <pattern>2ylc</pattern>
     <pattern>ylch3w</pattern>
     <pattern>yl4dera</pattern>
@@ -6519,7 +6521,7 @@
     <pattern>yl1f</pattern>
     <pattern>y3lin</pattern>
     <pattern>y4lit</pattern>
-    <pattern>yll5ad.</pattern>
+    <pattern>yll5ad </pattern>
     <pattern>yll3e</pattern>
     <pattern>4yllf</pattern>
     <pattern>yll5ida</pattern>
@@ -6531,13 +6533,13 @@
     <pattern>yl3od</pattern>
     <pattern>yl3on</pattern>
     <pattern>yl5ore</pattern>
-    <pattern>y4lu.</pattern>
+    <pattern>y4lu </pattern>
     <pattern>4ylwe</pattern>
     <pattern>yl3wy</pattern>
     <pattern>yl1y</pattern>
     <pattern>ym5ait</pattern>
     <pattern>ym4al</pattern>
-    <pattern>ym5an.</pattern>
+    <pattern>ym5an </pattern>
     <pattern>yman5t</pattern>
     <pattern>ymar5w</pattern>
     <pattern>ymbl2</pattern>
@@ -6582,7 +6584,7 @@
     <pattern>yn3dir</pattern>
     <pattern>yn4eb</pattern>
     <pattern>yn3ec</pattern>
-    <pattern>yn3ed.</pattern>
+    <pattern>yn3ed </pattern>
     <pattern>yn3edd</pattern>
     <pattern>yn2eg</pattern>
     <pattern>yn3ei</pattern>
@@ -6648,7 +6650,7 @@
     <pattern>yr5ddyd</pattern>
     <pattern>yr1e</pattern>
     <pattern>yr2ei</pattern>
-    <pattern>yr5el.</pattern>
+    <pattern>yr5el </pattern>
     <pattern>yren5d</pattern>
     <pattern>yrf3e</pattern>
     <pattern>yr3ff4</pattern>
@@ -6660,7 +6662,7 @@
     <pattern>yr3ly</pattern>
     <pattern>yrn3</pattern>
     <pattern>yr1o</pattern>
-    <pattern>yr5ol.</pattern>
+    <pattern>yr5ol </pattern>
     <pattern>yr2s</pattern>
     <pattern>yr1w</pattern>
     <pattern>yr5way</pattern>
@@ -6674,7 +6676,7 @@
     <pattern>2yse</pattern>
     <pattern>ys5etl</pattern>
     <pattern>2ysf</pattern>
-    <pattern>4ysgar.</pattern>
+    <pattern>4ysgar </pattern>
     <pattern>ys5garai</pattern>
     <pattern>ys5garasa</pattern>
     <pattern>ys5garia</pattern>
@@ -6686,11 +6688,11 @@
     <pattern>3ysgr</pattern>
     <pattern>ys4gy</pattern>
     <pattern>2ysi</pattern>
-    <pattern>ys5ni.</pattern>
+    <pattern>ys5ni </pattern>
     <pattern>2yso</pattern>
     <pattern>ys3od</pattern>
     <pattern>4ysol</pattern>
-    <pattern>ys5ol.</pattern>
+    <pattern>ys5ol </pattern>
     <pattern>ys3ta</pattern>
     <pattern>4yste</pattern>
     <pattern>yst5eb</pattern>
@@ -6736,15 +6738,15 @@
     <pattern>y1wc</pattern>
     <pattern>y3wedd</pattern>
     <pattern>y5weddia</pattern>
-    <pattern>yw5eg.</pattern>
+    <pattern>yw5eg </pattern>
     <pattern>y4wel</pattern>
-    <pattern>yw5en.</pattern>
+    <pattern>yw5en </pattern>
     <pattern>yw3es</pattern>
     <pattern>yw1g2</pattern>
     <pattern>y4wia</pattern>
     <pattern>yw3id</pattern>
     <pattern>y4wio</pattern>
-    <pattern>y4wir.</pattern>
+    <pattern>y4wir </pattern>
     <pattern>y1wn</pattern>
     <pattern>yw3ol</pattern>
     <pattern>y2wr1</pattern>

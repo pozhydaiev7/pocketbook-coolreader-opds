@@ -17,7 +17,9 @@
 %     http://www.tug.org/tex-hyphen/
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Turkmen" lang="tk"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>1-4</pattern>
     <pattern>ä1bä</pattern>
     <pattern>ä1be</pattern>
@@ -1217,887 +1219,887 @@
     <pattern>ä1şa</pattern>
     <pattern>ö1şa</pattern>
     <pattern>b1b</pattern>
-    <pattern>.b2b</pattern>
+    <pattern> b2b</pattern>
     <pattern>b1ç</pattern>
-    <pattern>.b2ç</pattern>
+    <pattern> b2ç</pattern>
     <pattern>b1d</pattern>
-    <pattern>.b2d</pattern>
+    <pattern> b2d</pattern>
     <pattern>b1f</pattern>
-    <pattern>.b2f</pattern>
+    <pattern> b2f</pattern>
     <pattern>b1g</pattern>
-    <pattern>.b2g</pattern>
+    <pattern> b2g</pattern>
     <pattern>b1h</pattern>
-    <pattern>.b2h</pattern>
+    <pattern> b2h</pattern>
     <pattern>b1j</pattern>
-    <pattern>.b2j</pattern>
+    <pattern> b2j</pattern>
     <pattern>b1k</pattern>
-    <pattern>.b2k</pattern>
+    <pattern> b2k</pattern>
     <pattern>b1l</pattern>
-    <pattern>.b2l</pattern>
+    <pattern> b2l</pattern>
     <pattern>b1m</pattern>
-    <pattern>.b2m</pattern>
+    <pattern> b2m</pattern>
     <pattern>b1n</pattern>
-    <pattern>.b2n</pattern>
+    <pattern> b2n</pattern>
     <pattern>b1p</pattern>
-    <pattern>.b2p</pattern>
+    <pattern> b2p</pattern>
     <pattern>b1r</pattern>
-    <pattern>.b2r</pattern>
+    <pattern> b2r</pattern>
     <pattern>b1s</pattern>
-    <pattern>.b2s</pattern>
+    <pattern> b2s</pattern>
     <pattern>b1t</pattern>
-    <pattern>.b2t</pattern>
+    <pattern> b2t</pattern>
     <pattern>b1w</pattern>
-    <pattern>.b2w</pattern>
+    <pattern> b2w</pattern>
     <pattern>b1ý</pattern>
-    <pattern>.b2ý</pattern>
+    <pattern> b2ý</pattern>
     <pattern>b1z</pattern>
-    <pattern>.b2z</pattern>
+    <pattern> b2z</pattern>
     <pattern>b1ň</pattern>
-    <pattern>.b2ň</pattern>
+    <pattern> b2ň</pattern>
     <pattern>b1ž</pattern>
-    <pattern>.b2ž</pattern>
+    <pattern> b2ž</pattern>
     <pattern>b1ş</pattern>
-    <pattern>.b2ş</pattern>
+    <pattern> b2ş</pattern>
     <pattern>ç1b</pattern>
-    <pattern>.ç2b</pattern>
+    <pattern> ç2b</pattern>
     <pattern>ç1ç</pattern>
-    <pattern>.ç2ç</pattern>
+    <pattern> ç2ç</pattern>
     <pattern>ç1d</pattern>
-    <pattern>.ç2d</pattern>
+    <pattern> ç2d</pattern>
     <pattern>ç1f</pattern>
-    <pattern>.ç2f</pattern>
+    <pattern> ç2f</pattern>
     <pattern>ç1g</pattern>
-    <pattern>.ç2g</pattern>
+    <pattern> ç2g</pattern>
     <pattern>ç1h</pattern>
-    <pattern>.ç2h</pattern>
+    <pattern> ç2h</pattern>
     <pattern>ç1j</pattern>
-    <pattern>.ç2j</pattern>
+    <pattern> ç2j</pattern>
     <pattern>ç1k</pattern>
-    <pattern>.ç2k</pattern>
+    <pattern> ç2k</pattern>
     <pattern>ç1l</pattern>
-    <pattern>.ç2l</pattern>
+    <pattern> ç2l</pattern>
     <pattern>ç1m</pattern>
-    <pattern>.ç2m</pattern>
+    <pattern> ç2m</pattern>
     <pattern>ç1n</pattern>
-    <pattern>.ç2n</pattern>
+    <pattern> ç2n</pattern>
     <pattern>ç1p</pattern>
-    <pattern>.ç2p</pattern>
+    <pattern> ç2p</pattern>
     <pattern>ç1r</pattern>
-    <pattern>.ç2r</pattern>
+    <pattern> ç2r</pattern>
     <pattern>ç1s</pattern>
-    <pattern>.ç2s</pattern>
+    <pattern> ç2s</pattern>
     <pattern>ç1t</pattern>
-    <pattern>.ç2t</pattern>
+    <pattern> ç2t</pattern>
     <pattern>ç1w</pattern>
-    <pattern>.ç2w</pattern>
+    <pattern> ç2w</pattern>
     <pattern>ç1ý</pattern>
-    <pattern>.ç2ý</pattern>
+    <pattern> ç2ý</pattern>
     <pattern>ç1z</pattern>
-    <pattern>.ç2z</pattern>
+    <pattern> ç2z</pattern>
     <pattern>ç1ň</pattern>
-    <pattern>.ç2ň</pattern>
+    <pattern> ç2ň</pattern>
     <pattern>ç1ž</pattern>
-    <pattern>.ç2ž</pattern>
+    <pattern> ç2ž</pattern>
     <pattern>ç1ş</pattern>
-    <pattern>.ç2ş</pattern>
+    <pattern> ç2ş</pattern>
     <pattern>d1b</pattern>
-    <pattern>.d2b</pattern>
+    <pattern> d2b</pattern>
     <pattern>d1ç</pattern>
-    <pattern>.d2ç</pattern>
+    <pattern> d2ç</pattern>
     <pattern>d1d</pattern>
-    <pattern>.d2d</pattern>
+    <pattern> d2d</pattern>
     <pattern>d1f</pattern>
-    <pattern>.d2f</pattern>
+    <pattern> d2f</pattern>
     <pattern>d1g</pattern>
-    <pattern>.d2g</pattern>
+    <pattern> d2g</pattern>
     <pattern>d1h</pattern>
-    <pattern>.d2h</pattern>
+    <pattern> d2h</pattern>
     <pattern>d1j</pattern>
-    <pattern>.d2j</pattern>
+    <pattern> d2j</pattern>
     <pattern>d1k</pattern>
-    <pattern>.d2k</pattern>
+    <pattern> d2k</pattern>
     <pattern>d1l</pattern>
-    <pattern>.d2l</pattern>
+    <pattern> d2l</pattern>
     <pattern>d1m</pattern>
-    <pattern>.d2m</pattern>
+    <pattern> d2m</pattern>
     <pattern>d1n</pattern>
-    <pattern>.d2n</pattern>
+    <pattern> d2n</pattern>
     <pattern>d1p</pattern>
-    <pattern>.d2p</pattern>
+    <pattern> d2p</pattern>
     <pattern>d1r</pattern>
-    <pattern>.d2r</pattern>
+    <pattern> d2r</pattern>
     <pattern>d1s</pattern>
-    <pattern>.d2s</pattern>
+    <pattern> d2s</pattern>
     <pattern>d1t</pattern>
-    <pattern>.d2t</pattern>
+    <pattern> d2t</pattern>
     <pattern>d1w</pattern>
-    <pattern>.d2w</pattern>
+    <pattern> d2w</pattern>
     <pattern>d1ý</pattern>
-    <pattern>.d2ý</pattern>
+    <pattern> d2ý</pattern>
     <pattern>d1z</pattern>
-    <pattern>.d2z</pattern>
+    <pattern> d2z</pattern>
     <pattern>d1ň</pattern>
-    <pattern>.d2ň</pattern>
+    <pattern> d2ň</pattern>
     <pattern>d1ž</pattern>
-    <pattern>.d2ž</pattern>
+    <pattern> d2ž</pattern>
     <pattern>d1ş</pattern>
-    <pattern>.d2ş</pattern>
+    <pattern> d2ş</pattern>
     <pattern>f1b</pattern>
-    <pattern>.f2b</pattern>
+    <pattern> f2b</pattern>
     <pattern>f1ç</pattern>
-    <pattern>.f2ç</pattern>
+    <pattern> f2ç</pattern>
     <pattern>f1d</pattern>
-    <pattern>.f2d</pattern>
+    <pattern> f2d</pattern>
     <pattern>f1f</pattern>
-    <pattern>.f2f</pattern>
+    <pattern> f2f</pattern>
     <pattern>f1g</pattern>
-    <pattern>.f2g</pattern>
+    <pattern> f2g</pattern>
     <pattern>f1h</pattern>
-    <pattern>.f2h</pattern>
+    <pattern> f2h</pattern>
     <pattern>f1j</pattern>
-    <pattern>.f2j</pattern>
+    <pattern> f2j</pattern>
     <pattern>f1k</pattern>
-    <pattern>.f2k</pattern>
+    <pattern> f2k</pattern>
     <pattern>f1l</pattern>
-    <pattern>.f2l</pattern>
+    <pattern> f2l</pattern>
     <pattern>f1m</pattern>
-    <pattern>.f2m</pattern>
+    <pattern> f2m</pattern>
     <pattern>f1n</pattern>
-    <pattern>.f2n</pattern>
+    <pattern> f2n</pattern>
     <pattern>f1p</pattern>
-    <pattern>.f2p</pattern>
+    <pattern> f2p</pattern>
     <pattern>f1r</pattern>
-    <pattern>.f2r</pattern>
+    <pattern> f2r</pattern>
     <pattern>f1s</pattern>
-    <pattern>.f2s</pattern>
+    <pattern> f2s</pattern>
     <pattern>f1t</pattern>
-    <pattern>.f2t</pattern>
+    <pattern> f2t</pattern>
     <pattern>f1w</pattern>
-    <pattern>.f2w</pattern>
+    <pattern> f2w</pattern>
     <pattern>f1ý</pattern>
-    <pattern>.f2ý</pattern>
+    <pattern> f2ý</pattern>
     <pattern>f1z</pattern>
-    <pattern>.f2z</pattern>
+    <pattern> f2z</pattern>
     <pattern>f1ň</pattern>
-    <pattern>.f2ň</pattern>
+    <pattern> f2ň</pattern>
     <pattern>f1ž</pattern>
-    <pattern>.f2ž</pattern>
+    <pattern> f2ž</pattern>
     <pattern>f1ş</pattern>
-    <pattern>.f2ş</pattern>
+    <pattern> f2ş</pattern>
     <pattern>g1b</pattern>
-    <pattern>.g2b</pattern>
+    <pattern> g2b</pattern>
     <pattern>g1ç</pattern>
-    <pattern>.g2ç</pattern>
+    <pattern> g2ç</pattern>
     <pattern>g1d</pattern>
-    <pattern>.g2d</pattern>
+    <pattern> g2d</pattern>
     <pattern>g1f</pattern>
-    <pattern>.g2f</pattern>
+    <pattern> g2f</pattern>
     <pattern>g1g</pattern>
-    <pattern>.g2g</pattern>
+    <pattern> g2g</pattern>
     <pattern>g1h</pattern>
-    <pattern>.g2h</pattern>
+    <pattern> g2h</pattern>
     <pattern>g1j</pattern>
-    <pattern>.g2j</pattern>
+    <pattern> g2j</pattern>
     <pattern>g1k</pattern>
-    <pattern>.g2k</pattern>
+    <pattern> g2k</pattern>
     <pattern>g1l</pattern>
-    <pattern>.g2l</pattern>
+    <pattern> g2l</pattern>
     <pattern>g1m</pattern>
-    <pattern>.g2m</pattern>
+    <pattern> g2m</pattern>
     <pattern>g1n</pattern>
-    <pattern>.g2n</pattern>
+    <pattern> g2n</pattern>
     <pattern>g1p</pattern>
-    <pattern>.g2p</pattern>
+    <pattern> g2p</pattern>
     <pattern>g1r</pattern>
-    <pattern>.g2r</pattern>
+    <pattern> g2r</pattern>
     <pattern>g1s</pattern>
-    <pattern>.g2s</pattern>
+    <pattern> g2s</pattern>
     <pattern>g1t</pattern>
-    <pattern>.g2t</pattern>
+    <pattern> g2t</pattern>
     <pattern>g1w</pattern>
-    <pattern>.g2w</pattern>
+    <pattern> g2w</pattern>
     <pattern>g1ý</pattern>
-    <pattern>.g2ý</pattern>
+    <pattern> g2ý</pattern>
     <pattern>g1z</pattern>
-    <pattern>.g2z</pattern>
+    <pattern> g2z</pattern>
     <pattern>g1ň</pattern>
-    <pattern>.g2ň</pattern>
+    <pattern> g2ň</pattern>
     <pattern>g1ž</pattern>
-    <pattern>.g2ž</pattern>
+    <pattern> g2ž</pattern>
     <pattern>g1ş</pattern>
-    <pattern>.g2ş</pattern>
+    <pattern> g2ş</pattern>
     <pattern>h1b</pattern>
-    <pattern>.h2b</pattern>
+    <pattern> h2b</pattern>
     <pattern>h1ç</pattern>
-    <pattern>.h2ç</pattern>
+    <pattern> h2ç</pattern>
     <pattern>h1d</pattern>
-    <pattern>.h2d</pattern>
+    <pattern> h2d</pattern>
     <pattern>h1f</pattern>
-    <pattern>.h2f</pattern>
+    <pattern> h2f</pattern>
     <pattern>h1g</pattern>
-    <pattern>.h2g</pattern>
+    <pattern> h2g</pattern>
     <pattern>h1h</pattern>
-    <pattern>.h2h</pattern>
+    <pattern> h2h</pattern>
     <pattern>h1j</pattern>
-    <pattern>.h2j</pattern>
+    <pattern> h2j</pattern>
     <pattern>h1k</pattern>
-    <pattern>.h2k</pattern>
+    <pattern> h2k</pattern>
     <pattern>h1l</pattern>
-    <pattern>.h2l</pattern>
+    <pattern> h2l</pattern>
     <pattern>h1m</pattern>
-    <pattern>.h2m</pattern>
+    <pattern> h2m</pattern>
     <pattern>h1n</pattern>
-    <pattern>.h2n</pattern>
+    <pattern> h2n</pattern>
     <pattern>h1p</pattern>
-    <pattern>.h2p</pattern>
+    <pattern> h2p</pattern>
     <pattern>h1r</pattern>
-    <pattern>.h2r</pattern>
+    <pattern> h2r</pattern>
     <pattern>h1s</pattern>
-    <pattern>.h2s</pattern>
+    <pattern> h2s</pattern>
     <pattern>h1t</pattern>
-    <pattern>.h2t</pattern>
+    <pattern> h2t</pattern>
     <pattern>h1w</pattern>
-    <pattern>.h2w</pattern>
+    <pattern> h2w</pattern>
     <pattern>h1ý</pattern>
-    <pattern>.h2ý</pattern>
+    <pattern> h2ý</pattern>
     <pattern>h1z</pattern>
-    <pattern>.h2z</pattern>
+    <pattern> h2z</pattern>
     <pattern>h1ň</pattern>
-    <pattern>.h2ň</pattern>
+    <pattern> h2ň</pattern>
     <pattern>h1ž</pattern>
-    <pattern>.h2ž</pattern>
+    <pattern> h2ž</pattern>
     <pattern>h1ş</pattern>
-    <pattern>.h2ş</pattern>
+    <pattern> h2ş</pattern>
     <pattern>j1b</pattern>
-    <pattern>.j2b</pattern>
+    <pattern> j2b</pattern>
     <pattern>j1ç</pattern>
-    <pattern>.j2ç</pattern>
+    <pattern> j2ç</pattern>
     <pattern>j1d</pattern>
-    <pattern>.j2d</pattern>
+    <pattern> j2d</pattern>
     <pattern>j1f</pattern>
-    <pattern>.j2f</pattern>
+    <pattern> j2f</pattern>
     <pattern>j1g</pattern>
-    <pattern>.j2g</pattern>
+    <pattern> j2g</pattern>
     <pattern>j1h</pattern>
-    <pattern>.j2h</pattern>
+    <pattern> j2h</pattern>
     <pattern>j1j</pattern>
-    <pattern>.j2j</pattern>
+    <pattern> j2j</pattern>
     <pattern>j1k</pattern>
-    <pattern>.j2k</pattern>
+    <pattern> j2k</pattern>
     <pattern>j1l</pattern>
-    <pattern>.j2l</pattern>
+    <pattern> j2l</pattern>
     <pattern>j1m</pattern>
-    <pattern>.j2m</pattern>
+    <pattern> j2m</pattern>
     <pattern>j1n</pattern>
-    <pattern>.j2n</pattern>
+    <pattern> j2n</pattern>
     <pattern>j1p</pattern>
-    <pattern>.j2p</pattern>
+    <pattern> j2p</pattern>
     <pattern>j1r</pattern>
-    <pattern>.j2r</pattern>
+    <pattern> j2r</pattern>
     <pattern>j1s</pattern>
-    <pattern>.j2s</pattern>
+    <pattern> j2s</pattern>
     <pattern>j1t</pattern>
-    <pattern>.j2t</pattern>
+    <pattern> j2t</pattern>
     <pattern>j1w</pattern>
-    <pattern>.j2w</pattern>
+    <pattern> j2w</pattern>
     <pattern>j1ý</pattern>
-    <pattern>.j2ý</pattern>
+    <pattern> j2ý</pattern>
     <pattern>j1z</pattern>
-    <pattern>.j2z</pattern>
+    <pattern> j2z</pattern>
     <pattern>j1ň</pattern>
-    <pattern>.j2ň</pattern>
+    <pattern> j2ň</pattern>
     <pattern>j1ž</pattern>
-    <pattern>.j2ž</pattern>
+    <pattern> j2ž</pattern>
     <pattern>j1ş</pattern>
-    <pattern>.j2ş</pattern>
+    <pattern> j2ş</pattern>
     <pattern>k1b</pattern>
-    <pattern>.k2b</pattern>
+    <pattern> k2b</pattern>
     <pattern>k1ç</pattern>
-    <pattern>.k2ç</pattern>
+    <pattern> k2ç</pattern>
     <pattern>k1d</pattern>
-    <pattern>.k2d</pattern>
+    <pattern> k2d</pattern>
     <pattern>k1f</pattern>
-    <pattern>.k2f</pattern>
+    <pattern> k2f</pattern>
     <pattern>k1g</pattern>
-    <pattern>.k2g</pattern>
+    <pattern> k2g</pattern>
     <pattern>k1h</pattern>
-    <pattern>.k2h</pattern>
+    <pattern> k2h</pattern>
     <pattern>k1j</pattern>
-    <pattern>.k2j</pattern>
+    <pattern> k2j</pattern>
     <pattern>k1k</pattern>
-    <pattern>.k2k</pattern>
+    <pattern> k2k</pattern>
     <pattern>k1l</pattern>
-    <pattern>.k2l</pattern>
+    <pattern> k2l</pattern>
     <pattern>k1m</pattern>
-    <pattern>.k2m</pattern>
+    <pattern> k2m</pattern>
     <pattern>k1n</pattern>
-    <pattern>.k2n</pattern>
+    <pattern> k2n</pattern>
     <pattern>k1p</pattern>
-    <pattern>.k2p</pattern>
+    <pattern> k2p</pattern>
     <pattern>k1r</pattern>
-    <pattern>.k2r</pattern>
+    <pattern> k2r</pattern>
     <pattern>k1s</pattern>
-    <pattern>.k2s</pattern>
+    <pattern> k2s</pattern>
     <pattern>k1t</pattern>
-    <pattern>.k2t</pattern>
+    <pattern> k2t</pattern>
     <pattern>k1w</pattern>
-    <pattern>.k2w</pattern>
+    <pattern> k2w</pattern>
     <pattern>k1ý</pattern>
-    <pattern>.k2ý</pattern>
+    <pattern> k2ý</pattern>
     <pattern>k1z</pattern>
-    <pattern>.k2z</pattern>
+    <pattern> k2z</pattern>
     <pattern>k1ň</pattern>
-    <pattern>.k2ň</pattern>
+    <pattern> k2ň</pattern>
     <pattern>k1ž</pattern>
-    <pattern>.k2ž</pattern>
+    <pattern> k2ž</pattern>
     <pattern>k1ş</pattern>
-    <pattern>.k2ş</pattern>
+    <pattern> k2ş</pattern>
     <pattern>l1b</pattern>
-    <pattern>.l2b</pattern>
+    <pattern> l2b</pattern>
     <pattern>l1ç</pattern>
-    <pattern>.l2ç</pattern>
+    <pattern> l2ç</pattern>
     <pattern>l1d</pattern>
-    <pattern>.l2d</pattern>
+    <pattern> l2d</pattern>
     <pattern>l1f</pattern>
-    <pattern>.l2f</pattern>
+    <pattern> l2f</pattern>
     <pattern>l1g</pattern>
-    <pattern>.l2g</pattern>
+    <pattern> l2g</pattern>
     <pattern>l1h</pattern>
-    <pattern>.l2h</pattern>
+    <pattern> l2h</pattern>
     <pattern>l1j</pattern>
-    <pattern>.l2j</pattern>
+    <pattern> l2j</pattern>
     <pattern>l1k</pattern>
-    <pattern>.l2k</pattern>
+    <pattern> l2k</pattern>
     <pattern>l1l</pattern>
-    <pattern>.l2l</pattern>
+    <pattern> l2l</pattern>
     <pattern>l1m</pattern>
-    <pattern>.l2m</pattern>
+    <pattern> l2m</pattern>
     <pattern>l1n</pattern>
-    <pattern>.l2n</pattern>
+    <pattern> l2n</pattern>
     <pattern>l1p</pattern>
-    <pattern>.l2p</pattern>
+    <pattern> l2p</pattern>
     <pattern>l1r</pattern>
-    <pattern>.l2r</pattern>
+    <pattern> l2r</pattern>
     <pattern>l1s</pattern>
-    <pattern>.l2s</pattern>
+    <pattern> l2s</pattern>
     <pattern>l1t</pattern>
-    <pattern>.l2t</pattern>
+    <pattern> l2t</pattern>
     <pattern>l1w</pattern>
-    <pattern>.l2w</pattern>
+    <pattern> l2w</pattern>
     <pattern>l1ý</pattern>
-    <pattern>.l2ý</pattern>
+    <pattern> l2ý</pattern>
     <pattern>l1z</pattern>
-    <pattern>.l2z</pattern>
+    <pattern> l2z</pattern>
     <pattern>l1ň</pattern>
-    <pattern>.l2ň</pattern>
+    <pattern> l2ň</pattern>
     <pattern>l1ž</pattern>
-    <pattern>.l2ž</pattern>
+    <pattern> l2ž</pattern>
     <pattern>l1ş</pattern>
-    <pattern>.l2ş</pattern>
+    <pattern> l2ş</pattern>
     <pattern>m1b</pattern>
-    <pattern>.m2b</pattern>
+    <pattern> m2b</pattern>
     <pattern>m1ç</pattern>
-    <pattern>.m2ç</pattern>
+    <pattern> m2ç</pattern>
     <pattern>m1d</pattern>
-    <pattern>.m2d</pattern>
+    <pattern> m2d</pattern>
     <pattern>m1f</pattern>
-    <pattern>.m2f</pattern>
+    <pattern> m2f</pattern>
     <pattern>m1g</pattern>
-    <pattern>.m2g</pattern>
+    <pattern> m2g</pattern>
     <pattern>m1h</pattern>
-    <pattern>.m2h</pattern>
+    <pattern> m2h</pattern>
     <pattern>m1j</pattern>
-    <pattern>.m2j</pattern>
+    <pattern> m2j</pattern>
     <pattern>m1k</pattern>
-    <pattern>.m2k</pattern>
+    <pattern> m2k</pattern>
     <pattern>m1l</pattern>
-    <pattern>.m2l</pattern>
+    <pattern> m2l</pattern>
     <pattern>m1m</pattern>
-    <pattern>.m2m</pattern>
+    <pattern> m2m</pattern>
     <pattern>m1n</pattern>
-    <pattern>.m2n</pattern>
+    <pattern> m2n</pattern>
     <pattern>m1p</pattern>
-    <pattern>.m2p</pattern>
+    <pattern> m2p</pattern>
     <pattern>m1r</pattern>
-    <pattern>.m2r</pattern>
+    <pattern> m2r</pattern>
     <pattern>m1s</pattern>
-    <pattern>.m2s</pattern>
+    <pattern> m2s</pattern>
     <pattern>m1t</pattern>
-    <pattern>.m2t</pattern>
+    <pattern> m2t</pattern>
     <pattern>m1w</pattern>
-    <pattern>.m2w</pattern>
+    <pattern> m2w</pattern>
     <pattern>m1ý</pattern>
-    <pattern>.m2ý</pattern>
+    <pattern> m2ý</pattern>
     <pattern>m1z</pattern>
-    <pattern>.m2z</pattern>
+    <pattern> m2z</pattern>
     <pattern>m1ň</pattern>
-    <pattern>.m2ň</pattern>
+    <pattern> m2ň</pattern>
     <pattern>m1ž</pattern>
-    <pattern>.m2ž</pattern>
+    <pattern> m2ž</pattern>
     <pattern>m1ş</pattern>
-    <pattern>.m2ş</pattern>
+    <pattern> m2ş</pattern>
     <pattern>n1b</pattern>
-    <pattern>.n2b</pattern>
+    <pattern> n2b</pattern>
     <pattern>n1ç</pattern>
-    <pattern>.n2ç</pattern>
+    <pattern> n2ç</pattern>
     <pattern>n1d</pattern>
-    <pattern>.n2d</pattern>
+    <pattern> n2d</pattern>
     <pattern>n1f</pattern>
-    <pattern>.n2f</pattern>
+    <pattern> n2f</pattern>
     <pattern>n1g</pattern>
-    <pattern>.n2g</pattern>
+    <pattern> n2g</pattern>
     <pattern>n1h</pattern>
-    <pattern>.n2h</pattern>
+    <pattern> n2h</pattern>
     <pattern>n1j</pattern>
-    <pattern>.n2j</pattern>
+    <pattern> n2j</pattern>
     <pattern>n1k</pattern>
-    <pattern>.n2k</pattern>
+    <pattern> n2k</pattern>
     <pattern>n1l</pattern>
-    <pattern>.n2l</pattern>
+    <pattern> n2l</pattern>
     <pattern>n1m</pattern>
-    <pattern>.n2m</pattern>
+    <pattern> n2m</pattern>
     <pattern>n1n</pattern>
-    <pattern>.n2n</pattern>
+    <pattern> n2n</pattern>
     <pattern>n1p</pattern>
-    <pattern>.n2p</pattern>
+    <pattern> n2p</pattern>
     <pattern>n1r</pattern>
-    <pattern>.n2r</pattern>
+    <pattern> n2r</pattern>
     <pattern>n1s</pattern>
-    <pattern>.n2s</pattern>
+    <pattern> n2s</pattern>
     <pattern>n1t</pattern>
-    <pattern>.n2t</pattern>
+    <pattern> n2t</pattern>
     <pattern>n1w</pattern>
-    <pattern>.n2w</pattern>
+    <pattern> n2w</pattern>
     <pattern>n1ý</pattern>
-    <pattern>.n2ý</pattern>
+    <pattern> n2ý</pattern>
     <pattern>n1z</pattern>
-    <pattern>.n2z</pattern>
+    <pattern> n2z</pattern>
     <pattern>n1ň</pattern>
-    <pattern>.n2ň</pattern>
+    <pattern> n2ň</pattern>
     <pattern>n1ž</pattern>
-    <pattern>.n2ž</pattern>
+    <pattern> n2ž</pattern>
     <pattern>n1ş</pattern>
-    <pattern>.n2ş</pattern>
+    <pattern> n2ş</pattern>
     <pattern>p1b</pattern>
-    <pattern>.p2b</pattern>
+    <pattern> p2b</pattern>
     <pattern>p1ç</pattern>
-    <pattern>.p2ç</pattern>
+    <pattern> p2ç</pattern>
     <pattern>p1d</pattern>
-    <pattern>.p2d</pattern>
+    <pattern> p2d</pattern>
     <pattern>p1f</pattern>
-    <pattern>.p2f</pattern>
+    <pattern> p2f</pattern>
     <pattern>p1g</pattern>
-    <pattern>.p2g</pattern>
+    <pattern> p2g</pattern>
     <pattern>p1h</pattern>
-    <pattern>.p2h</pattern>
+    <pattern> p2h</pattern>
     <pattern>p1j</pattern>
-    <pattern>.p2j</pattern>
+    <pattern> p2j</pattern>
     <pattern>p1k</pattern>
-    <pattern>.p2k</pattern>
+    <pattern> p2k</pattern>
     <pattern>p1l</pattern>
-    <pattern>.p2l</pattern>
+    <pattern> p2l</pattern>
     <pattern>p1m</pattern>
-    <pattern>.p2m</pattern>
+    <pattern> p2m</pattern>
     <pattern>p1n</pattern>
-    <pattern>.p2n</pattern>
+    <pattern> p2n</pattern>
     <pattern>p1p</pattern>
-    <pattern>.p2p</pattern>
+    <pattern> p2p</pattern>
     <pattern>p1r</pattern>
-    <pattern>.p2r</pattern>
+    <pattern> p2r</pattern>
     <pattern>p1s</pattern>
-    <pattern>.p2s</pattern>
+    <pattern> p2s</pattern>
     <pattern>p1t</pattern>
-    <pattern>.p2t</pattern>
+    <pattern> p2t</pattern>
     <pattern>p1w</pattern>
-    <pattern>.p2w</pattern>
+    <pattern> p2w</pattern>
     <pattern>p1ý</pattern>
-    <pattern>.p2ý</pattern>
+    <pattern> p2ý</pattern>
     <pattern>p1z</pattern>
-    <pattern>.p2z</pattern>
+    <pattern> p2z</pattern>
     <pattern>p1ň</pattern>
-    <pattern>.p2ň</pattern>
+    <pattern> p2ň</pattern>
     <pattern>p1ž</pattern>
-    <pattern>.p2ž</pattern>
+    <pattern> p2ž</pattern>
     <pattern>p1ş</pattern>
-    <pattern>.p2ş</pattern>
+    <pattern> p2ş</pattern>
     <pattern>r1b</pattern>
-    <pattern>.r2b</pattern>
+    <pattern> r2b</pattern>
     <pattern>r1ç</pattern>
-    <pattern>.r2ç</pattern>
+    <pattern> r2ç</pattern>
     <pattern>r1d</pattern>
-    <pattern>.r2d</pattern>
+    <pattern> r2d</pattern>
     <pattern>r1f</pattern>
-    <pattern>.r2f</pattern>
+    <pattern> r2f</pattern>
     <pattern>r1g</pattern>
-    <pattern>.r2g</pattern>
+    <pattern> r2g</pattern>
     <pattern>r1h</pattern>
-    <pattern>.r2h</pattern>
+    <pattern> r2h</pattern>
     <pattern>r1j</pattern>
-    <pattern>.r2j</pattern>
+    <pattern> r2j</pattern>
     <pattern>r1k</pattern>
-    <pattern>.r2k</pattern>
+    <pattern> r2k</pattern>
     <pattern>r1l</pattern>
-    <pattern>.r2l</pattern>
+    <pattern> r2l</pattern>
     <pattern>r1m</pattern>
-    <pattern>.r2m</pattern>
+    <pattern> r2m</pattern>
     <pattern>r1n</pattern>
-    <pattern>.r2n</pattern>
+    <pattern> r2n</pattern>
     <pattern>r1p</pattern>
-    <pattern>.r2p</pattern>
+    <pattern> r2p</pattern>
     <pattern>r1r</pattern>
-    <pattern>.r2r</pattern>
+    <pattern> r2r</pattern>
     <pattern>r1s</pattern>
-    <pattern>.r2s</pattern>
+    <pattern> r2s</pattern>
     <pattern>r1t</pattern>
-    <pattern>.r2t</pattern>
+    <pattern> r2t</pattern>
     <pattern>r1w</pattern>
-    <pattern>.r2w</pattern>
+    <pattern> r2w</pattern>
     <pattern>r1ý</pattern>
-    <pattern>.r2ý</pattern>
+    <pattern> r2ý</pattern>
     <pattern>r1z</pattern>
-    <pattern>.r2z</pattern>
+    <pattern> r2z</pattern>
     <pattern>r1ň</pattern>
-    <pattern>.r2ň</pattern>
+    <pattern> r2ň</pattern>
     <pattern>r1ž</pattern>
-    <pattern>.r2ž</pattern>
+    <pattern> r2ž</pattern>
     <pattern>r1ş</pattern>
-    <pattern>.r2ş</pattern>
+    <pattern> r2ş</pattern>
     <pattern>s1b</pattern>
-    <pattern>.s2b</pattern>
+    <pattern> s2b</pattern>
     <pattern>s1ç</pattern>
-    <pattern>.s2ç</pattern>
+    <pattern> s2ç</pattern>
     <pattern>s1d</pattern>
-    <pattern>.s2d</pattern>
+    <pattern> s2d</pattern>
     <pattern>s1f</pattern>
-    <pattern>.s2f</pattern>
+    <pattern> s2f</pattern>
     <pattern>s1g</pattern>
-    <pattern>.s2g</pattern>
+    <pattern> s2g</pattern>
     <pattern>s1h</pattern>
-    <pattern>.s2h</pattern>
+    <pattern> s2h</pattern>
     <pattern>s1j</pattern>
-    <pattern>.s2j</pattern>
+    <pattern> s2j</pattern>
     <pattern>s1k</pattern>
-    <pattern>.s2k</pattern>
+    <pattern> s2k</pattern>
     <pattern>s1l</pattern>
-    <pattern>.s2l</pattern>
+    <pattern> s2l</pattern>
     <pattern>s1m</pattern>
-    <pattern>.s2m</pattern>
+    <pattern> s2m</pattern>
     <pattern>s1n</pattern>
-    <pattern>.s2n</pattern>
+    <pattern> s2n</pattern>
     <pattern>s1p</pattern>
-    <pattern>.s2p</pattern>
+    <pattern> s2p</pattern>
     <pattern>s1r</pattern>
-    <pattern>.s2r</pattern>
+    <pattern> s2r</pattern>
     <pattern>s1s</pattern>
-    <pattern>.s2s</pattern>
+    <pattern> s2s</pattern>
     <pattern>s1t</pattern>
-    <pattern>.s2t</pattern>
+    <pattern> s2t</pattern>
     <pattern>s1w</pattern>
-    <pattern>.s2w</pattern>
+    <pattern> s2w</pattern>
     <pattern>s1ý</pattern>
-    <pattern>.s2ý</pattern>
+    <pattern> s2ý</pattern>
     <pattern>s1z</pattern>
-    <pattern>.s2z</pattern>
+    <pattern> s2z</pattern>
     <pattern>s1ň</pattern>
-    <pattern>.s2ň</pattern>
+    <pattern> s2ň</pattern>
     <pattern>s1ž</pattern>
-    <pattern>.s2ž</pattern>
+    <pattern> s2ž</pattern>
     <pattern>s1ş</pattern>
-    <pattern>.s2ş</pattern>
+    <pattern> s2ş</pattern>
     <pattern>t1b</pattern>
-    <pattern>.t2b</pattern>
+    <pattern> t2b</pattern>
     <pattern>t1ç</pattern>
-    <pattern>.t2ç</pattern>
+    <pattern> t2ç</pattern>
     <pattern>t1d</pattern>
-    <pattern>.t2d</pattern>
+    <pattern> t2d</pattern>
     <pattern>t1f</pattern>
-    <pattern>.t2f</pattern>
+    <pattern> t2f</pattern>
     <pattern>t1g</pattern>
-    <pattern>.t2g</pattern>
+    <pattern> t2g</pattern>
     <pattern>t1h</pattern>
-    <pattern>.t2h</pattern>
+    <pattern> t2h</pattern>
     <pattern>t1j</pattern>
-    <pattern>.t2j</pattern>
+    <pattern> t2j</pattern>
     <pattern>t1k</pattern>
-    <pattern>.t2k</pattern>
+    <pattern> t2k</pattern>
     <pattern>t1l</pattern>
-    <pattern>.t2l</pattern>
+    <pattern> t2l</pattern>
     <pattern>t1m</pattern>
-    <pattern>.t2m</pattern>
+    <pattern> t2m</pattern>
     <pattern>t1n</pattern>
-    <pattern>.t2n</pattern>
+    <pattern> t2n</pattern>
     <pattern>t1p</pattern>
-    <pattern>.t2p</pattern>
+    <pattern> t2p</pattern>
     <pattern>t1r</pattern>
-    <pattern>.t2r</pattern>
+    <pattern> t2r</pattern>
     <pattern>t1s</pattern>
-    <pattern>.t2s</pattern>
+    <pattern> t2s</pattern>
     <pattern>t1t</pattern>
-    <pattern>.t2t</pattern>
+    <pattern> t2t</pattern>
     <pattern>t1w</pattern>
-    <pattern>.t2w</pattern>
+    <pattern> t2w</pattern>
     <pattern>t1ý</pattern>
-    <pattern>.t2ý</pattern>
+    <pattern> t2ý</pattern>
     <pattern>t1z</pattern>
-    <pattern>.t2z</pattern>
+    <pattern> t2z</pattern>
     <pattern>t1ň</pattern>
-    <pattern>.t2ň</pattern>
+    <pattern> t2ň</pattern>
     <pattern>t1ž</pattern>
-    <pattern>.t2ž</pattern>
+    <pattern> t2ž</pattern>
     <pattern>t1ş</pattern>
-    <pattern>.t2ş</pattern>
+    <pattern> t2ş</pattern>
     <pattern>w1b</pattern>
-    <pattern>.w2b</pattern>
+    <pattern> w2b</pattern>
     <pattern>w1ç</pattern>
-    <pattern>.w2ç</pattern>
+    <pattern> w2ç</pattern>
     <pattern>w1d</pattern>
-    <pattern>.w2d</pattern>
+    <pattern> w2d</pattern>
     <pattern>w1f</pattern>
-    <pattern>.w2f</pattern>
+    <pattern> w2f</pattern>
     <pattern>w1g</pattern>
-    <pattern>.w2g</pattern>
+    <pattern> w2g</pattern>
     <pattern>w1h</pattern>
-    <pattern>.w2h</pattern>
+    <pattern> w2h</pattern>
     <pattern>w1j</pattern>
-    <pattern>.w2j</pattern>
+    <pattern> w2j</pattern>
     <pattern>w1k</pattern>
-    <pattern>.w2k</pattern>
+    <pattern> w2k</pattern>
     <pattern>w1l</pattern>
-    <pattern>.w2l</pattern>
+    <pattern> w2l</pattern>
     <pattern>w1m</pattern>
-    <pattern>.w2m</pattern>
+    <pattern> w2m</pattern>
     <pattern>w1n</pattern>
-    <pattern>.w2n</pattern>
+    <pattern> w2n</pattern>
     <pattern>w1p</pattern>
-    <pattern>.w2p</pattern>
+    <pattern> w2p</pattern>
     <pattern>w1r</pattern>
-    <pattern>.w2r</pattern>
+    <pattern> w2r</pattern>
     <pattern>w1s</pattern>
-    <pattern>.w2s</pattern>
+    <pattern> w2s</pattern>
     <pattern>w1t</pattern>
-    <pattern>.w2t</pattern>
+    <pattern> w2t</pattern>
     <pattern>w1w</pattern>
-    <pattern>.w2w</pattern>
+    <pattern> w2w</pattern>
     <pattern>w1ý</pattern>
-    <pattern>.w2ý</pattern>
+    <pattern> w2ý</pattern>
     <pattern>w1z</pattern>
-    <pattern>.w2z</pattern>
+    <pattern> w2z</pattern>
     <pattern>w1ň</pattern>
-    <pattern>.w2ň</pattern>
+    <pattern> w2ň</pattern>
     <pattern>w1ž</pattern>
-    <pattern>.w2ž</pattern>
+    <pattern> w2ž</pattern>
     <pattern>w1ş</pattern>
-    <pattern>.w2ş</pattern>
+    <pattern> w2ş</pattern>
     <pattern>ý1b</pattern>
-    <pattern>.ý2b</pattern>
+    <pattern> ý2b</pattern>
     <pattern>ý1ç</pattern>
-    <pattern>.ý2ç</pattern>
+    <pattern> ý2ç</pattern>
     <pattern>ý1d</pattern>
-    <pattern>.ý2d</pattern>
+    <pattern> ý2d</pattern>
     <pattern>ý1f</pattern>
-    <pattern>.ý2f</pattern>
+    <pattern> ý2f</pattern>
     <pattern>ý1g</pattern>
-    <pattern>.ý2g</pattern>
+    <pattern> ý2g</pattern>
     <pattern>ý1h</pattern>
-    <pattern>.ý2h</pattern>
+    <pattern> ý2h</pattern>
     <pattern>ý1j</pattern>
-    <pattern>.ý2j</pattern>
+    <pattern> ý2j</pattern>
     <pattern>ý1k</pattern>
-    <pattern>.ý2k</pattern>
+    <pattern> ý2k</pattern>
     <pattern>ý1l</pattern>
-    <pattern>.ý2l</pattern>
+    <pattern> ý2l</pattern>
     <pattern>ý1m</pattern>
-    <pattern>.ý2m</pattern>
+    <pattern> ý2m</pattern>
     <pattern>ý1n</pattern>
-    <pattern>.ý2n</pattern>
+    <pattern> ý2n</pattern>
     <pattern>ý1p</pattern>
-    <pattern>.ý2p</pattern>
+    <pattern> ý2p</pattern>
     <pattern>ý1r</pattern>
-    <pattern>.ý2r</pattern>
+    <pattern> ý2r</pattern>
     <pattern>ý1s</pattern>
-    <pattern>.ý2s</pattern>
+    <pattern> ý2s</pattern>
     <pattern>ý1t</pattern>
-    <pattern>.ý2t</pattern>
+    <pattern> ý2t</pattern>
     <pattern>ý1w</pattern>
-    <pattern>.ý2w</pattern>
+    <pattern> ý2w</pattern>
     <pattern>ý1ý</pattern>
-    <pattern>.ý2ý</pattern>
+    <pattern> ý2ý</pattern>
     <pattern>ý1z</pattern>
-    <pattern>.ý2z</pattern>
+    <pattern> ý2z</pattern>
     <pattern>ý1ň</pattern>
-    <pattern>.ý2ň</pattern>
+    <pattern> ý2ň</pattern>
     <pattern>ý1ž</pattern>
-    <pattern>.ý2ž</pattern>
+    <pattern> ý2ž</pattern>
     <pattern>ý1ş</pattern>
-    <pattern>.ý2ş</pattern>
+    <pattern> ý2ş</pattern>
     <pattern>z1b</pattern>
-    <pattern>.z2b</pattern>
+    <pattern> z2b</pattern>
     <pattern>z1ç</pattern>
-    <pattern>.z2ç</pattern>
+    <pattern> z2ç</pattern>
     <pattern>z1d</pattern>
-    <pattern>.z2d</pattern>
+    <pattern> z2d</pattern>
     <pattern>z1f</pattern>
-    <pattern>.z2f</pattern>
+    <pattern> z2f</pattern>
     <pattern>z1g</pattern>
-    <pattern>.z2g</pattern>
+    <pattern> z2g</pattern>
     <pattern>z1h</pattern>
-    <pattern>.z2h</pattern>
+    <pattern> z2h</pattern>
     <pattern>z1j</pattern>
-    <pattern>.z2j</pattern>
+    <pattern> z2j</pattern>
     <pattern>z1k</pattern>
-    <pattern>.z2k</pattern>
+    <pattern> z2k</pattern>
     <pattern>z1l</pattern>
-    <pattern>.z2l</pattern>
+    <pattern> z2l</pattern>
     <pattern>z1m</pattern>
-    <pattern>.z2m</pattern>
+    <pattern> z2m</pattern>
     <pattern>z1n</pattern>
-    <pattern>.z2n</pattern>
+    <pattern> z2n</pattern>
     <pattern>z1p</pattern>
-    <pattern>.z2p</pattern>
+    <pattern> z2p</pattern>
     <pattern>z1r</pattern>
-    <pattern>.z2r</pattern>
+    <pattern> z2r</pattern>
     <pattern>z1s</pattern>
-    <pattern>.z2s</pattern>
+    <pattern> z2s</pattern>
     <pattern>z1t</pattern>
-    <pattern>.z2t</pattern>
+    <pattern> z2t</pattern>
     <pattern>z1w</pattern>
-    <pattern>.z2w</pattern>
+    <pattern> z2w</pattern>
     <pattern>z1ý</pattern>
-    <pattern>.z2ý</pattern>
+    <pattern> z2ý</pattern>
     <pattern>z1z</pattern>
-    <pattern>.z2z</pattern>
+    <pattern> z2z</pattern>
     <pattern>z1ň</pattern>
-    <pattern>.z2ň</pattern>
+    <pattern> z2ň</pattern>
     <pattern>z1ž</pattern>
-    <pattern>.z2ž</pattern>
+    <pattern> z2ž</pattern>
     <pattern>z1ş</pattern>
-    <pattern>.z2ş</pattern>
+    <pattern> z2ş</pattern>
     <pattern>ň1b</pattern>
-    <pattern>.ň2b</pattern>
+    <pattern> ň2b</pattern>
     <pattern>ň1ç</pattern>
-    <pattern>.ň2ç</pattern>
+    <pattern> ň2ç</pattern>
     <pattern>ň1d</pattern>
-    <pattern>.ň2d</pattern>
+    <pattern> ň2d</pattern>
     <pattern>ň1f</pattern>
-    <pattern>.ň2f</pattern>
+    <pattern> ň2f</pattern>
     <pattern>ň1g</pattern>
-    <pattern>.ň2g</pattern>
+    <pattern> ň2g</pattern>
     <pattern>ň1h</pattern>
-    <pattern>.ň2h</pattern>
+    <pattern> ň2h</pattern>
     <pattern>ň1j</pattern>
-    <pattern>.ň2j</pattern>
+    <pattern> ň2j</pattern>
     <pattern>ň1k</pattern>
-    <pattern>.ň2k</pattern>
+    <pattern> ň2k</pattern>
     <pattern>ň1l</pattern>
-    <pattern>.ň2l</pattern>
+    <pattern> ň2l</pattern>
     <pattern>ň1m</pattern>
-    <pattern>.ň2m</pattern>
+    <pattern> ň2m</pattern>
     <pattern>ň1n</pattern>
-    <pattern>.ň2n</pattern>
+    <pattern> ň2n</pattern>
     <pattern>ň1p</pattern>
-    <pattern>.ň2p</pattern>
+    <pattern> ň2p</pattern>
     <pattern>ň1r</pattern>
-    <pattern>.ň2r</pattern>
+    <pattern> ň2r</pattern>
     <pattern>ň1s</pattern>
-    <pattern>.ň2s</pattern>
+    <pattern> ň2s</pattern>
     <pattern>ň1t</pattern>
-    <pattern>.ň2t</pattern>
+    <pattern> ň2t</pattern>
     <pattern>ň1w</pattern>
-    <pattern>.ň2w</pattern>
+    <pattern> ň2w</pattern>
     <pattern>ň1ý</pattern>
-    <pattern>.ň2ý</pattern>
+    <pattern> ň2ý</pattern>
     <pattern>ň1z</pattern>
-    <pattern>.ň2z</pattern>
+    <pattern> ň2z</pattern>
     <pattern>ň1ň</pattern>
-    <pattern>.ň2ň</pattern>
+    <pattern> ň2ň</pattern>
     <pattern>ň1ž</pattern>
-    <pattern>.ň2ž</pattern>
+    <pattern> ň2ž</pattern>
     <pattern>ň1ş</pattern>
-    <pattern>.ň2ş</pattern>
+    <pattern> ň2ş</pattern>
     <pattern>ž1b</pattern>
-    <pattern>.ž2b</pattern>
+    <pattern> ž2b</pattern>
     <pattern>ž1ç</pattern>
-    <pattern>.ž2ç</pattern>
+    <pattern> ž2ç</pattern>
     <pattern>ž1d</pattern>
-    <pattern>.ž2d</pattern>
+    <pattern> ž2d</pattern>
     <pattern>ž1f</pattern>
-    <pattern>.ž2f</pattern>
+    <pattern> ž2f</pattern>
     <pattern>ž1g</pattern>
-    <pattern>.ž2g</pattern>
+    <pattern> ž2g</pattern>
     <pattern>ž1h</pattern>
-    <pattern>.ž2h</pattern>
+    <pattern> ž2h</pattern>
     <pattern>ž1j</pattern>
-    <pattern>.ž2j</pattern>
+    <pattern> ž2j</pattern>
     <pattern>ž1k</pattern>
-    <pattern>.ž2k</pattern>
+    <pattern> ž2k</pattern>
     <pattern>ž1l</pattern>
-    <pattern>.ž2l</pattern>
+    <pattern> ž2l</pattern>
     <pattern>ž1m</pattern>
-    <pattern>.ž2m</pattern>
+    <pattern> ž2m</pattern>
     <pattern>ž1n</pattern>
-    <pattern>.ž2n</pattern>
+    <pattern> ž2n</pattern>
     <pattern>ž1p</pattern>
-    <pattern>.ž2p</pattern>
+    <pattern> ž2p</pattern>
     <pattern>ž1r</pattern>
-    <pattern>.ž2r</pattern>
+    <pattern> ž2r</pattern>
     <pattern>ž1s</pattern>
-    <pattern>.ž2s</pattern>
+    <pattern> ž2s</pattern>
     <pattern>ž1t</pattern>
-    <pattern>.ž2t</pattern>
+    <pattern> ž2t</pattern>
     <pattern>ž1w</pattern>
-    <pattern>.ž2w</pattern>
+    <pattern> ž2w</pattern>
     <pattern>ž1ý</pattern>
-    <pattern>.ž2ý</pattern>
+    <pattern> ž2ý</pattern>
     <pattern>ž1z</pattern>
-    <pattern>.ž2z</pattern>
+    <pattern> ž2z</pattern>
     <pattern>ž1ň</pattern>
-    <pattern>.ž2ň</pattern>
+    <pattern> ž2ň</pattern>
     <pattern>ž1ž</pattern>
-    <pattern>.ž2ž</pattern>
+    <pattern> ž2ž</pattern>
     <pattern>ž1ş</pattern>
-    <pattern>.ž2ş</pattern>
+    <pattern> ž2ş</pattern>
     <pattern>ş1b</pattern>
-    <pattern>.ş2b</pattern>
+    <pattern> ş2b</pattern>
     <pattern>ş1ç</pattern>
-    <pattern>.ş2ç</pattern>
+    <pattern> ş2ç</pattern>
     <pattern>ş1d</pattern>
-    <pattern>.ş2d</pattern>
+    <pattern> ş2d</pattern>
     <pattern>ş1f</pattern>
-    <pattern>.ş2f</pattern>
+    <pattern> ş2f</pattern>
     <pattern>ş1g</pattern>
-    <pattern>.ş2g</pattern>
+    <pattern> ş2g</pattern>
     <pattern>ş1h</pattern>
-    <pattern>.ş2h</pattern>
+    <pattern> ş2h</pattern>
     <pattern>ş1j</pattern>
-    <pattern>.ş2j</pattern>
+    <pattern> ş2j</pattern>
     <pattern>ş1k</pattern>
-    <pattern>.ş2k</pattern>
+    <pattern> ş2k</pattern>
     <pattern>ş1l</pattern>
-    <pattern>.ş2l</pattern>
+    <pattern> ş2l</pattern>
     <pattern>ş1m</pattern>
-    <pattern>.ş2m</pattern>
+    <pattern> ş2m</pattern>
     <pattern>ş1n</pattern>
-    <pattern>.ş2n</pattern>
+    <pattern> ş2n</pattern>
     <pattern>ş1p</pattern>
-    <pattern>.ş2p</pattern>
+    <pattern> ş2p</pattern>
     <pattern>ş1r</pattern>
-    <pattern>.ş2r</pattern>
+    <pattern> ş2r</pattern>
     <pattern>ş1s</pattern>
-    <pattern>.ş2s</pattern>
+    <pattern> ş2s</pattern>
     <pattern>ş1t</pattern>
-    <pattern>.ş2t</pattern>
+    <pattern> ş2t</pattern>
     <pattern>ş1w</pattern>
-    <pattern>.ş2w</pattern>
+    <pattern> ş2w</pattern>
     <pattern>ş1ý</pattern>
-    <pattern>.ş2ý</pattern>
+    <pattern> ş2ý</pattern>
     <pattern>ş1z</pattern>
-    <pattern>.ş2z</pattern>
+    <pattern> ş2z</pattern>
     <pattern>ş1ň</pattern>
-    <pattern>.ş2ň</pattern>
+    <pattern> ş2ň</pattern>
     <pattern>ş1ž</pattern>
-    <pattern>.ş2ž</pattern>
+    <pattern> ş2ž</pattern>
     <pattern>ş1ş</pattern>
-    <pattern>.ş2ş</pattern>
+    <pattern> ş2ş</pattern>
     <pattern>ý2t1b</pattern>
     <pattern>ý2n1b</pattern>
     <pattern>ý2d1b</pattern>

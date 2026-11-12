@@ -59,10 +59,8 @@ void PbTocList::show(CRGUIWindowManager * wm)
     int first = _screen * _perScreen;
     for (int i = first; i < total && i < first + _perScreen; i++) {
         const Entry & e = _entries[i];
-        lString32 title = e.text;
-        if (i == _current)
-            title = lString32(U"> ") + title; // chapter of the current page
-        OpdsItem * item = new OpdsItem(menu, PB_TOC_SAFE_CMD_RANGE + e.page, title, lString32::empty_str);
+        OpdsItem * item = new OpdsItem(menu, PB_TOC_SAFE_CMD_RANGE + e.page, e.text, lString32::empty_str);
+        item->mark = i == _current; // chapter of the current page
         item->indent = (e.level > 1 ? e.level - 1 : 0) * levelIndent;
         item->aside = lString32::itoa(e.page);
         menu->addItem(item);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   Indonesian hyphenations description for FBReader (original was taken from the teTeX distribution)
 
@@ -45,7 +45,9 @@
 % fax   : +49 6131 395474
 % email : mart@kph.uni-mainz.de
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Indonesian" lang="id"
+    lefthyphenmin="2" righthyphenmin="2">
   <pattern> a2ta2u</pattern>
   <pattern> be2r3</pattern>
   <pattern> b8e7r8a7b8e </pattern>

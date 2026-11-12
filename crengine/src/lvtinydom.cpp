@@ -3527,6 +3527,12 @@ lString8 ldomDataStorageManager::getText( lUInt32 address )
     return chunk->getText(address&0xFFFF);
 }
 
+lString32 ldomDataStorageManager::getText32( lUInt32 address )
+{
+    ldomTextStorageChunk * chunk = getChunk(address);
+    return chunk->getText32(address&0xFFFF);
+}
+
 /// get pointer to element data
 ElementDataStorageItem * ldomDataStorageManager::getElem( lUInt32 addr )
 {
@@ -3862,6 +3868,18 @@ lString8 ldomTextStorageChunk::getText( int offset )
         return item->getText8();
     }
     return lString8::empty_str;
+}
+
+/// The text of a node for the layout: every text node of the book is asked for at every layout,
+/// and the way through getText() made a copy of the stored UTF-8 first.
+lString32 ldomTextStorageChunk::getText32( int offset )
+{
+    offset <<= 4;
+    if ( _buf && offset>=0 && offset<(int)_bufpos ) {
+        TextDataStorageItem * item = (TextDataStorageItem *)(_buf+offset);
+        return item->getText();
+    }
+    return lString32::empty_str;
 }
 #endif
 
@@ -4926,6 +4944,28 @@ ldomDocument::~ldomDocument()
 
 #if BUILD_LITE!=1
 
+bool ldomDocument::getStyleSheetFileText( const lString32 & cssFile, lString8 & css8 )
+{
+    for (int i = 0; i < _cssFileNames.length(); i++) {
+        if (_cssFileNames[i] == cssFile) {
+            css8 = _cssFileTexts[i];
+            return true;
+        }
+    }
+    LVContainerRef container = getContainer();
+    if (container.isNull())
+        return false;
+    LVStreamRef cssStream = container->OpenStream(cssFile.c_str(), LVOM_READ);
+    if (cssStream.isNull())
+        return false;
+    lString32 css;
+    css << LVReadTextFile(cssStream);
+    css8 = UnicodeToUtf8(css);
+    _cssFileNames.add(cssFile);
+    _cssFileTexts.add(css8);
+    return true;
+}
+
 class LVImportStylesheetParser
 {
 public:
@@ -4947,26 +4987,29 @@ public:
 
         lString32 codeBase = cssFile;
         LVExtractLastPathElement(codeBase);
-        LVContainerRef container = _document->getContainer();
-        if (!container.isNull()) {
-            LVStreamRef cssStream = container->OpenStream(cssFile.c_str(), LVOM_READ);
-            if (!cssStream.isNull()) {
-                lString32 css;
-                css << LVReadTextFile(cssStream);
-                int offset = _inProgress.add(cssFile);
-                ret = Parse(codeBase, css) || ret;
-                _inProgress.erase(offset, 1);
-            }
+        // the text of the file is kept by the document: it is not read from the archive and
+        // converted again for every fragment of the book that links it, and at every layout
+        lString8 css8;
+        if (_document->getStyleSheetFileText(cssFile, css8)) {
+            int offset = _inProgress.add(cssFile);
+            ret = ParseUtf8(codeBase, css8) || ret;
+            _inProgress.erase(offset, 1);
         }
         return ret;
     }
 
     bool Parse(lString32 codeBase, lString32 css)
     {
-        bool ret = false;
         if ( css.empty() )
+            return false;
+        return ParseUtf8(codeBase, UnicodeToUtf8(css));
+    }
+
+    bool ParseUtf8(lString32 codeBase, const lString8 & css8)
+    {
+        bool ret = false;
+        if ( css8.empty() )
             return ret;
-        lString8 css8 = UnicodeToUtf8(css);
         const char * s = css8.c_str();
 
         _nestingLevel += 1;
@@ -16648,6 +16691,10 @@ void ldomNode::destroy()
 }
 
 /// returns index of child node by dataIndex
+// hint of ldomNode::getChildIndex(): the node asked last and the index found in it
+static const ldomNode * s_childIndexHintParent = NULL;
+static int s_childIndexHint = 0;
+
 int ldomNode::getChildIndex( lUInt32 dataIndex ) const
 {
     // was here and twice below: dataIndex &= 0xFFFFFFF0;
@@ -16669,11 +16716,25 @@ int ldomNode::getChildIndex( lUInt32 dataIndex ) const
     dataIndex &= 0xFFFFFFF1;
     ASSERT_NODE_NOT_NULL;
     int parentIndex = -1;
+    // Where the search starts: the children of one node are asked for one after another (the
+    // styles are set in the order of the document, and a CSS rule with "+" or :first-child asks
+    // for the index of every child), so the child after the one found last is tried first, then
+    // that one and the one before it. Looking through all the children took k steps for the
+    // k-th child. A hint that does not fit costs three comparisons: the children are compared
+    // with the node asked for in any case.
+    int hint = s_childIndexHintParent == this ? s_childIndexHint : -2;
     switch ( TNTYPE ) {
     case NT_ELEMENT:
         {
             tinyElement * me = NPELEM;
-            for ( int i=0; i<me->_children.length(); i++ ) {
+            int count = me->_children.length();
+            for ( int i=hint+1; i>=hint-1 && hint>=0; i-- ) {
+                if ( i>=0 && i<count && (me->_children[i] & 0xFFFFFFF1) == dataIndex ) {
+                    parentIndex = i;
+                    break;
+                }
+            }
+            for ( int i=0; i<count && parentIndex<0; i++ ) {
                 if ( (me->_children[i] & 0xFFFFFFF1) == dataIndex ) {
                     // found
                     parentIndex = i;
@@ -16686,7 +16747,14 @@ int ldomNode::getChildIndex( lUInt32 dataIndex ) const
     case NT_PELEMENT:
         {
             ElementDataStorageItem * me = getDocument()->_elemStorage.getElem( _data._pelem_addr );
-            for ( int i=0; i<me->childCount; i++ ) {
+            int count = me->childCount;
+            for ( int i=hint+1; i>=hint-1 && hint>=0; i-- ) {
+                if ( i>=0 && i<count && (me->children[i] & 0xFFFFFFF1) == dataIndex ) {
+                    parentIndex = i;
+                    break;
+                }
+            }
+            for ( int i=0; i<count && parentIndex<0; i++ ) {
                 if ( (me->children[i] & 0xFFFFFFF1) == dataIndex ) {
                     // found
                     parentIndex = i;
@@ -16699,6 +16767,10 @@ int ldomNode::getChildIndex( lUInt32 dataIndex ) const
 #endif
     case NT_TEXT:
         break;
+    }
+    if ( parentIndex >= 0 ) {
+        s_childIndexHintParent = this;
+        s_childIndexHint = parentIndex;
     }
     return parentIndex;
 }
@@ -17336,7 +17408,7 @@ lString32 ldomNode::getText( lChar32 blockDelimiter, int maxSize ) const
         break;
 #if BUILD_LITE!=1
     case NT_PTEXT:
-        return Utf8ToUnicode(getDocument()->_textStorage.getText( _data._ptext_addr ));
+        return getDocument()->_textStorage.getText32( _data._ptext_addr );
 #endif
     case NT_TEXT:
         return _data._text_ptr->getText32();

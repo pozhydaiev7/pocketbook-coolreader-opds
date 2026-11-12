@@ -546,6 +546,118 @@ public:
     }
 };
 
+/// Title and language tag of a .pattern file for the list of the dictionaries, from the
+/// attributes of its <HyphenationDescription> tag, read without the XML parser. The list is made
+/// at every start of the program. The parser stops at the first pattern, but before that
+/// LVXMLParser::CheckFormat() reads a large part of the file to guess its encoding and checks
+/// that part as UTF-8: 45 files took 162 ms of a start on a PocketBook (InkPad 4, 2026-11-12).
+/// Here the file is read in parts of 8 KB up to the end of the tag. Returns false when the tag is
+/// not found in the first 256 KB, has other characters than ASCII or lacks one of the four
+/// attributes: the caller then reads the file with the parser, as before.
+static bool readPatternFileHeader( LVStreamRef stream, lString32 & title, lString32 & langTag )
+{
+    static const char tagName[] = "<HyphenationDescription";
+    const int tagNameLen = (int)sizeof(tagName) - 1;
+    const int chunkSize = 8192;
+    const int limit = 262144;
+    lString8 buf;
+    char chunk[chunkSize];
+    int tagStart = -1;
+    int tagEnd = -1;
+    while ( tagEnd < 0 && (int)buf.length() < limit ) {
+        lvsize_t bytesRead = 0;
+        if ( stream->Read( chunk, chunkSize, &bytesRead ) != LVERR_OK || bytesRead == 0 )
+            break;
+        int from = tagStart >= 0 ? (int)buf.length() : 0;
+        buf.append( chunk, (int)bytesRead );
+        if ( tagStart < 0 ) {
+            tagStart = buf.pos( tagName );
+            from = tagStart + tagNameLen;
+        }
+        for ( int i = from; tagStart >= 0 && i < (int)buf.length(); i++ ) {
+            if ( buf[i] == '>' ) {
+                tagEnd = i;
+                break;
+            }
+        }
+    }
+    if ( tagStart < 0 || tagEnd < 0 )
+        return false;
+    lString8 name;
+    lString8 titleValue, langValue, leftValue, rightValue;
+    int i = tagStart + tagNameLen;
+    while ( i < tagEnd ) {
+        unsigned char ch = (unsigned char)buf[i];
+        if ( ch >= 0x80 )
+            return false;
+        if ( ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n' ) {
+            i++;
+            continue;
+        }
+        // name="value" or name='value'
+        int nameStart = i;
+        while ( i < tagEnd && buf[i] != '=' && buf[i] != ' ' && buf[i] != '\t' && buf[i] != '\r' && buf[i] != '\n' )
+            i++;
+        name = buf.substr( nameStart, i - nameStart );
+        while ( i < tagEnd && buf[i] != '=' )
+            i++;
+        i++; // '='
+        while ( i < tagEnd && buf[i] != '"' && buf[i] != '\'' )
+            i++;
+        if ( i >= tagEnd )
+            return false;
+        char quote = buf[i++];
+        int valueStart = i;
+        while ( i < tagEnd && buf[i] != quote ) {
+            if ( (unsigned char)buf[i] >= 0x80 || buf[i] == '&' )
+                return false; // other characters than ASCII or an entity: for the parser
+            i++;
+        }
+        if ( i >= tagEnd )
+            return false;
+        lString8 value = buf.substr( valueStart, i - valueStart );
+        i++; // the closing quote
+        if ( name == "title" )
+            titleValue = value;
+        else if ( name == "lang" )
+            langValue = value;
+        else if ( name == "lefthyphenmin" )
+            leftValue = value;
+        else if ( name == "righthyphenmin" )
+            rightValue = value;
+    }
+    // what HyphPatternReader::isValid() asks for
+    if ( titleValue.empty() || langValue.empty() || leftValue.atoi() <= 0 || rightValue.atoi() <= 0 )
+        return false;
+    title = lString32( titleValue.c_str() );
+    langTag = lString32( langValue.c_str() );
+    return true;
+}
+
+/// Language tag of a "*_hyphen_(Alan).pdb" dictionary by its name without that ending. Every
+/// dictionary gets a tag of its own: a dictionary of a language that has a .pattern file too, and
+/// the Russian ones with English patterns added, get a private-use part.
+lString32 alanDictionaryLangTag( const lString32 & name )
+{
+    static const struct { const char * name; const char * tag; } tags[] = {
+        { "Bulgarian", "bg" }, { "Czech", "cs" }, { "Danish", "da" }, { "English_GB", "en-GB" },
+        { "English_US", "en-US" }, { "Finnish", "fi" }, { "French", "fr" }, { "German", "de" },
+        { "Hungarian", "hu" }, { "Icelandic", "is" }, { "Irish", "ga-x-alan" }, { "Italian", "it" },
+        { "Polish", "pl" }, { "Portuguese", "pt" }, { "Roman", "ro-x-alan" }, { "Russian", "ru" },
+        { "Russian_EnGB", "ru-x-en-gb" }, { "Russian_EnUS", "ru-x-en-us" }, { "Slovak", "sk" },
+        { "Slovenian", "sl" }, { "Spanish", "es" }, { "Swedish", "sv" }, { "Ukrain", "uk" },
+        { NULL, NULL }
+    };
+    for ( int i = 0; tags[i].name != NULL; i++ ) {
+        if ( name == tags[i].name )
+            return lString32( tags[i].tag );
+    }
+    // a dictionary this table does not know: the two letters as before, and its name
+    lString32 tag = name.substr(0, 2);
+    tag << "-x-" << name;
+    return tag.lowercase();
+}
+
 bool HyphDictionaryList::activate( lString32 id )
 {
     CRLog::trace("HyphDictionaryList::activate(%s)", LCSTR(id));
@@ -626,8 +738,16 @@ bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
                 title = name;
                 if (title.endsWith(suffix))
                     title.erase(title.length() - suffix.length(), suffix.length());
+                // The language tag. This engine does not hyphenate with the dictionary chosen
+                // but with the first dictionary of the list that has the tag of the chosen one
+                // (TextLangMan::setMainLangFromHyphDict, HyphMan::getHyphMethodForLang), so two
+                // dictionaries must not have one tag. The tag was the first two letters of the
+                // file name: with "Russian_EnUS" chosen the plain "Russian" hyphenated (the
+                // English words of a Russian text were left whole), with "English_US" the
+                // British one, with "Romanian.pattern" the dictionary "Roman", and one of
+                // "Polish" / "Portuguese" and of "Slovak" / "Slovenian" stood for both.
+                langTag = alanDictionaryLangTag(title);
                 title.append(" (Alan)");
-                langTag = id.substr(0, 2);
             } else if (name.endsWith(".pattern")) {
                 t = HDT_DICT_TEX;
                 LVStreamRef hyphStream = LVOpenFileStream(filename.c_str(), LVOM_READ);
@@ -635,15 +755,21 @@ bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
                     CRLog::error("Failed to open hyphenation dictionary: %s\n", LCSTR(filename));
                     continue;
                 }
-                HyphPatternReader reader;
-                LVXMLParser parser(hyphStream, &reader);
-                if (parser.CheckFormat()) {
-                    if (parser.Parse()) {
-                        if (reader.isValid()) {
-                            title = reader.GetTitle();
-                            langTag = reader.GetLangTag();
-                        } else {
-                            CRLog::error("Invalid/incomplete hyphenation dictionary in file \"%s\"!", LCSTR(name));
+                if (!readPatternFileHeader(hyphStream, title, langTag)) {
+                    // not a plain header: the XML parser reads the file
+                    title.clear();
+                    langTag.clear();
+                    hyphStream->SetPos(0);
+                    HyphPatternReader reader;
+                    LVXMLParser parser(hyphStream, &reader);
+                    if (parser.CheckFormat()) {
+                        if (parser.Parse()) {
+                            if (reader.isValid()) {
+                                title = reader.GetTitle();
+                                langTag = reader.GetLangTag();
+                            } else {
+                                CRLog::error("Invalid/incomplete hyphenation dictionary in file \"%s\"!", LCSTR(name));
+                            }
                         }
                     }
                 }

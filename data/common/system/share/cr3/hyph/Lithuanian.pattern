@@ -29,7 +29,9 @@
 % Vilnius, March 4, 1992
 % Lithuanian hyphenation patterns
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Lithuanian" lang="lt"
+    lefthyphenmin="2" righthyphenmin="2">
   <pattern> ap1</pattern>
   <pattern> api1</pattern>
   <pattern> ap3r</pattern>

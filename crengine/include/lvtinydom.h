@@ -299,6 +299,8 @@ public:
     lUInt32 allocElem( lUInt32 dataIndex, lUInt32 parentIndex, int childCount, int attrCount );
     /// get text by address
     lString8 getText( lUInt32 address );
+    /// get text by address, decoded from the stored UTF-8 without a copy of it
+    lString32 getText32( lUInt32 address );
     /// get pointer to text data
     TextDataStorageItem * getTextItem( lUInt32 addr );
     /// get pointer to element data
@@ -373,6 +375,8 @@ public:
     int addElem( lUInt32 dataIndex, lUInt32 parentIndex, int childCount, int attrCount );
     /// get text item from buffer by offset
     lString8 getText( int offset );
+    /// get text item from buffer by offset, decoded from the stored UTF-8 without a copy of it
+    lString32 getText32( int offset );
     /// get node parent by offset
     lUInt32 getParent( int offset );
     /// set node parent by offset
@@ -2405,6 +2409,11 @@ private:
 
     LVContainerRef _container;
 
+    // Texts (UTF-8) of the style sheet files of the book, read from its container once. Every
+    // fragment of an EPUB links the same files, and they are asked for again at every layout.
+    lString32Collection _cssFileNames;
+    lString8Collection _cssFileTexts;
+
     LVHashTable<lUInt32, ListNumberingPropsRef> lists;
 
     LVEmbeddedFontList _fontList;
@@ -2500,7 +2509,9 @@ public:
 
 
     LVContainerRef getContainer() { return _container; }
-    void setContainer( LVContainerRef cont ) { _container = cont; }
+    void setContainer( LVContainerRef cont ) { _container = cont; _cssFileNames.clear(); _cssFileTexts.clear(); }
+    /// text (UTF-8) of a style sheet file of the book; read from the container at the first request
+    bool getStyleSheetFileText( const lString32 & cssFile, lString8 & css8 );
 
 #if BUILD_LITE!=1
     void clearRendBlockCache() { _renderedBlockCache.clear(); }

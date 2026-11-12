@@ -31,11 +31,13 @@
 % \message{Kurmanji hyphenation patterns kmrhyph v. 1.0 2009/06/29 JKn and MSh}
 %
 -->
-<HyphenationDescription>
-    <pattern>.ka6ra</pattern>
+<HyphenationDescription
+    title="Kurmanji" lang="kmr"
+    lefthyphenmin="2" righthyphenmin="2">
+    <pattern> ka6ra</pattern>
     <pattern>a1</pattern>
     <pattern>al4a</pattern>
-    <pattern>6amît.</pattern>
+    <pattern>6amît </pattern>
     <pattern>4an</pattern>
     <pattern>ar5a6nî</pattern>
     <pattern>3av</pattern>
@@ -121,7 +123,7 @@
     <pattern>î4pl</pattern>
     <pattern>îsti6ye</pattern>
     <pattern>1j</pattern>
-    <pattern>6ja6va.</pattern>
+    <pattern>6ja6va </pattern>
     <pattern>2jh</pattern>
     <pattern>2jk</pattern>
     <pattern>2jm</pattern>

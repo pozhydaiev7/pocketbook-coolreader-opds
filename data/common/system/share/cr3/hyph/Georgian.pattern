@@ -35,15 +35,17 @@
 % - First release
 %
 -->
-<HyphenationDescription>
-    <pattern>.ავ4რწყა</pattern>
-    <pattern>.აი2ა</pattern>
-    <pattern>.ერ2თხ</pattern>
-    <pattern>.ერ2ტ</pattern>
-    <pattern>.ირ2ტ</pattern>
-    <pattern>.ურ2ტ</pattern>
-    <pattern>.უფრ2</pattern>
-    <pattern>.ფრ2</pattern>
+<HyphenationDescription
+    title="Georgian" lang="ka"
+    lefthyphenmin="1" righthyphenmin="2">
+    <pattern> ავ4რწყა</pattern>
+    <pattern> აი2ა</pattern>
+    <pattern> ერ2თხ</pattern>
+    <pattern> ერ2ტ</pattern>
+    <pattern> ირ2ტ</pattern>
+    <pattern> ურ2ტ</pattern>
+    <pattern> უფრ2</pattern>
+    <pattern> ფრ2</pattern>
     <pattern>ა1ა</pattern>
     <pattern>ა1ბ</pattern>
     <pattern>აბ3ლდ</pattern>
@@ -177,7 +179,7 @@
     <pattern>ა3თ2ქო</pattern>
     <pattern>ა1ი</pattern>
     <pattern>ა1კ</pattern>
-    <pattern>აკარ4გს.</pattern>
+    <pattern>აკარ4გს </pattern>
     <pattern>ა2კბ</pattern>
     <pattern>აკ3ბე</pattern>
     <pattern>აკ1დ</pattern>
@@ -210,7 +212,7 @@
     <pattern>ალ3ხს</pattern>
     <pattern>ალ3ხშ</pattern>
     <pattern>ა1მ</pattern>
-    <pattern>2ამბავი.</pattern>
+    <pattern>2ამბავი </pattern>
     <pattern>ამ3ბლ</pattern>
     <pattern>ამ3ბნ</pattern>
     <pattern>ამ3ბრ</pattern>
@@ -387,7 +389,7 @@
     <pattern>არ3ხნ</pattern>
     <pattern>ა1ს</pattern>
     <pattern>ას1ასი</pattern>
-    <pattern>ასახ4ლს.</pattern>
+    <pattern>ასახ4ლს </pattern>
     <pattern>ას3გვ</pattern>
     <pattern>ას3გზ</pattern>
     <pattern>ას3დგ</pattern>
@@ -505,7 +507,7 @@
     <pattern>აც3ქე</pattern>
     <pattern>აც3ქვ</pattern>
     <pattern>ა1ძ</pattern>
-    <pattern>აძარ4ცვ.</pattern>
+    <pattern>აძარ4ცვ </pattern>
     <pattern>აძ3ვრ</pattern>
     <pattern>აძ3რწ</pattern>
     <pattern>ა1წ</pattern>
@@ -583,7 +585,7 @@
     <pattern>გ3ვთა</pattern>
     <pattern>2გ1ზ2</pattern>
     <pattern>2გ1თ2</pattern>
-    <pattern>გიერ4თს.</pattern>
+    <pattern>გიერ4თს </pattern>
     <pattern>გი2მო</pattern>
     <pattern>2გ1კ2</pattern>
     <pattern>გ1ლე</pattern>
@@ -915,7 +917,7 @@
     <pattern>2ვ1თ2</pattern>
     <pattern>ვი2რუ</pattern>
     <pattern>2ვ1კ2</pattern>
-    <pattern>ვკარ4გს.</pattern>
+    <pattern>ვკარ4გს </pattern>
     <pattern>2ვ1ლ2</pattern>
     <pattern>2ვ1მ2</pattern>
     <pattern>2ვ1ნ2</pattern>
@@ -981,7 +983,7 @@
     <pattern>2თ1შ</pattern>
     <pattern>2თ1ც2</pattern>
     <pattern>თხ2</pattern>
-    <pattern>2თხ.</pattern>
+    <pattern>2თხ </pattern>
     <pattern>2თხს</pattern>
     <pattern>3თხსა</pattern>
     <pattern>2თ1ჯ</pattern>
@@ -1316,7 +1318,7 @@
     <pattern>2მ1ზ2</pattern>
     <pattern>2მ1თ2</pattern>
     <pattern>1მი</pattern>
-    <pattern>მის4ტრს.</pattern>
+    <pattern>მის4ტრს </pattern>
     <pattern>2მ1კ2</pattern>
     <pattern>2მ1ლ2</pattern>
     <pattern>2მ1მ</pattern>
@@ -1350,7 +1352,7 @@
     <pattern>1ნი</pattern>
     <pattern>ნია3შტ</pattern>
     <pattern>ნი3თ2ქ</pattern>
-    <pattern>ნის4ტრს.</pattern>
+    <pattern>ნის4ტრს </pattern>
     <pattern>2ნ1კ2</pattern>
     <pattern>2ნ1ლ</pattern>
     <pattern>2ნ1მ2</pattern>
@@ -1636,7 +1638,7 @@
     <pattern>ჟ1ღე</pattern>
     <pattern>2ჟ1შ</pattern>
     <pattern>2რ1ამბ</pattern>
-    <pattern>3რამბავი.</pattern>
+    <pattern>3რამბავი </pattern>
     <pattern>2რ1აჩა</pattern>
     <pattern>2რ1ბ2</pattern>
     <pattern>2რ1გ2</pattern>
@@ -1648,7 +1650,7 @@
     <pattern>2რ1ვ2</pattern>
     <pattern>2რ1ზ2</pattern>
     <pattern>2რ1თ2</pattern>
-    <pattern>რთერ4თს.</pattern>
+    <pattern>რთერ4თს </pattern>
     <pattern>რ3თსა</pattern>
     <pattern>რ3თხმ</pattern>
     <pattern>1რი</pattern>
@@ -1722,7 +1724,7 @@
     <pattern>2ტ1ბ</pattern>
     <pattern>2ტ1გ2</pattern>
     <pattern>2ტ1დ</pattern>
-    <pattern>ტექ4სტს.</pattern>
+    <pattern>ტექ4სტს </pattern>
     <pattern>2ტვ2</pattern>
     <pattern>ტ1ვა</pattern>
     <pattern>2ტ1ზ</pattern>
@@ -2054,7 +2056,7 @@
     <pattern>2ც1ღ</pattern>
     <pattern>2ც1შ</pattern>
     <pattern>ცხ2</pattern>
-    <pattern>ძარ4ცვს.</pattern>
+    <pattern>ძარ4ცვს </pattern>
     <pattern>2ძ1გ2</pattern>
     <pattern>2ძ1ვ2</pattern>
     <pattern>2ძ1ზ</pattern>

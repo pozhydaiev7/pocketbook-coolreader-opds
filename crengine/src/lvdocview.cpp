@@ -4175,8 +4175,7 @@ bool LVDocView::LoadDocument(const lChar32 * fname, bool metadataOnly) {
 				(int) stream->GetSize()));
 		m_doc_props->setString(DOC_PROP_FILE_NAME, arcItemPathName);
 		m_doc_props->setHex(DOC_PROP_FILE_CRC32, stream->getcrc32());
-		CRFileHistRecord* record = m_hist.getRecord( filename32, stream->GetSize() );
-        if (loadDocumentWithHistory(stream, record, metadataOnly)) {
+        if (loadDocumentWithHistory(stream, filename32, metadataOnly)) {
             m_filename = lString32(fname);
             m_stream.Clear();
             return true;
@@ -4222,8 +4221,7 @@ bool LVDocView::LoadDocument(const lChar32 * fname, bool metadataOnly) {
 			(int) stream->GetSize()));
 	m_doc_props->setHex(DOC_PROP_FILE_CRC32, stream->getcrc32());
 
-	CRFileHistRecord* record = m_hist.getRecord( filename32, stream->GetSize() );
-    if (loadDocumentWithHistory(stream, record, metadataOnly)) {
+    if (loadDocumentWithHistory(stream, filename32, metadataOnly)) {
         m_filename = lString32(fname);
         m_stream.Clear();
 #define DUMP_OPENED_DOCUMENT_SENTENCES 0 // debug XPointer navigation
@@ -4298,8 +4296,7 @@ bool LVDocView::LoadDocument( LVStreamRef stream, const lChar32 * contentPath, b
 			(int) stream->GetSize()));
 	m_doc_props->setHex(DOC_PROP_FILE_CRC32, stream->getcrc32());
 
-	CRFileHistRecord* record = m_hist.getRecord( contentPath16, stream->GetSize() );
-    if (loadDocumentWithHistory(stream, record, metadataOnly)) {
+    if (loadDocumentWithHistory(stream, contentPath16, metadataOnly)) {
         m_filename = lString32(contentPath);
         return true;
     }
@@ -4307,40 +4304,96 @@ bool LVDocView::LoadDocument( LVStreamRef stream, const lChar32 * contentPath, b
     return false;
 }
 
-bool LVDocView::loadDocumentWithHistory(LVStreamRef stream, CRFileHistRecord *record, bool metadataOnly)
+/// A book opened from an archive (book.fb2.zip) is kept in the reading history with the name of
+/// the archive and the size of the book. The engine of 0.0.6-17-66 and older did so; the test
+/// builds 0.0.6-17-67 alpha1..alpha6 wrote the size of the archive, did not find the record of the
+/// older engine and opened such a book at its beginning. One record is kept, under the size of the
+/// book: the one with the position further in the book (the record of an alpha started from the
+/// first page), and of two equal ones the one read later.
+void LVDocView::adoptArchiveHistoryRecord(const lString32 & fileName, lvsize_t archiveSize)
 {
-    int requested = m_props->getIntDef(PROP_REQUESTED_DOM_VERSION, gDOMVersionCurrent);
-    if (metadataOnly || !needToConvertBookmarks(record, requested))
-        return loadDocumentInt(stream, metadataOnly);
-
-    // Save pointers independently: CRFileHistRecord's copy shares bookmark objects.
-    LVArray<lString32> starts, ends;
-    for (int i = -1; i < record->getBookmarks().length(); ++i) {
-        CRBookmark *bmk = i < 0 ? record->getLastPos() : record->getBookmarks()[i];
-        starts.add(bmk->getStartPos());
-        ends.add(bmk->getEndPos());
+    if ((lvsize_t)m_filesize == archiveSize)
+        return;
+    CRFileHistRecord * byArchive = m_hist.getRecord(fileName, archiveSize);
+    if (byArchive == NULL)
+        return;
+    CRFileHistRecord * byBook = m_hist.getRecord(fileName, m_filesize);
+    CRFileHistRecord * dropped = byArchive;
+    int archivePercent = byArchive->getLastPos()->getPercent();
+    int bookPercent = byBook != NULL ? byBook->getLastPos()->getPercent() : -1;
+    if (archivePercent > bookPercent
+            || (archivePercent == bookPercent && byBook->getLastTime() < byArchive->getLastTime())) {
+        byArchive->setFileSize((lvsize_t)m_filesize);
+        dropped = byBook;
     }
-    int previousVersion = record->getDOMversion();
+    if (dropped != NULL)
+        delete m_hist.getRecords().remove(dropped);
+    CRLog::info("history: one record of %s, under the size of the book %d (the archive: %d)", LCSTR(fileName),
+                (int)m_filesize, (int)archiveSize);
+}
+
+bool LVDocView::loadDocumentWithHistory(LVStreamRef stream, const lString32 & fileName, bool metadataOnly)
+{
+    if (metadataOnly)
+        return loadDocumentInt(stream, true);
+    int requested = m_props->getIntDef(PROP_REQUESTED_DOM_VERSION, gDOMVersionCurrent);
+    lvsize_t streamSize = stream->GetSize();
+    // Is there a record of an older engine for this book? Its pointers are found only in a tree
+    // built the old way, so the book is parsed that way first. The record of a book inside an
+    // archive has the size of the book, known when the archive is opened: the name decides here.
+    lString32 name = LVExtractFilename(fileName);
+    bool isZip = name.length() > 4 && name.substr(name.length() - 4).lowercase() == U".zip";
+    int previousVersion = 0;
+    for (int i = 0; i < m_hist.getRecords().length(); i++) {
+        CRFileHistRecord * rec = m_hist.getRecords()[i];
+        if (rec->getFileName() == name && (isZip || rec->getFileSize() == streamSize)
+                && needToConvertBookmarks(rec, requested)) {
+            previousVersion = rec->getDOMversion();
+            break;
+        }
+    }
+    if (previousVersion == 0) {
+        if (!loadDocumentInt(stream, false))
+            return false;
+        adoptArchiveHistoryRecord(fileName, streamSize);
+        return true;
+    }
+
     int flags = m_props->getIntDef(PROP_RENDER_BLOCK_RENDERING_FLAGS, BLOCK_RENDERING_FLAGS_DEFAULT);
     m_props->setInt(PROP_REQUESTED_DOM_VERSION, previousVersion);
     m_props->setInt(PROP_RENDER_BLOCK_RENDERING_FLAGS, BLOCK_RENDERING_FLAGS_LEGACY);
     bool loaded = loadDocumentInt(stream, false);
-    bool converted = loaded && record->convertBookmarks(m_doc, requested);
     m_props->setInt(PROP_REQUESTED_DOM_VERSION, requested);
     m_props->setInt(PROP_RENDER_BLOCK_RENDERING_FLAGS, flags);
-    if (!converted) {
-        CRLog::error("Cannot migrate reading positions; original history retained");
+    if (!loaded)
         return false;
+    adoptArchiveHistoryRecord(fileName, streamSize);
+    CRFileHistRecord * record = m_hist.getRecord(fileName, m_filesize);
+    // Save pointers independently: CRFileHistRecord's copy shares bookmark objects.
+    LVArray<lString32> starts, ends;
+    bool converted = false;
+    if (needToConvertBookmarks(record, requested)) {
+        for (int i = -1; i < record->getBookmarks().length(); ++i) {
+            CRBookmark *bmk = i < 0 ? record->getLastPos() : record->getBookmarks()[i];
+            starts.add(bmk->getStartPos());
+            ends.add(bmk->getEndPos());
+        }
+        previousVersion = record->getDOMversion();
+        converted = record->convertBookmarks(m_doc, requested);
+        CRLog::info("history: the reading position and %d bookmarks of %s are converted from the pointers of "
+                    "the engine version %d", record->getBookmarks().length(), LCSTR(fileName), previousVersion);
     }
     // Conversion resolves old pointers against an old DOM. Parse again with the
     // user's current DOM/layout settings before accepting the migrated history.
     if (stream->SetPos(0) != LVERR_OK || !loadDocumentInt(stream, false)) {
-        for (int i = -1; i < record->getBookmarks().length(); ++i) {
-            CRBookmark *bmk = i < 0 ? record->getLastPos() : record->getBookmarks()[i];
-            bmk->setStartPos(starts[i+1]);
-            bmk->setEndPos(ends[i+1]);
+        if (converted) {
+            for (int i = -1; i < record->getBookmarks().length(); ++i) {
+                CRBookmark *bmk = i < 0 ? record->getLastPos() : record->getBookmarks()[i];
+                bmk->setStartPos(starts[i+1]);
+                bmk->setEndPos(ends[i+1]);
+            }
+            record->setDOMversion(previousVersion);
         }
-        record->setDOMversion(previousVersion);
         return false;
     }
     return true;
@@ -4787,6 +4840,10 @@ bool LVDocView::loadDocumentInt(LVStreamRef stream, bool metadataOnly) {
 					m_doc_props->setString(DOC_PROP_CODE_BASE, LVExtractPath(fn) );
 					m_doc_props->setString(DOC_PROP_FILE_SIZE, lString32::itoa((int)m_stream->GetSize()));
                     m_doc_props->setHex(DOC_PROP_FILE_CRC32, m_stream->getcrc32());
+					// The reading history keeps a book of an archive with the size of the book,
+					// not of the archive, as the engine of 0.0.6-17-66 and older did: the
+					// positions saved by it are found again.
+					m_filesize = m_stream->GetSize();
 					found = true;
 				}
 			}

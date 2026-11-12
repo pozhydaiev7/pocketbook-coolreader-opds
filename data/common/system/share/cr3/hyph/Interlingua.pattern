@@ -92,11 +92,13 @@
 %
 % \fi
 -->
-<HyphenationDescription>
-    <pattern>.ch2</pattern>
-    <pattern>.de4s</pattern>
-    <pattern>.in1</pattern>
-    <pattern>.se4i</pattern>
+<HyphenationDescription
+    title="Interlingua" lang="ia"
+    lefthyphenmin="2" righthyphenmin="2">
+    <pattern> ch2</pattern>
+    <pattern> de4s</pattern>
+    <pattern> in1</pattern>
+    <pattern> se4i</pattern>
     <pattern>a1a</pattern>
     <pattern>a1b</pattern>
     <pattern>a2b1l</pattern>

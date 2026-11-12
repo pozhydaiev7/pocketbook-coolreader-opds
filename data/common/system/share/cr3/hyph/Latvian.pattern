@@ -13,7 +13,9 @@
 % License:  Lesser General Public Licence (LGPL) 2.1
 %
 -->
-<HyphenationDescription>
+<HyphenationDescription
+    title="Latvian" lang="lv"
+    lefthyphenmin="2" righthyphenmin="2">
     <pattern>d4z</pattern>
     <pattern>d4ž</pattern>
     <pattern>a2i</pattern>
@@ -25,12 +27,12 @@
     <pattern>o2i</pattern>
     <pattern>o2u</pattern>
     <pattern>e2u</pattern>
-    <pattern>.vi1s2a.</pattern>
-    <pattern>.vi1s2ā.</pattern>
-    <pattern>.vi1s2i.</pattern>
-    <pattern>.vi1s2os.</pattern>
-    <pattern>.vi1s2u.</pattern>
-    <pattern>.vi1s2iem.</pattern>
+    <pattern> vi1s2a </pattern>
+    <pattern> vi1s2ā </pattern>
+    <pattern> vi1s2i </pattern>
+    <pattern> vi1s2os </pattern>
+    <pattern> vi1s2u </pattern>
+    <pattern> vi1s2iem </pattern>
     <pattern>o1pī</pattern>
     <pattern>ū1rē</pattern>
     <pattern>i1ta</pattern>
@@ -9923,1646 +9925,1646 @@
     <pattern>akš1svā</pattern>
     <pattern>alt1bri</pattern>
     <pattern>ārs1prū</pattern>
-    <pattern>.jā1s2p</pattern>
-    <pattern>.ne1s2p</pattern>
-    <pattern>.ie1s2p</pattern>
-    <pattern>.no1s2p</pattern>
-    <pattern>.pa1s2p</pattern>
-    <pattern>.pie1s2p</pattern>
-    <pattern>.sa1s2p</pattern>
-    <pattern>.uz1s2p</pattern>
-    <pattern>.aiz1s2p</pattern>
-    <pattern>.ap1s2p</pattern>
-    <pattern>.at1s2p</pattern>
-    <pattern>.bez1s2p</pattern>
-    <pattern>.pār1s2p</pattern>
-    <pattern>.iz1s2p</pattern>
-    <pattern>.eks1s2p</pattern>
-    <pattern>.vis1s2p</pattern>
-    <pattern>.jā1t2r</pattern>
-    <pattern>.ne1t2r</pattern>
-    <pattern>.ie1t2r</pattern>
-    <pattern>.no1t2r</pattern>
-    <pattern>.pa1t2r</pattern>
-    <pattern>.pie1t2r</pattern>
-    <pattern>.sa1t2r</pattern>
-    <pattern>.uz1t2r</pattern>
-    <pattern>.aiz1t2r</pattern>
-    <pattern>.ap1t2r</pattern>
-    <pattern>.at1t2r</pattern>
-    <pattern>.bez1t2r</pattern>
-    <pattern>.pār1t2r</pattern>
-    <pattern>.iz1t2r</pattern>
-    <pattern>.eks1t2r</pattern>
-    <pattern>.vis1t2r</pattern>
-    <pattern>.jā1s2c</pattern>
-    <pattern>.ne1s2c</pattern>
-    <pattern>.ie1s2c</pattern>
-    <pattern>.no1s2c</pattern>
-    <pattern>.pa1s2c</pattern>
-    <pattern>.pie1s2c</pattern>
-    <pattern>.sa1s2c</pattern>
-    <pattern>.uz1s2c</pattern>
-    <pattern>.aiz1s2c</pattern>
-    <pattern>.ap1s2c</pattern>
-    <pattern>.at1s2c</pattern>
-    <pattern>.bez1s2c</pattern>
-    <pattern>.pār1s2c</pattern>
-    <pattern>.iz1s2c</pattern>
-    <pattern>.eks1s2c</pattern>
-    <pattern>.vis1s2c</pattern>
-    <pattern>.jā1s2tj</pattern>
-    <pattern>.ne1s2tj</pattern>
-    <pattern>.ie1s2tj</pattern>
-    <pattern>.no1s2tj</pattern>
-    <pattern>.pa1s2tj</pattern>
-    <pattern>.pie1s2tj</pattern>
-    <pattern>.sa1s2tj</pattern>
-    <pattern>.uz1s2tj</pattern>
-    <pattern>.aiz1s2tj</pattern>
-    <pattern>.ap1s2tj</pattern>
-    <pattern>.at1s2tj</pattern>
-    <pattern>.bez1s2tj</pattern>
-    <pattern>.pār1s2tj</pattern>
-    <pattern>.iz1s2tj</pattern>
-    <pattern>.eks1s2tj</pattern>
-    <pattern>.vis1s2tj</pattern>
-    <pattern>.jā1g2l</pattern>
-    <pattern>.ne1g2l</pattern>
-    <pattern>.ie1g2l</pattern>
-    <pattern>.no1g2l</pattern>
-    <pattern>.pa1g2l</pattern>
-    <pattern>.pie1g2l</pattern>
-    <pattern>.sa1g2l</pattern>
-    <pattern>.uz1g2l</pattern>
-    <pattern>.aiz1g2l</pattern>
-    <pattern>.ap1g2l</pattern>
-    <pattern>.at1g2l</pattern>
-    <pattern>.bez1g2l</pattern>
-    <pattern>.pār1g2l</pattern>
-    <pattern>.iz1g2l</pattern>
-    <pattern>.eks1g2l</pattern>
-    <pattern>.vis1g2l</pattern>
-    <pattern>.jā1ž2v</pattern>
-    <pattern>.ne1ž2v</pattern>
-    <pattern>.ie1ž2v</pattern>
-    <pattern>.no1ž2v</pattern>
-    <pattern>.pa1ž2v</pattern>
-    <pattern>.pie1ž2v</pattern>
-    <pattern>.sa1ž2v</pattern>
-    <pattern>.uz1ž2v</pattern>
-    <pattern>.aiz1ž2v</pattern>
-    <pattern>.ap1ž2v</pattern>
-    <pattern>.at1ž2v</pattern>
-    <pattern>.bez1ž2v</pattern>
-    <pattern>.pār1ž2v</pattern>
-    <pattern>.iz1ž2v</pattern>
-    <pattern>.eks1ž2v</pattern>
-    <pattern>.vis1ž2v</pattern>
-    <pattern>.jā1š2ļ</pattern>
-    <pattern>.ne1š2ļ</pattern>
-    <pattern>.ie1š2ļ</pattern>
-    <pattern>.no1š2ļ</pattern>
-    <pattern>.pa1š2ļ</pattern>
-    <pattern>.pie1š2ļ</pattern>
-    <pattern>.sa1š2ļ</pattern>
-    <pattern>.uz1š2ļ</pattern>
-    <pattern>.aiz1š2ļ</pattern>
-    <pattern>.ap1š2ļ</pattern>
-    <pattern>.at1š2ļ</pattern>
-    <pattern>.bez1š2ļ</pattern>
-    <pattern>.pār1š2ļ</pattern>
-    <pattern>.iz1š2ļ</pattern>
-    <pattern>.eks1š2ļ</pattern>
-    <pattern>.vis1š2ļ</pattern>
-    <pattern>.jā1s2f</pattern>
-    <pattern>.ne1s2f</pattern>
-    <pattern>.ie1s2f</pattern>
-    <pattern>.no1s2f</pattern>
-    <pattern>.pa1s2f</pattern>
-    <pattern>.pie1s2f</pattern>
-    <pattern>.sa1s2f</pattern>
-    <pattern>.uz1s2f</pattern>
-    <pattern>.aiz1s2f</pattern>
-    <pattern>.ap1s2f</pattern>
-    <pattern>.at1s2f</pattern>
-    <pattern>.bez1s2f</pattern>
-    <pattern>.pār1s2f</pattern>
-    <pattern>.iz1s2f</pattern>
-    <pattern>.eks1s2f</pattern>
-    <pattern>.vis1s2f</pattern>
-    <pattern>.jā1š2t</pattern>
-    <pattern>.ne1š2t</pattern>
-    <pattern>.ie1š2t</pattern>
-    <pattern>.no1š2t</pattern>
-    <pattern>.pa1š2t</pattern>
-    <pattern>.pie1š2t</pattern>
-    <pattern>.sa1š2t</pattern>
-    <pattern>.uz1š2t</pattern>
-    <pattern>.aiz1š2t</pattern>
-    <pattern>.ap1š2t</pattern>
-    <pattern>.at1š2t</pattern>
-    <pattern>.bez1š2t</pattern>
-    <pattern>.pār1š2t</pattern>
-    <pattern>.iz1š2t</pattern>
-    <pattern>.eks1š2t</pattern>
-    <pattern>.vis1š2t</pattern>
-    <pattern>.jā1s2tr</pattern>
-    <pattern>.ne1s2tr</pattern>
-    <pattern>.ie1s2tr</pattern>
-    <pattern>.no1s2tr</pattern>
-    <pattern>.pa1s2tr</pattern>
-    <pattern>.pie1s2tr</pattern>
-    <pattern>.sa1s2tr</pattern>
-    <pattern>.uz1s2tr</pattern>
-    <pattern>.aiz1s2tr</pattern>
-    <pattern>.ap1s2tr</pattern>
-    <pattern>.at1s2tr</pattern>
-    <pattern>.bez1s2tr</pattern>
-    <pattern>.pār1s2tr</pattern>
-    <pattern>.iz1s2tr</pattern>
-    <pattern>.eks1s2tr</pattern>
-    <pattern>.vis1s2tr</pattern>
-    <pattern>.jā1b2r</pattern>
-    <pattern>.ne1b2r</pattern>
-    <pattern>.ie1b2r</pattern>
-    <pattern>.no1b2r</pattern>
-    <pattern>.pa1b2r</pattern>
-    <pattern>.pie1b2r</pattern>
-    <pattern>.sa1b2r</pattern>
-    <pattern>.uz1b2r</pattern>
-    <pattern>.aiz1b2r</pattern>
-    <pattern>.ap1b2r</pattern>
-    <pattern>.at1b2r</pattern>
-    <pattern>.bez1b2r</pattern>
-    <pattern>.pār1b2r</pattern>
-    <pattern>.iz1b2r</pattern>
-    <pattern>.eks1b2r</pattern>
-    <pattern>.vis1b2r</pattern>
-    <pattern>.jā1š2r</pattern>
-    <pattern>.ne1š2r</pattern>
-    <pattern>.ie1š2r</pattern>
-    <pattern>.no1š2r</pattern>
-    <pattern>.pa1š2r</pattern>
-    <pattern>.pie1š2r</pattern>
-    <pattern>.sa1š2r</pattern>
-    <pattern>.uz1š2r</pattern>
-    <pattern>.aiz1š2r</pattern>
-    <pattern>.ap1š2r</pattern>
-    <pattern>.at1š2r</pattern>
-    <pattern>.bez1š2r</pattern>
-    <pattern>.pār1š2r</pattern>
-    <pattern>.iz1š2r</pattern>
-    <pattern>.eks1š2r</pattern>
-    <pattern>.vis1š2r</pattern>
-    <pattern>.jā1š2v</pattern>
-    <pattern>.ne1š2v</pattern>
-    <pattern>.ie1š2v</pattern>
-    <pattern>.no1š2v</pattern>
-    <pattern>.pa1š2v</pattern>
-    <pattern>.pie1š2v</pattern>
-    <pattern>.sa1š2v</pattern>
-    <pattern>.uz1š2v</pattern>
-    <pattern>.aiz1š2v</pattern>
-    <pattern>.ap1š2v</pattern>
-    <pattern>.at1š2v</pattern>
-    <pattern>.bez1š2v</pattern>
-    <pattern>.pār1š2v</pattern>
-    <pattern>.iz1š2v</pattern>
-    <pattern>.eks1š2v</pattern>
-    <pattern>.vis1š2v</pattern>
-    <pattern>.jā1s2t</pattern>
-    <pattern>.ne1s2t</pattern>
-    <pattern>.ie1s2t</pattern>
-    <pattern>.no1s2t</pattern>
-    <pattern>.pa1s2t</pattern>
-    <pattern>.pie1s2t</pattern>
-    <pattern>.sa1s2t</pattern>
-    <pattern>.uz1s2t</pattern>
-    <pattern>.aiz1s2t</pattern>
-    <pattern>.ap1s2t</pattern>
-    <pattern>.at1s2t</pattern>
-    <pattern>.bez1s2t</pattern>
-    <pattern>.pār1s2t</pattern>
-    <pattern>.iz1s2t</pattern>
-    <pattern>.eks1s2t</pattern>
-    <pattern>.vis1s2t</pattern>
-    <pattern>.jā1p2r</pattern>
-    <pattern>.ne1p2r</pattern>
-    <pattern>.ie1p2r</pattern>
-    <pattern>.no1p2r</pattern>
-    <pattern>.pa1p2r</pattern>
-    <pattern>.pie1p2r</pattern>
-    <pattern>.sa1p2r</pattern>
-    <pattern>.uz1p2r</pattern>
-    <pattern>.aiz1p2r</pattern>
-    <pattern>.ap1p2r</pattern>
-    <pattern>.at1p2r</pattern>
-    <pattern>.bez1p2r</pattern>
-    <pattern>.pār1p2r</pattern>
-    <pattern>.iz1p2r</pattern>
-    <pattern>.eks1p2r</pattern>
-    <pattern>.vis1p2r</pattern>
-    <pattern>.jā1g2ļ</pattern>
-    <pattern>.ne1g2ļ</pattern>
-    <pattern>.ie1g2ļ</pattern>
-    <pattern>.no1g2ļ</pattern>
-    <pattern>.pa1g2ļ</pattern>
-    <pattern>.pie1g2ļ</pattern>
-    <pattern>.sa1g2ļ</pattern>
-    <pattern>.uz1g2ļ</pattern>
-    <pattern>.aiz1g2ļ</pattern>
-    <pattern>.ap1g2ļ</pattern>
-    <pattern>.at1g2ļ</pattern>
-    <pattern>.bez1g2ļ</pattern>
-    <pattern>.pār1g2ļ</pattern>
-    <pattern>.iz1g2ļ</pattern>
-    <pattern>.eks1g2ļ</pattern>
-    <pattern>.vis1g2ļ</pattern>
-    <pattern>.jā1š2k</pattern>
-    <pattern>.ne1š2k</pattern>
-    <pattern>.ie1š2k</pattern>
-    <pattern>.no1š2k</pattern>
-    <pattern>.pa1š2k</pattern>
-    <pattern>.pie1š2k</pattern>
-    <pattern>.sa1š2k</pattern>
-    <pattern>.uz1š2k</pattern>
-    <pattern>.aiz1š2k</pattern>
-    <pattern>.ap1š2k</pattern>
-    <pattern>.at1š2k</pattern>
-    <pattern>.bez1š2k</pattern>
-    <pattern>.pār1š2k</pattern>
-    <pattern>.iz1š2k</pattern>
-    <pattern>.eks1š2k</pattern>
-    <pattern>.vis1š2k</pattern>
-    <pattern>.jā1p2s</pattern>
-    <pattern>.ne1p2s</pattern>
-    <pattern>.ie1p2s</pattern>
-    <pattern>.no1p2s</pattern>
-    <pattern>.pa1p2s</pattern>
-    <pattern>.pie1p2s</pattern>
-    <pattern>.sa1p2s</pattern>
-    <pattern>.uz1p2s</pattern>
-    <pattern>.aiz1p2s</pattern>
-    <pattern>.ap1p2s</pattern>
-    <pattern>.at1p2s</pattern>
-    <pattern>.bez1p2s</pattern>
-    <pattern>.pār1p2s</pattern>
-    <pattern>.iz1p2s</pattern>
-    <pattern>.eks1p2s</pattern>
-    <pattern>.vis1p2s</pattern>
-    <pattern>.jā1k2l</pattern>
-    <pattern>.ne1k2l</pattern>
-    <pattern>.ie1k2l</pattern>
-    <pattern>.no1k2l</pattern>
-    <pattern>.pa1k2l</pattern>
-    <pattern>.pie1k2l</pattern>
-    <pattern>.sa1k2l</pattern>
-    <pattern>.uz1k2l</pattern>
-    <pattern>.aiz1k2l</pattern>
-    <pattern>.ap1k2l</pattern>
-    <pattern>.at1k2l</pattern>
-    <pattern>.bez1k2l</pattern>
-    <pattern>.pār1k2l</pattern>
-    <pattern>.iz1k2l</pattern>
-    <pattern>.eks1k2l</pattern>
-    <pattern>.vis1k2l</pattern>
-    <pattern>.jā1g2r</pattern>
-    <pattern>.ne1g2r</pattern>
-    <pattern>.ie1g2r</pattern>
-    <pattern>.no1g2r</pattern>
-    <pattern>.pa1g2r</pattern>
-    <pattern>.pie1g2r</pattern>
-    <pattern>.sa1g2r</pattern>
-    <pattern>.uz1g2r</pattern>
-    <pattern>.aiz1g2r</pattern>
-    <pattern>.ap1g2r</pattern>
-    <pattern>.at1g2r</pattern>
-    <pattern>.bez1g2r</pattern>
-    <pattern>.pār1g2r</pattern>
-    <pattern>.iz1g2r</pattern>
-    <pattern>.eks1g2r</pattern>
-    <pattern>.vis1g2r</pattern>
-    <pattern>.jā1š2ķ</pattern>
-    <pattern>.ne1š2ķ</pattern>
-    <pattern>.ie1š2ķ</pattern>
-    <pattern>.no1š2ķ</pattern>
-    <pattern>.pa1š2ķ</pattern>
-    <pattern>.pie1š2ķ</pattern>
-    <pattern>.sa1š2ķ</pattern>
-    <pattern>.uz1š2ķ</pattern>
-    <pattern>.aiz1š2ķ</pattern>
-    <pattern>.ap1š2ķ</pattern>
-    <pattern>.at1š2ķ</pattern>
-    <pattern>.bez1š2ķ</pattern>
-    <pattern>.pār1š2ķ</pattern>
-    <pattern>.iz1š2ķ</pattern>
-    <pattern>.eks1š2ķ</pattern>
-    <pattern>.vis1š2ķ</pattern>
-    <pattern>.jā1p2n</pattern>
-    <pattern>.ne1p2n</pattern>
-    <pattern>.ie1p2n</pattern>
-    <pattern>.no1p2n</pattern>
-    <pattern>.pa1p2n</pattern>
-    <pattern>.pie1p2n</pattern>
-    <pattern>.sa1p2n</pattern>
-    <pattern>.uz1p2n</pattern>
-    <pattern>.aiz1p2n</pattern>
-    <pattern>.ap1p2n</pattern>
-    <pattern>.at1p2n</pattern>
-    <pattern>.bez1p2n</pattern>
-    <pattern>.pār1p2n</pattern>
-    <pattern>.iz1p2n</pattern>
-    <pattern>.eks1p2n</pattern>
-    <pattern>.vis1p2n</pattern>
-    <pattern>.jā1s2v</pattern>
-    <pattern>.ne1s2v</pattern>
-    <pattern>.ie1s2v</pattern>
-    <pattern>.no1s2v</pattern>
-    <pattern>.pa1s2v</pattern>
-    <pattern>.pie1s2v</pattern>
-    <pattern>.sa1s2v</pattern>
-    <pattern>.uz1s2v</pattern>
-    <pattern>.aiz1s2v</pattern>
-    <pattern>.ap1s2v</pattern>
-    <pattern>.at1s2v</pattern>
-    <pattern>.bez1s2v</pattern>
-    <pattern>.pār1s2v</pattern>
-    <pattern>.iz1s2v</pattern>
-    <pattern>.eks1s2v</pattern>
-    <pattern>.vis1s2v</pattern>
-    <pattern>.jā1s2pr</pattern>
-    <pattern>.ne1s2pr</pattern>
-    <pattern>.ie1s2pr</pattern>
-    <pattern>.no1s2pr</pattern>
-    <pattern>.pa1s2pr</pattern>
-    <pattern>.pie1s2pr</pattern>
-    <pattern>.sa1s2pr</pattern>
-    <pattern>.uz1s2pr</pattern>
-    <pattern>.aiz1s2pr</pattern>
-    <pattern>.ap1s2pr</pattern>
-    <pattern>.at1s2pr</pattern>
-    <pattern>.bez1s2pr</pattern>
-    <pattern>.pār1s2pr</pattern>
-    <pattern>.iz1s2pr</pattern>
-    <pattern>.eks1s2pr</pattern>
-    <pattern>.vis1s2pr</pattern>
-    <pattern>.jā1d2r</pattern>
-    <pattern>.ne1d2r</pattern>
-    <pattern>.ie1d2r</pattern>
-    <pattern>.no1d2r</pattern>
-    <pattern>.pa1d2r</pattern>
-    <pattern>.pie1d2r</pattern>
-    <pattern>.sa1d2r</pattern>
-    <pattern>.uz1d2r</pattern>
-    <pattern>.aiz1d2r</pattern>
-    <pattern>.ap1d2r</pattern>
-    <pattern>.at1d2r</pattern>
-    <pattern>.bez1d2r</pattern>
-    <pattern>.pār1d2r</pattern>
-    <pattern>.iz1d2r</pattern>
-    <pattern>.eks1d2r</pattern>
-    <pattern>.vis1d2r</pattern>
-    <pattern>.jā1p2l</pattern>
-    <pattern>.ne1p2l</pattern>
-    <pattern>.ie1p2l</pattern>
-    <pattern>.no1p2l</pattern>
-    <pattern>.pa1p2l</pattern>
-    <pattern>.pie1p2l</pattern>
-    <pattern>.sa1p2l</pattern>
-    <pattern>.uz1p2l</pattern>
-    <pattern>.aiz1p2l</pattern>
-    <pattern>.ap1p2l</pattern>
-    <pattern>.at1p2l</pattern>
-    <pattern>.bez1p2l</pattern>
-    <pattern>.pār1p2l</pattern>
-    <pattern>.iz1p2l</pattern>
-    <pattern>.eks1p2l</pattern>
-    <pattern>.vis1p2l</pattern>
-    <pattern>.jā1d2v</pattern>
-    <pattern>.ne1d2v</pattern>
-    <pattern>.ie1d2v</pattern>
-    <pattern>.no1d2v</pattern>
-    <pattern>.pa1d2v</pattern>
-    <pattern>.pie1d2v</pattern>
-    <pattern>.sa1d2v</pattern>
-    <pattern>.uz1d2v</pattern>
-    <pattern>.aiz1d2v</pattern>
-    <pattern>.ap1d2v</pattern>
-    <pattern>.at1d2v</pattern>
-    <pattern>.bez1d2v</pattern>
-    <pattern>.pār1d2v</pattern>
-    <pattern>.iz1d2v</pattern>
-    <pattern>.eks1d2v</pattern>
-    <pattern>.vis1d2v</pattern>
-    <pattern>.jā1š2l</pattern>
-    <pattern>.ne1š2l</pattern>
-    <pattern>.ie1š2l</pattern>
-    <pattern>.no1š2l</pattern>
-    <pattern>.pa1š2l</pattern>
-    <pattern>.pie1š2l</pattern>
-    <pattern>.sa1š2l</pattern>
-    <pattern>.uz1š2l</pattern>
-    <pattern>.aiz1š2l</pattern>
-    <pattern>.ap1š2l</pattern>
-    <pattern>.at1š2l</pattern>
-    <pattern>.bez1š2l</pattern>
-    <pattern>.pār1š2l</pattern>
-    <pattern>.iz1š2l</pattern>
-    <pattern>.eks1š2l</pattern>
-    <pattern>.vis1š2l</pattern>
-    <pattern>.jā1s2k</pattern>
-    <pattern>.ne1s2k</pattern>
-    <pattern>.ie1s2k</pattern>
-    <pattern>.no1s2k</pattern>
-    <pattern>.pa1s2k</pattern>
-    <pattern>.pie1s2k</pattern>
-    <pattern>.sa1s2k</pattern>
-    <pattern>.uz1s2k</pattern>
-    <pattern>.aiz1s2k</pattern>
-    <pattern>.ap1s2k</pattern>
-    <pattern>.at1s2k</pattern>
-    <pattern>.bez1s2k</pattern>
-    <pattern>.pār1s2k</pattern>
-    <pattern>.iz1s2k</pattern>
-    <pattern>.eks1s2k</pattern>
-    <pattern>.vis1s2k</pattern>
-    <pattern>.jā1s2kv</pattern>
-    <pattern>.ne1s2kv</pattern>
-    <pattern>.ie1s2kv</pattern>
-    <pattern>.no1s2kv</pattern>
-    <pattern>.pa1s2kv</pattern>
-    <pattern>.pie1s2kv</pattern>
-    <pattern>.sa1s2kv</pattern>
-    <pattern>.uz1s2kv</pattern>
-    <pattern>.aiz1s2kv</pattern>
-    <pattern>.ap1s2kv</pattern>
-    <pattern>.at1s2kv</pattern>
-    <pattern>.bez1s2kv</pattern>
-    <pattern>.pār1s2kv</pattern>
-    <pattern>.iz1s2kv</pattern>
-    <pattern>.eks1s2kv</pattern>
-    <pattern>.vis1s2kv</pattern>
-    <pattern>.jā1k2v</pattern>
-    <pattern>.ne1k2v</pattern>
-    <pattern>.ie1k2v</pattern>
-    <pattern>.no1k2v</pattern>
-    <pattern>.pa1k2v</pattern>
-    <pattern>.pie1k2v</pattern>
-    <pattern>.sa1k2v</pattern>
-    <pattern>.uz1k2v</pattern>
-    <pattern>.aiz1k2v</pattern>
-    <pattern>.ap1k2v</pattern>
-    <pattern>.at1k2v</pattern>
-    <pattern>.bez1k2v</pattern>
-    <pattern>.pār1k2v</pattern>
-    <pattern>.iz1k2v</pattern>
-    <pattern>.eks1k2v</pattern>
-    <pattern>.vis1k2v</pattern>
-    <pattern>.jā1z2v</pattern>
-    <pattern>.ne1z2v</pattern>
-    <pattern>.ie1z2v</pattern>
-    <pattern>.no1z2v</pattern>
-    <pattern>.pa1z2v</pattern>
-    <pattern>.pie1z2v</pattern>
-    <pattern>.sa1z2v</pattern>
-    <pattern>.uz1z2v</pattern>
-    <pattern>.aiz1z2v</pattern>
-    <pattern>.ap1z2v</pattern>
-    <pattern>.at1z2v</pattern>
-    <pattern>.bez1z2v</pattern>
-    <pattern>.pār1z2v</pattern>
-    <pattern>.iz1z2v</pattern>
-    <pattern>.eks1z2v</pattern>
-    <pattern>.vis1z2v</pattern>
-    <pattern>.jā1k2s</pattern>
-    <pattern>.ne1k2s</pattern>
-    <pattern>.ie1k2s</pattern>
-    <pattern>.no1k2s</pattern>
-    <pattern>.pa1k2s</pattern>
-    <pattern>.pie1k2s</pattern>
-    <pattern>.sa1k2s</pattern>
-    <pattern>.uz1k2s</pattern>
-    <pattern>.aiz1k2s</pattern>
-    <pattern>.ap1k2s</pattern>
-    <pattern>.at1k2s</pattern>
-    <pattern>.bez1k2s</pattern>
-    <pattern>.pār1k2s</pattern>
-    <pattern>.iz1k2s</pattern>
-    <pattern>.eks1k2s</pattern>
-    <pattern>.vis1k2s</pattern>
-    <pattern>.jā1p2t</pattern>
-    <pattern>.ne1p2t</pattern>
-    <pattern>.ie1p2t</pattern>
-    <pattern>.no1p2t</pattern>
-    <pattern>.pa1p2t</pattern>
-    <pattern>.pie1p2t</pattern>
-    <pattern>.sa1p2t</pattern>
-    <pattern>.uz1p2t</pattern>
-    <pattern>.aiz1p2t</pattern>
-    <pattern>.ap1p2t</pattern>
-    <pattern>.at1p2t</pattern>
-    <pattern>.bez1p2t</pattern>
-    <pattern>.pār1p2t</pattern>
-    <pattern>.iz1p2t</pattern>
-    <pattern>.eks1p2t</pattern>
-    <pattern>.vis1p2t</pattern>
-    <pattern>.jā1z2n</pattern>
-    <pattern>.ne1z2n</pattern>
-    <pattern>.ie1z2n</pattern>
-    <pattern>.no1z2n</pattern>
-    <pattern>.pa1z2n</pattern>
-    <pattern>.pie1z2n</pattern>
-    <pattern>.sa1z2n</pattern>
-    <pattern>.uz1z2n</pattern>
-    <pattern>.aiz1z2n</pattern>
-    <pattern>.ap1z2n</pattern>
-    <pattern>.at1z2n</pattern>
-    <pattern>.bez1z2n</pattern>
-    <pattern>.pār1z2n</pattern>
-    <pattern>.iz1z2n</pattern>
-    <pattern>.eks1z2n</pattern>
-    <pattern>.vis1z2n</pattern>
-    <pattern>.jā1k2r</pattern>
-    <pattern>.ne1k2r</pattern>
-    <pattern>.ie1k2r</pattern>
-    <pattern>.no1k2r</pattern>
-    <pattern>.pa1k2r</pattern>
-    <pattern>.pie1k2r</pattern>
-    <pattern>.sa1k2r</pattern>
-    <pattern>.uz1k2r</pattern>
-    <pattern>.aiz1k2r</pattern>
-    <pattern>.ap1k2r</pattern>
-    <pattern>.at1k2r</pattern>
-    <pattern>.bez1k2r</pattern>
-    <pattern>.pār1k2r</pattern>
-    <pattern>.iz1k2r</pattern>
-    <pattern>.eks1k2r</pattern>
-    <pattern>.vis1k2r</pattern>
-    <pattern>.jā1s2kr</pattern>
-    <pattern>.ne1s2kr</pattern>
-    <pattern>.ie1s2kr</pattern>
-    <pattern>.no1s2kr</pattern>
-    <pattern>.pa1s2kr</pattern>
-    <pattern>.pie1s2kr</pattern>
-    <pattern>.sa1s2kr</pattern>
-    <pattern>.uz1s2kr</pattern>
-    <pattern>.aiz1s2kr</pattern>
-    <pattern>.ap1s2kr</pattern>
-    <pattern>.at1s2kr</pattern>
-    <pattern>.bez1s2kr</pattern>
-    <pattern>.pār1s2kr</pattern>
-    <pattern>.iz1s2kr</pattern>
-    <pattern>.eks1s2kr</pattern>
-    <pattern>.vis1s2kr</pattern>
-    <pattern>.jā1f2r</pattern>
-    <pattern>.ne1f2r</pattern>
-    <pattern>.ie1f2r</pattern>
-    <pattern>.no1f2r</pattern>
-    <pattern>.pa1f2r</pattern>
-    <pattern>.pie1f2r</pattern>
-    <pattern>.sa1f2r</pattern>
-    <pattern>.uz1f2r</pattern>
-    <pattern>.aiz1f2r</pattern>
-    <pattern>.ap1f2r</pattern>
-    <pattern>.at1f2r</pattern>
-    <pattern>.bez1f2r</pattern>
-    <pattern>.pār1f2r</pattern>
-    <pattern>.iz1f2r</pattern>
-    <pattern>.eks1f2r</pattern>
-    <pattern>.vis1f2r</pattern>
-    <pattern>.jā1s2h</pattern>
-    <pattern>.ne1s2h</pattern>
-    <pattern>.ie1s2h</pattern>
-    <pattern>.no1s2h</pattern>
-    <pattern>.pa1s2h</pattern>
-    <pattern>.pie1s2h</pattern>
-    <pattern>.sa1s2h</pattern>
-    <pattern>.uz1s2h</pattern>
-    <pattern>.aiz1s2h</pattern>
-    <pattern>.ap1s2h</pattern>
-    <pattern>.at1s2h</pattern>
-    <pattern>.bez1s2h</pattern>
-    <pattern>.pār1s2h</pattern>
-    <pattern>.iz1s2h</pattern>
-    <pattern>.eks1s2h</pattern>
-    <pattern>.vis1s2h</pattern>
-    <pattern>.jā1ž2ņ</pattern>
-    <pattern>.ne1ž2ņ</pattern>
-    <pattern>.ie1ž2ņ</pattern>
-    <pattern>.no1ž2ņ</pattern>
-    <pattern>.pa1ž2ņ</pattern>
-    <pattern>.pie1ž2ņ</pattern>
-    <pattern>.sa1ž2ņ</pattern>
-    <pattern>.uz1ž2ņ</pattern>
-    <pattern>.aiz1ž2ņ</pattern>
-    <pattern>.ap1ž2ņ</pattern>
-    <pattern>.at1ž2ņ</pattern>
-    <pattern>.bez1ž2ņ</pattern>
-    <pattern>.pār1ž2ņ</pattern>
-    <pattern>.iz1ž2ņ</pattern>
-    <pattern>.eks1ž2ņ</pattern>
-    <pattern>.vis1ž2ņ</pattern>
-    <pattern>.jā1d2d</pattern>
-    <pattern>.ne1d2d</pattern>
-    <pattern>.ie1d2d</pattern>
-    <pattern>.no1d2d</pattern>
-    <pattern>.pa1d2d</pattern>
-    <pattern>.pie1d2d</pattern>
-    <pattern>.sa1d2d</pattern>
-    <pattern>.uz1d2d</pattern>
-    <pattern>.aiz1d2d</pattern>
-    <pattern>.ap1d2d</pattern>
-    <pattern>.at1d2d</pattern>
-    <pattern>.bez1d2d</pattern>
-    <pattern>.pār1d2d</pattern>
-    <pattern>.iz1d2d</pattern>
-    <pattern>.eks1d2d</pattern>
-    <pattern>.vis1d2d</pattern>
-    <pattern>.jā1š2pr</pattern>
-    <pattern>.ne1š2pr</pattern>
-    <pattern>.ie1š2pr</pattern>
-    <pattern>.no1š2pr</pattern>
-    <pattern>.pa1š2pr</pattern>
-    <pattern>.pie1š2pr</pattern>
-    <pattern>.sa1š2pr</pattern>
-    <pattern>.uz1š2pr</pattern>
-    <pattern>.aiz1š2pr</pattern>
-    <pattern>.ap1š2pr</pattern>
-    <pattern>.at1š2pr</pattern>
-    <pattern>.bez1š2pr</pattern>
-    <pattern>.pār1š2pr</pattern>
-    <pattern>.iz1š2pr</pattern>
-    <pattern>.eks1š2pr</pattern>
-    <pattern>.vis1š2pr</pattern>
-    <pattern>.jā1v2j</pattern>
-    <pattern>.ne1v2j</pattern>
-    <pattern>.ie1v2j</pattern>
-    <pattern>.no1v2j</pattern>
-    <pattern>.pa1v2j</pattern>
-    <pattern>.pie1v2j</pattern>
-    <pattern>.sa1v2j</pattern>
-    <pattern>.uz1v2j</pattern>
-    <pattern>.aiz1v2j</pattern>
-    <pattern>.ap1v2j</pattern>
-    <pattern>.at1v2j</pattern>
-    <pattern>.bez1v2j</pattern>
-    <pattern>.pār1v2j</pattern>
-    <pattern>.iz1v2j</pattern>
-    <pattern>.eks1v2j</pattern>
-    <pattern>.vis1v2j</pattern>
-    <pattern>.jā1f2j</pattern>
-    <pattern>.ne1f2j</pattern>
-    <pattern>.ie1f2j</pattern>
-    <pattern>.no1f2j</pattern>
-    <pattern>.pa1f2j</pattern>
-    <pattern>.pie1f2j</pattern>
-    <pattern>.sa1f2j</pattern>
-    <pattern>.uz1f2j</pattern>
-    <pattern>.aiz1f2j</pattern>
-    <pattern>.ap1f2j</pattern>
-    <pattern>.at1f2j</pattern>
-    <pattern>.bez1f2j</pattern>
-    <pattern>.pār1f2j</pattern>
-    <pattern>.iz1f2j</pattern>
-    <pattern>.eks1f2j</pattern>
-    <pattern>.vis1f2j</pattern>
-    <pattern>.jā1p2j</pattern>
-    <pattern>.ne1p2j</pattern>
-    <pattern>.ie1p2j</pattern>
-    <pattern>.no1p2j</pattern>
-    <pattern>.pa1p2j</pattern>
-    <pattern>.pie1p2j</pattern>
-    <pattern>.sa1p2j</pattern>
-    <pattern>.uz1p2j</pattern>
-    <pattern>.aiz1p2j</pattern>
-    <pattern>.ap1p2j</pattern>
-    <pattern>.at1p2j</pattern>
-    <pattern>.bez1p2j</pattern>
-    <pattern>.pār1p2j</pattern>
-    <pattern>.iz1p2j</pattern>
-    <pattern>.eks1p2j</pattern>
-    <pattern>.vis1p2j</pattern>
-    <pattern>.jā1b2ļ</pattern>
-    <pattern>.ne1b2ļ</pattern>
-    <pattern>.ie1b2ļ</pattern>
-    <pattern>.no1b2ļ</pattern>
-    <pattern>.pa1b2ļ</pattern>
-    <pattern>.pie1b2ļ</pattern>
-    <pattern>.sa1b2ļ</pattern>
-    <pattern>.uz1b2ļ</pattern>
-    <pattern>.aiz1b2ļ</pattern>
-    <pattern>.ap1b2ļ</pattern>
-    <pattern>.at1b2ļ</pattern>
-    <pattern>.bez1b2ļ</pattern>
-    <pattern>.pār1b2ļ</pattern>
-    <pattern>.iz1b2ļ</pattern>
-    <pattern>.eks1b2ļ</pattern>
-    <pattern>.vis1b2ļ</pattern>
-    <pattern>.jā1g2n</pattern>
-    <pattern>.ne1g2n</pattern>
-    <pattern>.ie1g2n</pattern>
-    <pattern>.no1g2n</pattern>
-    <pattern>.pa1g2n</pattern>
-    <pattern>.pie1g2n</pattern>
-    <pattern>.sa1g2n</pattern>
-    <pattern>.uz1g2n</pattern>
-    <pattern>.aiz1g2n</pattern>
-    <pattern>.ap1g2n</pattern>
-    <pattern>.at1g2n</pattern>
-    <pattern>.bez1g2n</pattern>
-    <pattern>.pār1g2n</pattern>
-    <pattern>.iz1g2n</pattern>
-    <pattern>.eks1g2n</pattern>
-    <pattern>.vis1g2n</pattern>
-    <pattern>.jā1h2r</pattern>
-    <pattern>.ne1h2r</pattern>
-    <pattern>.ie1h2r</pattern>
-    <pattern>.no1h2r</pattern>
-    <pattern>.pa1h2r</pattern>
-    <pattern>.pie1h2r</pattern>
-    <pattern>.sa1h2r</pattern>
-    <pattern>.uz1h2r</pattern>
-    <pattern>.aiz1h2r</pattern>
-    <pattern>.ap1h2r</pattern>
-    <pattern>.at1h2r</pattern>
-    <pattern>.bez1h2r</pattern>
-    <pattern>.pār1h2r</pattern>
-    <pattern>.iz1h2r</pattern>
-    <pattern>.eks1h2r</pattern>
-    <pattern>.vis1h2r</pattern>
-    <pattern>.jā1s2n</pattern>
-    <pattern>.ne1s2n</pattern>
-    <pattern>.ie1s2n</pattern>
-    <pattern>.no1s2n</pattern>
-    <pattern>.pa1s2n</pattern>
-    <pattern>.pie1s2n</pattern>
-    <pattern>.sa1s2n</pattern>
-    <pattern>.uz1s2n</pattern>
-    <pattern>.aiz1s2n</pattern>
-    <pattern>.ap1s2n</pattern>
-    <pattern>.at1s2n</pattern>
-    <pattern>.bez1s2n</pattern>
-    <pattern>.pār1s2n</pattern>
-    <pattern>.iz1s2n</pattern>
-    <pattern>.eks1s2n</pattern>
-    <pattern>.vis1s2n</pattern>
-    <pattern>.jā1ž2m</pattern>
-    <pattern>.ne1ž2m</pattern>
-    <pattern>.ie1ž2m</pattern>
-    <pattern>.no1ž2m</pattern>
-    <pattern>.pa1ž2m</pattern>
-    <pattern>.pie1ž2m</pattern>
-    <pattern>.sa1ž2m</pattern>
-    <pattern>.uz1ž2m</pattern>
-    <pattern>.aiz1ž2m</pattern>
-    <pattern>.ap1ž2m</pattern>
-    <pattern>.at1ž2m</pattern>
-    <pattern>.bez1ž2m</pattern>
-    <pattern>.pār1ž2m</pattern>
-    <pattern>.iz1ž2m</pattern>
-    <pattern>.eks1ž2m</pattern>
-    <pattern>.vis1ž2m</pattern>
-    <pattern>.jā1d2ž</pattern>
-    <pattern>.ne1d2ž</pattern>
-    <pattern>.ie1d2ž</pattern>
-    <pattern>.no1d2ž</pattern>
-    <pattern>.pa1d2ž</pattern>
-    <pattern>.pie1d2ž</pattern>
-    <pattern>.sa1d2ž</pattern>
-    <pattern>.uz1d2ž</pattern>
-    <pattern>.aiz1d2ž</pattern>
-    <pattern>.ap1d2ž</pattern>
-    <pattern>.at1d2ž</pattern>
-    <pattern>.bez1d2ž</pattern>
-    <pattern>.pār1d2ž</pattern>
-    <pattern>.iz1d2ž</pattern>
-    <pattern>.eks1d2ž</pattern>
-    <pattern>.vis1d2ž</pattern>
-    <pattern>.jā1k2c</pattern>
-    <pattern>.ne1k2c</pattern>
-    <pattern>.ie1k2c</pattern>
-    <pattern>.no1k2c</pattern>
-    <pattern>.pa1k2c</pattern>
-    <pattern>.pie1k2c</pattern>
-    <pattern>.sa1k2c</pattern>
-    <pattern>.uz1k2c</pattern>
-    <pattern>.aiz1k2c</pattern>
-    <pattern>.ap1k2c</pattern>
-    <pattern>.at1k2c</pattern>
-    <pattern>.bez1k2c</pattern>
-    <pattern>.pār1k2c</pattern>
-    <pattern>.iz1k2c</pattern>
-    <pattern>.eks1k2c</pattern>
-    <pattern>.vis1k2c</pattern>
-    <pattern>.jā1k2ņ</pattern>
-    <pattern>.ne1k2ņ</pattern>
-    <pattern>.ie1k2ņ</pattern>
-    <pattern>.no1k2ņ</pattern>
-    <pattern>.pa1k2ņ</pattern>
-    <pattern>.pie1k2ņ</pattern>
-    <pattern>.sa1k2ņ</pattern>
-    <pattern>.uz1k2ņ</pattern>
-    <pattern>.aiz1k2ņ</pattern>
-    <pattern>.ap1k2ņ</pattern>
-    <pattern>.at1k2ņ</pattern>
-    <pattern>.bez1k2ņ</pattern>
-    <pattern>.pār1k2ņ</pattern>
-    <pattern>.iz1k2ņ</pattern>
-    <pattern>.eks1k2ņ</pattern>
-    <pattern>.vis1k2ņ</pattern>
-    <pattern>.jā1š2m</pattern>
-    <pattern>.ne1š2m</pattern>
-    <pattern>.ie1š2m</pattern>
-    <pattern>.no1š2m</pattern>
-    <pattern>.pa1š2m</pattern>
-    <pattern>.pie1š2m</pattern>
-    <pattern>.sa1š2m</pattern>
-    <pattern>.uz1š2m</pattern>
-    <pattern>.aiz1š2m</pattern>
-    <pattern>.ap1š2m</pattern>
-    <pattern>.at1š2m</pattern>
-    <pattern>.bez1š2m</pattern>
-    <pattern>.pār1š2m</pattern>
-    <pattern>.iz1š2m</pattern>
-    <pattern>.eks1š2m</pattern>
-    <pattern>.vis1š2m</pattern>
-    <pattern>.jā1g2v</pattern>
-    <pattern>.ne1g2v</pattern>
-    <pattern>.ie1g2v</pattern>
-    <pattern>.no1g2v</pattern>
-    <pattern>.pa1g2v</pattern>
-    <pattern>.pie1g2v</pattern>
-    <pattern>.sa1g2v</pattern>
-    <pattern>.uz1g2v</pattern>
-    <pattern>.aiz1g2v</pattern>
-    <pattern>.ap1g2v</pattern>
-    <pattern>.at1g2v</pattern>
-    <pattern>.bez1g2v</pattern>
-    <pattern>.pār1g2v</pattern>
-    <pattern>.iz1g2v</pattern>
-    <pattern>.eks1g2v</pattern>
-    <pattern>.vis1g2v</pattern>
-    <pattern>.jā1h2l</pattern>
-    <pattern>.ne1h2l</pattern>
-    <pattern>.ie1h2l</pattern>
-    <pattern>.no1h2l</pattern>
-    <pattern>.pa1h2l</pattern>
-    <pattern>.pie1h2l</pattern>
-    <pattern>.sa1h2l</pattern>
-    <pattern>.uz1h2l</pattern>
-    <pattern>.aiz1h2l</pattern>
-    <pattern>.ap1h2l</pattern>
-    <pattern>.at1h2l</pattern>
-    <pattern>.bez1h2l</pattern>
-    <pattern>.pār1h2l</pattern>
-    <pattern>.iz1h2l</pattern>
-    <pattern>.eks1h2l</pattern>
-    <pattern>.vis1h2l</pattern>
-    <pattern>.jā1k2ļ</pattern>
-    <pattern>.ne1k2ļ</pattern>
-    <pattern>.ie1k2ļ</pattern>
-    <pattern>.no1k2ļ</pattern>
-    <pattern>.pa1k2ļ</pattern>
-    <pattern>.pie1k2ļ</pattern>
-    <pattern>.sa1k2ļ</pattern>
-    <pattern>.uz1k2ļ</pattern>
-    <pattern>.aiz1k2ļ</pattern>
-    <pattern>.ap1k2ļ</pattern>
-    <pattern>.at1k2ļ</pattern>
-    <pattern>.bez1k2ļ</pattern>
-    <pattern>.pār1k2ļ</pattern>
-    <pattern>.iz1k2ļ</pattern>
-    <pattern>.eks1k2ļ</pattern>
-    <pattern>.vis1k2ļ</pattern>
-    <pattern>.jā1s2l</pattern>
-    <pattern>.ne1s2l</pattern>
-    <pattern>.ie1s2l</pattern>
-    <pattern>.no1s2l</pattern>
-    <pattern>.pa1s2l</pattern>
-    <pattern>.pie1s2l</pattern>
-    <pattern>.sa1s2l</pattern>
-    <pattern>.uz1s2l</pattern>
-    <pattern>.aiz1s2l</pattern>
-    <pattern>.ap1s2l</pattern>
-    <pattern>.at1s2l</pattern>
-    <pattern>.bez1s2l</pattern>
-    <pattern>.pār1s2l</pattern>
-    <pattern>.iz1s2l</pattern>
-    <pattern>.eks1s2l</pattern>
-    <pattern>.vis1s2l</pattern>
-    <pattern>.jā1t2v</pattern>
-    <pattern>.ne1t2v</pattern>
-    <pattern>.ie1t2v</pattern>
-    <pattern>.no1t2v</pattern>
-    <pattern>.pa1t2v</pattern>
-    <pattern>.pie1t2v</pattern>
-    <pattern>.sa1t2v</pattern>
-    <pattern>.uz1t2v</pattern>
-    <pattern>.aiz1t2v</pattern>
-    <pattern>.ap1t2v</pattern>
-    <pattern>.at1t2v</pattern>
-    <pattern>.bez1t2v</pattern>
-    <pattern>.pār1t2v</pattern>
-    <pattern>.iz1t2v</pattern>
-    <pattern>.eks1t2v</pattern>
-    <pattern>.vis1t2v</pattern>
-    <pattern>.jā1š2ņ</pattern>
-    <pattern>.ne1š2ņ</pattern>
-    <pattern>.ie1š2ņ</pattern>
-    <pattern>.no1š2ņ</pattern>
-    <pattern>.pa1š2ņ</pattern>
-    <pattern>.pie1š2ņ</pattern>
-    <pattern>.sa1š2ņ</pattern>
-    <pattern>.uz1š2ņ</pattern>
-    <pattern>.aiz1š2ņ</pattern>
-    <pattern>.ap1š2ņ</pattern>
-    <pattern>.at1š2ņ</pattern>
-    <pattern>.bez1š2ņ</pattern>
-    <pattern>.pār1š2ņ</pattern>
-    <pattern>.iz1š2ņ</pattern>
-    <pattern>.eks1š2ņ</pattern>
-    <pattern>.vis1š2ņ</pattern>
-    <pattern>.jā1š2p</pattern>
-    <pattern>.ne1š2p</pattern>
-    <pattern>.ie1š2p</pattern>
-    <pattern>.no1š2p</pattern>
-    <pattern>.pa1š2p</pattern>
-    <pattern>.pie1š2p</pattern>
-    <pattern>.sa1š2p</pattern>
-    <pattern>.uz1š2p</pattern>
-    <pattern>.aiz1š2p</pattern>
-    <pattern>.ap1š2p</pattern>
-    <pattern>.at1š2p</pattern>
-    <pattern>.bez1š2p</pattern>
-    <pattern>.pār1š2p</pattern>
-    <pattern>.iz1š2p</pattern>
-    <pattern>.eks1š2p</pattern>
-    <pattern>.vis1š2p</pattern>
-    <pattern>.jā1d2z</pattern>
-    <pattern>.ne1d2z</pattern>
-    <pattern>.ie1d2z</pattern>
-    <pattern>.no1d2z</pattern>
-    <pattern>.pa1d2z</pattern>
-    <pattern>.pie1d2z</pattern>
-    <pattern>.sa1d2z</pattern>
-    <pattern>.uz1d2z</pattern>
-    <pattern>.aiz1d2z</pattern>
-    <pattern>.ap1d2z</pattern>
-    <pattern>.at1d2z</pattern>
-    <pattern>.bez1d2z</pattern>
-    <pattern>.pār1d2z</pattern>
-    <pattern>.iz1d2z</pattern>
-    <pattern>.eks1d2z</pattern>
-    <pattern>.vis1d2z</pattern>
-    <pattern>.jā1f2l</pattern>
-    <pattern>.ne1f2l</pattern>
-    <pattern>.ie1f2l</pattern>
-    <pattern>.no1f2l</pattern>
-    <pattern>.pa1f2l</pattern>
-    <pattern>.pie1f2l</pattern>
-    <pattern>.sa1f2l</pattern>
-    <pattern>.uz1f2l</pattern>
-    <pattern>.aiz1f2l</pattern>
-    <pattern>.ap1f2l</pattern>
-    <pattern>.at1f2l</pattern>
-    <pattern>.bez1f2l</pattern>
-    <pattern>.pār1f2l</pattern>
-    <pattern>.iz1f2l</pattern>
-    <pattern>.eks1f2l</pattern>
-    <pattern>.vis1f2l</pattern>
-    <pattern>.jā1k2n</pattern>
-    <pattern>.ne1k2n</pattern>
-    <pattern>.ie1k2n</pattern>
-    <pattern>.no1k2n</pattern>
-    <pattern>.pa1k2n</pattern>
-    <pattern>.pie1k2n</pattern>
-    <pattern>.sa1k2n</pattern>
-    <pattern>.uz1k2n</pattern>
-    <pattern>.aiz1k2n</pattern>
-    <pattern>.ap1k2n</pattern>
-    <pattern>.at1k2n</pattern>
-    <pattern>.bez1k2n</pattern>
-    <pattern>.pār1k2n</pattern>
-    <pattern>.iz1k2n</pattern>
-    <pattern>.eks1k2n</pattern>
-    <pattern>.vis1k2n</pattern>
-    <pattern>.jā1p2ļ</pattern>
-    <pattern>.ne1p2ļ</pattern>
-    <pattern>.ie1p2ļ</pattern>
-    <pattern>.no1p2ļ</pattern>
-    <pattern>.pa1p2ļ</pattern>
-    <pattern>.pie1p2ļ</pattern>
-    <pattern>.sa1p2ļ</pattern>
-    <pattern>.uz1p2ļ</pattern>
-    <pattern>.aiz1p2ļ</pattern>
-    <pattern>.ap1p2ļ</pattern>
-    <pattern>.at1p2ļ</pattern>
-    <pattern>.bez1p2ļ</pattern>
-    <pattern>.pār1p2ļ</pattern>
-    <pattern>.iz1p2ļ</pattern>
-    <pattern>.eks1p2ļ</pattern>
-    <pattern>.vis1p2ļ</pattern>
-    <pattern>.jā1s2pļ</pattern>
-    <pattern>.ne1s2pļ</pattern>
-    <pattern>.ie1s2pļ</pattern>
-    <pattern>.no1s2pļ</pattern>
-    <pattern>.pa1s2pļ</pattern>
-    <pattern>.pie1s2pļ</pattern>
-    <pattern>.sa1s2pļ</pattern>
-    <pattern>.uz1s2pļ</pattern>
-    <pattern>.aiz1s2pļ</pattern>
-    <pattern>.ap1s2pļ</pattern>
-    <pattern>.at1s2pļ</pattern>
-    <pattern>.bez1s2pļ</pattern>
-    <pattern>.pār1s2pļ</pattern>
-    <pattern>.iz1s2pļ</pattern>
-    <pattern>.eks1s2pļ</pattern>
-    <pattern>.vis1s2pļ</pattern>
-    <pattern>.jā1s2kl</pattern>
-    <pattern>.ne1s2kl</pattern>
-    <pattern>.ie1s2kl</pattern>
-    <pattern>.no1s2kl</pattern>
-    <pattern>.pa1s2kl</pattern>
-    <pattern>.pie1s2kl</pattern>
-    <pattern>.sa1s2kl</pattern>
-    <pattern>.uz1s2kl</pattern>
-    <pattern>.aiz1s2kl</pattern>
-    <pattern>.ap1s2kl</pattern>
-    <pattern>.at1s2kl</pattern>
-    <pattern>.bez1s2kl</pattern>
-    <pattern>.pār1s2kl</pattern>
-    <pattern>.iz1s2kl</pattern>
-    <pattern>.eks1s2kl</pattern>
-    <pattern>.vis1s2kl</pattern>
-    <pattern>.jā1k2b</pattern>
-    <pattern>.ne1k2b</pattern>
-    <pattern>.ie1k2b</pattern>
-    <pattern>.no1k2b</pattern>
-    <pattern>.pa1k2b</pattern>
-    <pattern>.pie1k2b</pattern>
-    <pattern>.sa1k2b</pattern>
-    <pattern>.uz1k2b</pattern>
-    <pattern>.aiz1k2b</pattern>
-    <pattern>.ap1k2b</pattern>
-    <pattern>.at1k2b</pattern>
-    <pattern>.bez1k2b</pattern>
-    <pattern>.pār1k2b</pattern>
-    <pattern>.iz1k2b</pattern>
-    <pattern>.eks1k2b</pattern>
-    <pattern>.vis1k2b</pattern>
-    <pattern>.jā1s2m</pattern>
-    <pattern>.ne1s2m</pattern>
-    <pattern>.ie1s2m</pattern>
-    <pattern>.no1s2m</pattern>
-    <pattern>.pa1s2m</pattern>
-    <pattern>.pie1s2m</pattern>
-    <pattern>.sa1s2m</pattern>
-    <pattern>.uz1s2m</pattern>
-    <pattern>.aiz1s2m</pattern>
-    <pattern>.ap1s2m</pattern>
-    <pattern>.at1s2m</pattern>
-    <pattern>.bez1s2m</pattern>
-    <pattern>.pār1s2m</pattern>
-    <pattern>.iz1s2m</pattern>
-    <pattern>.eks1s2m</pattern>
-    <pattern>.vis1s2m</pattern>
-    <pattern>.jā1m2n</pattern>
-    <pattern>.ne1m2n</pattern>
-    <pattern>.ie1m2n</pattern>
-    <pattern>.no1m2n</pattern>
-    <pattern>.pa1m2n</pattern>
-    <pattern>.pie1m2n</pattern>
-    <pattern>.sa1m2n</pattern>
-    <pattern>.uz1m2n</pattern>
-    <pattern>.aiz1m2n</pattern>
-    <pattern>.ap1m2n</pattern>
-    <pattern>.at1m2n</pattern>
-    <pattern>.bez1m2n</pattern>
-    <pattern>.pār1m2n</pattern>
-    <pattern>.iz1m2n</pattern>
-    <pattern>.eks1m2n</pattern>
-    <pattern>.vis1m2n</pattern>
-    <pattern>.jā1š2n</pattern>
-    <pattern>.ne1š2n</pattern>
-    <pattern>.ie1š2n</pattern>
-    <pattern>.no1š2n</pattern>
-    <pattern>.pa1š2n</pattern>
-    <pattern>.pie1š2n</pattern>
-    <pattern>.sa1š2n</pattern>
-    <pattern>.uz1š2n</pattern>
-    <pattern>.aiz1š2n</pattern>
-    <pattern>.ap1š2n</pattern>
-    <pattern>.at1š2n</pattern>
-    <pattern>.bez1š2n</pattern>
-    <pattern>.pār1š2n</pattern>
-    <pattern>.iz1š2n</pattern>
-    <pattern>.eks1š2n</pattern>
-    <pattern>.vis1š2n</pattern>
-    <pattern>.jā1v2r</pattern>
-    <pattern>.ne1v2r</pattern>
-    <pattern>.ie1v2r</pattern>
-    <pattern>.no1v2r</pattern>
-    <pattern>.pa1v2r</pattern>
-    <pattern>.pie1v2r</pattern>
-    <pattern>.sa1v2r</pattern>
-    <pattern>.uz1v2r</pattern>
-    <pattern>.aiz1v2r</pattern>
-    <pattern>.ap1v2r</pattern>
-    <pattern>.at1v2r</pattern>
-    <pattern>.bez1v2r</pattern>
-    <pattern>.pār1v2r</pattern>
-    <pattern>.iz1v2r</pattern>
-    <pattern>.eks1v2r</pattern>
-    <pattern>.vis1v2r</pattern>
-    <pattern>.jā1b2l</pattern>
-    <pattern>.ne1b2l</pattern>
-    <pattern>.ie1b2l</pattern>
-    <pattern>.no1b2l</pattern>
-    <pattern>.pa1b2l</pattern>
-    <pattern>.pie1b2l</pattern>
-    <pattern>.sa1b2l</pattern>
-    <pattern>.uz1b2l</pattern>
-    <pattern>.aiz1b2l</pattern>
-    <pattern>.ap1b2l</pattern>
-    <pattern>.at1b2l</pattern>
-    <pattern>.bez1b2l</pattern>
-    <pattern>.pār1b2l</pattern>
-    <pattern>.iz1b2l</pattern>
-    <pattern>.eks1b2l</pattern>
-    <pattern>.vis1b2l</pattern>
-    <pattern>2b3dams.</pattern>
-    <pattern>2c3dams.</pattern>
-    <pattern>2č3dams.</pattern>
-    <pattern>2d3dams.</pattern>
-    <pattern>2f3dams.</pattern>
-    <pattern>2g3dams.</pattern>
-    <pattern>2ģ3dams.</pattern>
-    <pattern>2h3dams.</pattern>
-    <pattern>2j3dams.</pattern>
-    <pattern>2k3dams.</pattern>
-    <pattern>2ķ3dams.</pattern>
-    <pattern>2l3dams.</pattern>
-    <pattern>2ļ3dams.</pattern>
-    <pattern>2m3dams.</pattern>
-    <pattern>2n3dams.</pattern>
-    <pattern>2ņ3dams.</pattern>
-    <pattern>2p3dams.</pattern>
-    <pattern>2r3dams.</pattern>
-    <pattern>2s3dams.</pattern>
-    <pattern>2š3dams.</pattern>
-    <pattern>2t3dams.</pattern>
-    <pattern>2v3dams.</pattern>
-    <pattern>2z3dams.</pattern>
-    <pattern>2ž3dams.</pattern>
-    <pattern>2b3da3ma.</pattern>
-    <pattern>2c3da3ma.</pattern>
-    <pattern>2č3da3ma.</pattern>
-    <pattern>2d3da3ma.</pattern>
-    <pattern>2f3da3ma.</pattern>
-    <pattern>2g3da3ma.</pattern>
-    <pattern>2ģ3da3ma.</pattern>
-    <pattern>2h3da3ma.</pattern>
-    <pattern>2j3da3ma.</pattern>
-    <pattern>2k3da3ma.</pattern>
-    <pattern>2ķ3da3ma.</pattern>
-    <pattern>2l3da3ma.</pattern>
-    <pattern>2ļ3da3ma.</pattern>
-    <pattern>2m3da3ma.</pattern>
-    <pattern>2n3da3ma.</pattern>
-    <pattern>2ņ3da3ma.</pattern>
-    <pattern>2p3da3ma.</pattern>
-    <pattern>2r3da3ma.</pattern>
-    <pattern>2s3da3ma.</pattern>
-    <pattern>2š3da3ma.</pattern>
-    <pattern>2t3da3ma.</pattern>
-    <pattern>2v3da3ma.</pattern>
-    <pattern>2z3da3ma.</pattern>
-    <pattern>2ž3da3ma.</pattern>
-    <pattern>2b3da3mies.</pattern>
-    <pattern>2c3da3mies.</pattern>
-    <pattern>2č3da3mies.</pattern>
-    <pattern>2d3da3mies.</pattern>
-    <pattern>2f3da3mies.</pattern>
-    <pattern>2g3da3mies.</pattern>
-    <pattern>2ģ3da3mies.</pattern>
-    <pattern>2h3da3mies.</pattern>
-    <pattern>2j3da3mies.</pattern>
-    <pattern>2k3da3mies.</pattern>
-    <pattern>2ķ3da3mies.</pattern>
-    <pattern>2l3da3mies.</pattern>
-    <pattern>2ļ3da3mies.</pattern>
-    <pattern>2m3da3mies.</pattern>
-    <pattern>2n3da3mies.</pattern>
-    <pattern>2ņ3da3mies.</pattern>
-    <pattern>2p3da3mies.</pattern>
-    <pattern>2r3da3mies.</pattern>
-    <pattern>2s3da3mies.</pattern>
-    <pattern>2š3da3mies.</pattern>
-    <pattern>2t3da3mies.</pattern>
-    <pattern>2v3da3mies.</pattern>
-    <pattern>2z3da3mies.</pattern>
-    <pattern>2ž3da3mies.</pattern>
-    <pattern>2b3da3mās.</pattern>
-    <pattern>2c3da3mās.</pattern>
-    <pattern>2č3da3mās.</pattern>
-    <pattern>2d3da3mās.</pattern>
-    <pattern>2f3da3mās.</pattern>
-    <pattern>2g3da3mās.</pattern>
-    <pattern>2ģ3da3mās.</pattern>
-    <pattern>2h3da3mās.</pattern>
-    <pattern>2j3da3mās.</pattern>
-    <pattern>2k3da3mās.</pattern>
-    <pattern>2ķ3da3mās.</pattern>
-    <pattern>2l3da3mās.</pattern>
-    <pattern>2ļ3da3mās.</pattern>
-    <pattern>2m3da3mās.</pattern>
-    <pattern>2n3da3mās.</pattern>
-    <pattern>2ņ3da3mās.</pattern>
-    <pattern>2p3da3mās.</pattern>
-    <pattern>2r3da3mās.</pattern>
-    <pattern>2s3da3mās.</pattern>
-    <pattern>2š3da3mās.</pattern>
-    <pattern>2t3da3mās.</pattern>
-    <pattern>2v3da3mās.</pattern>
-    <pattern>2z3da3mās.</pattern>
-    <pattern>2ž3da3mās.</pattern>
-    <pattern>2b3gans.</pattern>
-    <pattern>2c3gans.</pattern>
-    <pattern>2č3gans.</pattern>
-    <pattern>2d3gans.</pattern>
-    <pattern>2f3gans.</pattern>
-    <pattern>2g3gans.</pattern>
-    <pattern>2ģ3gans.</pattern>
-    <pattern>2h3gans.</pattern>
-    <pattern>2j3gans.</pattern>
-    <pattern>2k3gans.</pattern>
-    <pattern>2ķ3gans.</pattern>
-    <pattern>2l3gans.</pattern>
-    <pattern>2ļ3gans.</pattern>
-    <pattern>2m3gans.</pattern>
-    <pattern>2n3gans.</pattern>
-    <pattern>2ņ3gans.</pattern>
-    <pattern>2p3gans.</pattern>
-    <pattern>2r3gans.</pattern>
-    <pattern>2s3gans.</pattern>
-    <pattern>2š3gans.</pattern>
-    <pattern>2t3gans.</pattern>
-    <pattern>2v3gans.</pattern>
-    <pattern>2z3gans.</pattern>
-    <pattern>2ž3gans.</pattern>
-    <pattern>2b3ga3na.</pattern>
-    <pattern>2c3ga3na.</pattern>
-    <pattern>2č3ga3na.</pattern>
-    <pattern>2d3ga3na.</pattern>
-    <pattern>2f3ga3na.</pattern>
-    <pattern>2g3ga3na.</pattern>
-    <pattern>2ģ3ga3na.</pattern>
-    <pattern>2h3ga3na.</pattern>
-    <pattern>2j3ga3na.</pattern>
-    <pattern>2k3ga3na.</pattern>
-    <pattern>2ķ3ga3na.</pattern>
-    <pattern>2l3ga3na.</pattern>
-    <pattern>2ļ3ga3na.</pattern>
-    <pattern>2m3ga3na.</pattern>
-    <pattern>2n3ga3na.</pattern>
-    <pattern>2ņ3ga3na.</pattern>
-    <pattern>2p3ga3na.</pattern>
-    <pattern>2r3ga3na.</pattern>
-    <pattern>2s3ga3na.</pattern>
-    <pattern>2š3ga3na.</pattern>
-    <pattern>2t3ga3na.</pattern>
-    <pattern>2v3ga3na.</pattern>
-    <pattern>2z3ga3na.</pattern>
-    <pattern>2ž3ga3na.</pattern>
-    <pattern>2b3nieks.</pattern>
-    <pattern>2c3nieks.</pattern>
-    <pattern>2č3nieks.</pattern>
-    <pattern>2d3nieks.</pattern>
-    <pattern>2f3nieks.</pattern>
-    <pattern>2g3nieks.</pattern>
-    <pattern>2ģ3nieks.</pattern>
-    <pattern>2h3nieks.</pattern>
-    <pattern>2j3nieks.</pattern>
-    <pattern>2k3nieks.</pattern>
-    <pattern>2ķ3nieks.</pattern>
-    <pattern>2l3nieks.</pattern>
-    <pattern>2ļ3nieks.</pattern>
-    <pattern>2m3nieks.</pattern>
-    <pattern>2n3nieks.</pattern>
-    <pattern>2ņ3nieks.</pattern>
-    <pattern>2p3nieks.</pattern>
-    <pattern>2r3nieks.</pattern>
-    <pattern>2s3nieks.</pattern>
-    <pattern>2š3nieks.</pattern>
-    <pattern>2t3nieks.</pattern>
-    <pattern>2v3nieks.</pattern>
-    <pattern>2z3nieks.</pattern>
-    <pattern>2ž3nieks.</pattern>
-    <pattern>2b3nie3ce.</pattern>
-    <pattern>2c3nie3ce.</pattern>
-    <pattern>2č3nie3ce.</pattern>
-    <pattern>2d3nie3ce.</pattern>
-    <pattern>2f3nie3ce.</pattern>
-    <pattern>2g3nie3ce.</pattern>
-    <pattern>2ģ3nie3ce.</pattern>
-    <pattern>2h3nie3ce.</pattern>
-    <pattern>2j3nie3ce.</pattern>
-    <pattern>2k3nie3ce.</pattern>
-    <pattern>2ķ3nie3ce.</pattern>
-    <pattern>2l3nie3ce.</pattern>
-    <pattern>2ļ3nie3ce.</pattern>
-    <pattern>2m3nie3ce.</pattern>
-    <pattern>2n3nie3ce.</pattern>
-    <pattern>2ņ3nie3ce.</pattern>
-    <pattern>2p3nie3ce.</pattern>
-    <pattern>2r3nie3ce.</pattern>
-    <pattern>2s3nie3ce.</pattern>
-    <pattern>2š3nie3ce.</pattern>
-    <pattern>2t3nie3ce.</pattern>
-    <pattern>2v3nie3ce.</pattern>
-    <pattern>2z3nie3ce.</pattern>
-    <pattern>2ž3nie3ce.</pattern>
-    <pattern>2b3nī3ca.</pattern>
-    <pattern>2c3nī3ca.</pattern>
-    <pattern>2č3nī3ca.</pattern>
-    <pattern>2d3nī3ca.</pattern>
-    <pattern>2f3nī3ca.</pattern>
-    <pattern>2g3nī3ca.</pattern>
-    <pattern>2ģ3nī3ca.</pattern>
-    <pattern>2h3nī3ca.</pattern>
-    <pattern>2j3nī3ca.</pattern>
-    <pattern>2k3nī3ca.</pattern>
-    <pattern>2ķ3nī3ca.</pattern>
-    <pattern>2l3nī3ca.</pattern>
-    <pattern>2ļ3nī3ca.</pattern>
-    <pattern>2m3nī3ca.</pattern>
-    <pattern>2n3nī3ca.</pattern>
-    <pattern>2ņ3nī3ca.</pattern>
-    <pattern>2p3nī3ca.</pattern>
-    <pattern>2r3nī3ca.</pattern>
-    <pattern>2s3nī3ca.</pattern>
-    <pattern>2š3nī3ca.</pattern>
-    <pattern>2t3nī3ca.</pattern>
-    <pattern>2v3nī3ca.</pattern>
-    <pattern>2z3nī3ca.</pattern>
-    <pattern>2ž3nī3ca.</pattern>
-    <pattern>2b3ša3na.</pattern>
-    <pattern>2c3ša3na.</pattern>
-    <pattern>2č3ša3na.</pattern>
-    <pattern>2d3ša3na.</pattern>
-    <pattern>2f3ša3na.</pattern>
-    <pattern>2g3ša3na.</pattern>
-    <pattern>2ģ3ša3na.</pattern>
-    <pattern>2h3ša3na.</pattern>
-    <pattern>2j3ša3na.</pattern>
-    <pattern>2k3ša3na.</pattern>
-    <pattern>2ķ3ša3na.</pattern>
-    <pattern>2l3ša3na.</pattern>
-    <pattern>2ļ3ša3na.</pattern>
-    <pattern>2m3ša3na.</pattern>
-    <pattern>2n3ša3na.</pattern>
-    <pattern>2ņ3ša3na.</pattern>
-    <pattern>2p3ša3na.</pattern>
-    <pattern>2r3ša3na.</pattern>
-    <pattern>2s3ša3na.</pattern>
-    <pattern>2š3ša3na.</pattern>
-    <pattern>2t3ša3na.</pattern>
-    <pattern>2v3ša3na.</pattern>
-    <pattern>2z3ša3na.</pattern>
-    <pattern>2ž3ša3na.</pattern>
-    <pattern>2b3ša3nās.</pattern>
-    <pattern>2c3ša3nās.</pattern>
-    <pattern>2č3ša3nās.</pattern>
-    <pattern>2d3ša3nās.</pattern>
-    <pattern>2f3ša3nās.</pattern>
-    <pattern>2g3ša3nās.</pattern>
-    <pattern>2ģ3ša3nās.</pattern>
-    <pattern>2h3ša3nās.</pattern>
-    <pattern>2j3ša3nās.</pattern>
-    <pattern>2k3ša3nās.</pattern>
-    <pattern>2ķ3ša3nās.</pattern>
-    <pattern>2l3ša3nās.</pattern>
-    <pattern>2ļ3ša3nās.</pattern>
-    <pattern>2m3ša3nās.</pattern>
-    <pattern>2n3ša3nās.</pattern>
-    <pattern>2ņ3ša3nās.</pattern>
-    <pattern>2p3ša3nās.</pattern>
-    <pattern>2r3ša3nās.</pattern>
-    <pattern>2s3ša3nās.</pattern>
-    <pattern>2š3ša3nās.</pattern>
-    <pattern>2t3ša3nās.</pattern>
-    <pattern>2v3ša3nās.</pattern>
-    <pattern>2z3ša3nās.</pattern>
-    <pattern>2ž3ša3nās.</pattern>
-    <pattern>2b3ta3la.</pattern>
-    <pattern>2c3ta3la.</pattern>
-    <pattern>2č3ta3la.</pattern>
-    <pattern>2d3ta3la.</pattern>
-    <pattern>2f3ta3la.</pattern>
-    <pattern>2g3ta3la.</pattern>
-    <pattern>2ģ3ta3la.</pattern>
-    <pattern>2h3ta3la.</pattern>
-    <pattern>2j3ta3la.</pattern>
-    <pattern>2k3ta3la.</pattern>
-    <pattern>2ķ3ta3la.</pattern>
-    <pattern>2l3ta3la.</pattern>
-    <pattern>2ļ3ta3la.</pattern>
-    <pattern>2m3ta3la.</pattern>
-    <pattern>2n3ta3la.</pattern>
-    <pattern>2ņ3ta3la.</pattern>
-    <pattern>2p3ta3la.</pattern>
-    <pattern>2r3ta3la.</pattern>
-    <pattern>2s3ta3la.</pattern>
-    <pattern>2š3ta3la.</pattern>
-    <pattern>2t3ta3la.</pattern>
-    <pattern>2v3ta3la.</pattern>
-    <pattern>2z3ta3la.</pattern>
-    <pattern>2ž3ta3la.</pattern>
-    <pattern>2b3tu3ve.</pattern>
-    <pattern>2c3tu3ve.</pattern>
-    <pattern>2č3tu3ve.</pattern>
-    <pattern>2d3tu3ve.</pattern>
-    <pattern>2f3tu3ve.</pattern>
-    <pattern>2g3tu3ve.</pattern>
-    <pattern>2ģ3tu3ve.</pattern>
-    <pattern>2h3tu3ve.</pattern>
-    <pattern>2j3tu3ve.</pattern>
-    <pattern>2k3tu3ve.</pattern>
-    <pattern>2ķ3tu3ve.</pattern>
-    <pattern>2l3tu3ve.</pattern>
-    <pattern>2ļ3tu3ve.</pattern>
-    <pattern>2m3tu3ve.</pattern>
-    <pattern>2n3tu3ve.</pattern>
-    <pattern>2ņ3tu3ve.</pattern>
-    <pattern>2p3tu3ve.</pattern>
-    <pattern>2r3tu3ve.</pattern>
-    <pattern>2s3tu3ve.</pattern>
-    <pattern>2š3tu3ve.</pattern>
-    <pattern>2t3tu3ve.</pattern>
-    <pattern>2v3tu3ve.</pattern>
-    <pattern>2z3tu3ve.</pattern>
-    <pattern>2ž3tu3ve.</pattern>
-    <pattern>.jā3a2</pattern>
-    <pattern>.ne3a2</pattern>
-    <pattern>.ie3a2</pattern>
-    <pattern>.no3a2</pattern>
-    <pattern>.pa3a2</pattern>
-    <pattern>.pie3a2</pattern>
-    <pattern>.sa3a2</pattern>
-    <pattern>.uz3a2</pattern>
-    <pattern>.aiz3a2</pattern>
-    <pattern>.ap3a2</pattern>
-    <pattern>.at3a2</pattern>
-    <pattern>.bez3a2</pattern>
-    <pattern>.pār3a2</pattern>
-    <pattern>.iz3a2</pattern>
-    <pattern>.eks3a2</pattern>
-    <pattern>.vis3a2</pattern>
-    <pattern>.jā3ā2</pattern>
-    <pattern>.ne3ā2</pattern>
-    <pattern>.ie3ā2</pattern>
-    <pattern>.no3ā2</pattern>
-    <pattern>.pa3ā2</pattern>
-    <pattern>.pie3ā2</pattern>
-    <pattern>.sa3ā2</pattern>
-    <pattern>.uz3ā2</pattern>
-    <pattern>.aiz3ā2</pattern>
-    <pattern>.ap3ā2</pattern>
-    <pattern>.at3ā2</pattern>
-    <pattern>.bez3ā2</pattern>
-    <pattern>.pār3ā2</pattern>
-    <pattern>.iz3ā2</pattern>
-    <pattern>.eks3ā2</pattern>
-    <pattern>.vis3ā2</pattern>
-    <pattern>.jā3e2</pattern>
-    <pattern>.ne3e2</pattern>
-    <pattern>.ie3e2</pattern>
-    <pattern>.no3e2</pattern>
-    <pattern>.pa3e2</pattern>
-    <pattern>.pie3e2</pattern>
-    <pattern>.sa3e2</pattern>
-    <pattern>.uz3e2</pattern>
-    <pattern>.aiz3e2</pattern>
-    <pattern>.ap3e2</pattern>
-    <pattern>.at3e2</pattern>
-    <pattern>.bez3e2</pattern>
-    <pattern>.pār3e2</pattern>
-    <pattern>.iz3e2</pattern>
-    <pattern>.eks3e2</pattern>
-    <pattern>.vis3e2</pattern>
-    <pattern>.jā3ē2</pattern>
-    <pattern>.ne3ē2</pattern>
-    <pattern>.ie3ē2</pattern>
-    <pattern>.no3ē2</pattern>
-    <pattern>.pa3ē2</pattern>
-    <pattern>.pie3ē2</pattern>
-    <pattern>.sa3ē2</pattern>
-    <pattern>.uz3ē2</pattern>
-    <pattern>.aiz3ē2</pattern>
-    <pattern>.ap3ē2</pattern>
-    <pattern>.at3ē2</pattern>
-    <pattern>.bez3ē2</pattern>
-    <pattern>.pār3ē2</pattern>
-    <pattern>.iz3ē2</pattern>
-    <pattern>.eks3ē2</pattern>
-    <pattern>.vis3ē2</pattern>
-    <pattern>.jā3i2</pattern>
-    <pattern>.ne3i2</pattern>
-    <pattern>.ie3i2</pattern>
-    <pattern>.no3i2</pattern>
-    <pattern>.pa3i2</pattern>
-    <pattern>.pie3i2</pattern>
-    <pattern>.sa3i2</pattern>
-    <pattern>.uz3i2</pattern>
-    <pattern>.aiz3i2</pattern>
-    <pattern>.ap3i2</pattern>
-    <pattern>.at3i2</pattern>
-    <pattern>.bez3i2</pattern>
-    <pattern>.pār3i2</pattern>
-    <pattern>.iz3i2</pattern>
-    <pattern>.eks3i2</pattern>
-    <pattern>.vis3i2</pattern>
-    <pattern>.jā3ī2</pattern>
-    <pattern>.ne3ī2</pattern>
-    <pattern>.ie3ī2</pattern>
-    <pattern>.no3ī2</pattern>
-    <pattern>.pa3ī2</pattern>
-    <pattern>.pie3ī2</pattern>
-    <pattern>.sa3ī2</pattern>
-    <pattern>.uz3ī2</pattern>
-    <pattern>.aiz3ī2</pattern>
-    <pattern>.ap3ī2</pattern>
-    <pattern>.at3ī2</pattern>
-    <pattern>.bez3ī2</pattern>
-    <pattern>.pār3ī2</pattern>
-    <pattern>.iz3ī2</pattern>
-    <pattern>.eks3ī2</pattern>
-    <pattern>.vis3ī2</pattern>
-    <pattern>.jā3o2</pattern>
-    <pattern>.ne3o2</pattern>
-    <pattern>.ie3o2</pattern>
-    <pattern>.no3o2</pattern>
-    <pattern>.pa3o2</pattern>
-    <pattern>.pie3o2</pattern>
-    <pattern>.sa3o2</pattern>
-    <pattern>.uz3o2</pattern>
-    <pattern>.aiz3o2</pattern>
-    <pattern>.ap3o2</pattern>
-    <pattern>.at3o2</pattern>
-    <pattern>.bez3o2</pattern>
-    <pattern>.pār3o2</pattern>
-    <pattern>.iz3o2</pattern>
-    <pattern>.eks3o2</pattern>
-    <pattern>.vis3o2</pattern>
-    <pattern>.jā3u2</pattern>
-    <pattern>.ne3u2</pattern>
-    <pattern>.ie3u2</pattern>
-    <pattern>.no3u2</pattern>
-    <pattern>.pa3u2</pattern>
-    <pattern>.pie3u2</pattern>
-    <pattern>.sa3u2</pattern>
-    <pattern>.uz3u2</pattern>
-    <pattern>.aiz3u2</pattern>
-    <pattern>.ap3u2</pattern>
-    <pattern>.at3u2</pattern>
-    <pattern>.bez3u2</pattern>
-    <pattern>.pār3u2</pattern>
-    <pattern>.iz3u2</pattern>
-    <pattern>.eks3u2</pattern>
-    <pattern>.vis3u2</pattern>
-    <pattern>.jā3ū2</pattern>
-    <pattern>.ne3ū2</pattern>
-    <pattern>.ie3ū2</pattern>
-    <pattern>.no3ū2</pattern>
-    <pattern>.pa3ū2</pattern>
-    <pattern>.pie3ū2</pattern>
-    <pattern>.sa3ū2</pattern>
-    <pattern>.uz3ū2</pattern>
-    <pattern>.aiz3ū2</pattern>
-    <pattern>.ap3ū2</pattern>
-    <pattern>.at3ū2</pattern>
-    <pattern>.bez3ū2</pattern>
-    <pattern>.pār3ū2</pattern>
-    <pattern>.iz3ū2</pattern>
-    <pattern>.eks3ū2</pattern>
-    <pattern>.vis3ū2</pattern>
-    <pattern>.jā3ie1</pattern>
-    <pattern>.jā3iz1</pattern>
-    <pattern>.jā3no1</pattern>
-    <pattern>.ne3aiz1</pattern>
-    <pattern>.ne3ap1</pattern>
-    <pattern>.ne3ie1</pattern>
-    <pattern>.ne3at1</pattern>
-    <pattern>.ne3in1</pattern>
-    <pattern>.ne3iz1</pattern>
-    <pattern>.ne3sa</pattern>
-    <pattern>.ne3uz1</pattern>
-    <pattern>.priek2š1</pattern>
+    <pattern> jā1s2p</pattern>
+    <pattern> ne1s2p</pattern>
+    <pattern> ie1s2p</pattern>
+    <pattern> no1s2p</pattern>
+    <pattern> pa1s2p</pattern>
+    <pattern> pie1s2p</pattern>
+    <pattern> sa1s2p</pattern>
+    <pattern> uz1s2p</pattern>
+    <pattern> aiz1s2p</pattern>
+    <pattern> ap1s2p</pattern>
+    <pattern> at1s2p</pattern>
+    <pattern> bez1s2p</pattern>
+    <pattern> pār1s2p</pattern>
+    <pattern> iz1s2p</pattern>
+    <pattern> eks1s2p</pattern>
+    <pattern> vis1s2p</pattern>
+    <pattern> jā1t2r</pattern>
+    <pattern> ne1t2r</pattern>
+    <pattern> ie1t2r</pattern>
+    <pattern> no1t2r</pattern>
+    <pattern> pa1t2r</pattern>
+    <pattern> pie1t2r</pattern>
+    <pattern> sa1t2r</pattern>
+    <pattern> uz1t2r</pattern>
+    <pattern> aiz1t2r</pattern>
+    <pattern> ap1t2r</pattern>
+    <pattern> at1t2r</pattern>
+    <pattern> bez1t2r</pattern>
+    <pattern> pār1t2r</pattern>
+    <pattern> iz1t2r</pattern>
+    <pattern> eks1t2r</pattern>
+    <pattern> vis1t2r</pattern>
+    <pattern> jā1s2c</pattern>
+    <pattern> ne1s2c</pattern>
+    <pattern> ie1s2c</pattern>
+    <pattern> no1s2c</pattern>
+    <pattern> pa1s2c</pattern>
+    <pattern> pie1s2c</pattern>
+    <pattern> sa1s2c</pattern>
+    <pattern> uz1s2c</pattern>
+    <pattern> aiz1s2c</pattern>
+    <pattern> ap1s2c</pattern>
+    <pattern> at1s2c</pattern>
+    <pattern> bez1s2c</pattern>
+    <pattern> pār1s2c</pattern>
+    <pattern> iz1s2c</pattern>
+    <pattern> eks1s2c</pattern>
+    <pattern> vis1s2c</pattern>
+    <pattern> jā1s2tj</pattern>
+    <pattern> ne1s2tj</pattern>
+    <pattern> ie1s2tj</pattern>
+    <pattern> no1s2tj</pattern>
+    <pattern> pa1s2tj</pattern>
+    <pattern> pie1s2tj</pattern>
+    <pattern> sa1s2tj</pattern>
+    <pattern> uz1s2tj</pattern>
+    <pattern> aiz1s2tj</pattern>
+    <pattern> ap1s2tj</pattern>
+    <pattern> at1s2tj</pattern>
+    <pattern> bez1s2tj</pattern>
+    <pattern> pār1s2tj</pattern>
+    <pattern> iz1s2tj</pattern>
+    <pattern> eks1s2tj</pattern>
+    <pattern> vis1s2tj</pattern>
+    <pattern> jā1g2l</pattern>
+    <pattern> ne1g2l</pattern>
+    <pattern> ie1g2l</pattern>
+    <pattern> no1g2l</pattern>
+    <pattern> pa1g2l</pattern>
+    <pattern> pie1g2l</pattern>
+    <pattern> sa1g2l</pattern>
+    <pattern> uz1g2l</pattern>
+    <pattern> aiz1g2l</pattern>
+    <pattern> ap1g2l</pattern>
+    <pattern> at1g2l</pattern>
+    <pattern> bez1g2l</pattern>
+    <pattern> pār1g2l</pattern>
+    <pattern> iz1g2l</pattern>
+    <pattern> eks1g2l</pattern>
+    <pattern> vis1g2l</pattern>
+    <pattern> jā1ž2v</pattern>
+    <pattern> ne1ž2v</pattern>
+    <pattern> ie1ž2v</pattern>
+    <pattern> no1ž2v</pattern>
+    <pattern> pa1ž2v</pattern>
+    <pattern> pie1ž2v</pattern>
+    <pattern> sa1ž2v</pattern>
+    <pattern> uz1ž2v</pattern>
+    <pattern> aiz1ž2v</pattern>
+    <pattern> ap1ž2v</pattern>
+    <pattern> at1ž2v</pattern>
+    <pattern> bez1ž2v</pattern>
+    <pattern> pār1ž2v</pattern>
+    <pattern> iz1ž2v</pattern>
+    <pattern> eks1ž2v</pattern>
+    <pattern> vis1ž2v</pattern>
+    <pattern> jā1š2ļ</pattern>
+    <pattern> ne1š2ļ</pattern>
+    <pattern> ie1š2ļ</pattern>
+    <pattern> no1š2ļ</pattern>
+    <pattern> pa1š2ļ</pattern>
+    <pattern> pie1š2ļ</pattern>
+    <pattern> sa1š2ļ</pattern>
+    <pattern> uz1š2ļ</pattern>
+    <pattern> aiz1š2ļ</pattern>
+    <pattern> ap1š2ļ</pattern>
+    <pattern> at1š2ļ</pattern>
+    <pattern> bez1š2ļ</pattern>
+    <pattern> pār1š2ļ</pattern>
+    <pattern> iz1š2ļ</pattern>
+    <pattern> eks1š2ļ</pattern>
+    <pattern> vis1š2ļ</pattern>
+    <pattern> jā1s2f</pattern>
+    <pattern> ne1s2f</pattern>
+    <pattern> ie1s2f</pattern>
+    <pattern> no1s2f</pattern>
+    <pattern> pa1s2f</pattern>
+    <pattern> pie1s2f</pattern>
+    <pattern> sa1s2f</pattern>
+    <pattern> uz1s2f</pattern>
+    <pattern> aiz1s2f</pattern>
+    <pattern> ap1s2f</pattern>
+    <pattern> at1s2f</pattern>
+    <pattern> bez1s2f</pattern>
+    <pattern> pār1s2f</pattern>
+    <pattern> iz1s2f</pattern>
+    <pattern> eks1s2f</pattern>
+    <pattern> vis1s2f</pattern>
+    <pattern> jā1š2t</pattern>
+    <pattern> ne1š2t</pattern>
+    <pattern> ie1š2t</pattern>
+    <pattern> no1š2t</pattern>
+    <pattern> pa1š2t</pattern>
+    <pattern> pie1š2t</pattern>
+    <pattern> sa1š2t</pattern>
+    <pattern> uz1š2t</pattern>
+    <pattern> aiz1š2t</pattern>
+    <pattern> ap1š2t</pattern>
+    <pattern> at1š2t</pattern>
+    <pattern> bez1š2t</pattern>
+    <pattern> pār1š2t</pattern>
+    <pattern> iz1š2t</pattern>
+    <pattern> eks1š2t</pattern>
+    <pattern> vis1š2t</pattern>
+    <pattern> jā1s2tr</pattern>
+    <pattern> ne1s2tr</pattern>
+    <pattern> ie1s2tr</pattern>
+    <pattern> no1s2tr</pattern>
+    <pattern> pa1s2tr</pattern>
+    <pattern> pie1s2tr</pattern>
+    <pattern> sa1s2tr</pattern>
+    <pattern> uz1s2tr</pattern>
+    <pattern> aiz1s2tr</pattern>
+    <pattern> ap1s2tr</pattern>
+    <pattern> at1s2tr</pattern>
+    <pattern> bez1s2tr</pattern>
+    <pattern> pār1s2tr</pattern>
+    <pattern> iz1s2tr</pattern>
+    <pattern> eks1s2tr</pattern>
+    <pattern> vis1s2tr</pattern>
+    <pattern> jā1b2r</pattern>
+    <pattern> ne1b2r</pattern>
+    <pattern> ie1b2r</pattern>
+    <pattern> no1b2r</pattern>
+    <pattern> pa1b2r</pattern>
+    <pattern> pie1b2r</pattern>
+    <pattern> sa1b2r</pattern>
+    <pattern> uz1b2r</pattern>
+    <pattern> aiz1b2r</pattern>
+    <pattern> ap1b2r</pattern>
+    <pattern> at1b2r</pattern>
+    <pattern> bez1b2r</pattern>
+    <pattern> pār1b2r</pattern>
+    <pattern> iz1b2r</pattern>
+    <pattern> eks1b2r</pattern>
+    <pattern> vis1b2r</pattern>
+    <pattern> jā1š2r</pattern>
+    <pattern> ne1š2r</pattern>
+    <pattern> ie1š2r</pattern>
+    <pattern> no1š2r</pattern>
+    <pattern> pa1š2r</pattern>
+    <pattern> pie1š2r</pattern>
+    <pattern> sa1š2r</pattern>
+    <pattern> uz1š2r</pattern>
+    <pattern> aiz1š2r</pattern>
+    <pattern> ap1š2r</pattern>
+    <pattern> at1š2r</pattern>
+    <pattern> bez1š2r</pattern>
+    <pattern> pār1š2r</pattern>
+    <pattern> iz1š2r</pattern>
+    <pattern> eks1š2r</pattern>
+    <pattern> vis1š2r</pattern>
+    <pattern> jā1š2v</pattern>
+    <pattern> ne1š2v</pattern>
+    <pattern> ie1š2v</pattern>
+    <pattern> no1š2v</pattern>
+    <pattern> pa1š2v</pattern>
+    <pattern> pie1š2v</pattern>
+    <pattern> sa1š2v</pattern>
+    <pattern> uz1š2v</pattern>
+    <pattern> aiz1š2v</pattern>
+    <pattern> ap1š2v</pattern>
+    <pattern> at1š2v</pattern>
+    <pattern> bez1š2v</pattern>
+    <pattern> pār1š2v</pattern>
+    <pattern> iz1š2v</pattern>
+    <pattern> eks1š2v</pattern>
+    <pattern> vis1š2v</pattern>
+    <pattern> jā1s2t</pattern>
+    <pattern> ne1s2t</pattern>
+    <pattern> ie1s2t</pattern>
+    <pattern> no1s2t</pattern>
+    <pattern> pa1s2t</pattern>
+    <pattern> pie1s2t</pattern>
+    <pattern> sa1s2t</pattern>
+    <pattern> uz1s2t</pattern>
+    <pattern> aiz1s2t</pattern>
+    <pattern> ap1s2t</pattern>
+    <pattern> at1s2t</pattern>
+    <pattern> bez1s2t</pattern>
+    <pattern> pār1s2t</pattern>
+    <pattern> iz1s2t</pattern>
+    <pattern> eks1s2t</pattern>
+    <pattern> vis1s2t</pattern>
+    <pattern> jā1p2r</pattern>
+    <pattern> ne1p2r</pattern>
+    <pattern> ie1p2r</pattern>
+    <pattern> no1p2r</pattern>
+    <pattern> pa1p2r</pattern>
+    <pattern> pie1p2r</pattern>
+    <pattern> sa1p2r</pattern>
+    <pattern> uz1p2r</pattern>
+    <pattern> aiz1p2r</pattern>
+    <pattern> ap1p2r</pattern>
+    <pattern> at1p2r</pattern>
+    <pattern> bez1p2r</pattern>
+    <pattern> pār1p2r</pattern>
+    <pattern> iz1p2r</pattern>
+    <pattern> eks1p2r</pattern>
+    <pattern> vis1p2r</pattern>
+    <pattern> jā1g2ļ</pattern>
+    <pattern> ne1g2ļ</pattern>
+    <pattern> ie1g2ļ</pattern>
+    <pattern> no1g2ļ</pattern>
+    <pattern> pa1g2ļ</pattern>
+    <pattern> pie1g2ļ</pattern>
+    <pattern> sa1g2ļ</pattern>
+    <pattern> uz1g2ļ</pattern>
+    <pattern> aiz1g2ļ</pattern>
+    <pattern> ap1g2ļ</pattern>
+    <pattern> at1g2ļ</pattern>
+    <pattern> bez1g2ļ</pattern>
+    <pattern> pār1g2ļ</pattern>
+    <pattern> iz1g2ļ</pattern>
+    <pattern> eks1g2ļ</pattern>
+    <pattern> vis1g2ļ</pattern>
+    <pattern> jā1š2k</pattern>
+    <pattern> ne1š2k</pattern>
+    <pattern> ie1š2k</pattern>
+    <pattern> no1š2k</pattern>
+    <pattern> pa1š2k</pattern>
+    <pattern> pie1š2k</pattern>
+    <pattern> sa1š2k</pattern>
+    <pattern> uz1š2k</pattern>
+    <pattern> aiz1š2k</pattern>
+    <pattern> ap1š2k</pattern>
+    <pattern> at1š2k</pattern>
+    <pattern> bez1š2k</pattern>
+    <pattern> pār1š2k</pattern>
+    <pattern> iz1š2k</pattern>
+    <pattern> eks1š2k</pattern>
+    <pattern> vis1š2k</pattern>
+    <pattern> jā1p2s</pattern>
+    <pattern> ne1p2s</pattern>
+    <pattern> ie1p2s</pattern>
+    <pattern> no1p2s</pattern>
+    <pattern> pa1p2s</pattern>
+    <pattern> pie1p2s</pattern>
+    <pattern> sa1p2s</pattern>
+    <pattern> uz1p2s</pattern>
+    <pattern> aiz1p2s</pattern>
+    <pattern> ap1p2s</pattern>
+    <pattern> at1p2s</pattern>
+    <pattern> bez1p2s</pattern>
+    <pattern> pār1p2s</pattern>
+    <pattern> iz1p2s</pattern>
+    <pattern> eks1p2s</pattern>
+    <pattern> vis1p2s</pattern>
+    <pattern> jā1k2l</pattern>
+    <pattern> ne1k2l</pattern>
+    <pattern> ie1k2l</pattern>
+    <pattern> no1k2l</pattern>
+    <pattern> pa1k2l</pattern>
+    <pattern> pie1k2l</pattern>
+    <pattern> sa1k2l</pattern>
+    <pattern> uz1k2l</pattern>
+    <pattern> aiz1k2l</pattern>
+    <pattern> ap1k2l</pattern>
+    <pattern> at1k2l</pattern>
+    <pattern> bez1k2l</pattern>
+    <pattern> pār1k2l</pattern>
+    <pattern> iz1k2l</pattern>
+    <pattern> eks1k2l</pattern>
+    <pattern> vis1k2l</pattern>
+    <pattern> jā1g2r</pattern>
+    <pattern> ne1g2r</pattern>
+    <pattern> ie1g2r</pattern>
+    <pattern> no1g2r</pattern>
+    <pattern> pa1g2r</pattern>
+    <pattern> pie1g2r</pattern>
+    <pattern> sa1g2r</pattern>
+    <pattern> uz1g2r</pattern>
+    <pattern> aiz1g2r</pattern>
+    <pattern> ap1g2r</pattern>
+    <pattern> at1g2r</pattern>
+    <pattern> bez1g2r</pattern>
+    <pattern> pār1g2r</pattern>
+    <pattern> iz1g2r</pattern>
+    <pattern> eks1g2r</pattern>
+    <pattern> vis1g2r</pattern>
+    <pattern> jā1š2ķ</pattern>
+    <pattern> ne1š2ķ</pattern>
+    <pattern> ie1š2ķ</pattern>
+    <pattern> no1š2ķ</pattern>
+    <pattern> pa1š2ķ</pattern>
+    <pattern> pie1š2ķ</pattern>
+    <pattern> sa1š2ķ</pattern>
+    <pattern> uz1š2ķ</pattern>
+    <pattern> aiz1š2ķ</pattern>
+    <pattern> ap1š2ķ</pattern>
+    <pattern> at1š2ķ</pattern>
+    <pattern> bez1š2ķ</pattern>
+    <pattern> pār1š2ķ</pattern>
+    <pattern> iz1š2ķ</pattern>
+    <pattern> eks1š2ķ</pattern>
+    <pattern> vis1š2ķ</pattern>
+    <pattern> jā1p2n</pattern>
+    <pattern> ne1p2n</pattern>
+    <pattern> ie1p2n</pattern>
+    <pattern> no1p2n</pattern>
+    <pattern> pa1p2n</pattern>
+    <pattern> pie1p2n</pattern>
+    <pattern> sa1p2n</pattern>
+    <pattern> uz1p2n</pattern>
+    <pattern> aiz1p2n</pattern>
+    <pattern> ap1p2n</pattern>
+    <pattern> at1p2n</pattern>
+    <pattern> bez1p2n</pattern>
+    <pattern> pār1p2n</pattern>
+    <pattern> iz1p2n</pattern>
+    <pattern> eks1p2n</pattern>
+    <pattern> vis1p2n</pattern>
+    <pattern> jā1s2v</pattern>
+    <pattern> ne1s2v</pattern>
+    <pattern> ie1s2v</pattern>
+    <pattern> no1s2v</pattern>
+    <pattern> pa1s2v</pattern>
+    <pattern> pie1s2v</pattern>
+    <pattern> sa1s2v</pattern>
+    <pattern> uz1s2v</pattern>
+    <pattern> aiz1s2v</pattern>
+    <pattern> ap1s2v</pattern>
+    <pattern> at1s2v</pattern>
+    <pattern> bez1s2v</pattern>
+    <pattern> pār1s2v</pattern>
+    <pattern> iz1s2v</pattern>
+    <pattern> eks1s2v</pattern>
+    <pattern> vis1s2v</pattern>
+    <pattern> jā1s2pr</pattern>
+    <pattern> ne1s2pr</pattern>
+    <pattern> ie1s2pr</pattern>
+    <pattern> no1s2pr</pattern>
+    <pattern> pa1s2pr</pattern>
+    <pattern> pie1s2pr</pattern>
+    <pattern> sa1s2pr</pattern>
+    <pattern> uz1s2pr</pattern>
+    <pattern> aiz1s2pr</pattern>
+    <pattern> ap1s2pr</pattern>
+    <pattern> at1s2pr</pattern>
+    <pattern> bez1s2pr</pattern>
+    <pattern> pār1s2pr</pattern>
+    <pattern> iz1s2pr</pattern>
+    <pattern> eks1s2pr</pattern>
+    <pattern> vis1s2pr</pattern>
+    <pattern> jā1d2r</pattern>
+    <pattern> ne1d2r</pattern>
+    <pattern> ie1d2r</pattern>
+    <pattern> no1d2r</pattern>
+    <pattern> pa1d2r</pattern>
+    <pattern> pie1d2r</pattern>
+    <pattern> sa1d2r</pattern>
+    <pattern> uz1d2r</pattern>
+    <pattern> aiz1d2r</pattern>
+    <pattern> ap1d2r</pattern>
+    <pattern> at1d2r</pattern>
+    <pattern> bez1d2r</pattern>
+    <pattern> pār1d2r</pattern>
+    <pattern> iz1d2r</pattern>
+    <pattern> eks1d2r</pattern>
+    <pattern> vis1d2r</pattern>
+    <pattern> jā1p2l</pattern>
+    <pattern> ne1p2l</pattern>
+    <pattern> ie1p2l</pattern>
+    <pattern> no1p2l</pattern>
+    <pattern> pa1p2l</pattern>
+    <pattern> pie1p2l</pattern>
+    <pattern> sa1p2l</pattern>
+    <pattern> uz1p2l</pattern>
+    <pattern> aiz1p2l</pattern>
+    <pattern> ap1p2l</pattern>
+    <pattern> at1p2l</pattern>
+    <pattern> bez1p2l</pattern>
+    <pattern> pār1p2l</pattern>
+    <pattern> iz1p2l</pattern>
+    <pattern> eks1p2l</pattern>
+    <pattern> vis1p2l</pattern>
+    <pattern> jā1d2v</pattern>
+    <pattern> ne1d2v</pattern>
+    <pattern> ie1d2v</pattern>
+    <pattern> no1d2v</pattern>
+    <pattern> pa1d2v</pattern>
+    <pattern> pie1d2v</pattern>
+    <pattern> sa1d2v</pattern>
+    <pattern> uz1d2v</pattern>
+    <pattern> aiz1d2v</pattern>
+    <pattern> ap1d2v</pattern>
+    <pattern> at1d2v</pattern>
+    <pattern> bez1d2v</pattern>
+    <pattern> pār1d2v</pattern>
+    <pattern> iz1d2v</pattern>
+    <pattern> eks1d2v</pattern>
+    <pattern> vis1d2v</pattern>
+    <pattern> jā1š2l</pattern>
+    <pattern> ne1š2l</pattern>
+    <pattern> ie1š2l</pattern>
+    <pattern> no1š2l</pattern>
+    <pattern> pa1š2l</pattern>
+    <pattern> pie1š2l</pattern>
+    <pattern> sa1š2l</pattern>
+    <pattern> uz1š2l</pattern>
+    <pattern> aiz1š2l</pattern>
+    <pattern> ap1š2l</pattern>
+    <pattern> at1š2l</pattern>
+    <pattern> bez1š2l</pattern>
+    <pattern> pār1š2l</pattern>
+    <pattern> iz1š2l</pattern>
+    <pattern> eks1š2l</pattern>
+    <pattern> vis1š2l</pattern>
+    <pattern> jā1s2k</pattern>
+    <pattern> ne1s2k</pattern>
+    <pattern> ie1s2k</pattern>
+    <pattern> no1s2k</pattern>
+    <pattern> pa1s2k</pattern>
+    <pattern> pie1s2k</pattern>
+    <pattern> sa1s2k</pattern>
+    <pattern> uz1s2k</pattern>
+    <pattern> aiz1s2k</pattern>
+    <pattern> ap1s2k</pattern>
+    <pattern> at1s2k</pattern>
+    <pattern> bez1s2k</pattern>
+    <pattern> pār1s2k</pattern>
+    <pattern> iz1s2k</pattern>
+    <pattern> eks1s2k</pattern>
+    <pattern> vis1s2k</pattern>
+    <pattern> jā1s2kv</pattern>
+    <pattern> ne1s2kv</pattern>
+    <pattern> ie1s2kv</pattern>
+    <pattern> no1s2kv</pattern>
+    <pattern> pa1s2kv</pattern>
+    <pattern> pie1s2kv</pattern>
+    <pattern> sa1s2kv</pattern>
+    <pattern> uz1s2kv</pattern>
+    <pattern> aiz1s2kv</pattern>
+    <pattern> ap1s2kv</pattern>
+    <pattern> at1s2kv</pattern>
+    <pattern> bez1s2kv</pattern>
+    <pattern> pār1s2kv</pattern>
+    <pattern> iz1s2kv</pattern>
+    <pattern> eks1s2kv</pattern>
+    <pattern> vis1s2kv</pattern>
+    <pattern> jā1k2v</pattern>
+    <pattern> ne1k2v</pattern>
+    <pattern> ie1k2v</pattern>
+    <pattern> no1k2v</pattern>
+    <pattern> pa1k2v</pattern>
+    <pattern> pie1k2v</pattern>
+    <pattern> sa1k2v</pattern>
+    <pattern> uz1k2v</pattern>
+    <pattern> aiz1k2v</pattern>
+    <pattern> ap1k2v</pattern>
+    <pattern> at1k2v</pattern>
+    <pattern> bez1k2v</pattern>
+    <pattern> pār1k2v</pattern>
+    <pattern> iz1k2v</pattern>
+    <pattern> eks1k2v</pattern>
+    <pattern> vis1k2v</pattern>
+    <pattern> jā1z2v</pattern>
+    <pattern> ne1z2v</pattern>
+    <pattern> ie1z2v</pattern>
+    <pattern> no1z2v</pattern>
+    <pattern> pa1z2v</pattern>
+    <pattern> pie1z2v</pattern>
+    <pattern> sa1z2v</pattern>
+    <pattern> uz1z2v</pattern>
+    <pattern> aiz1z2v</pattern>
+    <pattern> ap1z2v</pattern>
+    <pattern> at1z2v</pattern>
+    <pattern> bez1z2v</pattern>
+    <pattern> pār1z2v</pattern>
+    <pattern> iz1z2v</pattern>
+    <pattern> eks1z2v</pattern>
+    <pattern> vis1z2v</pattern>
+    <pattern> jā1k2s</pattern>
+    <pattern> ne1k2s</pattern>
+    <pattern> ie1k2s</pattern>
+    <pattern> no1k2s</pattern>
+    <pattern> pa1k2s</pattern>
+    <pattern> pie1k2s</pattern>
+    <pattern> sa1k2s</pattern>
+    <pattern> uz1k2s</pattern>
+    <pattern> aiz1k2s</pattern>
+    <pattern> ap1k2s</pattern>
+    <pattern> at1k2s</pattern>
+    <pattern> bez1k2s</pattern>
+    <pattern> pār1k2s</pattern>
+    <pattern> iz1k2s</pattern>
+    <pattern> eks1k2s</pattern>
+    <pattern> vis1k2s</pattern>
+    <pattern> jā1p2t</pattern>
+    <pattern> ne1p2t</pattern>
+    <pattern> ie1p2t</pattern>
+    <pattern> no1p2t</pattern>
+    <pattern> pa1p2t</pattern>
+    <pattern> pie1p2t</pattern>
+    <pattern> sa1p2t</pattern>
+    <pattern> uz1p2t</pattern>
+    <pattern> aiz1p2t</pattern>
+    <pattern> ap1p2t</pattern>
+    <pattern> at1p2t</pattern>
+    <pattern> bez1p2t</pattern>
+    <pattern> pār1p2t</pattern>
+    <pattern> iz1p2t</pattern>
+    <pattern> eks1p2t</pattern>
+    <pattern> vis1p2t</pattern>
+    <pattern> jā1z2n</pattern>
+    <pattern> ne1z2n</pattern>
+    <pattern> ie1z2n</pattern>
+    <pattern> no1z2n</pattern>
+    <pattern> pa1z2n</pattern>
+    <pattern> pie1z2n</pattern>
+    <pattern> sa1z2n</pattern>
+    <pattern> uz1z2n</pattern>
+    <pattern> aiz1z2n</pattern>
+    <pattern> ap1z2n</pattern>
+    <pattern> at1z2n</pattern>
+    <pattern> bez1z2n</pattern>
+    <pattern> pār1z2n</pattern>
+    <pattern> iz1z2n</pattern>
+    <pattern> eks1z2n</pattern>
+    <pattern> vis1z2n</pattern>
+    <pattern> jā1k2r</pattern>
+    <pattern> ne1k2r</pattern>
+    <pattern> ie1k2r</pattern>
+    <pattern> no1k2r</pattern>
+    <pattern> pa1k2r</pattern>
+    <pattern> pie1k2r</pattern>
+    <pattern> sa1k2r</pattern>
+    <pattern> uz1k2r</pattern>
+    <pattern> aiz1k2r</pattern>
+    <pattern> ap1k2r</pattern>
+    <pattern> at1k2r</pattern>
+    <pattern> bez1k2r</pattern>
+    <pattern> pār1k2r</pattern>
+    <pattern> iz1k2r</pattern>
+    <pattern> eks1k2r</pattern>
+    <pattern> vis1k2r</pattern>
+    <pattern> jā1s2kr</pattern>
+    <pattern> ne1s2kr</pattern>
+    <pattern> ie1s2kr</pattern>
+    <pattern> no1s2kr</pattern>
+    <pattern> pa1s2kr</pattern>
+    <pattern> pie1s2kr</pattern>
+    <pattern> sa1s2kr</pattern>
+    <pattern> uz1s2kr</pattern>
+    <pattern> aiz1s2kr</pattern>
+    <pattern> ap1s2kr</pattern>
+    <pattern> at1s2kr</pattern>
+    <pattern> bez1s2kr</pattern>
+    <pattern> pār1s2kr</pattern>
+    <pattern> iz1s2kr</pattern>
+    <pattern> eks1s2kr</pattern>
+    <pattern> vis1s2kr</pattern>
+    <pattern> jā1f2r</pattern>
+    <pattern> ne1f2r</pattern>
+    <pattern> ie1f2r</pattern>
+    <pattern> no1f2r</pattern>
+    <pattern> pa1f2r</pattern>
+    <pattern> pie1f2r</pattern>
+    <pattern> sa1f2r</pattern>
+    <pattern> uz1f2r</pattern>
+    <pattern> aiz1f2r</pattern>
+    <pattern> ap1f2r</pattern>
+    <pattern> at1f2r</pattern>
+    <pattern> bez1f2r</pattern>
+    <pattern> pār1f2r</pattern>
+    <pattern> iz1f2r</pattern>
+    <pattern> eks1f2r</pattern>
+    <pattern> vis1f2r</pattern>
+    <pattern> jā1s2h</pattern>
+    <pattern> ne1s2h</pattern>
+    <pattern> ie1s2h</pattern>
+    <pattern> no1s2h</pattern>
+    <pattern> pa1s2h</pattern>
+    <pattern> pie1s2h</pattern>
+    <pattern> sa1s2h</pattern>
+    <pattern> uz1s2h</pattern>
+    <pattern> aiz1s2h</pattern>
+    <pattern> ap1s2h</pattern>
+    <pattern> at1s2h</pattern>
+    <pattern> bez1s2h</pattern>
+    <pattern> pār1s2h</pattern>
+    <pattern> iz1s2h</pattern>
+    <pattern> eks1s2h</pattern>
+    <pattern> vis1s2h</pattern>
+    <pattern> jā1ž2ņ</pattern>
+    <pattern> ne1ž2ņ</pattern>
+    <pattern> ie1ž2ņ</pattern>
+    <pattern> no1ž2ņ</pattern>
+    <pattern> pa1ž2ņ</pattern>
+    <pattern> pie1ž2ņ</pattern>
+    <pattern> sa1ž2ņ</pattern>
+    <pattern> uz1ž2ņ</pattern>
+    <pattern> aiz1ž2ņ</pattern>
+    <pattern> ap1ž2ņ</pattern>
+    <pattern> at1ž2ņ</pattern>
+    <pattern> bez1ž2ņ</pattern>
+    <pattern> pār1ž2ņ</pattern>
+    <pattern> iz1ž2ņ</pattern>
+    <pattern> eks1ž2ņ</pattern>
+    <pattern> vis1ž2ņ</pattern>
+    <pattern> jā1d2d</pattern>
+    <pattern> ne1d2d</pattern>
+    <pattern> ie1d2d</pattern>
+    <pattern> no1d2d</pattern>
+    <pattern> pa1d2d</pattern>
+    <pattern> pie1d2d</pattern>
+    <pattern> sa1d2d</pattern>
+    <pattern> uz1d2d</pattern>
+    <pattern> aiz1d2d</pattern>
+    <pattern> ap1d2d</pattern>
+    <pattern> at1d2d</pattern>
+    <pattern> bez1d2d</pattern>
+    <pattern> pār1d2d</pattern>
+    <pattern> iz1d2d</pattern>
+    <pattern> eks1d2d</pattern>
+    <pattern> vis1d2d</pattern>
+    <pattern> jā1š2pr</pattern>
+    <pattern> ne1š2pr</pattern>
+    <pattern> ie1š2pr</pattern>
+    <pattern> no1š2pr</pattern>
+    <pattern> pa1š2pr</pattern>
+    <pattern> pie1š2pr</pattern>
+    <pattern> sa1š2pr</pattern>
+    <pattern> uz1š2pr</pattern>
+    <pattern> aiz1š2pr</pattern>
+    <pattern> ap1š2pr</pattern>
+    <pattern> at1š2pr</pattern>
+    <pattern> bez1š2pr</pattern>
+    <pattern> pār1š2pr</pattern>
+    <pattern> iz1š2pr</pattern>
+    <pattern> eks1š2pr</pattern>
+    <pattern> vis1š2pr</pattern>
+    <pattern> jā1v2j</pattern>
+    <pattern> ne1v2j</pattern>
+    <pattern> ie1v2j</pattern>
+    <pattern> no1v2j</pattern>
+    <pattern> pa1v2j</pattern>
+    <pattern> pie1v2j</pattern>
+    <pattern> sa1v2j</pattern>
+    <pattern> uz1v2j</pattern>
+    <pattern> aiz1v2j</pattern>
+    <pattern> ap1v2j</pattern>
+    <pattern> at1v2j</pattern>
+    <pattern> bez1v2j</pattern>
+    <pattern> pār1v2j</pattern>
+    <pattern> iz1v2j</pattern>
+    <pattern> eks1v2j</pattern>
+    <pattern> vis1v2j</pattern>
+    <pattern> jā1f2j</pattern>
+    <pattern> ne1f2j</pattern>
+    <pattern> ie1f2j</pattern>
+    <pattern> no1f2j</pattern>
+    <pattern> pa1f2j</pattern>
+    <pattern> pie1f2j</pattern>
+    <pattern> sa1f2j</pattern>
+    <pattern> uz1f2j</pattern>
+    <pattern> aiz1f2j</pattern>
+    <pattern> ap1f2j</pattern>
+    <pattern> at1f2j</pattern>
+    <pattern> bez1f2j</pattern>
+    <pattern> pār1f2j</pattern>
+    <pattern> iz1f2j</pattern>
+    <pattern> eks1f2j</pattern>
+    <pattern> vis1f2j</pattern>
+    <pattern> jā1p2j</pattern>
+    <pattern> ne1p2j</pattern>
+    <pattern> ie1p2j</pattern>
+    <pattern> no1p2j</pattern>
+    <pattern> pa1p2j</pattern>
+    <pattern> pie1p2j</pattern>
+    <pattern> sa1p2j</pattern>
+    <pattern> uz1p2j</pattern>
+    <pattern> aiz1p2j</pattern>
+    <pattern> ap1p2j</pattern>
+    <pattern> at1p2j</pattern>
+    <pattern> bez1p2j</pattern>
+    <pattern> pār1p2j</pattern>
+    <pattern> iz1p2j</pattern>
+    <pattern> eks1p2j</pattern>
+    <pattern> vis1p2j</pattern>
+    <pattern> jā1b2ļ</pattern>
+    <pattern> ne1b2ļ</pattern>
+    <pattern> ie1b2ļ</pattern>
+    <pattern> no1b2ļ</pattern>
+    <pattern> pa1b2ļ</pattern>
+    <pattern> pie1b2ļ</pattern>
+    <pattern> sa1b2ļ</pattern>
+    <pattern> uz1b2ļ</pattern>
+    <pattern> aiz1b2ļ</pattern>
+    <pattern> ap1b2ļ</pattern>
+    <pattern> at1b2ļ</pattern>
+    <pattern> bez1b2ļ</pattern>
+    <pattern> pār1b2ļ</pattern>
+    <pattern> iz1b2ļ</pattern>
+    <pattern> eks1b2ļ</pattern>
+    <pattern> vis1b2ļ</pattern>
+    <pattern> jā1g2n</pattern>
+    <pattern> ne1g2n</pattern>
+    <pattern> ie1g2n</pattern>
+    <pattern> no1g2n</pattern>
+    <pattern> pa1g2n</pattern>
+    <pattern> pie1g2n</pattern>
+    <pattern> sa1g2n</pattern>
+    <pattern> uz1g2n</pattern>
+    <pattern> aiz1g2n</pattern>
+    <pattern> ap1g2n</pattern>
+    <pattern> at1g2n</pattern>
+    <pattern> bez1g2n</pattern>
+    <pattern> pār1g2n</pattern>
+    <pattern> iz1g2n</pattern>
+    <pattern> eks1g2n</pattern>
+    <pattern> vis1g2n</pattern>
+    <pattern> jā1h2r</pattern>
+    <pattern> ne1h2r</pattern>
+    <pattern> ie1h2r</pattern>
+    <pattern> no1h2r</pattern>
+    <pattern> pa1h2r</pattern>
+    <pattern> pie1h2r</pattern>
+    <pattern> sa1h2r</pattern>
+    <pattern> uz1h2r</pattern>
+    <pattern> aiz1h2r</pattern>
+    <pattern> ap1h2r</pattern>
+    <pattern> at1h2r</pattern>
+    <pattern> bez1h2r</pattern>
+    <pattern> pār1h2r</pattern>
+    <pattern> iz1h2r</pattern>
+    <pattern> eks1h2r</pattern>
+    <pattern> vis1h2r</pattern>
+    <pattern> jā1s2n</pattern>
+    <pattern> ne1s2n</pattern>
+    <pattern> ie1s2n</pattern>
+    <pattern> no1s2n</pattern>
+    <pattern> pa1s2n</pattern>
+    <pattern> pie1s2n</pattern>
+    <pattern> sa1s2n</pattern>
+    <pattern> uz1s2n</pattern>
+    <pattern> aiz1s2n</pattern>
+    <pattern> ap1s2n</pattern>
+    <pattern> at1s2n</pattern>
+    <pattern> bez1s2n</pattern>
+    <pattern> pār1s2n</pattern>
+    <pattern> iz1s2n</pattern>
+    <pattern> eks1s2n</pattern>
+    <pattern> vis1s2n</pattern>
+    <pattern> jā1ž2m</pattern>
+    <pattern> ne1ž2m</pattern>
+    <pattern> ie1ž2m</pattern>
+    <pattern> no1ž2m</pattern>
+    <pattern> pa1ž2m</pattern>
+    <pattern> pie1ž2m</pattern>
+    <pattern> sa1ž2m</pattern>
+    <pattern> uz1ž2m</pattern>
+    <pattern> aiz1ž2m</pattern>
+    <pattern> ap1ž2m</pattern>
+    <pattern> at1ž2m</pattern>
+    <pattern> bez1ž2m</pattern>
+    <pattern> pār1ž2m</pattern>
+    <pattern> iz1ž2m</pattern>
+    <pattern> eks1ž2m</pattern>
+    <pattern> vis1ž2m</pattern>
+    <pattern> jā1d2ž</pattern>
+    <pattern> ne1d2ž</pattern>
+    <pattern> ie1d2ž</pattern>
+    <pattern> no1d2ž</pattern>
+    <pattern> pa1d2ž</pattern>
+    <pattern> pie1d2ž</pattern>
+    <pattern> sa1d2ž</pattern>
+    <pattern> uz1d2ž</pattern>
+    <pattern> aiz1d2ž</pattern>
+    <pattern> ap1d2ž</pattern>
+    <pattern> at1d2ž</pattern>
+    <pattern> bez1d2ž</pattern>
+    <pattern> pār1d2ž</pattern>
+    <pattern> iz1d2ž</pattern>
+    <pattern> eks1d2ž</pattern>
+    <pattern> vis1d2ž</pattern>
+    <pattern> jā1k2c</pattern>
+    <pattern> ne1k2c</pattern>
+    <pattern> ie1k2c</pattern>
+    <pattern> no1k2c</pattern>
+    <pattern> pa1k2c</pattern>
+    <pattern> pie1k2c</pattern>
+    <pattern> sa1k2c</pattern>
+    <pattern> uz1k2c</pattern>
+    <pattern> aiz1k2c</pattern>
+    <pattern> ap1k2c</pattern>
+    <pattern> at1k2c</pattern>
+    <pattern> bez1k2c</pattern>
+    <pattern> pār1k2c</pattern>
+    <pattern> iz1k2c</pattern>
+    <pattern> eks1k2c</pattern>
+    <pattern> vis1k2c</pattern>
+    <pattern> jā1k2ņ</pattern>
+    <pattern> ne1k2ņ</pattern>
+    <pattern> ie1k2ņ</pattern>
+    <pattern> no1k2ņ</pattern>
+    <pattern> pa1k2ņ</pattern>
+    <pattern> pie1k2ņ</pattern>
+    <pattern> sa1k2ņ</pattern>
+    <pattern> uz1k2ņ</pattern>
+    <pattern> aiz1k2ņ</pattern>
+    <pattern> ap1k2ņ</pattern>
+    <pattern> at1k2ņ</pattern>
+    <pattern> bez1k2ņ</pattern>
+    <pattern> pār1k2ņ</pattern>
+    <pattern> iz1k2ņ</pattern>
+    <pattern> eks1k2ņ</pattern>
+    <pattern> vis1k2ņ</pattern>
+    <pattern> jā1š2m</pattern>
+    <pattern> ne1š2m</pattern>
+    <pattern> ie1š2m</pattern>
+    <pattern> no1š2m</pattern>
+    <pattern> pa1š2m</pattern>
+    <pattern> pie1š2m</pattern>
+    <pattern> sa1š2m</pattern>
+    <pattern> uz1š2m</pattern>
+    <pattern> aiz1š2m</pattern>
+    <pattern> ap1š2m</pattern>
+    <pattern> at1š2m</pattern>
+    <pattern> bez1š2m</pattern>
+    <pattern> pār1š2m</pattern>
+    <pattern> iz1š2m</pattern>
+    <pattern> eks1š2m</pattern>
+    <pattern> vis1š2m</pattern>
+    <pattern> jā1g2v</pattern>
+    <pattern> ne1g2v</pattern>
+    <pattern> ie1g2v</pattern>
+    <pattern> no1g2v</pattern>
+    <pattern> pa1g2v</pattern>
+    <pattern> pie1g2v</pattern>
+    <pattern> sa1g2v</pattern>
+    <pattern> uz1g2v</pattern>
+    <pattern> aiz1g2v</pattern>
+    <pattern> ap1g2v</pattern>
+    <pattern> at1g2v</pattern>
+    <pattern> bez1g2v</pattern>
+    <pattern> pār1g2v</pattern>
+    <pattern> iz1g2v</pattern>
+    <pattern> eks1g2v</pattern>
+    <pattern> vis1g2v</pattern>
+    <pattern> jā1h2l</pattern>
+    <pattern> ne1h2l</pattern>
+    <pattern> ie1h2l</pattern>
+    <pattern> no1h2l</pattern>
+    <pattern> pa1h2l</pattern>
+    <pattern> pie1h2l</pattern>
+    <pattern> sa1h2l</pattern>
+    <pattern> uz1h2l</pattern>
+    <pattern> aiz1h2l</pattern>
+    <pattern> ap1h2l</pattern>
+    <pattern> at1h2l</pattern>
+    <pattern> bez1h2l</pattern>
+    <pattern> pār1h2l</pattern>
+    <pattern> iz1h2l</pattern>
+    <pattern> eks1h2l</pattern>
+    <pattern> vis1h2l</pattern>
+    <pattern> jā1k2ļ</pattern>
+    <pattern> ne1k2ļ</pattern>
+    <pattern> ie1k2ļ</pattern>
+    <pattern> no1k2ļ</pattern>
+    <pattern> pa1k2ļ</pattern>
+    <pattern> pie1k2ļ</pattern>
+    <pattern> sa1k2ļ</pattern>
+    <pattern> uz1k2ļ</pattern>
+    <pattern> aiz1k2ļ</pattern>
+    <pattern> ap1k2ļ</pattern>
+    <pattern> at1k2ļ</pattern>
+    <pattern> bez1k2ļ</pattern>
+    <pattern> pār1k2ļ</pattern>
+    <pattern> iz1k2ļ</pattern>
+    <pattern> eks1k2ļ</pattern>
+    <pattern> vis1k2ļ</pattern>
+    <pattern> jā1s2l</pattern>
+    <pattern> ne1s2l</pattern>
+    <pattern> ie1s2l</pattern>
+    <pattern> no1s2l</pattern>
+    <pattern> pa1s2l</pattern>
+    <pattern> pie1s2l</pattern>
+    <pattern> sa1s2l</pattern>
+    <pattern> uz1s2l</pattern>
+    <pattern> aiz1s2l</pattern>
+    <pattern> ap1s2l</pattern>
+    <pattern> at1s2l</pattern>
+    <pattern> bez1s2l</pattern>
+    <pattern> pār1s2l</pattern>
+    <pattern> iz1s2l</pattern>
+    <pattern> eks1s2l</pattern>
+    <pattern> vis1s2l</pattern>
+    <pattern> jā1t2v</pattern>
+    <pattern> ne1t2v</pattern>
+    <pattern> ie1t2v</pattern>
+    <pattern> no1t2v</pattern>
+    <pattern> pa1t2v</pattern>
+    <pattern> pie1t2v</pattern>
+    <pattern> sa1t2v</pattern>
+    <pattern> uz1t2v</pattern>
+    <pattern> aiz1t2v</pattern>
+    <pattern> ap1t2v</pattern>
+    <pattern> at1t2v</pattern>
+    <pattern> bez1t2v</pattern>
+    <pattern> pār1t2v</pattern>
+    <pattern> iz1t2v</pattern>
+    <pattern> eks1t2v</pattern>
+    <pattern> vis1t2v</pattern>
+    <pattern> jā1š2ņ</pattern>
+    <pattern> ne1š2ņ</pattern>
+    <pattern> ie1š2ņ</pattern>
+    <pattern> no1š2ņ</pattern>
+    <pattern> pa1š2ņ</pattern>
+    <pattern> pie1š2ņ</pattern>
+    <pattern> sa1š2ņ</pattern>
+    <pattern> uz1š2ņ</pattern>
+    <pattern> aiz1š2ņ</pattern>
+    <pattern> ap1š2ņ</pattern>
+    <pattern> at1š2ņ</pattern>
+    <pattern> bez1š2ņ</pattern>
+    <pattern> pār1š2ņ</pattern>
+    <pattern> iz1š2ņ</pattern>
+    <pattern> eks1š2ņ</pattern>
+    <pattern> vis1š2ņ</pattern>
+    <pattern> jā1š2p</pattern>
+    <pattern> ne1š2p</pattern>
+    <pattern> ie1š2p</pattern>
+    <pattern> no1š2p</pattern>
+    <pattern> pa1š2p</pattern>
+    <pattern> pie1š2p</pattern>
+    <pattern> sa1š2p</pattern>
+    <pattern> uz1š2p</pattern>
+    <pattern> aiz1š2p</pattern>
+    <pattern> ap1š2p</pattern>
+    <pattern> at1š2p</pattern>
+    <pattern> bez1š2p</pattern>
+    <pattern> pār1š2p</pattern>
+    <pattern> iz1š2p</pattern>
+    <pattern> eks1š2p</pattern>
+    <pattern> vis1š2p</pattern>
+    <pattern> jā1d2z</pattern>
+    <pattern> ne1d2z</pattern>
+    <pattern> ie1d2z</pattern>
+    <pattern> no1d2z</pattern>
+    <pattern> pa1d2z</pattern>
+    <pattern> pie1d2z</pattern>
+    <pattern> sa1d2z</pattern>
+    <pattern> uz1d2z</pattern>
+    <pattern> aiz1d2z</pattern>
+    <pattern> ap1d2z</pattern>
+    <pattern> at1d2z</pattern>
+    <pattern> bez1d2z</pattern>
+    <pattern> pār1d2z</pattern>
+    <pattern> iz1d2z</pattern>
+    <pattern> eks1d2z</pattern>
+    <pattern> vis1d2z</pattern>
+    <pattern> jā1f2l</pattern>
+    <pattern> ne1f2l</pattern>
+    <pattern> ie1f2l</pattern>
+    <pattern> no1f2l</pattern>
+    <pattern> pa1f2l</pattern>
+    <pattern> pie1f2l</pattern>
+    <pattern> sa1f2l</pattern>
+    <pattern> uz1f2l</pattern>
+    <pattern> aiz1f2l</pattern>
+    <pattern> ap1f2l</pattern>
+    <pattern> at1f2l</pattern>
+    <pattern> bez1f2l</pattern>
+    <pattern> pār1f2l</pattern>
+    <pattern> iz1f2l</pattern>
+    <pattern> eks1f2l</pattern>
+    <pattern> vis1f2l</pattern>
+    <pattern> jā1k2n</pattern>
+    <pattern> ne1k2n</pattern>
+    <pattern> ie1k2n</pattern>
+    <pattern> no1k2n</pattern>
+    <pattern> pa1k2n</pattern>
+    <pattern> pie1k2n</pattern>
+    <pattern> sa1k2n</pattern>
+    <pattern> uz1k2n</pattern>
+    <pattern> aiz1k2n</pattern>
+    <pattern> ap1k2n</pattern>
+    <pattern> at1k2n</pattern>
+    <pattern> bez1k2n</pattern>
+    <pattern> pār1k2n</pattern>
+    <pattern> iz1k2n</pattern>
+    <pattern> eks1k2n</pattern>
+    <pattern> vis1k2n</pattern>
+    <pattern> jā1p2ļ</pattern>
+    <pattern> ne1p2ļ</pattern>
+    <pattern> ie1p2ļ</pattern>
+    <pattern> no1p2ļ</pattern>
+    <pattern> pa1p2ļ</pattern>
+    <pattern> pie1p2ļ</pattern>
+    <pattern> sa1p2ļ</pattern>
+    <pattern> uz1p2ļ</pattern>
+    <pattern> aiz1p2ļ</pattern>
+    <pattern> ap1p2ļ</pattern>
+    <pattern> at1p2ļ</pattern>
+    <pattern> bez1p2ļ</pattern>
+    <pattern> pār1p2ļ</pattern>
+    <pattern> iz1p2ļ</pattern>
+    <pattern> eks1p2ļ</pattern>
+    <pattern> vis1p2ļ</pattern>
+    <pattern> jā1s2pļ</pattern>
+    <pattern> ne1s2pļ</pattern>
+    <pattern> ie1s2pļ</pattern>
+    <pattern> no1s2pļ</pattern>
+    <pattern> pa1s2pļ</pattern>
+    <pattern> pie1s2pļ</pattern>
+    <pattern> sa1s2pļ</pattern>
+    <pattern> uz1s2pļ</pattern>
+    <pattern> aiz1s2pļ</pattern>
+    <pattern> ap1s2pļ</pattern>
+    <pattern> at1s2pļ</pattern>
+    <pattern> bez1s2pļ</pattern>
+    <pattern> pār1s2pļ</pattern>
+    <pattern> iz1s2pļ</pattern>
+    <pattern> eks1s2pļ</pattern>
+    <pattern> vis1s2pļ</pattern>
+    <pattern> jā1s2kl</pattern>
+    <pattern> ne1s2kl</pattern>
+    <pattern> ie1s2kl</pattern>
+    <pattern> no1s2kl</pattern>
+    <pattern> pa1s2kl</pattern>
+    <pattern> pie1s2kl</pattern>
+    <pattern> sa1s2kl</pattern>
+    <pattern> uz1s2kl</pattern>
+    <pattern> aiz1s2kl</pattern>
+    <pattern> ap1s2kl</pattern>
+    <pattern> at1s2kl</pattern>
+    <pattern> bez1s2kl</pattern>
+    <pattern> pār1s2kl</pattern>
+    <pattern> iz1s2kl</pattern>
+    <pattern> eks1s2kl</pattern>
+    <pattern> vis1s2kl</pattern>
+    <pattern> jā1k2b</pattern>
+    <pattern> ne1k2b</pattern>
+    <pattern> ie1k2b</pattern>
+    <pattern> no1k2b</pattern>
+    <pattern> pa1k2b</pattern>
+    <pattern> pie1k2b</pattern>
+    <pattern> sa1k2b</pattern>
+    <pattern> uz1k2b</pattern>
+    <pattern> aiz1k2b</pattern>
+    <pattern> ap1k2b</pattern>
+    <pattern> at1k2b</pattern>
+    <pattern> bez1k2b</pattern>
+    <pattern> pār1k2b</pattern>
+    <pattern> iz1k2b</pattern>
+    <pattern> eks1k2b</pattern>
+    <pattern> vis1k2b</pattern>
+    <pattern> jā1s2m</pattern>
+    <pattern> ne1s2m</pattern>
+    <pattern> ie1s2m</pattern>
+    <pattern> no1s2m</pattern>
+    <pattern> pa1s2m</pattern>
+    <pattern> pie1s2m</pattern>
+    <pattern> sa1s2m</pattern>
+    <pattern> uz1s2m</pattern>
+    <pattern> aiz1s2m</pattern>
+    <pattern> ap1s2m</pattern>
+    <pattern> at1s2m</pattern>
+    <pattern> bez1s2m</pattern>
+    <pattern> pār1s2m</pattern>
+    <pattern> iz1s2m</pattern>
+    <pattern> eks1s2m</pattern>
+    <pattern> vis1s2m</pattern>
+    <pattern> jā1m2n</pattern>
+    <pattern> ne1m2n</pattern>
+    <pattern> ie1m2n</pattern>
+    <pattern> no1m2n</pattern>
+    <pattern> pa1m2n</pattern>
+    <pattern> pie1m2n</pattern>
+    <pattern> sa1m2n</pattern>
+    <pattern> uz1m2n</pattern>
+    <pattern> aiz1m2n</pattern>
+    <pattern> ap1m2n</pattern>
+    <pattern> at1m2n</pattern>
+    <pattern> bez1m2n</pattern>
+    <pattern> pār1m2n</pattern>
+    <pattern> iz1m2n</pattern>
+    <pattern> eks1m2n</pattern>
+    <pattern> vis1m2n</pattern>
+    <pattern> jā1š2n</pattern>
+    <pattern> ne1š2n</pattern>
+    <pattern> ie1š2n</pattern>
+    <pattern> no1š2n</pattern>
+    <pattern> pa1š2n</pattern>
+    <pattern> pie1š2n</pattern>
+    <pattern> sa1š2n</pattern>
+    <pattern> uz1š2n</pattern>
+    <pattern> aiz1š2n</pattern>
+    <pattern> ap1š2n</pattern>
+    <pattern> at1š2n</pattern>
+    <pattern> bez1š2n</pattern>
+    <pattern> pār1š2n</pattern>
+    <pattern> iz1š2n</pattern>
+    <pattern> eks1š2n</pattern>
+    <pattern> vis1š2n</pattern>
+    <pattern> jā1v2r</pattern>
+    <pattern> ne1v2r</pattern>
+    <pattern> ie1v2r</pattern>
+    <pattern> no1v2r</pattern>
+    <pattern> pa1v2r</pattern>
+    <pattern> pie1v2r</pattern>
+    <pattern> sa1v2r</pattern>
+    <pattern> uz1v2r</pattern>
+    <pattern> aiz1v2r</pattern>
+    <pattern> ap1v2r</pattern>
+    <pattern> at1v2r</pattern>
+    <pattern> bez1v2r</pattern>
+    <pattern> pār1v2r</pattern>
+    <pattern> iz1v2r</pattern>
+    <pattern> eks1v2r</pattern>
+    <pattern> vis1v2r</pattern>
+    <pattern> jā1b2l</pattern>
+    <pattern> ne1b2l</pattern>
+    <pattern> ie1b2l</pattern>
+    <pattern> no1b2l</pattern>
+    <pattern> pa1b2l</pattern>
+    <pattern> pie1b2l</pattern>
+    <pattern> sa1b2l</pattern>
+    <pattern> uz1b2l</pattern>
+    <pattern> aiz1b2l</pattern>
+    <pattern> ap1b2l</pattern>
+    <pattern> at1b2l</pattern>
+    <pattern> bez1b2l</pattern>
+    <pattern> pār1b2l</pattern>
+    <pattern> iz1b2l</pattern>
+    <pattern> eks1b2l</pattern>
+    <pattern> vis1b2l</pattern>
+    <pattern>2b3dams </pattern>
+    <pattern>2c3dams </pattern>
+    <pattern>2č3dams </pattern>
+    <pattern>2d3dams </pattern>
+    <pattern>2f3dams </pattern>
+    <pattern>2g3dams </pattern>
+    <pattern>2ģ3dams </pattern>
+    <pattern>2h3dams </pattern>
+    <pattern>2j3dams </pattern>
+    <pattern>2k3dams </pattern>
+    <pattern>2ķ3dams </pattern>
+    <pattern>2l3dams </pattern>
+    <pattern>2ļ3dams </pattern>
+    <pattern>2m3dams </pattern>
+    <pattern>2n3dams </pattern>
+    <pattern>2ņ3dams </pattern>
+    <pattern>2p3dams </pattern>
+    <pattern>2r3dams </pattern>
+    <pattern>2s3dams </pattern>
+    <pattern>2š3dams </pattern>
+    <pattern>2t3dams </pattern>
+    <pattern>2v3dams </pattern>
+    <pattern>2z3dams </pattern>
+    <pattern>2ž3dams </pattern>
+    <pattern>2b3da3ma </pattern>
+    <pattern>2c3da3ma </pattern>
+    <pattern>2č3da3ma </pattern>
+    <pattern>2d3da3ma </pattern>
+    <pattern>2f3da3ma </pattern>
+    <pattern>2g3da3ma </pattern>
+    <pattern>2ģ3da3ma </pattern>
+    <pattern>2h3da3ma </pattern>
+    <pattern>2j3da3ma </pattern>
+    <pattern>2k3da3ma </pattern>
+    <pattern>2ķ3da3ma </pattern>
+    <pattern>2l3da3ma </pattern>
+    <pattern>2ļ3da3ma </pattern>
+    <pattern>2m3da3ma </pattern>
+    <pattern>2n3da3ma </pattern>
+    <pattern>2ņ3da3ma </pattern>
+    <pattern>2p3da3ma </pattern>
+    <pattern>2r3da3ma </pattern>
+    <pattern>2s3da3ma </pattern>
+    <pattern>2š3da3ma </pattern>
+    <pattern>2t3da3ma </pattern>
+    <pattern>2v3da3ma </pattern>
+    <pattern>2z3da3ma </pattern>
+    <pattern>2ž3da3ma </pattern>
+    <pattern>2b3da3mies </pattern>
+    <pattern>2c3da3mies </pattern>
+    <pattern>2č3da3mies </pattern>
+    <pattern>2d3da3mies </pattern>
+    <pattern>2f3da3mies </pattern>
+    <pattern>2g3da3mies </pattern>
+    <pattern>2ģ3da3mies </pattern>
+    <pattern>2h3da3mies </pattern>
+    <pattern>2j3da3mies </pattern>
+    <pattern>2k3da3mies </pattern>
+    <pattern>2ķ3da3mies </pattern>
+    <pattern>2l3da3mies </pattern>
+    <pattern>2ļ3da3mies </pattern>
+    <pattern>2m3da3mies </pattern>
+    <pattern>2n3da3mies </pattern>
+    <pattern>2ņ3da3mies </pattern>
+    <pattern>2p3da3mies </pattern>
+    <pattern>2r3da3mies </pattern>
+    <pattern>2s3da3mies </pattern>
+    <pattern>2š3da3mies </pattern>
+    <pattern>2t3da3mies </pattern>
+    <pattern>2v3da3mies </pattern>
+    <pattern>2z3da3mies </pattern>
+    <pattern>2ž3da3mies </pattern>
+    <pattern>2b3da3mās </pattern>
+    <pattern>2c3da3mās </pattern>
+    <pattern>2č3da3mās </pattern>
+    <pattern>2d3da3mās </pattern>
+    <pattern>2f3da3mās </pattern>
+    <pattern>2g3da3mās </pattern>
+    <pattern>2ģ3da3mās </pattern>
+    <pattern>2h3da3mās </pattern>
+    <pattern>2j3da3mās </pattern>
+    <pattern>2k3da3mās </pattern>
+    <pattern>2ķ3da3mās </pattern>
+    <pattern>2l3da3mās </pattern>
+    <pattern>2ļ3da3mās </pattern>
+    <pattern>2m3da3mās </pattern>
+    <pattern>2n3da3mās </pattern>
+    <pattern>2ņ3da3mās </pattern>
+    <pattern>2p3da3mās </pattern>
+    <pattern>2r3da3mās </pattern>
+    <pattern>2s3da3mās </pattern>
+    <pattern>2š3da3mās </pattern>
+    <pattern>2t3da3mās </pattern>
+    <pattern>2v3da3mās </pattern>
+    <pattern>2z3da3mās </pattern>
+    <pattern>2ž3da3mās </pattern>
+    <pattern>2b3gans </pattern>
+    <pattern>2c3gans </pattern>
+    <pattern>2č3gans </pattern>
+    <pattern>2d3gans </pattern>
+    <pattern>2f3gans </pattern>
+    <pattern>2g3gans </pattern>
+    <pattern>2ģ3gans </pattern>
+    <pattern>2h3gans </pattern>
+    <pattern>2j3gans </pattern>
+    <pattern>2k3gans </pattern>
+    <pattern>2ķ3gans </pattern>
+    <pattern>2l3gans </pattern>
+    <pattern>2ļ3gans </pattern>
+    <pattern>2m3gans </pattern>
+    <pattern>2n3gans </pattern>
+    <pattern>2ņ3gans </pattern>
+    <pattern>2p3gans </pattern>
+    <pattern>2r3gans </pattern>
+    <pattern>2s3gans </pattern>
+    <pattern>2š3gans </pattern>
+    <pattern>2t3gans </pattern>
+    <pattern>2v3gans </pattern>
+    <pattern>2z3gans </pattern>
+    <pattern>2ž3gans </pattern>
+    <pattern>2b3ga3na </pattern>
+    <pattern>2c3ga3na </pattern>
+    <pattern>2č3ga3na </pattern>
+    <pattern>2d3ga3na </pattern>
+    <pattern>2f3ga3na </pattern>
+    <pattern>2g3ga3na </pattern>
+    <pattern>2ģ3ga3na </pattern>
+    <pattern>2h3ga3na </pattern>
+    <pattern>2j3ga3na </pattern>
+    <pattern>2k3ga3na </pattern>
+    <pattern>2ķ3ga3na </pattern>
+    <pattern>2l3ga3na </pattern>
+    <pattern>2ļ3ga3na </pattern>
+    <pattern>2m3ga3na </pattern>
+    <pattern>2n3ga3na </pattern>
+    <pattern>2ņ3ga3na </pattern>
+    <pattern>2p3ga3na </pattern>
+    <pattern>2r3ga3na </pattern>
+    <pattern>2s3ga3na </pattern>
+    <pattern>2š3ga3na </pattern>
+    <pattern>2t3ga3na </pattern>
+    <pattern>2v3ga3na </pattern>
+    <pattern>2z3ga3na </pattern>
+    <pattern>2ž3ga3na </pattern>
+    <pattern>2b3nieks </pattern>
+    <pattern>2c3nieks </pattern>
+    <pattern>2č3nieks </pattern>
+    <pattern>2d3nieks </pattern>
+    <pattern>2f3nieks </pattern>
+    <pattern>2g3nieks </pattern>
+    <pattern>2ģ3nieks </pattern>
+    <pattern>2h3nieks </pattern>
+    <pattern>2j3nieks </pattern>
+    <pattern>2k3nieks </pattern>
+    <pattern>2ķ3nieks </pattern>
+    <pattern>2l3nieks </pattern>
+    <pattern>2ļ3nieks </pattern>
+    <pattern>2m3nieks </pattern>
+    <pattern>2n3nieks </pattern>
+    <pattern>2ņ3nieks </pattern>
+    <pattern>2p3nieks </pattern>
+    <pattern>2r3nieks </pattern>
+    <pattern>2s3nieks </pattern>
+    <pattern>2š3nieks </pattern>
+    <pattern>2t3nieks </pattern>
+    <pattern>2v3nieks </pattern>
+    <pattern>2z3nieks </pattern>
+    <pattern>2ž3nieks </pattern>
+    <pattern>2b3nie3ce </pattern>
+    <pattern>2c3nie3ce </pattern>
+    <pattern>2č3nie3ce </pattern>
+    <pattern>2d3nie3ce </pattern>
+    <pattern>2f3nie3ce </pattern>
+    <pattern>2g3nie3ce </pattern>
+    <pattern>2ģ3nie3ce </pattern>
+    <pattern>2h3nie3ce </pattern>
+    <pattern>2j3nie3ce </pattern>
+    <pattern>2k3nie3ce </pattern>
+    <pattern>2ķ3nie3ce </pattern>
+    <pattern>2l3nie3ce </pattern>
+    <pattern>2ļ3nie3ce </pattern>
+    <pattern>2m3nie3ce </pattern>
+    <pattern>2n3nie3ce </pattern>
+    <pattern>2ņ3nie3ce </pattern>
+    <pattern>2p3nie3ce </pattern>
+    <pattern>2r3nie3ce </pattern>
+    <pattern>2s3nie3ce </pattern>
+    <pattern>2š3nie3ce </pattern>
+    <pattern>2t3nie3ce </pattern>
+    <pattern>2v3nie3ce </pattern>
+    <pattern>2z3nie3ce </pattern>
+    <pattern>2ž3nie3ce </pattern>
+    <pattern>2b3nī3ca </pattern>
+    <pattern>2c3nī3ca </pattern>
+    <pattern>2č3nī3ca </pattern>
+    <pattern>2d3nī3ca </pattern>
+    <pattern>2f3nī3ca </pattern>
+    <pattern>2g3nī3ca </pattern>
+    <pattern>2ģ3nī3ca </pattern>
+    <pattern>2h3nī3ca </pattern>
+    <pattern>2j3nī3ca </pattern>
+    <pattern>2k3nī3ca </pattern>
+    <pattern>2ķ3nī3ca </pattern>
+    <pattern>2l3nī3ca </pattern>
+    <pattern>2ļ3nī3ca </pattern>
+    <pattern>2m3nī3ca </pattern>
+    <pattern>2n3nī3ca </pattern>
+    <pattern>2ņ3nī3ca </pattern>
+    <pattern>2p3nī3ca </pattern>
+    <pattern>2r3nī3ca </pattern>
+    <pattern>2s3nī3ca </pattern>
+    <pattern>2š3nī3ca </pattern>
+    <pattern>2t3nī3ca </pattern>
+    <pattern>2v3nī3ca </pattern>
+    <pattern>2z3nī3ca </pattern>
+    <pattern>2ž3nī3ca </pattern>
+    <pattern>2b3ša3na </pattern>
+    <pattern>2c3ša3na </pattern>
+    <pattern>2č3ša3na </pattern>
+    <pattern>2d3ša3na </pattern>
+    <pattern>2f3ša3na </pattern>
+    <pattern>2g3ša3na </pattern>
+    <pattern>2ģ3ša3na </pattern>
+    <pattern>2h3ša3na </pattern>
+    <pattern>2j3ša3na </pattern>
+    <pattern>2k3ša3na </pattern>
+    <pattern>2ķ3ša3na </pattern>
+    <pattern>2l3ša3na </pattern>
+    <pattern>2ļ3ša3na </pattern>
+    <pattern>2m3ša3na </pattern>
+    <pattern>2n3ša3na </pattern>
+    <pattern>2ņ3ša3na </pattern>
+    <pattern>2p3ša3na </pattern>
+    <pattern>2r3ša3na </pattern>
+    <pattern>2s3ša3na </pattern>
+    <pattern>2š3ša3na </pattern>
+    <pattern>2t3ša3na </pattern>
+    <pattern>2v3ša3na </pattern>
+    <pattern>2z3ša3na </pattern>
+    <pattern>2ž3ša3na </pattern>
+    <pattern>2b3ša3nās </pattern>
+    <pattern>2c3ša3nās </pattern>
+    <pattern>2č3ša3nās </pattern>
+    <pattern>2d3ša3nās </pattern>
+    <pattern>2f3ša3nās </pattern>
+    <pattern>2g3ša3nās </pattern>
+    <pattern>2ģ3ša3nās </pattern>
+    <pattern>2h3ša3nās </pattern>
+    <pattern>2j3ša3nās </pattern>
+    <pattern>2k3ša3nās </pattern>
+    <pattern>2ķ3ša3nās </pattern>
+    <pattern>2l3ša3nās </pattern>
+    <pattern>2ļ3ša3nās </pattern>
+    <pattern>2m3ša3nās </pattern>
+    <pattern>2n3ša3nās </pattern>
+    <pattern>2ņ3ša3nās </pattern>
+    <pattern>2p3ša3nās </pattern>
+    <pattern>2r3ša3nās </pattern>
+    <pattern>2s3ša3nās </pattern>
+    <pattern>2š3ša3nās </pattern>
+    <pattern>2t3ša3nās </pattern>
+    <pattern>2v3ša3nās </pattern>
+    <pattern>2z3ša3nās </pattern>
+    <pattern>2ž3ša3nās </pattern>
+    <pattern>2b3ta3la </pattern>
+    <pattern>2c3ta3la </pattern>
+    <pattern>2č3ta3la </pattern>
+    <pattern>2d3ta3la </pattern>
+    <pattern>2f3ta3la </pattern>
+    <pattern>2g3ta3la </pattern>
+    <pattern>2ģ3ta3la </pattern>
+    <pattern>2h3ta3la </pattern>
+    <pattern>2j3ta3la </pattern>
+    <pattern>2k3ta3la </pattern>
+    <pattern>2ķ3ta3la </pattern>
+    <pattern>2l3ta3la </pattern>
+    <pattern>2ļ3ta3la </pattern>
+    <pattern>2m3ta3la </pattern>
+    <pattern>2n3ta3la </pattern>
+    <pattern>2ņ3ta3la </pattern>
+    <pattern>2p3ta3la </pattern>
+    <pattern>2r3ta3la </pattern>
+    <pattern>2s3ta3la </pattern>
+    <pattern>2š3ta3la </pattern>
+    <pattern>2t3ta3la </pattern>
+    <pattern>2v3ta3la </pattern>
+    <pattern>2z3ta3la </pattern>
+    <pattern>2ž3ta3la </pattern>
+    <pattern>2b3tu3ve </pattern>
+    <pattern>2c3tu3ve </pattern>
+    <pattern>2č3tu3ve </pattern>
+    <pattern>2d3tu3ve </pattern>
+    <pattern>2f3tu3ve </pattern>
+    <pattern>2g3tu3ve </pattern>
+    <pattern>2ģ3tu3ve </pattern>
+    <pattern>2h3tu3ve </pattern>
+    <pattern>2j3tu3ve </pattern>
+    <pattern>2k3tu3ve </pattern>
+    <pattern>2ķ3tu3ve </pattern>
+    <pattern>2l3tu3ve </pattern>
+    <pattern>2ļ3tu3ve </pattern>
+    <pattern>2m3tu3ve </pattern>
+    <pattern>2n3tu3ve </pattern>
+    <pattern>2ņ3tu3ve </pattern>
+    <pattern>2p3tu3ve </pattern>
+    <pattern>2r3tu3ve </pattern>
+    <pattern>2s3tu3ve </pattern>
+    <pattern>2š3tu3ve </pattern>
+    <pattern>2t3tu3ve </pattern>
+    <pattern>2v3tu3ve </pattern>
+    <pattern>2z3tu3ve </pattern>
+    <pattern>2ž3tu3ve </pattern>
+    <pattern> jā3a2</pattern>
+    <pattern> ne3a2</pattern>
+    <pattern> ie3a2</pattern>
+    <pattern> no3a2</pattern>
+    <pattern> pa3a2</pattern>
+    <pattern> pie3a2</pattern>
+    <pattern> sa3a2</pattern>
+    <pattern> uz3a2</pattern>
+    <pattern> aiz3a2</pattern>
+    <pattern> ap3a2</pattern>
+    <pattern> at3a2</pattern>
+    <pattern> bez3a2</pattern>
+    <pattern> pār3a2</pattern>
+    <pattern> iz3a2</pattern>
+    <pattern> eks3a2</pattern>
+    <pattern> vis3a2</pattern>
+    <pattern> jā3ā2</pattern>
+    <pattern> ne3ā2</pattern>
+    <pattern> ie3ā2</pattern>
+    <pattern> no3ā2</pattern>
+    <pattern> pa3ā2</pattern>
+    <pattern> pie3ā2</pattern>
+    <pattern> sa3ā2</pattern>
+    <pattern> uz3ā2</pattern>
+    <pattern> aiz3ā2</pattern>
+    <pattern> ap3ā2</pattern>
+    <pattern> at3ā2</pattern>
+    <pattern> bez3ā2</pattern>
+    <pattern> pār3ā2</pattern>
+    <pattern> iz3ā2</pattern>
+    <pattern> eks3ā2</pattern>
+    <pattern> vis3ā2</pattern>
+    <pattern> jā3e2</pattern>
+    <pattern> ne3e2</pattern>
+    <pattern> ie3e2</pattern>
+    <pattern> no3e2</pattern>
+    <pattern> pa3e2</pattern>
+    <pattern> pie3e2</pattern>
+    <pattern> sa3e2</pattern>
+    <pattern> uz3e2</pattern>
+    <pattern> aiz3e2</pattern>
+    <pattern> ap3e2</pattern>
+    <pattern> at3e2</pattern>
+    <pattern> bez3e2</pattern>
+    <pattern> pār3e2</pattern>
+    <pattern> iz3e2</pattern>
+    <pattern> eks3e2</pattern>
+    <pattern> vis3e2</pattern>
+    <pattern> jā3ē2</pattern>
+    <pattern> ne3ē2</pattern>
+    <pattern> ie3ē2</pattern>
+    <pattern> no3ē2</pattern>
+    <pattern> pa3ē2</pattern>
+    <pattern> pie3ē2</pattern>
+    <pattern> sa3ē2</pattern>
+    <pattern> uz3ē2</pattern>
+    <pattern> aiz3ē2</pattern>
+    <pattern> ap3ē2</pattern>
+    <pattern> at3ē2</pattern>
+    <pattern> bez3ē2</pattern>
+    <pattern> pār3ē2</pattern>
+    <pattern> iz3ē2</pattern>
+    <pattern> eks3ē2</pattern>
+    <pattern> vis3ē2</pattern>
+    <pattern> jā3i2</pattern>
+    <pattern> ne3i2</pattern>
+    <pattern> ie3i2</pattern>
+    <pattern> no3i2</pattern>
+    <pattern> pa3i2</pattern>
+    <pattern> pie3i2</pattern>
+    <pattern> sa3i2</pattern>
+    <pattern> uz3i2</pattern>
+    <pattern> aiz3i2</pattern>
+    <pattern> ap3i2</pattern>
+    <pattern> at3i2</pattern>
+    <pattern> bez3i2</pattern>
+    <pattern> pār3i2</pattern>
+    <pattern> iz3i2</pattern>
+    <pattern> eks3i2</pattern>
+    <pattern> vis3i2</pattern>
+    <pattern> jā3ī2</pattern>
+    <pattern> ne3ī2</pattern>
+    <pattern> ie3ī2</pattern>
+    <pattern> no3ī2</pattern>
+    <pattern> pa3ī2</pattern>
+    <pattern> pie3ī2</pattern>
+    <pattern> sa3ī2</pattern>
+    <pattern> uz3ī2</pattern>
+    <pattern> aiz3ī2</pattern>
+    <pattern> ap3ī2</pattern>
+    <pattern> at3ī2</pattern>
+    <pattern> bez3ī2</pattern>
+    <pattern> pār3ī2</pattern>
+    <pattern> iz3ī2</pattern>
+    <pattern> eks3ī2</pattern>
+    <pattern> vis3ī2</pattern>
+    <pattern> jā3o2</pattern>
+    <pattern> ne3o2</pattern>
+    <pattern> ie3o2</pattern>
+    <pattern> no3o2</pattern>
+    <pattern> pa3o2</pattern>
+    <pattern> pie3o2</pattern>
+    <pattern> sa3o2</pattern>
+    <pattern> uz3o2</pattern>
+    <pattern> aiz3o2</pattern>
+    <pattern> ap3o2</pattern>
+    <pattern> at3o2</pattern>
+    <pattern> bez3o2</pattern>
+    <pattern> pār3o2</pattern>
+    <pattern> iz3o2</pattern>
+    <pattern> eks3o2</pattern>
+    <pattern> vis3o2</pattern>
+    <pattern> jā3u2</pattern>
+    <pattern> ne3u2</pattern>
+    <pattern> ie3u2</pattern>
+    <pattern> no3u2</pattern>
+    <pattern> pa3u2</pattern>
+    <pattern> pie3u2</pattern>
+    <pattern> sa3u2</pattern>
+    <pattern> uz3u2</pattern>
+    <pattern> aiz3u2</pattern>
+    <pattern> ap3u2</pattern>
+    <pattern> at3u2</pattern>
+    <pattern> bez3u2</pattern>
+    <pattern> pār3u2</pattern>
+    <pattern> iz3u2</pattern>
+    <pattern> eks3u2</pattern>
+    <pattern> vis3u2</pattern>
+    <pattern> jā3ū2</pattern>
+    <pattern> ne3ū2</pattern>
+    <pattern> ie3ū2</pattern>
+    <pattern> no3ū2</pattern>
+    <pattern> pa3ū2</pattern>
+    <pattern> pie3ū2</pattern>
+    <pattern> sa3ū2</pattern>
+    <pattern> uz3ū2</pattern>
+    <pattern> aiz3ū2</pattern>
+    <pattern> ap3ū2</pattern>
+    <pattern> at3ū2</pattern>
+    <pattern> bez3ū2</pattern>
+    <pattern> pār3ū2</pattern>
+    <pattern> iz3ū2</pattern>
+    <pattern> eks3ū2</pattern>
+    <pattern> vis3ū2</pattern>
+    <pattern> jā3ie1</pattern>
+    <pattern> jā3iz1</pattern>
+    <pattern> jā3no1</pattern>
+    <pattern> ne3aiz1</pattern>
+    <pattern> ne3ap1</pattern>
+    <pattern> ne3ie1</pattern>
+    <pattern> ne3at1</pattern>
+    <pattern> ne3in1</pattern>
+    <pattern> ne3iz1</pattern>
+    <pattern> ne3sa</pattern>
+    <pattern> ne3uz1</pattern>
+    <pattern> priek2š1</pattern>
     <pattern>4d5ze1me</pattern>
-    <pattern>.tur2p1m</pattern>
+    <pattern> tur2p1m</pattern>
     <pattern>il2k1tie</pattern>
-    <pattern>.spil2g1t</pattern>
+    <pattern> spil2g1t</pattern>
     <pattern>mē1ne2š1</pattern>
     <pattern>1pa1d2smit</pattern>
     <pattern>g2š1gal</pattern>
@@ -11574,11 +11576,11 @@
     <pattern>pa2t3stā</pattern>
     <pattern>pa2s2t3k</pattern>
     <pattern>pa2s2t3m</pattern>
-    <pattern>pa2s2t2s.</pattern>
-    <pattern>pa2r2k2s.</pattern>
+    <pattern>pa2s2t2s </pattern>
+    <pattern>pa2r2k2s </pattern>
     <pattern>pa2r3ket</pattern>
-    <pattern>sa2ls.</pattern>
-    <pattern>sa2lds.</pattern>
+    <pattern>sa2ls </pattern>
+    <pattern>sa2lds </pattern>
     <pattern>sa2l2d1</pattern>
     <pattern>pir2m1r</pattern>
     <pattern>pir2m1k</pattern>
@@ -11587,14 +11589,14 @@
     <pattern>ot2r1k2</pattern>
     <pattern>ir2k3l</pattern>
     <pattern>ir2k3ļ</pattern>
-    <pattern>.adā2m3</pattern>
-    <pattern>.ai4z5</pattern>
+    <pattern> adā2m3</pattern>
+    <pattern> ai4z5</pattern>
     <pattern>ak3me4ņ3</pattern>
     <pattern>apak2š3</pattern>
     <pattern>ap1au</pattern>
     <pattern>kār2t3n</pattern>
     <pattern>aug2s2t3</pattern>
-    <pattern>.at3e2j</pattern>
+    <pattern> at3e2j</pattern>
     <pattern>bal2t3ma</pattern>
-    <pattern>.vie2n1</pattern>
+    <pattern> vie2n1</pattern>
 </HyphenationDescription>

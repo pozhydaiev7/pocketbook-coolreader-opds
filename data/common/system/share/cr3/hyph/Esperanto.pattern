@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="iso-8859-3"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Esperanto hyphenations description for FBReader (original was taken from the teTeX distribution)
   
@@ -14,35 +14,37 @@
 % More documentation can be found near the end of this file.
 
 -->
-<HyphenationDescription>
-  <pattern> ^ce2f1</pattern>
-  <pattern> ^ci4a</pattern>
-  <pattern> ^cia4m1</pattern>
-  <pattern> ^ci4e</pattern>
-  <pattern> ^cie4s</pattern>
-  <pattern> ^ci3l</pattern>
-  <pattern> ^ci4o</pattern>
-  <pattern> ^cio4m</pattern>
-  <pattern> ^ci4u</pattern>
-  <pattern> ^gent2i3l</pattern>
-  <pattern> ^gi2s1</pattern>
-  <pattern> ^ha3n</pattern>
-  <pattern> ^he3t</pattern>
-  <pattern> ^jak2e3t</pattern>
-  <pattern> ^ju3l</pattern>
-  <pattern> ^si4a</pattern>
-  <pattern> ^sin3d</pattern>
-  <pattern> ^sl4</pattern>
-  <pattern> ^sm4</pattern>
-  <pattern> ^sn4</pattern>
-  <pattern> ^so3t</pattern>
-  <pattern> ^sp4</pattern>
-  <pattern> ^spr4</pattern>
-  <pattern> ^sr4</pattern>
-  <pattern> ^st4</pattern>
-  <pattern> ^str4</pattern>
-  <pattern> ^sv4</pattern>
-  <pattern> ^sv2i3t</pattern>
+<HyphenationDescription
+    title="Esperanto" lang="eo"
+    lefthyphenmin="2" righthyphenmin="2">
+  <pattern> Äe2f1</pattern>
+  <pattern> Äi4a</pattern>
+  <pattern> Äia4m1</pattern>
+  <pattern> Äi4e</pattern>
+  <pattern> Äie4s</pattern>
+  <pattern> Äi3l</pattern>
+  <pattern> Äi4o</pattern>
+  <pattern> Äio4m</pattern>
+  <pattern> Äi4u</pattern>
+  <pattern> Äent2i3l</pattern>
+  <pattern> Äi2s1</pattern>
+  <pattern> Ä¥a3n</pattern>
+  <pattern> Ä¥e3t</pattern>
+  <pattern> Äµak2e3t</pattern>
+  <pattern> Äµu3l</pattern>
+  <pattern> Ċi4a</pattern>
+  <pattern> Ċin3d</pattern>
+  <pattern> Ċl4</pattern>
+  <pattern> Ċm4</pattern>
+  <pattern> Ċn4</pattern>
+  <pattern> Ċo3t</pattern>
+  <pattern> Ċp4</pattern>
+  <pattern> Ċpr4</pattern>
+  <pattern> Ċr4</pattern>
+  <pattern> Ċt4</pattern>
+  <pattern> Ċtr4</pattern>
+  <pattern> Ċv4</pattern>
+  <pattern> Ċv2i3t</pattern>
   <pattern> ab2a3t</pattern>
   <pattern> abs2i3d</pattern>
   <pattern> abs2in3t</pattern>
@@ -115,21 +117,21 @@
   <pattern> bo3t</pattern>
   <pattern> br4</pattern>
   <pattern> braz2i3l</pattern>
-  <pattern> br2i3^g</pattern>
+  <pattern> br2i3Ä</pattern>
   <pattern> br2i3d</pattern>
   <pattern> br2i3g</pattern>
   <pattern> br2i3gx</pattern>
   <pattern> br2i3l</pattern>
   <pattern> br2i3t</pattern>
-  <pattern> br2i3ĝ</pattern>
+  <pattern> br2i3Ä</pattern>
   <pattern> brok2an3t</pattern>
   <pattern> brok2a3t</pattern>
   <pattern> bru3l</pattern>
-  <pattern> bu^g2e3t</pattern>
+  <pattern> buÄ2e3t</pattern>
   <pattern> bugx2e3t</pattern>
   <pattern> bu3l</pattern>
   <pattern> bu3m</pattern>
-  <pattern> buĝ2e3t</pattern>
+  <pattern> buÄ2e3t</pattern>
   <pattern> ced2i3l</pattern>
   <pattern> cenob2i3t</pattern>
   <pattern> ci3d2a3r</pattern>
@@ -189,7 +191,7 @@
   <pattern> duk2a3t</pattern>
   <pattern> du2m1</pattern>
   <pattern> du2on1</pattern>
-  <pattern> e^ukl2i3d</pattern>
+  <pattern> eĊ­kl2i3d</pattern>
   <pattern> ed2e3m</pattern>
   <pattern> ed2i3l</pattern>
   <pattern> efr2i3t</pattern>
@@ -222,9 +224,9 @@
   <pattern> ekz2e3m</pattern>
   <pattern> ekz2i3l</pattern>
   <pattern> ekz2o3t</pattern>
-  <pattern> el1a^cet</pattern>
+  <pattern> el1aÄet</pattern>
   <pattern> el1acxet</pattern>
-  <pattern> el1aĉet</pattern>
+  <pattern> el1aÄet</pattern>
   <pattern> el1i2r</pattern>
   <pattern> el2i3t</pattern>
   <pattern> el1uz</pattern>
@@ -242,7 +244,7 @@
   <pattern> et2i3l</pattern>
   <pattern> euxkl2i3d</pattern>
   <pattern> ev2i3t</pattern>
-  <pattern> eŭkl2i3d</pattern>
+  <pattern> eĊ­kl2i3d</pattern>
   <pattern> fac2i3l</pattern>
   <pattern> fag2o3t</pattern>
   <pattern> fakt2o3t</pattern>
@@ -376,7 +378,7 @@
   <pattern> ju3l</pattern>
   <pattern> jxak2e3t</pattern>
   <pattern> jxu3l</pattern>
-  <pattern> ka^cal2o3t</pattern>
+  <pattern> kaÄal2o3t</pattern>
   <pattern> kab2u3l</pattern>
   <pattern> kacxal2o3t</pattern>
   <pattern> kad2e3t</pattern>
@@ -393,7 +395,7 @@
   <pattern> kar2a3t</pattern>
   <pattern> kar2o3t</pattern>
   <pattern> kazem2a3t</pattern>
-  <pattern> kaĉal2o3t</pattern>
+  <pattern> kaÄal2o3t</pattern>
   <pattern> kel2k</pattern>
   <pattern> ki3l</pattern>
   <pattern> kin2e3t</pattern>
@@ -516,14 +518,14 @@
   <pattern> mul2a3t</pattern>
   <pattern> musk2a3t</pattern>
   <pattern> mut2i3l</pattern>
-  <pattern> na^uo4n</pattern>
+  <pattern> naĊ­o4n</pattern>
   <pattern> nauxo4n</pattern>
   <pattern> nav2i3g</pattern>
-  <pattern> naŭo4n</pattern>
+  <pattern> naĊ­o4n</pattern>
   <pattern> neb2u3l</pattern>
-  <pattern> negl2i3^g</pattern>
+  <pattern> negl2i3Ä</pattern>
   <pattern> negl2i3gx</pattern>
-  <pattern> negl2i3ĝ</pattern>
+  <pattern> negl2i3Ä</pattern>
   <pattern> neof2i3t</pattern>
   <pattern> ne3t</pattern>
   <pattern> ni4a</pattern>
@@ -559,12 +561,12 @@
   <pattern> opid2u3m</pattern>
   <pattern> orb2i3t</pattern>
   <pattern> osc2i3l</pattern>
-  <pattern> pa^c2u3l</pattern>
+  <pattern> paÄ2u3l</pattern>
   <pattern> pacx2u3l</pattern>
   <pattern> pal2a3t</pattern>
   <pattern> pa3n</pattern>
   <pattern> paraz2i3t</pattern>
-  <pattern> paĉ2u3l</pattern>
+  <pattern> paÄ2u3l</pattern>
   <pattern> pe3c</pattern>
   <pattern> ped2an3t</pattern>
   <pattern> pedik2u3l2ar</pattern>
@@ -599,9 +601,9 @@
   <pattern> prel2a3t</pattern>
   <pattern> prel2e3g</pattern>
   <pattern> pr2e3m</pattern>
-  <pattern> prest2i3^g</pattern>
+  <pattern> prest2i3Ä</pattern>
   <pattern> prest2i3gx</pattern>
-  <pattern> prest2i3ĝ</pattern>
+  <pattern> prest2i3Ä</pattern>
   <pattern> prete2r1</pattern>
   <pattern> prez2i3d</pattern>
   <pattern> prim2a3t</pattern>
@@ -721,9 +723,9 @@
   <pattern> su2d1af</pattern>
   <pattern> su2d1am</pattern>
   <pattern> su2d1azi</pattern>
-  <pattern> su2d1e^ur</pattern>
+  <pattern> su2d1eĊ­r</pattern>
   <pattern> su2d1euxr</pattern>
-  <pattern> su2d1eŭr</pattern>
+  <pattern> su2d1eĊ­r</pattern>
   <pattern> su2d1rus</pattern>
   <pattern> su3m</pattern>
   <pattern> supe2r1</pattern>
@@ -804,12 +806,12 @@
   <pattern> vel2a3r</pattern>
   <pattern> ven3d</pattern>
   <pattern> vend2e3t</pattern>
-  <pattern> vert2i3^g</pattern>
+  <pattern> vert2i3Ä</pattern>
   <pattern> vert2i3gx</pattern>
-  <pattern> vert2i3ĝ</pattern>
-  <pattern> vest2i3^g</pattern>
+  <pattern> vert2i3Ä</pattern>
+  <pattern> vest2i3Ä</pattern>
   <pattern> vest2i3gx</pattern>
-  <pattern> vest2i3ĝ</pattern>
+  <pattern> vest2i3Ä</pattern>
   <pattern> ve3t</pattern>
   <pattern> vi4a</pattern>
   <pattern> vi2c1</pattern>
@@ -841,212 +843,212 @@
   <pattern> zel2o3t</pattern>
   <pattern> zen2i3t</pattern>
   <pattern> zu3m</pattern>
-  <pattern> ĉe2f1</pattern>
-  <pattern> ĉi4a</pattern>
-  <pattern> ĉia4m1</pattern>
-  <pattern> ĉi4e</pattern>
-  <pattern> ĉie4s</pattern>
-  <pattern> ĉi3l</pattern>
-  <pattern> ĉi4o</pattern>
-  <pattern> ĉio4m</pattern>
-  <pattern> ĉi4u</pattern>
-  <pattern> ĝent2i3l</pattern>
-  <pattern> ĝi2s1</pattern>
-  <pattern> ĥa3n</pattern>
-  <pattern> ĥe3t</pattern>
-  <pattern> ĵak2e3t</pattern>
-  <pattern> ĵu3l</pattern>
-  <pattern> ŝi4a</pattern>
-  <pattern> ŝin3d</pattern>
-  <pattern> ŝl4</pattern>
-  <pattern> ŝm4</pattern>
-  <pattern> ŝn4</pattern>
-  <pattern> ŝo3t</pattern>
-  <pattern> ŝp4</pattern>
-  <pattern> ŝpr4</pattern>
-  <pattern> ŝr4</pattern>
-  <pattern> ŝt4</pattern>
-  <pattern> ŝtr4</pattern>
-  <pattern> ŝv4</pattern>
-  <pattern> ŝv2i3t</pattern>
+  <pattern> Äe2f1</pattern>
+  <pattern> Äi4a</pattern>
+  <pattern> Äia4m1</pattern>
+  <pattern> Äi4e</pattern>
+  <pattern> Äie4s</pattern>
+  <pattern> Äi3l</pattern>
+  <pattern> Äi4o</pattern>
+  <pattern> Äio4m</pattern>
+  <pattern> Äi4u</pattern>
+  <pattern> Äent2i3l</pattern>
+  <pattern> Äi2s1</pattern>
+  <pattern> Ä¥a3n</pattern>
+  <pattern> Ä¥e3t</pattern>
+  <pattern> Äµak2e3t</pattern>
+  <pattern> Äµu3l</pattern>
+  <pattern> Ċi4a</pattern>
+  <pattern> Ċin3d</pattern>
+  <pattern> Ċl4</pattern>
+  <pattern> Ċm4</pattern>
+  <pattern> Ċn4</pattern>
+  <pattern> Ċo3t</pattern>
+  <pattern> Ċp4</pattern>
+  <pattern> Ċpr4</pattern>
+  <pattern> Ċr4</pattern>
+  <pattern> Ċt4</pattern>
+  <pattern> Ċtr4</pattern>
+  <pattern> Ċv4</pattern>
+  <pattern> Ċv2i3t</pattern>
   <pattern>8'8</pattern>
   <pattern>^8c</pattern>
-  <pattern>4^c1^g</pattern>
-  <pattern>4^c1^j</pattern>
-  <pattern>4^c1^s</pattern>
-  <pattern>^cambel2a3n</pattern>
-  <pattern>^camp2a3n</pattern>
-  <pattern>^carlat2a3n</pattern>
-  <pattern>4^c1b</pattern>
-  <pattern>4^c1c</pattern>
-  <pattern>4^c1d</pattern>
-  <pattern>4^c1f</pattern>
-  <pattern>4^c1g</pattern>
-  <pattern>4^c1gx</pattern>
-  <pattern>4^c1h4</pattern>
-  <pattern>^ci3el1</pattern>
-  <pattern>^cik2a3n</pattern>
-  <pattern>^cinĉ2i3l</pattern>
-  <pattern>4^c1j2</pattern>
-  <pattern>3^c2jo</pattern>
-  <pattern>4^c1jx</pattern>
-  <pattern>4^c1k</pattern>
-  <pattern>4^c1l</pattern>
-  <pattern>4^c1m</pattern>
-  <pattern>4^c1n</pattern>
-  <pattern>^cokol2a3d</pattern>
-  <pattern>4^c1p</pattern>
-  <pattern>4^c1s</pattern>
-  <pattern>4^c1sx</pattern>
-  <pattern>4^c1t</pattern>
-  <pattern>4^c1v</pattern>
-  <pattern>4^c1z</pattern>
-  <pattern>4^c1ĉ</pattern>
-  <pattern>4^c1ĝ</pattern>
-  <pattern>4^c1ĵ</pattern>
-  <pattern>4^c1ŝ</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>Äambel2a3n</pattern>
+  <pattern>Äamp2a3n</pattern>
+  <pattern>Äarlat2a3n</pattern>
+  <pattern>4Ä1b</pattern>
+  <pattern>4Ä1c</pattern>
+  <pattern>4Ä1d</pattern>
+  <pattern>4Ä1f</pattern>
+  <pattern>4Ä1g</pattern>
+  <pattern>4Ä1gx</pattern>
+  <pattern>4Ä1h4</pattern>
+  <pattern>Äi3el1</pattern>
+  <pattern>Äik2a3n</pattern>
+  <pattern>ÄinÄ2i3l</pattern>
+  <pattern>4Ä1j2</pattern>
+  <pattern>3Ä2jo</pattern>
+  <pattern>4Ä1jx</pattern>
+  <pattern>4Ä1k</pattern>
+  <pattern>4Ä1l</pattern>
+  <pattern>4Ä1m</pattern>
+  <pattern>4Ä1n</pattern>
+  <pattern>Äokol2a3d</pattern>
+  <pattern>4Ä1p</pattern>
+  <pattern>4Ä1s</pattern>
+  <pattern>4Ä1sx</pattern>
+  <pattern>4Ä1t</pattern>
+  <pattern>4Ä1v</pattern>
+  <pattern>4Ä1z</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
   <pattern>^8g</pattern>
-  <pattern>4^g1^c</pattern>
-  <pattern>4^g1^j</pattern>
-  <pattern>4^g1^s</pattern>
-  <pattern>4^g1b</pattern>
-  <pattern>4^g1c</pattern>
-  <pattern>4^g1cx</pattern>
-  <pattern>4^g1d</pattern>
-  <pattern>^gentlem2a3n</pattern>
-  <pattern>4^g1f</pattern>
-  <pattern>4^g1g</pattern>
-  <pattern>4^g1h4</pattern>
-  <pattern>4^g1j2</pattern>
-  <pattern>4^g1jx</pattern>
-  <pattern>4^g1k</pattern>
-  <pattern>4^g1l</pattern>
-  <pattern>4^g1m</pattern>
-  <pattern>4^g1n</pattern>
-  <pattern>4^g1p</pattern>
-  <pattern>4^g1s</pattern>
-  <pattern>4^g1sx</pattern>
-  <pattern>4^g1t</pattern>
-  <pattern>4^g1v</pattern>
-  <pattern>4^g1z</pattern>
-  <pattern>4^g1ĉ</pattern>
-  <pattern>4^g1ĝ</pattern>
-  <pattern>4^g1ĵ</pattern>
-  <pattern>4^g1ŝ</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>4Ä1b</pattern>
+  <pattern>4Ä1c</pattern>
+  <pattern>4Ä1cx</pattern>
+  <pattern>4Ä1d</pattern>
+  <pattern>Äentlem2a3n</pattern>
+  <pattern>4Ä1f</pattern>
+  <pattern>4Ä1g</pattern>
+  <pattern>4Ä1h4</pattern>
+  <pattern>4Ä1j2</pattern>
+  <pattern>4Ä1jx</pattern>
+  <pattern>4Ä1k</pattern>
+  <pattern>4Ä1l</pattern>
+  <pattern>4Ä1m</pattern>
+  <pattern>4Ä1n</pattern>
+  <pattern>4Ä1p</pattern>
+  <pattern>4Ä1s</pattern>
+  <pattern>4Ä1sx</pattern>
+  <pattern>4Ä1t</pattern>
+  <pattern>4Ä1v</pattern>
+  <pattern>4Ä1z</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
   <pattern>^8h</pattern>
-  <pattern>4^h1^c</pattern>
-  <pattern>4^h1^g</pattern>
-  <pattern>4^h1^j</pattern>
-  <pattern>4^h1^s</pattern>
-  <pattern>4^h1b</pattern>
-  <pattern>4^h1c</pattern>
-  <pattern>4^h1cx</pattern>
-  <pattern>4^h1d</pattern>
-  <pattern>4^h1f</pattern>
-  <pattern>4^h1g</pattern>
-  <pattern>4^h1gx</pattern>
-  <pattern>4^h1h4</pattern>
-  <pattern>4^h1j2</pattern>
-  <pattern>4^h1jx</pattern>
-  <pattern>4^h1k</pattern>
-  <pattern>^hlam2i3d</pattern>
-  <pattern>4^h1m</pattern>
-  <pattern>4^h1n</pattern>
-  <pattern>4^h1p</pattern>
-  <pattern>4^h1s</pattern>
-  <pattern>4^h1sx</pattern>
-  <pattern>4^h1t</pattern>
-  <pattern>4^h1v</pattern>
-  <pattern>4^h1z</pattern>
-  <pattern>4^h1ĉ</pattern>
-  <pattern>4^h1ĝ</pattern>
-  <pattern>4^h1ĵ</pattern>
-  <pattern>4^h1ŝ</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Äµ</pattern>
+  <pattern>4Ä¥1Ċ</pattern>
+  <pattern>4Ä¥1b</pattern>
+  <pattern>4Ä¥1c</pattern>
+  <pattern>4Ä¥1cx</pattern>
+  <pattern>4Ä¥1d</pattern>
+  <pattern>4Ä¥1f</pattern>
+  <pattern>4Ä¥1g</pattern>
+  <pattern>4Ä¥1gx</pattern>
+  <pattern>4Ä¥1h4</pattern>
+  <pattern>4Ä¥1j2</pattern>
+  <pattern>4Ä¥1jx</pattern>
+  <pattern>4Ä¥1k</pattern>
+  <pattern>Ä¥lam2i3d</pattern>
+  <pattern>4Ä¥1m</pattern>
+  <pattern>4Ä¥1n</pattern>
+  <pattern>4Ä¥1p</pattern>
+  <pattern>4Ä¥1s</pattern>
+  <pattern>4Ä¥1sx</pattern>
+  <pattern>4Ä¥1t</pattern>
+  <pattern>4Ä¥1v</pattern>
+  <pattern>4Ä¥1z</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Äµ</pattern>
+  <pattern>4Ä¥1Ċ</pattern>
   <pattern>^8j</pattern>
-  <pattern>4^j1^c</pattern>
-  <pattern>4^j1^g</pattern>
-  <pattern>4^j1^s</pattern>
-  <pattern>^jab2o3t</pattern>
-  <pattern>4^j1b</pattern>
-  <pattern>4^j1c</pattern>
-  <pattern>4^j1cx</pattern>
-  <pattern>4^j1d</pattern>
-  <pattern>^j2e3t</pattern>
-  <pattern>4^j1f</pattern>
-  <pattern>4^j1g</pattern>
-  <pattern>4^j1gx</pattern>
-  <pattern>4^j1h4</pattern>
-  <pattern>4^j1j2</pattern>
-  <pattern>4^j1k</pattern>
-  <pattern>4^j1l</pattern>
-  <pattern>4^j1m</pattern>
-  <pattern>4^j1n</pattern>
-  <pattern>4^j1p</pattern>
-  <pattern>4^j1s</pattern>
-  <pattern>4^j1sx</pattern>
-  <pattern>4^j1t</pattern>
-  <pattern>4^j1v</pattern>
-  <pattern>4^j1z</pattern>
-  <pattern>4^j1ĉ</pattern>
-  <pattern>4^j1ĝ</pattern>
-  <pattern>4^j1ĵ</pattern>
-  <pattern>4^j1ŝ</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ċ</pattern>
+  <pattern>Äµab2o3t</pattern>
+  <pattern>4Äµ1b</pattern>
+  <pattern>4Äµ1c</pattern>
+  <pattern>4Äµ1cx</pattern>
+  <pattern>4Äµ1d</pattern>
+  <pattern>Äµ2e3t</pattern>
+  <pattern>4Äµ1f</pattern>
+  <pattern>4Äµ1g</pattern>
+  <pattern>4Äµ1gx</pattern>
+  <pattern>4Äµ1h4</pattern>
+  <pattern>4Äµ1j2</pattern>
+  <pattern>4Äµ1k</pattern>
+  <pattern>4Äµ1l</pattern>
+  <pattern>4Äµ1m</pattern>
+  <pattern>4Äµ1n</pattern>
+  <pattern>4Äµ1p</pattern>
+  <pattern>4Äµ1s</pattern>
+  <pattern>4Äµ1sx</pattern>
+  <pattern>4Äµ1t</pattern>
+  <pattern>4Äµ1v</pattern>
+  <pattern>4Äµ1z</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Äµ</pattern>
+  <pattern>4Äµ1Ċ</pattern>
   <pattern>^8s</pattern>
-  <pattern>4^s1^c</pattern>
-  <pattern>4^s1^g</pattern>
-  <pattern>4^s1^j</pattern>
-  <pattern>^sam2a3n</pattern>
-  <pattern>4^s1b</pattern>
-  <pattern>4^s1c</pattern>
-  <pattern>4^s1cx</pattern>
-  <pattern>4^s1d</pattern>
-  <pattern>^sevj2o3t</pattern>
-  <pattern>4^s1f</pattern>
-  <pattern>4^s1g</pattern>
-  <pattern>4^s1gx</pattern>
-  <pattern>4^s1h4</pattern>
-  <pattern>^sibol2e3t</pattern>
-  <pattern>^sil2in3g</pattern>
-  <pattern>4^s1j2</pattern>
-  <pattern>4^s1jx</pattern>
-  <pattern>4^s1k</pattern>
-  <pattern>^s1m</pattern>
-  <pattern>^s1n</pattern>
-  <pattern>^s1p</pattern>
-  <pattern>4^s1s</pattern>
-  <pattern>^s1t</pattern>
-  <pattern>1^s2tel</pattern>
-  <pattern>^s1v</pattern>
-  <pattern>4^s1z</pattern>
-  <pattern>4^s1ĉ</pattern>
-  <pattern>4^s1ĝ</pattern>
-  <pattern>4^s1ĵ</pattern>
-  <pattern>4^s1ŝ</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Äµ</pattern>
+  <pattern>Ċam2a3n</pattern>
+  <pattern>4Ċ1b</pattern>
+  <pattern>4Ċ1c</pattern>
+  <pattern>4Ċ1cx</pattern>
+  <pattern>4Ċ1d</pattern>
+  <pattern>Ċevj2o3t</pattern>
+  <pattern>4Ċ1f</pattern>
+  <pattern>4Ċ1g</pattern>
+  <pattern>4Ċ1gx</pattern>
+  <pattern>4Ċ1h4</pattern>
+  <pattern>Ċibol2e3t</pattern>
+  <pattern>Ċil2in3g</pattern>
+  <pattern>4Ċ1j2</pattern>
+  <pattern>4Ċ1jx</pattern>
+  <pattern>4Ċ1k</pattern>
+  <pattern>Ċ1m</pattern>
+  <pattern>Ċ1n</pattern>
+  <pattern>Ċ1p</pattern>
+  <pattern>4Ċ1s</pattern>
+  <pattern>Ċ1t</pattern>
+  <pattern>1Ċ2tel</pattern>
+  <pattern>Ċ1v</pattern>
+  <pattern>4Ċ1z</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Äµ</pattern>
+  <pattern>4Ċ1Ċ</pattern>
   <pattern>^8u</pattern>
-  <pattern>4^u1</pattern>
-  <pattern>^u2s1k</pattern>
+  <pattern>4Ċ­1</pattern>
+  <pattern>Ċ­2s1k</pattern>
   <pattern>a1</pattern>
-  <pattern>1a2^ca </pattern>
-  <pattern>1a2^caj </pattern>
-  <pattern>1a2^cajn </pattern>
-  <pattern>1a2^can </pattern>
-  <pattern>1a2^ce </pattern>
-  <pattern>a2^c2e3t</pattern>
-  <pattern>1a2^co </pattern>
-  <pattern>1a2^coj </pattern>
-  <pattern>1a2^cojn </pattern>
-  <pattern>1a2^con </pattern>
-  <pattern>1a2^ja </pattern>
-  <pattern>1a2^jaj </pattern>
-  <pattern>1a2^jajn </pattern>
-  <pattern>1a2^jan </pattern>
-  <pattern>1a2^je </pattern>
-  <pattern>1a2^jo </pattern>
-  <pattern>1a2^joj </pattern>
-  <pattern>1a2^jojn </pattern>
-  <pattern>1a2^jon </pattern>
-  <pattern>a^utom2a3t</pattern>
-  <pattern>a^utorit2a3t</pattern>
+  <pattern>1a2Äa </pattern>
+  <pattern>1a2Äaj </pattern>
+  <pattern>1a2Äajn </pattern>
+  <pattern>1a2Äan </pattern>
+  <pattern>1a2Äe </pattern>
+  <pattern>a2Ä2e3t</pattern>
+  <pattern>1a2Äo </pattern>
+  <pattern>1a2Äoj </pattern>
+  <pattern>1a2Äojn </pattern>
+  <pattern>1a2Äon </pattern>
+  <pattern>1a2Äµa </pattern>
+  <pattern>1a2Äµaj </pattern>
+  <pattern>1a2Äµajn </pattern>
+  <pattern>1a2Äµan </pattern>
+  <pattern>1a2Äµe </pattern>
+  <pattern>1a2Äµo </pattern>
+  <pattern>1a2Äµoj </pattern>
+  <pattern>1a2Äµojn </pattern>
+  <pattern>1a2Äµon </pattern>
+  <pattern>aĊ­tom2a3t</pattern>
+  <pattern>aĊ­torit2a3t</pattern>
   <pattern>a3a</pattern>
   <pattern>abrik2o3t</pattern>
   <pattern>abut2i3l</pattern>
@@ -1167,10 +1169,10 @@
   <pattern>1a2ran </pattern>
   <pattern>1a2re </pattern>
   <pattern>arg2a3n</pattern>
-  <pattern>1a2ri^g</pattern>
+  <pattern>1a2riÄ</pattern>
   <pattern>1a2rig</pattern>
   <pattern>1a2rigx</pattern>
-  <pattern>1a2riĝ</pattern>
+  <pattern>1a2riÄ</pattern>
   <pattern>ark2a3n</pattern>
   <pattern>1a2ro </pattern>
   <pattern>1a2roj </pattern>
@@ -1194,31 +1196,31 @@
   <pattern>auxtom2a3t</pattern>
   <pattern>auxtorit2a3t</pattern>
   <pattern>1a2va1r</pattern>
-  <pattern>1a2ĉa </pattern>
-  <pattern>1a2ĉaj </pattern>
-  <pattern>1a2ĉajn </pattern>
-  <pattern>1a2ĉan </pattern>
-  <pattern>1a2ĉe </pattern>
-  <pattern>a2ĉ2e3t</pattern>
-  <pattern>1a2ĉo </pattern>
-  <pattern>1a2ĉoj </pattern>
-  <pattern>1a2ĉojn </pattern>
-  <pattern>1a2ĉon </pattern>
-  <pattern>1a2ĵa </pattern>
-  <pattern>1a2ĵaj </pattern>
-  <pattern>1a2ĵajn </pattern>
-  <pattern>1a2ĵan </pattern>
-  <pattern>1a2ĵe </pattern>
-  <pattern>1a2ĵo </pattern>
-  <pattern>1a2ĵoj </pattern>
-  <pattern>1a2ĵojn </pattern>
-  <pattern>1a2ĵon </pattern>
-  <pattern>aŭtom2a3t</pattern>
-  <pattern>aŭtorit2a3t</pattern>
-  <pattern>4b1^c</pattern>
-  <pattern>4b1^g</pattern>
-  <pattern>4b1^j</pattern>
-  <pattern>4b1^s</pattern>
+  <pattern>1a2Äa </pattern>
+  <pattern>1a2Äaj </pattern>
+  <pattern>1a2Äajn </pattern>
+  <pattern>1a2Äan </pattern>
+  <pattern>1a2Äe </pattern>
+  <pattern>a2Ä2e3t</pattern>
+  <pattern>1a2Äo </pattern>
+  <pattern>1a2Äoj </pattern>
+  <pattern>1a2Äojn </pattern>
+  <pattern>1a2Äon </pattern>
+  <pattern>1a2Äµa </pattern>
+  <pattern>1a2Äµaj </pattern>
+  <pattern>1a2Äµajn </pattern>
+  <pattern>1a2Äµan </pattern>
+  <pattern>1a2Äµe </pattern>
+  <pattern>1a2Äµo </pattern>
+  <pattern>1a2Äµoj </pattern>
+  <pattern>1a2Äµojn </pattern>
+  <pattern>1a2Äµon </pattern>
+  <pattern>aĊ­tom2a3t</pattern>
+  <pattern>aĊ­torit2a3t</pattern>
+  <pattern>4b1Ä</pattern>
+  <pattern>4b1Ä</pattern>
+  <pattern>4b1Äµ</pattern>
+  <pattern>4b1Ċ</pattern>
   <pattern>bajon2e3t</pattern>
   <pattern>ban2a3n</pattern>
   <pattern>bankr2o3t</pattern>
@@ -1259,14 +1261,14 @@
   <pattern>but2a3n</pattern>
   <pattern>4b1v</pattern>
   <pattern>4b1z</pattern>
-  <pattern>4b1ĉ</pattern>
-  <pattern>4b1ĝ</pattern>
-  <pattern>4b1ĵ</pattern>
-  <pattern>4b1ŝ</pattern>
-  <pattern>4c1^c</pattern>
-  <pattern>4c1^g</pattern>
-  <pattern>4c1^j</pattern>
-  <pattern>4c1^s</pattern>
+  <pattern>4b1Ä</pattern>
+  <pattern>4b1Ä</pattern>
+  <pattern>4b1Äµ</pattern>
+  <pattern>4b1Ċ</pattern>
+  <pattern>4c1Ä</pattern>
+  <pattern>4c1Ä</pattern>
+  <pattern>4c1Äµ</pattern>
+  <pattern>4c1Ċ</pattern>
   <pattern>4c1b</pattern>
   <pattern>4c1c2</pattern>
   <pattern>4c1cx</pattern>
@@ -1309,9 +1311,9 @@
   <pattern>4c1t</pattern>
   <pattern>4c1v</pattern>
   <pattern>c8x</pattern>
-  <pattern>4cx1^g</pattern>
-  <pattern>4cx1^j</pattern>
-  <pattern>4cx1^s</pattern>
+  <pattern>4cx1Ä</pattern>
+  <pattern>4cx1Äµ</pattern>
+  <pattern>4cx1Ċ</pattern>
   <pattern>cxambel2a3n</pattern>
   <pattern>cxamp2a3n</pattern>
   <pattern>cxarlat2a3n</pattern>
@@ -1324,7 +1326,7 @@
   <pattern>4cx1h4</pattern>
   <pattern>cxi3el1</pattern>
   <pattern>cxik2a3n</pattern>
-  <pattern>cxinĉ2i3l</pattern>
+  <pattern>cxinÄ2i3l</pattern>
   <pattern>4cx1j2</pattern>
   <pattern>3cx2jo</pattern>
   <pattern>4cx1jx</pattern>
@@ -1339,19 +1341,19 @@
   <pattern>4cx1t</pattern>
   <pattern>4cx1v</pattern>
   <pattern>4cx1z</pattern>
-  <pattern>4cx1ĉ</pattern>
-  <pattern>4cx1ĝ</pattern>
-  <pattern>4cx1ĵ</pattern>
-  <pattern>4cx1ŝ</pattern>
+  <pattern>4cx1Ä</pattern>
+  <pattern>4cx1Ä</pattern>
+  <pattern>4cx1Äµ</pattern>
+  <pattern>4cx1Ċ</pattern>
   <pattern>4c1z</pattern>
-  <pattern>4c1ĉ</pattern>
-  <pattern>4c1ĝ</pattern>
-  <pattern>4c1ĵ</pattern>
-  <pattern>4c1ŝ</pattern>
-  <pattern>4d1^c</pattern>
-  <pattern>4d1^g</pattern>
-  <pattern>4d1^j</pattern>
-  <pattern>4d1^s</pattern>
+  <pattern>4c1Ä</pattern>
+  <pattern>4c1Ä</pattern>
+  <pattern>4c1Äµ</pattern>
+  <pattern>4c1Ċ</pattern>
+  <pattern>4d1Ä</pattern>
+  <pattern>4d1Ä</pattern>
+  <pattern>4d1Äµ</pattern>
+  <pattern>4d1Ċ</pattern>
   <pattern>dakt2i3l2a3rb</pattern>
   <pattern>4d1b</pattern>
   <pattern>4d1c</pattern>
@@ -1426,21 +1428,21 @@
   <pattern>duo2pon </pattern>
   <pattern>4d1v</pattern>
   <pattern>4d1z</pattern>
-  <pattern>4d1ĉ</pattern>
-  <pattern>4d1ĝ</pattern>
-  <pattern>4d1ĵ</pattern>
-  <pattern>4d1ŝ</pattern>
+  <pattern>4d1Ä</pattern>
+  <pattern>4d1Ä</pattern>
+  <pattern>4d1Äµ</pattern>
+  <pattern>4d1Ċ</pattern>
   <pattern>e1</pattern>
   <pattern>e3a</pattern>
   <pattern>1e2ben</pattern>
   <pattern>1e2bla </pattern>
-  <pattern>1e2bl1a^j</pattern>
+  <pattern>1e2bl1aÄµ</pattern>
   <pattern>1e2blaj </pattern>
   <pattern>1e2blajn </pattern>
   <pattern>1e2bl1ajx</pattern>
   <pattern>1e2blan </pattern>
   <pattern>1e2blas </pattern>
-  <pattern>1e2bl1aĵ</pattern>
+  <pattern>1e2bl1aÄµ</pattern>
   <pattern>1e2ble </pattern>
   <pattern>1e2bl1ec</pattern>
   <pattern>1e2bli </pattern>
@@ -1485,10 +1487,10 @@
   <pattern>1e2jajn </pattern>
   <pattern>1e2jan </pattern>
   <pattern>1e2je </pattern>
-  <pattern>1e2j1i^g</pattern>
+  <pattern>1e2j1iÄ</pattern>
   <pattern>1e2j1ig</pattern>
   <pattern>1e2j1igx</pattern>
-  <pattern>1e2j1iĝ</pattern>
+  <pattern>1e2j1iÄ</pattern>
   <pattern>1e2jo </pattern>
   <pattern>1e2joj </pattern>
   <pattern>1e2jojn </pattern>
@@ -1567,10 +1569,10 @@
   <pattern>1e2tojn </pattern>
   <pattern>1e2ton </pattern>
   <pattern>e3u</pattern>
-  <pattern>4f1^c</pattern>
-  <pattern>4f1^g</pattern>
-  <pattern>4f1^j</pattern>
-  <pattern>4f1^s</pattern>
+  <pattern>4f1Ä</pattern>
+  <pattern>4f1Ä</pattern>
+  <pattern>4f1Äµ</pattern>
+  <pattern>4f1Ċ</pattern>
   <pattern>fakult2a3t</pattern>
   <pattern>fanf2a3r</pattern>
   <pattern>faz2a3n</pattern>
@@ -1603,14 +1605,14 @@
   <pattern>f1t</pattern>
   <pattern>4f1v</pattern>
   <pattern>4f1z</pattern>
-  <pattern>4f1ĉ</pattern>
-  <pattern>4f1ĝ</pattern>
-  <pattern>4f1ĵ</pattern>
-  <pattern>4f1ŝ</pattern>
-  <pattern>4g1^c</pattern>
-  <pattern>4g1^g</pattern>
-  <pattern>4g1^j</pattern>
-  <pattern>4g1^s</pattern>
+  <pattern>4f1Ä</pattern>
+  <pattern>4f1Ä</pattern>
+  <pattern>4f1Äµ</pattern>
+  <pattern>4f1Ċ</pattern>
+  <pattern>4g1Ä</pattern>
+  <pattern>4g1Ä</pattern>
+  <pattern>4g1Äµ</pattern>
+  <pattern>4g1Ċ</pattern>
   <pattern>gal2a4n3t2i3n</pattern>
   <pattern>galin2u3l</pattern>
   <pattern>galv2a3n</pattern>
@@ -1638,9 +1640,9 @@
   <pattern>4g1t</pattern>
   <pattern>g1v</pattern>
   <pattern>g8x</pattern>
-  <pattern>4gx1^c</pattern>
-  <pattern>4gx1^j</pattern>
-  <pattern>4gx1^s</pattern>
+  <pattern>4gx1Ä</pattern>
+  <pattern>4gx1Äµ</pattern>
+  <pattern>4gx1Ċ</pattern>
   <pattern>4gx1b</pattern>
   <pattern>4gx1c</pattern>
   <pattern>4gx1cx</pattern>
@@ -1661,19 +1663,19 @@
   <pattern>4gx1t</pattern>
   <pattern>4gx1v</pattern>
   <pattern>4gx1z</pattern>
-  <pattern>4gx1ĉ</pattern>
-  <pattern>4gx1ĝ</pattern>
-  <pattern>4gx1ĵ</pattern>
-  <pattern>4gx1ŝ</pattern>
+  <pattern>4gx1Ä</pattern>
+  <pattern>4gx1Ä</pattern>
+  <pattern>4gx1Äµ</pattern>
+  <pattern>4gx1Ċ</pattern>
   <pattern>4g1z</pattern>
-  <pattern>4g1ĉ</pattern>
-  <pattern>4g1ĝ</pattern>
-  <pattern>4g1ĵ</pattern>
-  <pattern>4g1ŝ</pattern>
-  <pattern>4h1^c</pattern>
-  <pattern>4h1^g</pattern>
-  <pattern>4h1^j</pattern>
-  <pattern>4h1^s</pattern>
+  <pattern>4g1Ä</pattern>
+  <pattern>4g1Ä</pattern>
+  <pattern>4g1Äµ</pattern>
+  <pattern>4g1Ċ</pattern>
+  <pattern>4h1Ä</pattern>
+  <pattern>4h1Ä</pattern>
+  <pattern>4h1Äµ</pattern>
+  <pattern>4h1Ċ</pattern>
   <pattern>4h1cx</pattern>
   <pattern>hermafrod2i3t</pattern>
   <pattern>4h1gx</pattern>
@@ -1691,10 +1693,10 @@
   <pattern>hum2i3d</pattern>
   <pattern>hung2a3r</pattern>
   <pattern>h8x</pattern>
-  <pattern>4hx1^c</pattern>
-  <pattern>4hx1^g</pattern>
-  <pattern>4hx1^j</pattern>
-  <pattern>4hx1^s</pattern>
+  <pattern>4hx1Ä</pattern>
+  <pattern>4hx1Ä</pattern>
+  <pattern>4hx1Äµ</pattern>
+  <pattern>4hx1Ċ</pattern>
   <pattern>4hx1b</pattern>
   <pattern>4hx1c</pattern>
   <pattern>4hx1cx</pattern>
@@ -1715,35 +1717,35 @@
   <pattern>4hx1t</pattern>
   <pattern>4hx1v</pattern>
   <pattern>4hx1z</pattern>
-  <pattern>4hx1ĉ</pattern>
-  <pattern>4hx1ĝ</pattern>
-  <pattern>4hx1ĵ</pattern>
-  <pattern>4hx1ŝ</pattern>
-  <pattern>4h1ĉ</pattern>
-  <pattern>4h1ĝ</pattern>
-  <pattern>4h1ĵ</pattern>
-  <pattern>4h1ŝ</pattern>
+  <pattern>4hx1Ä</pattern>
+  <pattern>4hx1Ä</pattern>
+  <pattern>4hx1Äµ</pattern>
+  <pattern>4hx1Ċ</pattern>
+  <pattern>4h1Ä</pattern>
+  <pattern>4h1Ä</pattern>
+  <pattern>4h1Äµ</pattern>
+  <pattern>4h1Ċ</pattern>
   <pattern>i1</pattern>
-  <pattern>1i2^ga </pattern>
-  <pattern>1i2^g1a2d</pattern>
-  <pattern>1i2^gaj </pattern>
-  <pattern>1i2^gajn </pattern>
-  <pattern>1i2^gan </pattern>
-  <pattern>1i2^gant</pattern>
-  <pattern>1i2^gas </pattern>
-  <pattern>1i2^ge </pattern>
-  <pattern>1i2^g1e2m</pattern>
-  <pattern>1i2^gi </pattern>
-  <pattern>1i2^gint</pattern>
-  <pattern>1i2^gis </pattern>
-  <pattern>1i2^go </pattern>
-  <pattern>1i2^goj </pattern>
-  <pattern>1i2^gojn </pattern>
-  <pattern>1i2^gon </pattern>
-  <pattern>1i2^gont</pattern>
-  <pattern>1i2^gos </pattern>
-  <pattern>1i2^gu </pattern>
-  <pattern>1i2^gus </pattern>
+  <pattern>1i2Äa </pattern>
+  <pattern>1i2Ä1a2d</pattern>
+  <pattern>1i2Äaj </pattern>
+  <pattern>1i2Äajn </pattern>
+  <pattern>1i2Äan </pattern>
+  <pattern>1i2Äant</pattern>
+  <pattern>1i2Äas </pattern>
+  <pattern>1i2Äe </pattern>
+  <pattern>1i2Ä1e2m</pattern>
+  <pattern>1i2Äi </pattern>
+  <pattern>1i2Äint</pattern>
+  <pattern>1i2Äis </pattern>
+  <pattern>1i2Äo </pattern>
+  <pattern>1i2Äoj </pattern>
+  <pattern>1i2Äojn </pattern>
+  <pattern>1i2Äon </pattern>
+  <pattern>1i2Äont</pattern>
+  <pattern>1i2Äos </pattern>
+  <pattern>1i2Äu </pattern>
+  <pattern>1i2Äus </pattern>
   <pattern>i3a</pattern>
   <pattern>1i2da </pattern>
   <pattern>1i2daj </pattern>
@@ -1822,14 +1824,14 @@
   <pattern>1in2de </pattern>
   <pattern>1in2d3ec</pattern>
   <pattern>1in2di </pattern>
-  <pattern>1in2d3i^g</pattern>
-  <pattern>in3d2i^gen</pattern>
+  <pattern>1in2d3iÄ</pattern>
+  <pattern>in3d2iÄen</pattern>
   <pattern>1in2d3ig</pattern>
   <pattern>1in2d3igx</pattern>
   <pattern>in3d2igxen</pattern>
   <pattern>1in2dis </pattern>
-  <pattern>1in2d3iĝ</pattern>
-  <pattern>in3d2iĝen</pattern>
+  <pattern>1in2d3iÄ</pattern>
+  <pattern>in3d2iÄen</pattern>
   <pattern>1in2do </pattern>
   <pattern>1in2don </pattern>
   <pattern>1in2dos </pattern>
@@ -1912,30 +1914,30 @@
   <pattern>1i2ton </pattern>
   <pattern>i3u</pattern>
   <pattern>izob2a3r</pattern>
-  <pattern>1i2ĝa </pattern>
-  <pattern>1i2ĝ1a2d</pattern>
-  <pattern>1i2ĝaj </pattern>
-  <pattern>1i2ĝajn </pattern>
-  <pattern>1i2ĝan </pattern>
-  <pattern>1i2ĝant</pattern>
-  <pattern>1i2ĝas </pattern>
-  <pattern>1i2ĝe </pattern>
-  <pattern>1i2ĝ1e2m</pattern>
-  <pattern>1i2ĝi </pattern>
-  <pattern>1i2ĝint</pattern>
-  <pattern>1i2ĝis </pattern>
-  <pattern>1i2ĝo </pattern>
-  <pattern>1i2ĝoj </pattern>
-  <pattern>1i2ĝojn </pattern>
-  <pattern>1i2ĝon </pattern>
-  <pattern>1i2ĝont</pattern>
-  <pattern>1i2ĝos </pattern>
-  <pattern>1i2ĝu </pattern>
-  <pattern>1i2ĝus </pattern>
-  <pattern>4j1^c</pattern>
-  <pattern>4j1^g</pattern>
-  <pattern>4j1^j</pattern>
-  <pattern>4j1^s</pattern>
+  <pattern>1i2Äa </pattern>
+  <pattern>1i2Ä1a2d</pattern>
+  <pattern>1i2Äaj </pattern>
+  <pattern>1i2Äajn </pattern>
+  <pattern>1i2Äan </pattern>
+  <pattern>1i2Äant</pattern>
+  <pattern>1i2Äas </pattern>
+  <pattern>1i2Äe </pattern>
+  <pattern>1i2Ä1e2m</pattern>
+  <pattern>1i2Äi </pattern>
+  <pattern>1i2Äint</pattern>
+  <pattern>1i2Äis </pattern>
+  <pattern>1i2Äo </pattern>
+  <pattern>1i2Äoj </pattern>
+  <pattern>1i2Äojn </pattern>
+  <pattern>1i2Äon </pattern>
+  <pattern>1i2Äont</pattern>
+  <pattern>1i2Äos </pattern>
+  <pattern>1i2Äu </pattern>
+  <pattern>1i2Äus </pattern>
+  <pattern>4j1Ä</pattern>
+  <pattern>4j1Ä</pattern>
+  <pattern>4j1Äµ</pattern>
+  <pattern>4j1Ċ</pattern>
   <pattern>jap2a3n</pattern>
   <pattern>4j1b</pattern>
   <pattern>4j1c</pattern>
@@ -1960,9 +1962,9 @@
   <pattern>jug2u3l2a3r</pattern>
   <pattern>4j1v</pattern>
   <pattern>j8x</pattern>
-  <pattern>4jx1^c</pattern>
-  <pattern>4jx1^g</pattern>
-  <pattern>4jx1^s</pattern>
+  <pattern>4jx1Ä</pattern>
+  <pattern>4jx1Ä</pattern>
+  <pattern>4jx1Ċ</pattern>
   <pattern>jxab2o3t</pattern>
   <pattern>4jx1b</pattern>
   <pattern>4jx1c</pattern>
@@ -1984,19 +1986,19 @@
   <pattern>4jx1t</pattern>
   <pattern>4jx1v</pattern>
   <pattern>4jx1z</pattern>
-  <pattern>4jx1ĉ</pattern>
-  <pattern>4jx1ĝ</pattern>
-  <pattern>4jx1ĵ</pattern>
-  <pattern>4jx1ŝ</pattern>
+  <pattern>4jx1Ä</pattern>
+  <pattern>4jx1Ä</pattern>
+  <pattern>4jx1Äµ</pattern>
+  <pattern>4jx1Ċ</pattern>
   <pattern>4j1z</pattern>
-  <pattern>4j1ĉ</pattern>
-  <pattern>4j1ĝ</pattern>
-  <pattern>4j1ĵ</pattern>
-  <pattern>4j1ŝ</pattern>
-  <pattern>4k1^c</pattern>
-  <pattern>4k1^g</pattern>
-  <pattern>4k1^j</pattern>
-  <pattern>4k1^s</pattern>
+  <pattern>4j1Ä</pattern>
+  <pattern>4j1Ä</pattern>
+  <pattern>4j1Äµ</pattern>
+  <pattern>4j1Ċ</pattern>
+  <pattern>4k1Ä</pattern>
+  <pattern>4k1Ä</pattern>
+  <pattern>4k1Äµ</pattern>
+  <pattern>4k1Ċ</pattern>
   <pattern>kabin2e3t</pattern>
   <pattern>kalend2a3r</pattern>
   <pattern>kalend2u3l</pattern>
@@ -2052,9 +2054,9 @@
   <pattern>kotl2e3t</pattern>
   <pattern>4k1p</pattern>
   <pattern>kreoz2o3t</pattern>
-  <pattern>kres^c2en3d</pattern>
+  <pattern>kresÄ2en3d</pattern>
   <pattern>krescx2en3d</pattern>
-  <pattern>kresĉ2en3d</pattern>
+  <pattern>kresÄ2en3d</pattern>
   <pattern>krizal2i3d</pattern>
   <pattern>krizant2e3m</pattern>
   <pattern>krokod2i3l</pattern>
@@ -2073,23 +2075,23 @@
   <pattern>kvin3o2p</pattern>
   <pattern>kvodlib2e3t</pattern>
   <pattern>4k1z</pattern>
-  <pattern>4k1ĉ</pattern>
-  <pattern>4k1ĝ</pattern>
-  <pattern>4k1ĵ</pattern>
-  <pattern>4k1ŝ</pattern>
-  <pattern>4l1^c</pattern>
-  <pattern>4l1^g</pattern>
-  <pattern>4l1^j</pattern>
-  <pattern>4l5^s2</pattern>
+  <pattern>4k1Ä</pattern>
+  <pattern>4k1Ä</pattern>
+  <pattern>4k1Äµ</pattern>
+  <pattern>4k1Ċ</pattern>
+  <pattern>4l1Ä</pattern>
+  <pattern>4l1Ä</pattern>
+  <pattern>4l1Äµ</pattern>
+  <pattern>4l5Ċ2</pattern>
   <pattern>labir2in3t</pattern>
   <pattern>lap2i3d2a3r</pattern>
   <pattern>4l1b</pattern>
   <pattern>4l1c</pattern>
   <pattern>4l1cx</pattern>
   <pattern>4l1d</pattern>
-  <pattern>le^uten2an3t</pattern>
+  <pattern>leĊ­ten2an3t</pattern>
   <pattern>leuxten2an3t</pattern>
-  <pattern>leŭten2an3t</pattern>
+  <pattern>leĊ­ten2an3t</pattern>
   <pattern>4l1f</pattern>
   <pattern>4l1g</pattern>
   <pattern>4l1gx</pattern>
@@ -2114,14 +2116,14 @@
   <pattern>2lt </pattern>
   <pattern>4l1v</pattern>
   <pattern>4l1z</pattern>
-  <pattern>4l1ĉ</pattern>
-  <pattern>4l1ĝ</pattern>
-  <pattern>4l1ĵ</pattern>
-  <pattern>4l5ŝ2</pattern>
-  <pattern>4m1^c</pattern>
-  <pattern>4m1^g</pattern>
-  <pattern>4m1^j</pattern>
-  <pattern>4m1^s</pattern>
+  <pattern>4l1Ä</pattern>
+  <pattern>4l1Ä</pattern>
+  <pattern>4l1Äµ</pattern>
+  <pattern>4l5Ċ2</pattern>
+  <pattern>4m1Ä</pattern>
+  <pattern>4m1Ä</pattern>
+  <pattern>4m1Äµ</pattern>
+  <pattern>4m1Ċ</pattern>
   <pattern>magistr2a3t</pattern>
   <pattern>magn2e3t</pattern>
   <pattern>majorit2a3t</pattern>
@@ -2153,10 +2155,10 @@
   <pattern>4m1g</pattern>
   <pattern>4m1gx</pattern>
   <pattern>4m1h4</pattern>
-  <pattern>mi5a^u</pattern>
+  <pattern>mi5aĊ­</pattern>
   <pattern>mi5asm</pattern>
   <pattern>mi5aux</pattern>
-  <pattern>mi5aŭ</pattern>
+  <pattern>mi5aĊ­</pattern>
   <pattern>mil2i3t</pattern>
   <pattern>mil3o2na </pattern>
   <pattern>mil3o2naj </pattern>
@@ -2202,22 +2204,22 @@
   <pattern>mul4t3obl</pattern>
   <pattern>4m1v</pattern>
   <pattern>4m1z</pattern>
-  <pattern>4m1ĉ</pattern>
-  <pattern>4m1ĝ</pattern>
-  <pattern>4m1ĵ</pattern>
-  <pattern>4m1ŝ</pattern>
-  <pattern>4n1^c</pattern>
-  <pattern>4n1^g</pattern>
-  <pattern>4n1^j</pattern>
-  <pattern>4n1^s</pattern>
-  <pattern>na^uo4p</pattern>
-  <pattern>na^ut2i3l</pattern>
+  <pattern>4m1Ä</pattern>
+  <pattern>4m1Ä</pattern>
+  <pattern>4m1Äµ</pattern>
+  <pattern>4m1Ċ</pattern>
+  <pattern>4n1Ä</pattern>
+  <pattern>4n1Ä</pattern>
+  <pattern>4n1Äµ</pattern>
+  <pattern>4n1Ċ</pattern>
+  <pattern>naĊ­o4p</pattern>
+  <pattern>naĊ­t2i3l</pattern>
   <pattern>najb4a1r</pattern>
   <pattern>nark2o3t</pattern>
   <pattern>nauxo4p</pattern>
   <pattern>nauxt2i3l</pattern>
-  <pattern>naŭo4p</pattern>
-  <pattern>naŭt2i3l</pattern>
+  <pattern>naĊ­o4p</pattern>
+  <pattern>naĊ­t2i3l</pattern>
   <pattern>4n1b</pattern>
   <pattern>4n1c</pattern>
   <pattern>4n1cx</pattern>
@@ -2248,9 +2250,9 @@
   <pattern>nor2d1af</pattern>
   <pattern>nor2d1am</pattern>
   <pattern>nor2d1az</pattern>
-  <pattern>nor2d1e^u</pattern>
+  <pattern>nor2d1eĊ­</pattern>
   <pattern>nor2d1eux</pattern>
-  <pattern>nor2d1eŭ</pattern>
+  <pattern>nor2d1eĊ­</pattern>
   <pattern>nor2d1germ</pattern>
   <pattern>nor2d1rus</pattern>
   <pattern>4n1p</pattern>
@@ -2265,10 +2267,10 @@
   <pattern>2nt </pattern>
   <pattern>4n1v2</pattern>
   <pattern>4n1z</pattern>
-  <pattern>4n1ĉ</pattern>
-  <pattern>4n1ĝ</pattern>
-  <pattern>4n1ĵ</pattern>
-  <pattern>4n1ŝ</pattern>
+  <pattern>4n1Ä</pattern>
+  <pattern>4n1Ä</pattern>
+  <pattern>4n1Äµ</pattern>
+  <pattern>4n1Ċ</pattern>
   <pattern>o1</pattern>
   <pattern>o3a</pattern>
   <pattern>1o2be</pattern>
@@ -2320,10 +2322,10 @@
   <pattern>1o2tojn </pattern>
   <pattern>1o2ton </pattern>
   <pattern>o3u</pattern>
-  <pattern>4p1^c</pattern>
-  <pattern>4p1^g</pattern>
-  <pattern>4p1^j</pattern>
-  <pattern>p1^s</pattern>
+  <pattern>4p1Ä</pattern>
+  <pattern>4p1Ä</pattern>
+  <pattern>4p1Äµ</pattern>
+  <pattern>p1Ċ</pattern>
   <pattern>palp2i3t</pattern>
   <pattern>pamfl2e3t</pattern>
   <pattern>parf2u3m</pattern>
@@ -2352,9 +2354,9 @@
   <pattern>4p1jx</pattern>
   <pattern>p1k</pattern>
   <pattern>plebisc2i3t</pattern>
-  <pattern>pl2i3l2a3r^g</pattern>
+  <pattern>pl2i3l2a3rÄ</pattern>
   <pattern>pl2i3l2a3rgx</pattern>
-  <pattern>pl2i3l2a3rĝ</pattern>
+  <pattern>pl2i3l2a3rÄ</pattern>
   <pattern>p1m</pattern>
   <pattern>p1n</pattern>
   <pattern>poligl2o3t</pattern>
@@ -2379,14 +2381,14 @@
   <pattern>pterodakt2i3l</pattern>
   <pattern>4p1v</pattern>
   <pattern>4p1z</pattern>
-  <pattern>4p1ĉ</pattern>
-  <pattern>4p1ĝ</pattern>
-  <pattern>4p1ĵ</pattern>
-  <pattern>p1ŝ</pattern>
-  <pattern>4r1^c</pattern>
-  <pattern>4r1^g</pattern>
-  <pattern>4r1^j</pattern>
-  <pattern>4r1^s</pattern>
+  <pattern>4p1Ä</pattern>
+  <pattern>4p1Ä</pattern>
+  <pattern>4p1Äµ</pattern>
+  <pattern>p1Ċ</pattern>
+  <pattern>4r1Ä</pattern>
+  <pattern>4r1Ä</pattern>
+  <pattern>4r1Äµ</pattern>
+  <pattern>4r1Ċ</pattern>
   <pattern>rad2a3r</pattern>
   <pattern>rap2i3d</pattern>
   <pattern>4r1b</pattern>
@@ -2420,14 +2422,14 @@
   <pattern>rum2a3n</pattern>
   <pattern>4r1v</pattern>
   <pattern>4r1z</pattern>
-  <pattern>4r1ĉ</pattern>
-  <pattern>4r1ĝ</pattern>
-  <pattern>4r1ĵ</pattern>
-  <pattern>4r1ŝ</pattern>
-  <pattern>4s1^c</pattern>
-  <pattern>4s1^g</pattern>
-  <pattern>4s1^j</pattern>
-  <pattern>4s1^s</pattern>
+  <pattern>4r1Ä</pattern>
+  <pattern>4r1Ä</pattern>
+  <pattern>4r1Äµ</pattern>
+  <pattern>4r1Ċ</pattern>
+  <pattern>4s1Ä</pattern>
+  <pattern>4s1Ä</pattern>
+  <pattern>4s1Äµ</pattern>
+  <pattern>4s1Ċ</pattern>
   <pattern>sacerd2o3t</pattern>
   <pattern>safr2a3n2i3n</pattern>
   <pattern>salp2in3g</pattern>
@@ -2520,9 +2522,9 @@
   <pattern>s1v</pattern>
   <pattern>svah2i3l</pattern>
   <pattern>s8x</pattern>
-  <pattern>4sx1^c</pattern>
-  <pattern>4sx1^g</pattern>
-  <pattern>4sx1^j</pattern>
+  <pattern>4sx1Ä</pattern>
+  <pattern>4sx1Ä</pattern>
+  <pattern>4sx1Äµ</pattern>
   <pattern>sxam2a3n</pattern>
   <pattern>4sx1b</pattern>
   <pattern>4sx1c</pattern>
@@ -2546,19 +2548,19 @@
   <pattern>1sx2tel</pattern>
   <pattern>sx1v</pattern>
   <pattern>4sx1z</pattern>
-  <pattern>4sx1ĉ</pattern>
-  <pattern>4sx1ĝ</pattern>
-  <pattern>4sx1ĵ</pattern>
-  <pattern>4sx1ŝ</pattern>
+  <pattern>4sx1Ä</pattern>
+  <pattern>4sx1Ä</pattern>
+  <pattern>4sx1Äµ</pattern>
+  <pattern>4sx1Ċ</pattern>
   <pattern>4s1z</pattern>
-  <pattern>4s1ĉ</pattern>
-  <pattern>4s1ĝ</pattern>
-  <pattern>4s1ĵ</pattern>
-  <pattern>4s1ŝ</pattern>
-  <pattern>4t1^c</pattern>
-  <pattern>4t1^g</pattern>
-  <pattern>4t1^j</pattern>
-  <pattern>4t1^s</pattern>
+  <pattern>4s1Ä</pattern>
+  <pattern>4s1Ä</pattern>
+  <pattern>4s1Äµ</pattern>
+  <pattern>4s1Ċ</pattern>
+  <pattern>4t1Ä</pattern>
+  <pattern>4t1Ä</pattern>
+  <pattern>4t1Äµ</pattern>
+  <pattern>4t1Ċ</pattern>
   <pattern>tal2an3t</pattern>
   <pattern>tal2a3r</pattern>
   <pattern>tamar4in3d</pattern>
@@ -2598,10 +2600,10 @@
   <pattern>turb2u3l</pattern>
   <pattern>4t1v</pattern>
   <pattern>4t1z</pattern>
-  <pattern>4t1ĉ</pattern>
-  <pattern>4t1ĝ</pattern>
-  <pattern>4t1ĵ</pattern>
-  <pattern>4t1ŝ</pattern>
+  <pattern>4t1Ä</pattern>
+  <pattern>4t1Ä</pattern>
+  <pattern>4t1Äµ</pattern>
+  <pattern>4t1Ċ</pattern>
   <pattern>u1</pattern>
   <pattern>u3a</pattern>
   <pattern>u3e</pattern>
@@ -2611,10 +2613,10 @@
   <pattern>1u2jajn </pattern>
   <pattern>1u2jan </pattern>
   <pattern>1u2je </pattern>
-  <pattern>1u2j1i^g</pattern>
+  <pattern>1u2j1iÄ</pattern>
   <pattern>1u2j1ig</pattern>
   <pattern>1u2j1igx</pattern>
-  <pattern>1u2j1iĝ</pattern>
+  <pattern>1u2j1iÄ</pattern>
   <pattern>1u2jo </pattern>
   <pattern>1u2joj </pattern>
   <pattern>1u2jojn </pattern>
@@ -2665,10 +2667,10 @@
   <pattern>u8x</pattern>
   <pattern>4ux1</pattern>
   <pattern>ux2s1k</pattern>
-  <pattern>4v1^c</pattern>
-  <pattern>4v1^g</pattern>
-  <pattern>4v1^j</pattern>
-  <pattern>4v1^s</pattern>
+  <pattern>4v1Ä</pattern>
+  <pattern>4v1Ä</pattern>
+  <pattern>4v1Äµ</pattern>
+  <pattern>4v1Ċ</pattern>
   <pattern>vatik2a3n</pattern>
   <pattern>4v1b</pattern>
   <pattern>4v1c</pattern>
@@ -2703,14 +2705,14 @@
   <pattern>vulk2a3n</pattern>
   <pattern>4v1v</pattern>
   <pattern>4v1z</pattern>
-  <pattern>4v1ĉ</pattern>
-  <pattern>4v1ĝ</pattern>
-  <pattern>4v1ĵ</pattern>
-  <pattern>4v1ŝ</pattern>
-  <pattern>4z1^c</pattern>
-  <pattern>4z1^g</pattern>
-  <pattern>4z1^j</pattern>
-  <pattern>4z1^s</pattern>
+  <pattern>4v1Ä</pattern>
+  <pattern>4v1Ä</pattern>
+  <pattern>4v1Äµ</pattern>
+  <pattern>4v1Ċ</pattern>
+  <pattern>4z1Ä</pattern>
+  <pattern>4z1Ä</pattern>
+  <pattern>4z1Äµ</pattern>
+  <pattern>4z1Ċ</pattern>
   <pattern>4z1b</pattern>
   <pattern>4z1c</pattern>
   <pattern>4z1cx</pattern>
@@ -2732,157 +2734,157 @@
   <pattern>4z1sx</pattern>
   <pattern>4z1t</pattern>
   <pattern>4z1v</pattern>
-  <pattern>4z1ĉ</pattern>
-  <pattern>4z1ĝ</pattern>
-  <pattern>4z1ĵ</pattern>
-  <pattern>4z1ŝ</pattern>
-  <pattern>4ĉ1^g</pattern>
-  <pattern>4ĉ1^j</pattern>
-  <pattern>4ĉ1^s</pattern>
-  <pattern>ĉambel2a3n</pattern>
-  <pattern>ĉamp2a3n</pattern>
-  <pattern>ĉarlat2a3n</pattern>
-  <pattern>4ĉ1b</pattern>
-  <pattern>4ĉ1c</pattern>
-  <pattern>4ĉ1d</pattern>
-  <pattern>4ĉ1f</pattern>
-  <pattern>4ĉ1g</pattern>
-  <pattern>4ĉ1gx</pattern>
-  <pattern>4ĉ1h4</pattern>
-  <pattern>ĉi3el1</pattern>
-  <pattern>ĉik2a3n</pattern>
-  <pattern>ĉinĉ2i3l</pattern>
-  <pattern>4ĉ1j2</pattern>
-  <pattern>3ĉ2jo</pattern>
-  <pattern>4ĉ1jx</pattern>
-  <pattern>4ĉ1k</pattern>
-  <pattern>4ĉ1l</pattern>
-  <pattern>4ĉ1m</pattern>
-  <pattern>4ĉ1n</pattern>
-  <pattern>ĉokol2a3d</pattern>
-  <pattern>4ĉ1p</pattern>
-  <pattern>4ĉ1s</pattern>
-  <pattern>4ĉ1sx</pattern>
-  <pattern>4ĉ1t</pattern>
-  <pattern>4ĉ1v</pattern>
-  <pattern>4ĉ1z</pattern>
-  <pattern>4ĉ1ĉ</pattern>
-  <pattern>4ĉ1ĝ</pattern>
-  <pattern>4ĉ1ĵ</pattern>
-  <pattern>4ĉ1ŝ</pattern>
-  <pattern>4ĝ1^c</pattern>
-  <pattern>4ĝ1^j</pattern>
-  <pattern>4ĝ1^s</pattern>
-  <pattern>4ĝ1b</pattern>
-  <pattern>4ĝ1c</pattern>
-  <pattern>4ĝ1cx</pattern>
-  <pattern>4ĝ1d</pattern>
-  <pattern>ĝentlem2a3n</pattern>
-  <pattern>4ĝ1f</pattern>
-  <pattern>4ĝ1g</pattern>
-  <pattern>4ĝ1h4</pattern>
-  <pattern>4ĝ1j2</pattern>
-  <pattern>4ĝ1jx</pattern>
-  <pattern>4ĝ1k</pattern>
-  <pattern>4ĝ1l</pattern>
-  <pattern>4ĝ1m</pattern>
-  <pattern>4ĝ1n</pattern>
-  <pattern>4ĝ1p</pattern>
-  <pattern>4ĝ1s</pattern>
-  <pattern>4ĝ1sx</pattern>
-  <pattern>4ĝ1t</pattern>
-  <pattern>4ĝ1v</pattern>
-  <pattern>4ĝ1z</pattern>
-  <pattern>4ĝ1ĉ</pattern>
-  <pattern>4ĝ1ĝ</pattern>
-  <pattern>4ĝ1ĵ</pattern>
-  <pattern>4ĝ1ŝ</pattern>
-  <pattern>4ĥ1^c</pattern>
-  <pattern>4ĥ1^g</pattern>
-  <pattern>4ĥ1^j</pattern>
-  <pattern>4ĥ1^s</pattern>
-  <pattern>4ĥ1b</pattern>
-  <pattern>4ĥ1c</pattern>
-  <pattern>4ĥ1cx</pattern>
-  <pattern>4ĥ1d</pattern>
-  <pattern>4ĥ1f</pattern>
-  <pattern>4ĥ1g</pattern>
-  <pattern>4ĥ1gx</pattern>
-  <pattern>4ĥ1h4</pattern>
-  <pattern>4ĥ1j2</pattern>
-  <pattern>4ĥ1jx</pattern>
-  <pattern>4ĥ1k</pattern>
-  <pattern>ĥlam2i3d</pattern>
-  <pattern>4ĥ1m</pattern>
-  <pattern>4ĥ1n</pattern>
-  <pattern>4ĥ1p</pattern>
-  <pattern>4ĥ1s</pattern>
-  <pattern>4ĥ1sx</pattern>
-  <pattern>4ĥ1t</pattern>
-  <pattern>4ĥ1v</pattern>
-  <pattern>4ĥ1z</pattern>
-  <pattern>4ĥ1ĉ</pattern>
-  <pattern>4ĥ1ĝ</pattern>
-  <pattern>4ĥ1ĵ</pattern>
-  <pattern>4ĥ1ŝ</pattern>
-  <pattern>4ĵ1^c</pattern>
-  <pattern>4ĵ1^g</pattern>
-  <pattern>4ĵ1^s</pattern>
-  <pattern>ĵab2o3t</pattern>
-  <pattern>4ĵ1b</pattern>
-  <pattern>4ĵ1c</pattern>
-  <pattern>4ĵ1cx</pattern>
-  <pattern>4ĵ1d</pattern>
-  <pattern>ĵ2e3t</pattern>
-  <pattern>4ĵ1f</pattern>
-  <pattern>4ĵ1g</pattern>
-  <pattern>4ĵ1gx</pattern>
-  <pattern>4ĵ1h4</pattern>
-  <pattern>4ĵ1j2</pattern>
-  <pattern>4ĵ1k</pattern>
-  <pattern>4ĵ1l</pattern>
-  <pattern>4ĵ1m</pattern>
-  <pattern>4ĵ1n</pattern>
-  <pattern>4ĵ1p</pattern>
-  <pattern>4ĵ1s</pattern>
-  <pattern>4ĵ1sx</pattern>
-  <pattern>4ĵ1t</pattern>
-  <pattern>4ĵ1v</pattern>
-  <pattern>4ĵ1z</pattern>
-  <pattern>4ĵ1ĉ</pattern>
-  <pattern>4ĵ1ĝ</pattern>
-  <pattern>4ĵ1ĵ</pattern>
-  <pattern>4ĵ1ŝ</pattern>
-  <pattern>4ŝ1^c</pattern>
-  <pattern>4ŝ1^g</pattern>
-  <pattern>4ŝ1^j</pattern>
-  <pattern>ŝam2a3n</pattern>
-  <pattern>4ŝ1b</pattern>
-  <pattern>4ŝ1c</pattern>
-  <pattern>4ŝ1cx</pattern>
-  <pattern>4ŝ1d</pattern>
-  <pattern>ŝevj2o3t</pattern>
-  <pattern>4ŝ1f</pattern>
-  <pattern>4ŝ1g</pattern>
-  <pattern>4ŝ1gx</pattern>
-  <pattern>4ŝ1h4</pattern>
-  <pattern>ŝibol2e3t</pattern>
-  <pattern>ŝil2in3g</pattern>
-  <pattern>4ŝ1j2</pattern>
-  <pattern>4ŝ1jx</pattern>
-  <pattern>4ŝ1k</pattern>
-  <pattern>ŝ1m</pattern>
-  <pattern>ŝ1n</pattern>
-  <pattern>ŝ1p</pattern>
-  <pattern>4ŝ1s</pattern>
-  <pattern>ŝ1t</pattern>
-  <pattern>1ŝ2tel</pattern>
-  <pattern>ŝ1v</pattern>
-  <pattern>4ŝ1z</pattern>
-  <pattern>4ŝ1ĉ</pattern>
-  <pattern>4ŝ1ĝ</pattern>
-  <pattern>4ŝ1ĵ</pattern>
-  <pattern>4ŝ1ŝ</pattern>
-  <pattern>4ŭ1</pattern>
-  <pattern>ŭ2s1k</pattern>
+  <pattern>4z1Ä</pattern>
+  <pattern>4z1Ä</pattern>
+  <pattern>4z1Äµ</pattern>
+  <pattern>4z1Ċ</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>Äambel2a3n</pattern>
+  <pattern>Äamp2a3n</pattern>
+  <pattern>Äarlat2a3n</pattern>
+  <pattern>4Ä1b</pattern>
+  <pattern>4Ä1c</pattern>
+  <pattern>4Ä1d</pattern>
+  <pattern>4Ä1f</pattern>
+  <pattern>4Ä1g</pattern>
+  <pattern>4Ä1gx</pattern>
+  <pattern>4Ä1h4</pattern>
+  <pattern>Äi3el1</pattern>
+  <pattern>Äik2a3n</pattern>
+  <pattern>ÄinÄ2i3l</pattern>
+  <pattern>4Ä1j2</pattern>
+  <pattern>3Ä2jo</pattern>
+  <pattern>4Ä1jx</pattern>
+  <pattern>4Ä1k</pattern>
+  <pattern>4Ä1l</pattern>
+  <pattern>4Ä1m</pattern>
+  <pattern>4Ä1n</pattern>
+  <pattern>Äokol2a3d</pattern>
+  <pattern>4Ä1p</pattern>
+  <pattern>4Ä1s</pattern>
+  <pattern>4Ä1sx</pattern>
+  <pattern>4Ä1t</pattern>
+  <pattern>4Ä1v</pattern>
+  <pattern>4Ä1z</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>4Ä1b</pattern>
+  <pattern>4Ä1c</pattern>
+  <pattern>4Ä1cx</pattern>
+  <pattern>4Ä1d</pattern>
+  <pattern>Äentlem2a3n</pattern>
+  <pattern>4Ä1f</pattern>
+  <pattern>4Ä1g</pattern>
+  <pattern>4Ä1h4</pattern>
+  <pattern>4Ä1j2</pattern>
+  <pattern>4Ä1jx</pattern>
+  <pattern>4Ä1k</pattern>
+  <pattern>4Ä1l</pattern>
+  <pattern>4Ä1m</pattern>
+  <pattern>4Ä1n</pattern>
+  <pattern>4Ä1p</pattern>
+  <pattern>4Ä1s</pattern>
+  <pattern>4Ä1sx</pattern>
+  <pattern>4Ä1t</pattern>
+  <pattern>4Ä1v</pattern>
+  <pattern>4Ä1z</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Ä</pattern>
+  <pattern>4Ä1Äµ</pattern>
+  <pattern>4Ä1Ċ</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Äµ</pattern>
+  <pattern>4Ä¥1Ċ</pattern>
+  <pattern>4Ä¥1b</pattern>
+  <pattern>4Ä¥1c</pattern>
+  <pattern>4Ä¥1cx</pattern>
+  <pattern>4Ä¥1d</pattern>
+  <pattern>4Ä¥1f</pattern>
+  <pattern>4Ä¥1g</pattern>
+  <pattern>4Ä¥1gx</pattern>
+  <pattern>4Ä¥1h4</pattern>
+  <pattern>4Ä¥1j2</pattern>
+  <pattern>4Ä¥1jx</pattern>
+  <pattern>4Ä¥1k</pattern>
+  <pattern>Ä¥lam2i3d</pattern>
+  <pattern>4Ä¥1m</pattern>
+  <pattern>4Ä¥1n</pattern>
+  <pattern>4Ä¥1p</pattern>
+  <pattern>4Ä¥1s</pattern>
+  <pattern>4Ä¥1sx</pattern>
+  <pattern>4Ä¥1t</pattern>
+  <pattern>4Ä¥1v</pattern>
+  <pattern>4Ä¥1z</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Ä</pattern>
+  <pattern>4Ä¥1Äµ</pattern>
+  <pattern>4Ä¥1Ċ</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ċ</pattern>
+  <pattern>Äµab2o3t</pattern>
+  <pattern>4Äµ1b</pattern>
+  <pattern>4Äµ1c</pattern>
+  <pattern>4Äµ1cx</pattern>
+  <pattern>4Äµ1d</pattern>
+  <pattern>Äµ2e3t</pattern>
+  <pattern>4Äµ1f</pattern>
+  <pattern>4Äµ1g</pattern>
+  <pattern>4Äµ1gx</pattern>
+  <pattern>4Äµ1h4</pattern>
+  <pattern>4Äµ1j2</pattern>
+  <pattern>4Äµ1k</pattern>
+  <pattern>4Äµ1l</pattern>
+  <pattern>4Äµ1m</pattern>
+  <pattern>4Äµ1n</pattern>
+  <pattern>4Äµ1p</pattern>
+  <pattern>4Äµ1s</pattern>
+  <pattern>4Äµ1sx</pattern>
+  <pattern>4Äµ1t</pattern>
+  <pattern>4Äµ1v</pattern>
+  <pattern>4Äµ1z</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Ä</pattern>
+  <pattern>4Äµ1Äµ</pattern>
+  <pattern>4Äµ1Ċ</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Äµ</pattern>
+  <pattern>Ċam2a3n</pattern>
+  <pattern>4Ċ1b</pattern>
+  <pattern>4Ċ1c</pattern>
+  <pattern>4Ċ1cx</pattern>
+  <pattern>4Ċ1d</pattern>
+  <pattern>Ċevj2o3t</pattern>
+  <pattern>4Ċ1f</pattern>
+  <pattern>4Ċ1g</pattern>
+  <pattern>4Ċ1gx</pattern>
+  <pattern>4Ċ1h4</pattern>
+  <pattern>Ċibol2e3t</pattern>
+  <pattern>Ċil2in3g</pattern>
+  <pattern>4Ċ1j2</pattern>
+  <pattern>4Ċ1jx</pattern>
+  <pattern>4Ċ1k</pattern>
+  <pattern>Ċ1m</pattern>
+  <pattern>Ċ1n</pattern>
+  <pattern>Ċ1p</pattern>
+  <pattern>4Ċ1s</pattern>
+  <pattern>Ċ1t</pattern>
+  <pattern>1Ċ2tel</pattern>
+  <pattern>Ċ1v</pattern>
+  <pattern>4Ċ1z</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Ä</pattern>
+  <pattern>4Ċ1Äµ</pattern>
+  <pattern>4Ċ1Ċ</pattern>
+  <pattern>4Ċ­1</pattern>
+  <pattern>Ċ­2s1k</pattern>
 </HyphenationDescription>

@@ -445,7 +445,11 @@ protected:
     bool getCursorDocRect( ldomXPointer ptr, lvRect & rc );
     /// load document from stream (internal)
     bool loadDocumentInt( LVStreamRef stream, bool metadataOnly = false );
-    bool loadDocumentWithHistory(LVStreamRef stream, CRFileHistRecord *record, bool metadataOnly);
+    /// load document from stream; the reading position and the bookmarks written by an older
+    /// engine are converted to the pointers of this one
+    bool loadDocumentWithHistory(LVStreamRef stream, const lString32 & fileName, bool metadataOnly);
+    /// one history record, under the size of the book, for a book opened from an archive
+    void adoptArchiveHistoryRecord(const lString32 & fileName, lvsize_t archiveSize);
     /// get section bounds for specific root node and specific section depth level, in 1/100 of percent
     void getSectionBoundsInt( LVArray<int>& bounds, ldomNode* node , lUInt16 section_id, int target_level, int level );
 public:

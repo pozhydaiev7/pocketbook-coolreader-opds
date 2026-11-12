@@ -1035,17 +1035,11 @@ fprintf(_log, "GetFont(size=%d, weight=%d, italic=%d, family=%d, typeface='%s')\
                 break;
             }
         }
-        // filling in the language support table if it is empty
-#if USE_LOCALE_DATA==1
-        LVHashTable<lString8, font_lang_compat>* langTable = NULL;
-        if (!_supportedLangs.get(font->getTypeFace(), langTable) || NULL == langTable) {
-            FT_Face face = (FT_Face) font->GetHandle();
-            if (NULL != face) {
-                langTable = getSupportedLangs(face);
-                _supportedLangs.set(font->getTypeFace(), langTable);
-            }
-        }
-#endif
+        // The table of the languages a typeface supports is not filled here: it asks the font for
+        // every character of every language of the fontconfig data (tens of thousands of
+        // requests), about 0.2 s on a PocketBook for each typeface loaded for the first time, three
+        // typefaces at every start. checkFontLangCompat(), the only reader of the table, fills it
+        // itself when it is asked about a typeface.
         // add to cache
         _cache.update( &newDef, ref );
         //            int rsz = ref->getSize();

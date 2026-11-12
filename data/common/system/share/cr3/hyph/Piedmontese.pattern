@@ -43,10 +43,12 @@
 % - 2013-02-14 - First release 1.0
 %%
 -->
-<HyphenationDescription>
-    <pattern>.'2s2</pattern>
+<HyphenationDescription
+    title="Piedmontese" lang="pms"
+    lefthyphenmin="2" righthyphenmin="2">
+    <pattern> '2s2</pattern>
     <pattern>2'2</pattern>
-    <pattern>2'.</pattern>
+    <pattern>2' </pattern>
     <pattern>2b'</pattern>
     <pattern>2c'</pattern>
     <pattern>2d'</pattern>
@@ -55,65 +57,65 @@
     <pattern>2h'</pattern>
     <pattern>2j'</pattern>
     <pattern>2k'</pattern>
-    <pattern>2l'.</pattern>
+    <pattern>2l' </pattern>
     <pattern>2l''</pattern>
     <pattern>2m'</pattern>
     <pattern>2n'</pattern>
-    <pattern>.'n2</pattern>
+    <pattern> 'n2</pattern>
     <pattern>2p'</pattern>
     <pattern>2q'</pattern>
     <pattern>2r'</pattern>
-    <pattern>4s'.</pattern>
+    <pattern>4s' </pattern>
     <pattern>4s''</pattern>
     <pattern>2st'</pattern>
-    <pattern>2t'.</pattern>
+    <pattern>2t' </pattern>
     <pattern>2t''</pattern>
-    <pattern>2v'.</pattern>
+    <pattern>2v' </pattern>
     <pattern>2v''</pattern>
     <pattern>2w'</pattern>
     <pattern>2x'</pattern>
-    <pattern>2z'.</pattern>
+    <pattern>2z' </pattern>
     <pattern>2z''</pattern>
-    <pattern>.a3p2n</pattern>
-    <pattern>.anti1</pattern>
-    <pattern>.anti3m2n</pattern>
-    <pattern>.bio1</pattern>
-    <pattern>.ca4p3s</pattern>
-    <pattern>.circu2m1</pattern>
-    <pattern>.co1o2p</pattern>
-    <pattern>.di2s3</pattern>
-    <pattern>.e2x1e</pattern>
-    <pattern>.ex2tra3</pattern>
-    <pattern>.fran2k3</pattern>
-    <pattern>.free3</pattern>
-    <pattern>.li3p2sa</pattern>
-    <pattern>.narco1</pattern>
-    <pattern>.opto1</pattern>
-    <pattern>.orto3p2</pattern>
-    <pattern>.para1</pattern>
-    <pattern>.poli3p2</pattern>
-    <pattern>.pre1</pattern>
-    <pattern>.p2s</pattern>
-    <pattern>.re1ac</pattern>
-    <pattern>.re1i2scr</pattern>
-    <pattern>.tran2s3ac</pattern>
-    <pattern>.tran2s3c</pattern>
-    <pattern>.tran2s3d</pattern>
-    <pattern>.tran2s3l</pattern>
-    <pattern>.tran2s3n</pattern>
-    <pattern>.tran2s3p</pattern>
-    <pattern>.tran2s3r</pattern>
-    <pattern>.tran2s3t</pattern>
-    <pattern>.su2b3lu</pattern>
-    <pattern>.su2b3r</pattern>
-    <pattern>.wa2g3n</pattern>
-    <pattern>.wel2t1</pattern>
+    <pattern> a3p2n</pattern>
+    <pattern> anti1</pattern>
+    <pattern> anti3m2n</pattern>
+    <pattern> bio1</pattern>
+    <pattern> ca4p3s</pattern>
+    <pattern> circu2m1</pattern>
+    <pattern> co1o2p</pattern>
+    <pattern> di2s3</pattern>
+    <pattern> e2x1e</pattern>
+    <pattern> ex2tra3</pattern>
+    <pattern> fran2k3</pattern>
+    <pattern> free3</pattern>
+    <pattern> li3p2sa</pattern>
+    <pattern> narco1</pattern>
+    <pattern> opto1</pattern>
+    <pattern> orto3p2</pattern>
+    <pattern> para1</pattern>
+    <pattern> poli3p2</pattern>
+    <pattern> pre1</pattern>
+    <pattern> p2s</pattern>
+    <pattern> re1ac</pattern>
+    <pattern> re1i2scr</pattern>
+    <pattern> tran2s3ac</pattern>
+    <pattern> tran2s3c</pattern>
+    <pattern> tran2s3d</pattern>
+    <pattern> tran2s3l</pattern>
+    <pattern> tran2s3n</pattern>
+    <pattern> tran2s3p</pattern>
+    <pattern> tran2s3r</pattern>
+    <pattern> tran2s3t</pattern>
+    <pattern> su2b3lu</pattern>
+    <pattern> su2b3r</pattern>
+    <pattern> wa2g3n</pattern>
+    <pattern> wel2t1</pattern>
     <pattern>a1ia</pattern>
     <pattern>a1ie</pattern>
     <pattern>a1io</pattern>
     <pattern>a1iu</pattern>
     <pattern>a1uo</pattern>
-    <pattern>2at.</pattern>
+    <pattern>2at </pattern>
     <pattern>e1iu</pattern>
     <pattern>e2w</pattern>
     <pattern>o2a</pattern>
@@ -133,15 +135,15 @@
     <pattern>2bv</pattern>
     <pattern>b2l</pattern>
     <pattern>b2r</pattern>
-    <pattern>2b.</pattern>
+    <pattern>2b </pattern>
     <pattern>1c</pattern>
     <pattern>2cb</pattern>
     <pattern>2cc</pattern>
-    <pattern>c2c.</pattern>
+    <pattern>c2c </pattern>
     <pattern>2cd</pattern>
     <pattern>2cf</pattern>
     <pattern>c2j</pattern>
-    <pattern>2cj.</pattern>
+    <pattern>2cj </pattern>
     <pattern>2ck</pattern>
     <pattern>2cm</pattern>
     <pattern>2cn</pattern>
@@ -151,14 +153,14 @@
     <pattern>2cz</pattern>
     <pattern>2chh</pattern>
     <pattern>c2h</pattern>
-    <pattern>2ch.</pattern>
+    <pattern>2ch </pattern>
     <pattern>2chb</pattern>
     <pattern>ch2r</pattern>
     <pattern>2chn</pattern>
     <pattern>c2l</pattern>
     <pattern>c2r</pattern>
-    <pattern>2c.</pattern>
-    <pattern>.c2</pattern>
+    <pattern>2c </pattern>
+    <pattern> c2</pattern>
     <pattern>1d</pattern>
     <pattern>2db</pattern>
     <pattern>2dd</pattern>
@@ -173,8 +175,8 @@
     <pattern>2dt</pattern>
     <pattern>2dv</pattern>
     <pattern>2dw</pattern>
-    <pattern>2d.</pattern>
-    <pattern>.d2</pattern>
+    <pattern>2d </pattern>
+    <pattern> d2</pattern>
     <pattern>1f</pattern>
     <pattern>2fb</pattern>
     <pattern>2fg</pattern>
@@ -184,19 +186,19 @@
     <pattern>f2r</pattern>
     <pattern>2fs</pattern>
     <pattern>2ft</pattern>
-    <pattern>2f.</pattern>
+    <pattern>2f </pattern>
     <pattern>1g</pattern>
     <pattern>2gb</pattern>
     <pattern>2gd</pattern>
     <pattern>2gf</pattern>
     <pattern>2gg</pattern>
-    <pattern>g2g.</pattern>
+    <pattern>g2g </pattern>
     <pattern>g2h</pattern>
     <pattern>g2j</pattern>
     <pattern>g2l</pattern>
     <pattern>2gm</pattern>
     <pattern>g2n</pattern>
-    <pattern>2gn.</pattern>
+    <pattern>2gn </pattern>
     <pattern>2gp</pattern>
     <pattern>g2r</pattern>
     <pattern>2gs</pattern>
@@ -205,7 +207,7 @@
     <pattern>2gw</pattern>
     <pattern>2gz</pattern>
     <pattern>2gh2t</pattern>
-    <pattern>2g.</pattern>
+    <pattern>2g </pattern>
     <pattern>1h</pattern>
     <pattern>2hb</pattern>
     <pattern>2hd</pattern>
@@ -216,9 +218,9 @@
     <pattern>2hn</pattern>
     <pattern>2hr</pattern>
     <pattern>2hv</pattern>
-    <pattern>2h.</pattern>
+    <pattern>2h </pattern>
     <pattern>1j</pattern>
-    <pattern>2j.</pattern>
+    <pattern>2j </pattern>
     <pattern>1k</pattern>
     <pattern>2kg</pattern>
     <pattern>2kf</pattern>
@@ -229,7 +231,7 @@
     <pattern>k2r</pattern>
     <pattern>2ks</pattern>
     <pattern>2kt</pattern>
-    <pattern>2k.</pattern>
+    <pattern>2k </pattern>
     <pattern>1l</pattern>
     <pattern>2lb</pattern>
     <pattern>2lc</pattern>
@@ -250,7 +252,7 @@
     <pattern>2lv</pattern>
     <pattern>2lw</pattern>
     <pattern>2lz</pattern>
-    <pattern>2l.</pattern>
+    <pattern>2l </pattern>
     <pattern>1m</pattern>
     <pattern>2mb</pattern>
     <pattern>2mc</pattern>
@@ -265,7 +267,7 @@
     <pattern>2mt</pattern>
     <pattern>2mv</pattern>
     <pattern>2mw</pattern>
-    <pattern>2m.</pattern>
+    <pattern>2m </pattern>
     <pattern>1n</pattern>
     <pattern>2nb</pattern>
     <pattern>2nc</pattern>
@@ -280,15 +282,15 @@
     <pattern>2nq</pattern>
     <pattern>2nr</pattern>
     <pattern>2ns</pattern>
-    <pattern>n2s.</pattern>
+    <pattern>n2s </pattern>
     <pattern>n2s3fer</pattern>
     <pattern>2nt</pattern>
-    <pattern>n2t.</pattern>
+    <pattern>n2t </pattern>
     <pattern>2nv</pattern>
     <pattern>2nz</pattern>
     <pattern>n2g3n</pattern>
     <pattern>2nheit</pattern>
-    <pattern>2n.</pattern>
+    <pattern>2n </pattern>
     <pattern>1p</pattern>
     <pattern>2pd</pattern>
     <pattern>p2h</pattern>
@@ -301,10 +303,10 @@
     <pattern>3p2sic</pattern>
     <pattern>2pt</pattern>
     <pattern>2pz</pattern>
-    <pattern>2p.</pattern>
+    <pattern>2p </pattern>
     <pattern>1q</pattern>
     <pattern>2qq</pattern>
-    <pattern>2q.</pattern>
+    <pattern>2q </pattern>
     <pattern>1r</pattern>
     <pattern>2rb</pattern>
     <pattern>2rc</pattern>
@@ -326,15 +328,15 @@
     <pattern>2rx</pattern>
     <pattern>2rw</pattern>
     <pattern>2rz</pattern>
-    <pattern>2r.</pattern>
-    <pattern>.s2</pattern>
-    <pattern>4s.</pattern>
-    <pattern>4ss.</pattern>
+    <pattern>2r </pattern>
+    <pattern> s2</pattern>
+    <pattern>4s </pattern>
+    <pattern>4ss </pattern>
     <pattern>1s2</pattern>
     <pattern>2s3s</pattern>
     <pattern>2s3p2n</pattern>
     <pattern>2s4s3m</pattern>
-    <pattern>2s2t.</pattern>
+    <pattern>2s2t </pattern>
     <pattern>2s2tb</pattern>
     <pattern>2s2tc</pattern>
     <pattern>2s2td</pattern>
@@ -366,20 +368,20 @@
     <pattern>t2z</pattern>
     <pattern>2tzk</pattern>
     <pattern>tz2s</pattern>
-    <pattern>2t.</pattern>
-    <pattern>2ts.</pattern>
+    <pattern>2t </pattern>
+    <pattern>2ts </pattern>
     <pattern>1v</pattern>
     <pattern>2vc</pattern>
     <pattern>v2l</pattern>
     <pattern>v2r</pattern>
-    <pattern>2vs.</pattern>
+    <pattern>2vs </pattern>
     <pattern>2vv</pattern>
-    <pattern>2v.</pattern>
+    <pattern>2v </pattern>
     <pattern>1w</pattern>
     <pattern>w2h</pattern>
     <pattern>wa2r</pattern>
     <pattern>2w1y</pattern>
-    <pattern>2w.</pattern>
+    <pattern>2w </pattern>
     <pattern>1x</pattern>
     <pattern>2xb</pattern>
     <pattern>2xc</pattern>
@@ -389,7 +391,7 @@
     <pattern>2xp</pattern>
     <pattern>2xt</pattern>
     <pattern>2xw</pattern>
-    <pattern>2x.</pattern>
+    <pattern>2x </pattern>
     <pattern>y1ou</pattern>
     <pattern>y1i</pattern>
     <pattern>1z</pattern>
@@ -403,6 +405,6 @@
     <pattern>2zt</pattern>
     <pattern>2zv</pattern>
     <pattern>2zz</pattern>
-    <pattern>2z.</pattern>
-    <pattern>.z2</pattern>
+    <pattern>2z </pattern>
+    <pattern> z2</pattern>
 </HyphenationDescription>
