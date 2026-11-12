@@ -2060,7 +2060,7 @@ msgstr "Стр."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Catalog menu"
-msgstr "Меню"
+msgstr "Меню каталога"
 
 #: ../src/settings.cpp ../src/pb_statsview.cpp
 msgid "Reading statistics"

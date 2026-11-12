@@ -261,7 +261,7 @@
     <p>A long article and the list of words are paged by a vertical swipe over the dictionary window; the caption shows the page number of the article. Turning the pages of the book with the keys or a horizontal swipe does not close the dictionary window.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Search keyboard</subtitle>
-    <p>A word is typed on the keyboard of the program: English, Russian and Ukrainian layouts, digits and signs; with the inverse display (night mode) it is dark. The firmware keyboard can be chosen instead (see «<emphasis>Settings</emphasis>» &gt; «<emphasis>Dictionary settings</emphasis>»). Devices without a touch screen always use the firmware keyboard.</p>
+    <p>A word is typed on the keyboard of the program: English, Russian and Ukrainian layouts, the keys are placed as on the firmware keyboard; with the inverse display (night mode) it is dark. The firmware keyboard can be chosen instead (see «<emphasis>Settings</emphasis>» &gt; «<emphasis>Dictionary settings</emphasis>»). Devices without a touch screen always use the firmware keyboard.</p>
    </section>
    <section>
     <title>
@@ -283,7 +283,7 @@
     <image l:href="#i_026.png"/>
     <subtitle>Navigation</subtitle>
     <p>The arrow in the caption and the first row of every screen go one level up; from the start page of the catalog, back to the book.</p>
-    <p>In a list of books each book takes two lines: the title and the author. In the bottom row «<emphasis>Back</emphasis>» is on the left and «<emphasis>Next</emphasis>» on the right; the page number in the centre opens the catalog menu: back to the list, search, catalog start page, other catalog, catalog address.</p>
+    <p>In a list of books each book takes two lines: the title and the author. A long list is turned with the arrows in the top right corner, the screen number is between them. The row «<emphasis>Catalog menu</emphasis>» opens the menu: back to the list, search, catalog start page, other catalog, catalog address.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Search</subtitle>
     <p>The search takes two steps, as the catalog serves it: first choose what to look for (authors or books), then the list of results opens.</p>

@@ -1,6 +1,8 @@
 // Full-screen touch lists of the CoolReader PocketBook port, in the touch-TOC style:
-// rows with a bold title and a second line, two-line text rows and a paging row.
-// Used by the OPDS catalog browser and by the reading statistics.
+// rows with a bold title and a second line and two-line text rows. A long list is shown screen by
+// screen: the screens are turned with the arrows of the title, the screen number is between them,
+// as in every menu of CoolReader.
+// Used by the OPDS catalog browser, the reading statistics and the contents list.
 #ifndef OPDSMENU_H
 #define OPDSMENU_H
 
@@ -52,21 +54,16 @@ lString32 menuSkinName(CRGUIWindowManager * wm);
 
 class OpdsMenu;
 
-// One row of a list: title (bold) and an optional second line, two lines of plain text,
-// or the paging row with three tap zones: previous | center | next.
+// One row of a list: title (bold) and an optional second line, or two lines of plain text.
+// A tap closes the list and posts the id of the row.
 class OpdsItem : public CRMenuItem
 {
 public:
-    enum Kind { ROW, TEXT, PAGER };
+    enum Kind { ROW, TEXT };
 
     OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind = ROW);
     virtual void Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected);
-    virtual int onSelect();
 
-    // Paging row texts; an empty side is disabled.
-    lString32 left, center, right;
-    // Paging row commands; 0 disables the side. The center opens the OPDS catalog menu by default.
-    int leftCommand, rightCommand, centerCommand;
     // Text row lines.
     InfoLine first, second;
     // Regular row: left indent of the title in pixels and a short text at the right edge
@@ -87,22 +84,31 @@ private:
 class OpdsMenu : public CRFullScreenMenu
 {
     int _rows;
-    int _lastTouchX;
     bool _paged;
     int _prevCommand;
     int _nextCommand;
     int _closeCommand;
+    int _screen;   // screen of the list shown, from 0
+    int _screens;  // screens of the list; 0: the menu counts its own pages
+protected:
+    // the page counter of the title shows the screens of the list
+    virtual void drawTitleBar();
 public:
     LVFontRef titleFont;
     LVFontRef subFont;
     LVFontRef labelFont; // bold, the size of subFont
     LVFontRef bodyFont;  // description text
 
-    // paged: page keys of the reader post OPDS_CMD_NEXT / OPDS_CMD_PREV instead of paging the menu
+    // paged: page keys of the reader and the arrows of the title post OPDS_CMD_NEXT / OPDS_CMD_PREV
+    // instead of paging the menu
     OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged);
     virtual ~OpdsMenu();
-    // Page keys post these commands; 0 leaves the key on that side to the menu.
+    // Page keys and the arrows of the title post these commands; 0 leaves that side to the menu.
     void setPageCommands(int prevCommand, int nextCommand);
+    // The list is one of several screens: the title shows "screen / screens" between its arrows,
+    // an arrow is active when there is a screen on its side.
+    void setScreens(int screen, int screens);
+    virtual bool isScrollEnabled(bool down);
     // The arrow at the caption and the Back key post this command (one level up);
     // by default they post the menu id (OPDS_CMD_CLOSE: back to the book).
     void setCloseCommand(int command) { _closeCommand = command; }
@@ -114,10 +120,8 @@ public:
     // Number of rows that fit on the screen with two text lines per row.
     int setupRows(bool twoLines);
     virtual void reconfigure(int flags);
-    virtual bool onTouchEvent(int x, int y, CRGUITouchEventType evType);
     virtual bool onCommand(int command, int params = 0);
 
-    int lastTouchX() const { return _lastTouchX; }
     // Width available for the text of a row (see OpdsItem::Draw).
     int rowTextWidth();
     void add(int command, const lString32 & title, const lString32 & subtitle = lString32::empty_str);

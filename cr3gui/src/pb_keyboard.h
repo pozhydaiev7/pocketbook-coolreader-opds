@@ -1,7 +1,9 @@
 /*
  * On-screen touch keyboard drawn by CoolReader on PocketBook, used instead of the firmware keyboard
  * where CoolReader needs full control over it: it follows the night mode of CoolReader (the firmware
- * keyboard keeps its colors). English, Russian and Ukrainian layouts and a page of digits and signs.
+ * keyboard keeps its colors). English, Russian and Ukrainian layouts with the keys placed as on the
+ * firmware keyboard: 5 rows of 11 keys, the digits in the first row, the signs and capital letters
+ * on the Shift page.
  * Devices without a touch screen keep the firmware keyboard (see pbKeyboardUsable()).
  */
 #ifndef PB_KEYBOARD_H_INCLUDED
@@ -36,13 +38,12 @@ protected:
 private:
     enum Layout { LAYOUT_EN, LAYOUT_RU, LAYOUT_UK, LAYOUT_COUNT };
     enum Special {
-        PBK_SHIFT = -1, PBK_BACKSPACE = -2, PBK_SPACE = -3, PBK_SYMBOLS = -4, PBK_LAYOUT = -5,
+        PBK_SHIFT = -1, PBK_BACKSPACE = -2, PBK_SPACE = -3, PBK_LAYOUT = -5,
         PBK_OK = -6, PBK_CANCEL = -7
     };
     struct Key {
         int code;        // character, or Special
-        int units;       // width in quarters of a letter key
-        lvRect rc;
+        lvRect rc;       // cell of the key, its frame is drawn inside
     };
     lString32 _title;
     char * _buffer;
@@ -52,8 +53,7 @@ private:
     lString32 _text;
     bool _textSelected;  // the starting text is selected: the first letter replaces it
     int _layout;
-    bool _symbols;
-    bool _shift;
+    bool _shift;         // the Shift page of the layout is shown, for one character
     int _pressed;        // key under the finger, -1 when none
     std::vector<Key> _keys;
     lvRect _textRc;
@@ -63,8 +63,8 @@ private:
     int _line;              // frame width
 
     void build();
-    void addRow(const lString32 & letters, int row, bool shiftRow, int rows, int keyHeight, int unitWidth,
-                int maxUnits, const lvRect & area, std::vector<Key> & keys);
+    void addRow(const char * row, int left, int top, int cellWidth, int cellHeight);
+    static int keyGap(int cellHeight);
     int keyAt(int x, int y) const;
     lString32 label(const Key & key) const;
     void drawTextField(LVDrawBuf & buf, bool invert);

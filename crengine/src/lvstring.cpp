@@ -3537,6 +3537,10 @@ void lStr_uppercase( lChar32 * str, int len )
             str[i] = ch - 0x20;
         } else if ( ch>=0x430 && ch<=0x44F ) {
             str[i] = ch - 0x20;
+        } else if ( ch>=0x450 && ch<=0x45F ) { // Cyrillic letters outside the Russian alphabet: io, Ukrainian, Belarusian, Serbian
+            str[i] = ch - 0x50;
+        } else if ( ((ch>=0x48A && ch<=0x4BF) || (ch>=0x4D0 && ch<=0x52F)) && (ch & 1) ) { // Cyrillic pairs: capital, small
+            str[i] = ch - 1;
         } else if ( ch>=0x3b0 && ch<=0x3cF ) {
             str[i] = ch - 0x20;
         } else if ( (ch >> 8)==0x1F ) { // greek
@@ -3566,6 +3570,10 @@ void lStr_lowercase( lChar32 * str, int len )
             str[i] = ch + 0x20;
         } else if ( ch>=0x410 && ch<=0x42F ) {
             str[i] = ch + 0x20;
+        } else if ( ch>=0x400 && ch<=0x40F ) { // Cyrillic letters outside the Russian alphabet: io, Ukrainian, Belarusian, Serbian
+            str[i] = ch + 0x50;
+        } else if ( ((ch>=0x48A && ch<=0x4BF) || (ch>=0x4D0 && ch<=0x52F)) && !(ch & 1) ) { // Cyrillic pairs: capital, small
+            str[i] = ch + 1;
         } else if ( ch>=0x390 && ch<=0x3aF ) {
             str[i] = ch + 0x20;
         } else if ( (ch >> 8)==0x1F ) { // greek
@@ -3611,6 +3619,10 @@ void lStr_capitalize( lChar32 * str, int len )
                 str[i] = ch - 0x20;
             } else if ( ch>=0x430 && ch<=0x44F ) {
                 str[i] = ch - 0x20;
+            } else if ( ch>=0x450 && ch<=0x45F ) {
+                str[i] = ch - 0x50;
+            } else if ( ((ch>=0x48A && ch<=0x4BF) || (ch>=0x4D0 && ch<=0x52F)) && (ch & 1) ) {
+                str[i] = ch - 1;
             } else if ( ch>=0x3b0 && ch<=0x3cF ) {
                 str[i] = ch - 0x20;
             } else if ( (ch >> 8)==0x1F ) { // greek

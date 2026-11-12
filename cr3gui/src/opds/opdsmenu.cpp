@@ -94,8 +94,9 @@ lString32 menuSkinName(CRGUIWindowManager * wm)
 // ------------------------------------------------------------ OpdsMenu
 
 OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged)
-    : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _lastTouchX(-1), _paged(paged),
-      _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE)
+    : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _paged(paged),
+      _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE),
+      _screen(0), _screens(0)
 {
     if (!fontAntiAliasingActivated())
         forcePartialBwUpdates = true;
@@ -118,6 +119,29 @@ void OpdsMenu::setPageCommands(int prevCommand, int nextCommand)
     _paged = true;
     _prevCommand = prevCommand;
     _nextCommand = nextCommand;
+}
+
+void OpdsMenu::setScreens(int screen, int screens)
+{
+    _screens = screens < 1 ? 1 : screens;
+    _screen = screen < 0 ? 0 : (screen >= _screens ? _screens - 1 : screen);
+}
+
+bool OpdsMenu::isScrollEnabled(bool down)
+{
+    if (!_paged || _screens <= 0)
+        return CRFullScreenMenu::isScrollEnabled(down);
+    return down ? (_nextCommand != 0 && _screen + 1 < _screens) : (_prevCommand != 0 && _screen > 0);
+}
+
+void OpdsMenu::drawTitleBar()
+{
+    // CRMenu::draw() has counted the pages of the rows on the screen: one page
+    if (_paged && _screens > 0) {
+        _page = _screen + 1;
+        _pages = _screens;
+    }
+    CRFullScreenMenu::drawTitleBar();
 }
 
 void OpdsMenu::setPlainRows()
@@ -166,18 +190,20 @@ void OpdsMenu::reconfigure(int flags)
         _pageItems = _rows;
 }
 
-bool OpdsMenu::onTouchEvent(int x, int y, CRGUITouchEventType evType)
-{
-    _lastTouchX = x;
-    return CRFullScreenMenu::onTouchEvent(x, y, evType);
-}
-
 bool OpdsMenu::onCommand(int command, int params)
 {
     // the arrow at the caption and the Back key: one level up
     if ((command == DCMD_BUTTON_PRESSED || command == DCMD_BUTTON_PRESSED_LONG) && params == BTN_CLOSE) {
         closeMenu(_closeCommand);
         return true;
+    }
+    // the arrows of the title turn the screens of the list, as the page keys do
+    if (_paged && (command == DCMD_BUTTON_PRESSED || command == DCMD_BUTTON_PRESSED_LONG) &&
+        (params == BTN_SCROLL_DOWN || params == BTN_SCROLL_UP)) {
+        if (!isScrollEnabled(params == BTN_SCROLL_DOWN))
+            return true;
+        command = params == BTN_SCROLL_DOWN ? MCMD_NEXT_PAGE : MCMD_PREV_PAGE;
+        params = 1;
     }
     if (command == MCMD_CANCEL && _closeCommand != getId()) {
         closeMenu(_closeCommand);
@@ -219,8 +245,7 @@ void OpdsMenu::add(int command, const lString32 & title, const lString32 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      leftCommand(0), rightCommand(0), centerCommand(OPDS_CMD_SERVICE), indent(0),
-      _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
+      indent(0), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
 }
 
@@ -249,19 +274,7 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
     buf.GetClipRect(&oldClip);
     buf.SetClipRect(&r);
 
-    if (_kind == PAGER) {
-        int third = r.width() / 3;
-        int y = r.top + (r.height() - tf->getHeight()) / 2;
-        lString32 l = fitText(tf, left, third);
-        lString32 c = fitText(sf, center, third);
-        lString32 rt = fitText(tf, right, third);
-        tf->DrawTextString(&buf, r.left, y, l.c_str(), l.length(), U'?', NULL, false, 0);
-        int cw = sf->getTextWidth(c.c_str(), c.length());
-        sf->DrawTextString(&buf, r.left + (r.width() - cw) / 2, r.top + (r.height() - sf->getHeight()) / 2,
-                           c.c_str(), c.length(), U'?', NULL, false, 0);
-        int rw = tf->getTextWidth(rt.c_str(), rt.length());
-        tf->DrawTextString(&buf, r.right - rw, y, rt.c_str(), rt.length(), U'?', NULL, false, 0);
-    } else if (_kind == TEXT) {
+    if (_kind == TEXT) {
         int gap = sf->getHeight() / 8;
         int h1 = first.font.isNull() ? 0 : first.font->getHeight();
         int h2 = second.font.isNull() ? 0 : second.font->getHeight();
@@ -319,23 +332,6 @@ void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r
     }
     lString32 t = fitText(line.font, line.text, r.right - x);
     line.font->DrawTextString(&buf, x, top, t.c_str(), t.length(), U'?', NULL, false, 0);
-}
-
-int OpdsItem::onSelect()
-{
-    if (_kind != PAGER)
-        return 0; // regular row: the menu closes and posts the item id
-    int x = _owner->lastTouchX();
-    int width = _owner->getWindowManager()->getScreen()->getWidth();
-    int command = centerCommand;
-    if (x >= 0 && x < width / 3)
-        command = leftCommand;
-    else if (x >= 0 && x > width * 2 / 3)
-        command = rightCommand;
-    if (command == 0)
-        return 1; // disabled side: stay on this screen
-    _owner->closeMenu(command);
-    return 1;
 }
 
 void activate(CRGUIWindowManager * wm, OpdsMenu * menu)

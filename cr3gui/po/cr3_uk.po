@@ -1379,7 +1379,7 @@ msgid "Dictionaries"
 msgstr "Словники"
 
 msgid "Check dictionaries..."
-msgstr "Позначити словники…"
+msgstr "Позначити словники..."
 
 msgid "No more than 5 dictionaries"
 msgstr "Не більше 5 словників"
@@ -1940,11 +1940,11 @@ msgstr "Каталог книг (OPDS)"
 
 #: ../src/settings.cpp
 msgid "OPDS catalog address"
-msgstr "Адреса OPDS-каталога"
+msgstr "Адреса OPDS-каталогу"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Cannot load the catalog. Check Wi-Fi and the catalog address."
-msgstr "Не вдалося завантажити каталог. Перевірте Wi-Fi та адресу каталога."
+msgstr "Не вдалося завантажити каталог. Перевірте Wi-Fi та адресу каталогу."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "The server did not return an OPDS catalog."
@@ -1964,11 +1964,11 @@ msgstr "Наступна сторінка"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Catalog start page"
-msgstr "До початку каталога"
+msgstr "До початку каталогу"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Catalog address..."
-msgstr "Адреса каталога..."
+msgstr "Адреса каталогу..."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Close catalog"
@@ -2020,7 +2020,7 @@ msgstr "Сервер замість книги повернув вебсторі
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "No network connection. Turn on Wi-Fi and try again."
-msgstr "Немає підключення до мережі. Увімкніть Wi-Fi і спробуйте знову."
+msgstr "Немає підключення до мережі. Увімкніть Wi-Fi і спробуйте ще раз."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Search: author or title"
@@ -2036,7 +2036,7 @@ msgstr "Стор."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Catalog menu"
-msgstr "Меню"
+msgstr "Меню каталогу"
 
 #: ../src/settings.cpp ../src/pb_statsview.cpp
 msgid "Reading statistics"
@@ -2068,7 +2068,7 @@ msgstr "Весь час"
 
 #: ../src/pb_statsview.cpp
 msgid "Choose a period..."
-msgstr "Задати період…"
+msgstr "Вказати період..."
 
 #: ../src/pb_statsview.cpp
 msgid "dd.mm.yyyy-dd.mm.yyyy"
@@ -2080,7 +2080,7 @@ msgstr "Період: дд.мм.рррр-дд.мм.рррр"
 
 #: ../src/pb_statsview.cpp
 msgid "Enter the period as dd.mm.yyyy-dd.mm.yyyy"
-msgstr "Введіть період у вигляді дд.мм.рррр-дд.мм.рррр"
+msgstr "Вкажіть період у вигляді дд.мм.рррр-дд.мм.рррр"
 
 #: ../src/pb_statsview.cpp
 msgid "Period"
@@ -2108,7 +2108,7 @@ msgstr "Статистика книги"
 
 #: ../src/pb_statsview.cpp
 msgid "Reading started: "
-msgstr "Читання почато: "
+msgstr "Читання розпочато: "
 
 #: ../src/pb_statsview.cpp
 msgid "Reading finished: "
@@ -2137,7 +2137,7 @@ msgstr "До кінця (орієнтовно): "
 
 #: ../src/pb_statsview.cpp
 msgid "Average time per page: "
-msgstr "Середній час сторінки: "
+msgstr "Середній час на сторінку: "
 
 #: ../src/pb_statsview.cpp
 msgid "Average reading time per day: "
@@ -2181,7 +2181,7 @@ msgstr "Дочитано книг: "
 
 #: ../src/pb_statsview.cpp
 msgid "Reading time by days"
-msgstr "Час читання по днях"
+msgstr "Час читання за днями"
 
 #: ../src/pb_statsview.cpp
 msgid "Books"
@@ -2197,7 +2197,7 @@ msgstr "Словники для пошуку не вибрано."
 
 #: ../src/cr3pocketbook.cpp
 msgid "Tap the dictionary name above and check them under \"Check dictionaries...\"."
-msgstr "Натисніть на назву словника вгорі й позначте словники в пункті \"Позначити словники…\"."
+msgstr "Торкніться назви словника вгорі й позначте словники в пункті \"Позначити словники...\"."
 
 #: ../src/settings.cpp, opds/opdsbrowser.cpp
 msgid "OPDS catalogs"
@@ -2213,7 +2213,7 @@ msgstr "Змінити каталоги..."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Default catalog"
-msgstr "Каталог за замовчуванням"
+msgstr "Типовий каталог"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Add catalog..."
@@ -2221,7 +2221,7 @@ msgstr "Додати каталог..."
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Name, address, default catalog"
-msgstr "Назва, адреса, каталог за замовчуванням"
+msgstr "Назва, адреса, типовий каталог"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Open catalog"
@@ -2309,7 +2309,7 @@ msgstr "Системна"
 
 #: ../src/settings.cpp
 msgid "Letter spacing in justified lines"
-msgstr "Розрядка літер у вирівняних рядках"
+msgstr "Міжбуквений інтервал у вирівняних рядках"
 
 #: ../src/mainwnd.cpp
 msgid "Could not save reading position and bookmarks. Changes may be lost."

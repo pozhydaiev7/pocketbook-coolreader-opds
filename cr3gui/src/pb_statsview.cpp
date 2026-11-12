@@ -147,29 +147,6 @@ PbStatsView::Line heading(const lString32 & label)
 }
 
 // Empty rows keep the paging row at the bottom of the screen
-void addFillers(OpdsMenu * menu, int count)
-{
-    for (int i = 0; i < count; i++)
-        menu->addItem(new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str));
-}
-
-void addPager(OpdsMenu * menu, int screen, int screens)
-{
-    OpdsItem * pager = new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str,
-                                    OpdsItem::PAGER);
-    if (screen > 0) {
-        pager->left = lString32(MARK_PREV) + tr("Back");
-        pager->leftCommand = PB_STATS_CMD_PREV;
-    }
-    if (screen + 1 < screens) {
-        pager->right = tr("Next") + lString32(MARK_NEXT);
-        pager->rightCommand = PB_STATS_CMD_NEXT;
-    }
-    pager->center = tr("Page") + U" " + num(screen + 1) + U"/" + num(screens);
-    pager->centerCommand = 0;
-    menu->addItem(pager);
-}
-
 } // namespace
 
 // ------------------------------------------------------------ book window side
@@ -278,9 +255,8 @@ void PbStatsView::showBooks(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, tr("All books"), rc, false);
     int rows = menu->setupRows(true);
     int total = (int)_bookIndexes.size();
+    // the first row goes back; a long list is turned with the arrows of the title
     int perScreen = rows - 1;
-    if (total > perScreen)
-        perScreen = rows - 2;
     if (perScreen < 1)
         perScreen = 1;
     int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;
@@ -289,22 +265,18 @@ void PbStatsView::showBooks(CRGUIWindowManager * wm)
     if (_booksScreen < 0)
         _booksScreen = 0;
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
+    menu->setScreens(_booksScreen, screens);
     menu->setCloseCommand(PB_STATS_CMD_MENU);
 
     menu->add(PB_STATS_CMD_MENU, lString32(MARK_PREV) + tr("Reading statistics"));
     int first = _booksScreen * perScreen;
-    int shown = 0;
-    for (int i = first; i < total && i < first + perScreen; i++, shown++) {
+    for (int i = first; i < total && i < first + perScreen; i++) {
         const PbStatsBook & b = _log.books[_bookIndexes[i]];
         lString32 sub;
         if (!b.author.empty())
             sub << u16(b.author) << lString32(DOT);
         sub << durationText(_bookSeconds[i]);
         menu->add(PB_STATS_CMD_BOOK + _bookIndexes[i], u16(b.title.empty() ? b.key : b.title), sub);
-    }
-    if (screens > 1) {
-        addFillers(menu, perScreen - shown);
-        addPager(menu, _booksScreen, screens);
     }
     activate(wm, menu);
 }
@@ -328,8 +300,6 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
     }
     int total = (int)packed.size();
     int perScreen = rows - 1;
-    if (total > perScreen)
-        perScreen = rows - 2;
     if (perScreen < 1)
         perScreen = 1;
     int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;
@@ -338,14 +308,14 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
     if (_screen < 0)
         _screen = 0;
     menu->setPageCommands(PB_STATS_CMD_PREV, PB_STATS_CMD_NEXT);
+    menu->setScreens(_screen, screens);
     menu->setCloseCommand(PB_STATS_CMD_BACK);
 
     menu->add(PB_STATS_CMD_BACK, lString32(MARK_PREV) +
               (_reportBack == PB_STATS_CMD_BOOKS ? tr("All books") : tr("Reading statistics")));
     int indent = menu->subFont->getHeight();
     int first = _screen * perScreen;
-    int shown = 0;
-    for (int i = first; i < total && i < first + perScreen; i++, shown++) {
+    for (int i = first; i < total && i < first + perScreen; i++) {
         OpdsItem * item = new OpdsItem(menu, PB_STATS_CMD_LAST, lString32::empty_str, lString32::empty_str,
                                        OpdsItem::TEXT);
         for (int k = 0; k < 2; k++) {
@@ -361,10 +331,6 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
             info.rule = l.section;
         }
         menu->addItem(item);
-    }
-    if (screens > 1) {
-        addFillers(menu, perScreen - shown);
-        addPager(menu, _screen, screens);
     }
     activate(wm, menu);
 }
