@@ -6007,7 +6007,7 @@ int InitDoc(const char *exename, char *fileName)
     perfT[0] = pbPerfNow();
 
     pbGlobals = new CRPocketBookGlobals(fileName);
-    char manual_file[512] = USERDATA"/share/c3/manual/cr3-manual-en.fb2";
+    char manual_file[512] = USERDATA"/share/cr3/manual/cr3-manual-en.fb2";
     {
         const char *lang = pbGlobals->getLang();
 
@@ -6027,6 +6027,9 @@ int InitDoc(const char *exename, char *fileName)
             sprintf( manual_file, USERDATA"/share/cr3/manual/cr3-manual-%s.fb2", lang );
             if ( !LVFileExists( lString32(manual_file).c_str() ) )
                 sprintf( manual_file, USERDATA2"/share/cr3/manual/cr3-manual-%s.fb2", lang );
+            // no manual in this language: the English one
+            if ( !LVFileExists( lString32(manual_file).c_str() ) )
+                strcpy( manual_file, USERDATA"/share/cr3/manual/cr3-manual-en.fb2" );
         }
     }
 

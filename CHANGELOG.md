@@ -2,17 +2,22 @@
 
 ## 0.0.6-17-67-opds (branch `engine-3.2.59`, not released)
 
-The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test builds: `0.0.6-17-67-opds-alpha1`, `-alpha2` (the font weight setting, the footnote hint in the packaged `fb2.css`), `-alpha3` (the settings review, the settings menus and the loading progress after the first run on InkPad 4).
+The engine is CREngine 3.2.59-1 (official CoolReader, `dcc2d4c8`, 2026-07-20) instead of 3.1.2-52 (2014). Test builds: `0.0.6-17-67-opds-alpha1`, `-alpha2` (the font weight setting, the footnote hint in the packaged `fb2.css`), `-alpha3` (the settings review, the settings menus and the loading progress after the first run on InkPad 4), `-alpha4` (a window under the top window drawn over it, the manuals).
 
 The engine with its PocketBook port, the bundled libraries and the reliability changes of the frontend are taken from [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader) at `8f592d51` (commits `9d969bb7`, `01403eee`, `3ab28e48`, `7a20f240`, `ebecbb7f`, `2c1e56da`, `dc91e9cd`) and two later fixes (`98fef7e0`, `f6a54727`). Not taken: its OTA update, dictionary downloads, settings menus, device table and its private curl.
 
 ### Fixed
 
+- **A window under the top window was drawn over it** (`CRGUIWindowManager::update`, `updateWindow`, `crengine/src/crgui.cpp`): `lvRect::isRectInside()` of CREngine 3.2 accepts an empty rectangle, so the cover box of the window stack was never set, and every window marked for redrawing was drawn, covered or not. A tap in *Check dictionaries…* also marks the dictionary list under it (the count in *Selected dictionaries (N)*): that list was drawn over the checklist, with the one changed row of the checklist on top. The two tests treat an empty rectangle as the old engine did.
+  - Looked for other changes of this kind between the engines: `lvtypes.h` has none; `LVPtrVector::remove()` now refuses an index equal to the count (the calls of the frontend are guarded); `lvstring.cpp`, compared function by function, differs in `atoi` overflow and `lStr_cmp` of null strings only.
+- **Manual of an unlisted language:** the default path had `share/c3`, so a device language without a manual got "No manual"; the English manual is opened now (`InitDoc`, `cr3gui/src/cr3pocketbook.cpp`).
 - **Settings menus** (`crengine/src/crgui.cpp`, `crengine/include/crgui.h`): the window framework that came with the engine carried dderugin's changes of the settings menus: a wide Back button drawn by the code and filled when pressed, a title as high as a row, a button that kept its pressed state. With our skins the Back button of a list was black and taps went to other rows (the checklist of the dictionaries). The menus work as in 0.0.6-17-66 again.
 - **Loading progress over the wait icon:** the new engine reports every layout, so a rotation or a font size change showed the progress bar of the book loading with the wait icon. The progress is shown only while a book is loaded (`V3DocViewWin::OnFormatStart`, `OnFormatProgress`, `OnFormatEnd`).
 
 ### Changed
 
+- **Manuals** (`data/common/system/share/cr3/manual`, `cr3gui/data/manual`): the Russian and Ukrainian manuals follow the current menus (font weight, hinting, letter spacing in justified lines, TOC page numbers, G-sensor, clear cache, reading menu icons) and describe the OPDS catalogs, the reading statistics, StarDict and XDXF dictionaries, *Selected dictionaries*, the dictionary settings and the search keyboard. `cr3-manual-en.fb2` is new: the same manual in English, without screenshots. `cr3gui/data/manual/cr3-manual-ru.fb2` was the manual of 2011; it is the packaged one now.
+- **Translations:** Russian and Ukrainian texts of the two warnings about a failed save.
 - **Engine:** `crengine/` is CREngine 3.2.59-1 with the PocketBook port of dderugin (`crengine/POCKETBOOK-PORT.txt`, `crengine/UPSTREAM.json`): the retained `crgui`/`crskin` window framework and `src/pocketbook_compat.cpp`. HarfBuzz, FriBidi, libunibreak, Zstd, NanoSVG and utf8proc are off (`crengine/include/crsetup.h`).
   - New in the engine against 3.1.2: the block layout of CSS (tables, floats, borders, margins), DOCX, ODT and FB3 books, footnotes at the bottom of the page by a CSS hint, hyphenation patterns by language.
   - The cache files of books made by the old engine are not used: a book is laid out again when it is opened for the first time. Reading positions and bookmarks are converted by the engine.

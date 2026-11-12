@@ -280,11 +280,11 @@ void CRGUIWindowManager::updateWindow( CRGUIWindow * window )
         if ( !_windows[i]->isVisible() )
             continue;
         lvRect rc = _windows[i]->getRect();
-        if ( coverBox.isRectInside( rc ) )
+        if ( !coverBox.isEmpty() && !rc.isEmpty() && coverBox.isRectInside( rc ) ) // an empty box covers nothing: lvRect::isRectInside() of CREngine 3.2 accepts empty rectangles
             continue; // fully covered by top window
         if ( !rc.isEmpty() )
             drawList.add( _windows[i] );
-        if ( !rc.isRectInside( coverBox ) )
+        if ( coverBox.isEmpty() || rc.isEmpty() || !rc.isRectInside( coverBox ) )
             coverBox = rc;
     }
     while ( !drawList.empty()  ) {
@@ -309,11 +309,11 @@ void CRGUIWindowManager::update( bool fullScreenUpdate, bool forceFlushScreen )
         if ( !_windows[i]->isVisible() )
             continue;
         lvRect rc = _windows[i]->getRect();
-        if ( coverBox.isRectInside( rc ) )
+        if ( !coverBox.isEmpty() && !rc.isEmpty() && coverBox.isRectInside( rc ) ) // an empty box covers nothing: lvRect::isRectInside() of CREngine 3.2 accepts empty rectangles
             continue; // fully covered by top window
         if ( !rc.isEmpty() )
             drawList.add( _windows[i] );
-        if ( !rc.isRectInside( coverBox ) )
+        if ( coverBox.isEmpty() || rc.isEmpty() || !rc.isRectInside( coverBox ) )
             coverBox = rc;
     }
     while ( !drawList.empty()  ) {

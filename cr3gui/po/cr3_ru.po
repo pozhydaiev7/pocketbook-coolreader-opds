@@ -2334,3 +2334,11 @@ msgstr "Системная"
 #: ../src/settings.cpp
 msgid "Letter spacing in justified lines"
 msgstr "Разрядка букв в выровненных строках"
+
+#: ../src/mainwnd.cpp
+msgid "Could not save reading position and bookmarks. Changes may be lost."
+msgstr "Не удалось сохранить позицию чтения и закладки. Изменения могут быть потеряны."
+
+#: ../src/mainwnd.cpp
+msgid "Could not save settings. Changes may be lost when CoolReader closes."
+msgstr "Не удалось сохранить настройки. Изменения могут быть потеряны при закрытии CoolReader."

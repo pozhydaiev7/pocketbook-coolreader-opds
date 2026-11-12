@@ -30,15 +30,16 @@
    <program-used>FictionBook Editor Release 2.6.7</program-used>
    <date value="2020-09-09">09.09.2020</date>
    <id>B8A5F03F-9F8B-45AA-B5F7-DADD4419EB84</id>
-   <version>1.5</version>
+   <version>1.7</version>
    <history>
     <p>1.0 – создание файла [biv_sumy]; </p>
     <p>1.1 – адаптация под PocketBook 627 [kaznelson]; </p>
     <p>1.2 – правки, дополнения и уточнения [kaznelson]; </p>
     <p>1.3 – добавление старых тем [kaznelson]; </p>
     <p>1.4 – добавление иллюстраций [kaznelson]; </p>
-    <p>1.5 – мелкие правки [kaznelson]; </p>
-    <p>1.6 – дополнения и уточнения с учетом прошивки 6 [kaznelson]. </p>
+    <p>1.5 – мелкие правки [kaznelson]; </p>
+    <p>1.6 – дополнения и уточнения с учетом прошивки 6 [kaznelson]; </p>
+    <p>1.7 – сборка CoolReader OPDS 0.0.6-17-67: каталоги книг, статистика чтения, словари StarDict и XDXF, настройки словаря, жирность шрифта, оглавление, поворот [pozhydaiev7, 11.2026]. </p>
    </history>
   </document-info>
  </description>
@@ -51,9 +52,11 @@
     <p>Основные возможности</p>
    </title>
    <p>Программа позволяет читать файлы следующих форматов:</p>
-   <p><strong>FB2</strong>, <strong>EPUB</strong>, <strong>HTML</strong>, <strong>CHM</strong>, <strong>TXT</strong>, <strong>RTF</strong>, <strong>DOC</strong></p>
+   <p><strong>FB2</strong>, <strong>EPUB</strong>, <strong>HTML</strong>, <strong>CHM</strong>, <strong>TXT</strong>, <strong>RTF</strong>, <strong>DOC</strong>, <strong>DOCX</strong>, <strong>ODT</strong>, <strong>FB3</strong></p>
    <empty-line/>
    <p>В программе реализовано: содержание, закладки, поиск, переключение между последними открытыми файлами, работа со словарем и цитатами, переход на произвольные страницы, просмотр информации о текущем файле и версии программы, настраиваемые стили отображения текста, возможность изменять внешний вид программы.</p>
+   <empty-line/>
+   <p>В этой сборке (CoolReader OPDS) дополнительно есть: сетевые каталоги книг OPDS с поиском и скачиванием, словари StarDict и XDXF, поиск слова сразу в нескольких словарях, статистика чтения, автоматический поворот страницы по датчику положения, работа на прошивке 6.11.</p>
    <empty-line/>
    <p>Также программа поддерживает управление подсветкой и корректно работает с защитными обложками, имеющими функцию усыпления устройства.</p>
    <cite>
@@ -186,9 +189,11 @@
      <p>• <strong>Выход из книги</strong> – на экран открытия;</p>
      <p>• <strong>Содержание</strong> – открыть оглавление;</p>
      <p>• <strong>Закладки</strong> – открыть список закладок;</p>
-     <p>• <strong>Поиск</strong> – искать введенное слово / фразу;</p>
-     <p>• <strong>Словарь</strong> – открыть выбранный словарь;</p>
-     <p>• <strong>Поворот</strong> – повернуть экран с шагом 90°;</p>
+     <p>• <strong>Словарь</strong> – открыть выбранный словарь;</p>
+     <p>• <strong>Поиск</strong> – искать введенное слово / фразу;</p>
+     <p>• <strong>Каталог книг</strong> – открыть сетевой каталог (OPDS);</p>
+     <p>• <strong>Статистика чтения</strong> – открыть отчеты о времени чтения;</p>
+     <p>• <strong>Поворот</strong> – повернуть экран с шагом 90°;</p>
      <p>• <strong>Настройки</strong> – открыть меню настроек.</p>
     </cite>
     <empty-line/>
@@ -202,7 +207,7 @@
     <p>Также можно быстро регулировать уровень подсветки с помощью вертикального жеста по правой стороне экрана.</p>
     <empty-line/>
     <subtitle>Классический вид меню чтения</subtitle>
-    <p>Если название используемого стиля интерфейса отличается от <emphasis>pb626fw5</emphasis> или <emphasis>pb631fw5</emphasis>, то меню чтения будет отображаться в классическом виде старых PocketBook (с незначительным изменением функциональности):</p>
+    <p>Если название используемого стиля интерфейса отличается от <emphasis>pb617fw5, pb618fw5, pb626fw5, pb631fw5, pb700fw5, pb740fw5</emphasis> и <emphasis>pbXfw5</emphasis>, то меню чтения будет отображаться в классическом виде старых PocketBook (с незначительным изменением функциональности):</p>
     <empty-line/>
     <image l:href="#i_012.png"/>
     <empty-line/>
@@ -224,16 +229,18 @@
     <title>
      <p>Содержание</p>
     </title>
-    <p>Данный пункт меню чтения позволяет просматривать оглавление (без нумерации страниц) и переходить по главам читаемой книги.</p>
+    <p>Данный пункт меню чтения позволяет просматривать оглавление и переходить по главам читаемой книги. Номера страниц глав включаются в настройках отображения («<emphasis>Номера страниц в оглавлении</emphasis>»).</p>
     <empty-line/>
     <image l:href="#i_013.png"/>
     <empty-line/>
     <p>Текущая глава отмечена угловым маркером. Для выбора другой главы достаточно по тапнуть по соответствующей строке.</p>
     <empty-line/>
     <subtitle>Классический вид содержания</subtitle>
-    <p>Если в настройках программы отключить новый навигатор по главам, то вместо него будет использован старый вид оглавления из стандартной для PocketBook темы «Line» – с отображением нумерации страниц, сворачиванием заголовков первого уровня, но с весьма мелким шрифтом.</p>
-    <empty-line/>
-    <image l:href="#i_014.png"/>
+    <p>Если в настройках отображения отключить «<emphasis>Использовать новый навигатор по главам</emphasis>», оглавление показывается простым списком глав с отступами и номерами страниц. Список работает с любым стилем интерфейса и на всех прошивках.</p>
+    <cite>
+     <p><strong>Примечание:</strong></p>
+     <p>Прежнее окно оглавления из темы PocketBook на прошивке 6.11 закрывало программу, поэтому в этой сборке оно заменено.</p>
+    </cite>
    </section>
    <section>
     <title>
@@ -286,6 +293,27 @@
     <p>Для смены текущего словаря требуется тапнуть по заголовку словарного окна, затем в появившемся меню выбрать нужный словарь.</p>
     <empty-line/>
     <p>Закрыть окно словаря можно тапом по значку стрелки в строке его меню.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Какие словари работают</subtitle>
+    <p>В одном списке показаны словари трех видов:</p>
+    <p>• словари PocketBook (<emphasis>*.dic</emphasis>);</p>
+    <p>• словари <strong>StarDict</strong>: файлы <emphasis>.ifo</emphasis>, <emphasis>.idx</emphasis> (или <emphasis>.idx.gz</emphasis>), <emphasis>.dict</emphasis> (или <emphasis>.dict.dz</emphasis>), по желанию <emphasis>.syn</emphasis> со словоформами («домами» находит «дом»);</p>
+    <p>• словари <strong>XDXF</strong>: простой файл <emphasis>.xdxf</emphasis> без сжатия.</p>
+    <p>У словарей StarDict и XDXF после названия указан формат. Все словари кладутся в папку <emphasis>system/dictionaries</emphasis> во внутренней памяти или на карте: каждый словарь в свою подпапку или прямо в эту папку.</p>
+    <cite>
+     <p><strong>Примечание:</strong></p>
+     <p>Встроенные словари прошивки 6.11 хранятся в закрытой области памяти и программе недоступны.</p>
+    </cite>
+    <image l:href="#i_026.png"/>
+    <subtitle>Выбранные словари</subtitle>
+    <p>Первая строка списка словарей – «<emphasis>Выбранные словари</emphasis>»: слово ищется сразу в нескольких словарях (до пяти). Они отмечаются в пункте «<emphasis>Отметить словари…</emphasis>»: тап по строке ставит или снимает отметку <strong>[x]</strong>.</p>
+    <p>Статьи разных словарей разделены линией, над каждой мелко написано название словаря. Если ни один словарь не отмечен, поиск не выполняется, и окно словаря об этом сообщает.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Листание статьи и книги</subtitle>
+    <p>Длинная статья и список слов листаются вертикальным движением пальца по окну словаря; номер страницы статьи виден в заголовке. Листание книги клавишами и горизонтальным жестом окно словаря не закрывает.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Клавиатура поиска</subtitle>
+    <p>Для ручного ввода слова используется собственная клавиатура программы: английская, русская и украинская раскладки, цифры и знаки; при инверсном отображении (ночной режим) она темная. Вместо нее можно выбрать системную клавиатуру (см. «<emphasis>Настройки</emphasis>» &gt; «<emphasis>Словарь</emphasis>»). На устройствах без сенсорного экрана всегда используется системная.</p>
    </section>
    <section>
     <title>
@@ -305,6 +333,47 @@
    </section>
    <section>
     <title>
+     <p>Каталог книг (OPDS)</p>
+    </title>
+    <p>Данный пункт меню чтения открывает сетевую библиотеку: в ней можно просматривать разделы, искать книги, скачивать их и сразу открывать, не выходя из программы. Нужен Wi-Fi; если он выключен, программа попросит устройство подключиться.</p>
+    <empty-line/>
+    <p>Значок открывает каталог по умолчанию, а если он не назначен – список каталогов. Тот же список есть в меню настроек: «<emphasis>OPDS-каталоги</emphasis>».</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Список каталогов</subtitle>
+    <p>Флибуста есть в списке всегда: ее адрес можно заменить на адрес зеркала, но удалить или переименовать ее нельзя. Другие каталоги добавляются пунктом «<emphasis>Добавить каталог...</emphasis>» (адрес и название).</p>
+    <p>Пункт «<emphasis>Изменить каталоги...</emphasis>» позволяет для каждого каталога сменить название и адрес, назначить его каталогом по умолчанию или удалить.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Навигация</subtitle>
+    <p>Стрелка в заголовке и первая строка каждого экрана ведут на уровень выше, а с первой страницы каталога – обратно в книгу.</p>
+    <p>В списках книг каждая книга занимает две строки: название и автор. В нижней строке: «<emphasis>Назад</emphasis>» слева, «<emphasis>Далее</emphasis>» справа, а номер страницы в центре открывает меню каталога: назад к списку, поиск, в начало каталога, другой каталог, адрес каталога.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Поиск</subtitle>
+    <p>Поиск идет в два шага, как его отдает каталог: сначала выбирается, что искать (авторов или книги), затем открывается список найденного.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Экран книги</subtitle>
+    <p>На экране книги показаны название и автор (тап открывает полное описание: жанры, год, формат, язык, размер, серия, аннотация), строки «<emphasis>Скачать и открыть</emphasis>» для каждого формата, который предлагает каталог, и ссылки на другие книги автора и серии.</p>
+    <p>Скачанная книга сохраняется в папку <emphasis>Books/Flibusta</emphasis>, сразу открывается, появляется в библиотеке PocketBook и в списке последних книг на домашнем экране. Позиция в прежней книге перед этим сохраняется.</p>
+   </section>
+   <section>
+    <title>
+     <p>Статистика чтения</p>
+    </title>
+    <p>Программа записывает, сколько времени каждая страница была на экране, и строит по этим данным отчеты. Открывается значком с диаграммой в меню чтения или пунктом «<emphasis>Статистика чтения</emphasis>» в меню настроек.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Что считается чтением</subtitle>
+    <p>• страница, показанная меньше 5 секунд, считается пролистанной и не учитывается;</p>
+    <p>• больше 2 минут на одной странице засчитывается как 2 минуты;</p>
+    <p>• режим ожидания и выход из книги останавливают счет.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Отчеты</subtitle>
+    <p>• отчет по текущей книге: когда начата и закончена, дни чтения, прочитано страниц из общего числа, общее время, сколько осталось до конца, среднее время на страницу и на день чтения, время по дням;</p>
+    <p>• отчеты за период (сегодня, неделя с понедельника, месяц, год, все время или свои даты в виде <emphasis>дд.мм.гггг-дд.мм.гггг</emphasis>): страницы и слова, книги, общее время, время по дням и по книгам;</p>
+    <p>• список всех книг с общим временем чтения; тап открывает отчет по книге.</p>
+    <empty-line/>
+    <p>Журнал хранится в файле <emphasis>system/state/cr3/cr3stats.txt</emphasis> и сохраняется при обновлении программы. Чтобы начать статистику заново, удалите этот файл.</p>
+   </section>
+   <section>
+    <title>
      <p>Поворот</p>
     </title>
     <p>Данный пункт меню чтения позволяет повернуть экран на один из четырех заданных углов: <strong>0°</strong>; <strong>90°</strong>; <strong>180°</strong>; <strong>270°</strong>.</p>
@@ -312,6 +381,8 @@
     <image l:href="#i_021.png"/>
     <empty-line/>
     <p>Требуемый угол поворота экрана выбирается тапом по соответствующему значку, после чего панель поворота закрывается автоматически с одновременным выполнением поворота.</p>
+    <empty-line/>
+    <p>На устройствах с датчиком положения страница может поворачиваться сама: при значении <strong>360°</strong> в пункте «<emphasis>Настройки управления</emphasis>» &gt; «<emphasis>Управление G-сенсором</emphasis>» она поворачивается на 90°, когда читалка лежит на боку. Поворачивается только CoolReader, системная ориентация устройства не меняется.</p>
    </section>
    <section>
     <title>
@@ -362,8 +433,12 @@
      <empty-line/>
      <image l:href="#i_026.png"/>
      <subtitle>Жирность шрифта</subtitle>
-     <p>Выбор так называемого «веса» шрифта, доступного при наличии соответствующего файла в используемом семействе.</p>
-     <p><emphasis>Значение:</emphasis> стандарт / жирный</p>
+     <p>Толщина штриха букв основного шрифта. «Стандарт» соответствует весу 400, «Жирный» – 700; промежуточные значения делают текст немного плотнее или тоньше. Работает с любым шрифтом: если в семействе нет файла нужного веса, программа утолщает буквы сама.</p>
+     <p><emphasis>Значение:</emphasis> 300 / стандарт (400) / 425 / 450 / 475 / 500 / 525 / 550 / 600 / 650 / жирный (700) / 800 / 900</p>
+     <cite>
+      <p><strong>Примечание:</strong></p>
+      <p>Этот пункт заменяет прежние «стандарт / жирный» и «Утолщение шрифта»; сохраненные значения пересчитываются при первом запуске.</p>
+     </cite>
      <image l:href="#i_026.png"/>
      <subtitle>Сглаживание букв</subtitle>
      <p>Сглаживание позволяет устранить эффект «зубчатости» на краях символов.</p>
@@ -371,18 +446,14 @@
      <image l:href="#i_026.png"/>
      <subtitle>Хинтинг шрифта</subtitle>
      <p>Изменение контура шрифта при его растеризации для более четкого отображения мелких шрифтов и оптимизации под устройства с низким разрешением экрана.</p>
-     <p><emphasis>Значение:</emphasis> отключено / байт-код / автохинтинг / легкий</p>
+     <p><emphasis>Значение:</emphasis> отключено / байт-код / автохинтинг</p>
      <image l:href="#i_026.png"/>
      <subtitle>Кернинг шрифта</subtitle>
      <p>Избирательное изменение интервала между буквами в зависимости от их формы для улучшения зрительного восприятия текста.</p>
      <p><emphasis>Значение:</emphasis> включен / выключен</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Утолщение шрифта</subtitle>
-     <p>Изменение контуров букв для лучшего отображения чрезмерно тонких или слишком толстых шрифтов.</p>
-     <p><emphasis>Значение:</emphasis> от -2.0 до 5.0</p>
-     <image l:href="#i_026.png"/>
      <subtitle>Межбуквенный интервал</subtitle>
-     <p>Равномерное (в отличие от кернинга) изменение расстояния между буквами.</p>
+     <p>Равномерное (в отличие от кернинга) изменение расстояния между буквами, в тысячных долях высоты шрифта. Отрицательные значения сближают буквы.</p>
      <p><emphasis>Значение:</emphasis> от -50 до 250</p>
      <image l:href="#i_026.png"/>
      <subtitle>Гамма-коррекция шрифтов</subtitle>
@@ -423,9 +494,9 @@
      <p>Минимальная ширина пробела, до которой его можно сжать при форматировании текста.</p>
      <p><emphasis>Значение:</emphasis> от 25 % до 100 %</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Расширять пробелы до</subtitle>
-     <p>Максимальная ширина пробела, до которой его можно растянуть при форматировании текста.</p>
-     <p><emphasis>Значение:</emphasis> от 100 % до 800 %</p>
+     <subtitle>Разрядка букв в выровненных строках</subtitle>
+     <p>Насколько программа может увеличить расстояние между буквами в строке, выровненной по ширине, чтобы не растягивать пробелы слишком сильно. При 0 % буквы не раздвигаются.</p>
+     <p><emphasis>Значение:</emphasis> от 0 % до 20 %</p>
      <image l:href="#i_026.png"/>
      <subtitle>Висячая пунктуация</subtitle>
      <p>Способ набора текста, при котором знаки препинания, маркеры списков, кавычки и дефисы находятся вне текста.</p>
@@ -561,7 +632,11 @@
      </cite>
      <image l:href="#i_026.png"/>
      <subtitle>Использовать новый навигатор по главам</subtitle>
-     <p>Отображать оглавление книги в новом стиле (без страниц); иначе использовать старое из темы PocketBook (мелкий шрифт).</p>
+     <p>Отображать оглавление книги в новом стиле; иначе показывать простой список глав с отступами и номерами страниц.</p>
+     <p><emphasis>Значение:</emphasis> включить / выключить</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Номера страниц в оглавлении</subtitle>
+     <p>Показывать номера страниц глав в новом оглавлении.</p>
      <p><emphasis>Значение:</emphasis> включить / выключить</p>
      <image l:href="#i_026.png"/>
      <subtitle>Стиль интерфейса</subtitle>
@@ -570,8 +645,28 @@
      <cite>
       <p><strong>Примечания:</strong></p>
       <p>Сторонние skin-файлы ставить можно, но без гарантий полной совместимости.</p>
-      <p>Новое меню чтения доступно только для файлов с именами pb626fw5 / pb631fw5.</p>
+      <p>Новое меню чтения доступно только для файлов с именами pb617fw5 / pb618fw5 / pb626fw5 / pb631fw5 / pb700fw5 / pb740fw5 / pbXfw5.</p>
+      <p>Если стиль не выбран, программа берет его по размеру экрана.</p>
      </cite>
+    </section>
+    <section>
+     <title>
+      <p>Словарь</p>
+     </title>
+     <p>Данный пункт открывает вложенное подменю с настройками окна словаря.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Окно словаря</subtitle>
+     <p>Где показывать окно словаря: в стороне от выбранного слова (окно само переходит к противоположному краю экрана), всегда вверху или всегда внизу.</p>
+     <p><emphasis>Значение:</emphasis> напротив слова / вверху / внизу</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Поиск слова</subtitle>
+     <p>Что показывать, если слова нет в словаре: список ближайших слов или сообщение о том, что слово не найдено.</p>
+     <p><emphasis>Значение:</emphasis> с ближайшими словами / точный</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Клавиатура поиска</subtitle>
+     <p>Клавиатура для ручного ввода слова. Пункт есть только на устройствах с сенсорным экраном.</p>
+     <p><emphasis>Значение:</emphasis> CoolReader, с ночным режимом / системная</p>
     </section>
     <section>
      <title>
@@ -581,6 +676,18 @@
      <empty-line/>
      <image l:href="#i_031.png"/>
      <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Управление G-сенсором</subtitle>
+     <p>Реакция программы на поворот устройства. При значении 360° (стоит по умолчанию) страница поворачивается на 90°, когда читалка лежит на боку, например при чтении лежа; при 180° – только переворачивается. В вариантах «180°+стр.» наклон устройства дополнительно перелистывает страницы.</p>
+     <p><emphasis>Значение:</emphasis> 360° / 180° / 180° с перелистыванием наклоном (пять вариантов)</p>
+     <cite>
+      <p><strong>Примечание:</strong></p>
+      <p>Пункт есть только на устройствах с датчиком положения. Поворачивается только CoolReader, системная ориентация не меняется.</p>
+     </cite>
+     <image l:href="#i_026.png"/>
+     <subtitle>Наклон для перелистывания</subtitle>
+     <p>Угол наклона устройства, при котором выполняется перелистывание в вариантах «180°+стр.».</p>
+     <p><emphasis>Значение:</emphasis> список углов</p>
      <image l:href="#i_026.png"/>
      <subtitle>Короткий / долгий тап</subtitle>
      <p>Назначение пользовательских действий на выбранные тап-зоны сенсорного экрана.</p>
@@ -692,17 +799,21 @@
      <title>
       <p>Очистить кэш</p>
      </title>
-     <p>Данный пункт меню позволяет выполнить принудительную очистку кэша документов (кроме текущего).</p>
+     <p>Данный пункт меню позволяет выполнить принудительную очистку кэша документов, включая кэш открытой книги.</p>
      <empty-line/>
      <image l:href="#i_034.png"/>
     </section>
     <section>
      <title>
-      <p>Обновление программы по сети</p>
+      <p>OPDS-каталоги</p>
      </title>
-     <p>Данный пункт меню не работает по причине прекращения поддержки программы разработчиком.</p>
-     <empty-line/>
-     <image l:href="#i_035.png"/>
+     <p>Данный пункт меню открывает список сетевых каталогов книг: открыть каталог, добавить новый, изменить название и адрес, назначить каталог по умолчанию (см. главу «<emphasis>Каталог книг (OPDS)</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Статистика чтения</p>
+     </title>
+     <p>Данный пункт меню открывает отчеты о времени чтения (см. главу «<emphasis>Статистика чтения</emphasis>»).</p>
     </section>
    </section>
   </section>
@@ -1172,6 +1283,27 @@
     <empty-line/>
     <p>Вывод процентов (1 – да / 0 – нет):</p>
     <p><strong>window.status.pos.percent=1</strong></p>
+    <empty-line/>
+    <p>Вес основного шрифта (300–900; 400 – стандарт, 700 – жирный):</p>
+    <p><strong>font.face.base.weight=400</strong></p>
+    <empty-line/>
+    <p>Межбуквенный интервал (в тысячных долях высоты шрифта):</p>
+    <p><strong>crengine.font.tracking=0</strong></p>
+    <empty-line/>
+    <p>OPDS-каталоги (N – номер, 0 – Флибуста), каталог по умолчанию (номер плюс один; 0 – нет) и папка для скачанных книг:</p>
+    <p><strong>cr3.pocketbook.opds.catalog.N.name=</strong></p>
+    <p><strong>cr3.pocketbook.opds.catalog.N.url=</strong></p>
+    <p><strong>cr3.pocketbook.opds.default=0</strong></p>
+    <p><strong>cr3.pocketbook.opds.dir=</strong></p>
+    <empty-line/>
+    <p>Точный поиск слова в словаре (1 – да / 0 – с ближайшими словами):</p>
+    <p><strong>cr3.pocketbook.dict.exact=0</strong></p>
+    <empty-line/>
+    <p>Клавиатура поиска в словаре (0 – CoolReader / 1 – системная):</p>
+    <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>
+    <empty-line/>
+    <p>Прямой вывод страницы на экран (0 – выключить, если изображение искажено):</p>
+    <p><strong>cr3.pocketbook.direct.blit=1</strong></p>
    </section>
   </section>
  </body>
@@ -2474,109 +2606,6 @@ XsH5seun9OS1LlWY5FLolSkA1dMjsDHoFWqzsBQNaMDLO/EBlvICPtL3TGc+wGkvAdBvlvDJ
 M6jDRw15eZ4G6KUP0EBsD+b3G3mG2T7co8QRnjjzENFDyKzuOeljW3I47yN8c4n3o/L7hl15
 v+8a7nRY6Qj/CjmRdlTrvp5nmKeIh/E9L0ZIo3cyn94453cCaWcmf36neOlVIMs00bhkTL38
 P3FK/yWBAt+aAAAAAElFTkSuQmCC</binary>
- <binary id="i_014.png" content-type="image/png">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
-</binary>
  <binary id="i_015.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAAu4AAACWBAMAAABz3RB8AAAAMFBMVEX////n5+eLi4tISEjI
 yMgCAgI3NzcXFxfa2tqXl5e1tbVXV1eqqqpnZ2cnJyd3d3fWP7ahAAAAAXRSTlMAQObYZgAA
 AAlwSFlzAAALEgAACxIB0t1+/AAAFpBJREFUeNrtnX1gE0X+xp9J13aT5mVCX6HQhnJBEU8L
@@ -4790,42 +4819,6 @@ j/v4EL8R7hHdx4b4Hexx3fVyjf0V9dju14YaBpkHuCv98hnInkPqQ9zP5VF/nLuUvtTOObd/
 Rf2h7oQ77rjjjjvuuOOOO+6440644064406444477rjjjjvuuBPuuBPuuBPuuOOOO+644447
 7oQ77oQ77oQ77rjjjjvuuOOOO+6440644064406444477rjjjjvuuBPuuBPuuFMAdwoQ7rjj
 jjvuz+X+H+LkXZZHKJciAAAAAElFTkSuQmCC</binary>
- <binary id="i_035.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAAu4AAADmBAMAAAB4/x29AAAAG1BMVEX///8AAADT09O9vb2p
-qalcXFyVlZURERE7OztNJ71pAAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEgAACxIB0t1+/AAA
-BwhJREFUeNrt3UGPokgUwHGwO8QjdXE9dtJ+gE6nP0BH2fkEmz1LsuvMdS57hsvEj731XlUh
-joDONliu/X9J24oUyK+eVQUqJEl3pIYYI/Lk1wJ33HEncL9b94T4aOCOO+6444477rjjTuCO
-O4E77gTuuOOOO+6444477gTuuBO4407gjjvuuOOOO+6444477rgTuONO4I47gTvuuOOOO+64
-4447gTvuBO64E7jjjjvuuOOOO+64E7jjTuCOO4E77rhP7T57fitsbF6f8L6e+0zRXWyQv5J7
-Wx35q7k/FCfxAvrk7s9FR7yiPrH7quiMNeyTuj8UPUFTM6X7rOgNOtcJ3YuBwH0y99WQ+xr3
-idwfisF4wX0a9+JM4D6J++qc+xr3Cdxnxdl4wn1899V59zXuo7tfkO6fPOGncV9d4r7GfWz3
-4qLAfWT3x8vc33Ef1/3tMvcN7qO6z4oL4wn3Md0fL3V/x31M9+LiwH1E94fL3Z9wH8/98XL3
-d9zHc3+73H2D+2jus6KgoYng3m5m/uyy/puGZgr31rGZ33/765T9y/c/OEYzgftbm/ifU/ev
-7crY4D6We69xZ13gPpL7wwByR1W84D6O+2MxmPA/18Q77uO4rwaZTypijfs47m+Dzif1sMF9
-HPfhbvS0o8V9Evdj6Y5+FvdR3GeD48aOceUT7mO4PwztJ3XtR73gPob7YzGQ8B3p/lkHktO7
-H7Q7DxvgPor7quhP+K50/6wD+Cu4B+/OdO91T+V1ldX/zTPN47h3fdjkwTvTvXfHCfcPuzvx
-7nTHfRz3zk/zlLw73Xt3nHD/uLuY96T7effabJPMGPPDPp6bpb21j2SS1InRGSq9Y+zTWkJe
-n07UWXULXUG7tfZ/Zp+vc9kOk8t9fW6+sBOrzN4rc5nNLDO3mZmsX5eT6/K0rI1vZqEvaJH4
-2V3R23K36H3pfs69dFR7x7+Ul2uWtbH3lVNmsI9US268u5soTvu9dfIFE7sYdRe+dGmfkTv2
-uUXL3c5oV7b/4d3tkuzEerkP7plf8NKuW6qj8rO7orflbhO+L93PuVtuu60+mRZWS7LaTs0k
-01LjZqhkopG73t1NTLRgGgombkkWrly4yeKe6pTGfS4gUsy7Gy3lajYJZX1pXW6Y3RW9Mfcv
-3/vSvehfjSTTXJJt6/lqRc22SmQ0rXUG2VizNXLXuYeJyVFBzVZVlqajcdfCuh5xL4/dD+sP
-7lJW5pWqcrfBvbwj9zR4yDbKJrvNlhSs7b+6SiV19c+IjHMPE4O7LxjcNfeDu5bKG3ddinPf
-7fxS2vmuZZuXUWnFeHdT3ks7Y1lVP9MO0XWYQmjbmMyUlqmsZD7JubmR3la6A+NyeN52dwUF
-Xdx1m727NNDWNLOFxT1bNg2HrtM7GukMXD+dh+Yn8T1qcNei99KvpsvdbrfVYcm2cd9rV5vm
-88XBPXUjjkH3edu9PHJPXP1auoP77pupvGPajGeO3X/s5E3h3LXovYwj/fvcj++adkba92yR
-5mXTztS5kX+D7YytCtfOmIO7b2f0/WLd623aat/L3K3fPrvz+Z6adjuzTcLLC0WTG3L/wH7T
-fBk2LF347nEuCVpJD1dvy9CvykOVGupX00XoV11P0PSrdRUq0yRt91Tb/XIrE5t+Nff9arbw
-5UKzlER0H/04gaRpazhoHYRCmny7b+RnsJtvuzslOYwj6+NxZKgfdZfO0Wzb48jgnh+517kb
-R8rCgrvrWJtxZFKF2fNbc//QcTHdA5LdH5P/tN8kAmEGJ+QmHO03hXeDFJxL76g1ZtFLTedm
-vym4Vy33fW38flN7/O4al7DftDwMO7XovIrjPvpx4Kz2+4WL5jjB3B0n0De/P06Qud2r0+ME
-vsHRgtrnumMD5ULeDunhOEFwT5L2eKbyxwm05wjubsfJHSf45g5cNM1StH71lj/3KPNfOHDF
-53y4/yf32/lc+57db/l7HPfsfsvfW8q24eb+3Pme3m24873UK7nzPew47vzuII47v7OJ487v
-yuK48zvKSO78bjiOO7+Tj+POeSHiuHMelDjunPcnkjvnuYrjPqOZieLOeQwjuXPezjjunKc2
-jjvnZY7kznnI47hz3v1I7lxnIo4711WJ4851hCK5c92sOO5cJy6SO9dFjOTOdUDjuHPd20ju
-XOc5kjvXNY/j3t/EvyS4T+je18SvYZ/WPXnuYn9FfWr3rqaGRuYK7snsp89ANnSpV3E/lkf9
-eu5W/lnpN6+oX9WdwB133HHHHXfccccdd9xxJ3DHncAddwJ33HHHHXfccccddwJ33AnccSdw
-xx133HHHHXfccSdwx53AHXcCd9xxxx133HHHHXfcccedwB13AnfcCdxxxx133HHHHXfcCdxx
-J3DHnRjBnRghcMcdd9xx/1zu/wJiBRzB8tKn3AAAAABJRU5ErkJggg==</binary>
  <binary id="i_036.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAAu4AAAGGCAAAAAABOVu8AAAAAnRSTlMA/1uRIrUAAAAJcEhZ
 cwAACxIAAAsSAdLdfvwAACmwSURBVHja7Z2vn53IEkdLtkQikUgkEolEIpFIJBLZEolEIpFI
 JBKJbNmy/4PzBHcmPzabzXu7eZswdcwkd2Zu8hnOramu2/RXUJQPg+iPQFHdFUV1VxTVXVFU

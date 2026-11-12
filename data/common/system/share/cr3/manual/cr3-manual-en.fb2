@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink">
+ <description>
+  <title-info>
+   <genre>comp_soft</genre>
+   <author>
+    <nickname>biv_sumy</nickname>
+   </author>
+   <author>
+    <nickname>kaznelson</nickname>
+   </author>
+   <author>
+    <nickname>pozhydaiev7</nickname>
+   </author>
+   <book-title>Cool Reader 3 for PocketBook: User Manual</book-title>
+   <annotation>
+    <p>User manual of Cool Reader 3 for PocketBook, OPDS edition (0.0.6-17-67-opds).</p>
+    <p>It is an English edition of the Russian manual by biv_sumy and kaznelson, brought up to date with the current menus and the features of this build.</p>
+   </annotation>
+   <date>2011-2026</date>
+   <coverpage>
+    <image l:href="#cover.png"/>
+   </coverpage>
+   <lang>en</lang>
+   <src-lang>ru</src-lang>
+  </title-info>
+  <document-info>
+   <author>
+    <nickname>pozhydaiev7</nickname>
+   </author>
+   <program-used>text editor</program-used>
+   <date value="2026-11-12">12.11.2026</date>
+   <id>CR3-PB-OPDS-MANUAL-EN-0001</id>
+   <version>1.0</version>
+   <history>
+    <p>1.0 – English edition for the build CoolReader OPDS 0.0.6-17-67, made from the Russian manual 1.7 [pozhydaiev7, 11.2026]. </p>
+   </history>
+  </document-info>
+ </description>
+ <body>
+  <title>
+   <p>Cool Reader 3</p>
+  </title>
+  <section>
+   <title>
+    <p>Main features</p>
+   </title>
+   <p>The program reads files of the following formats:</p>
+   <p><strong>FB2</strong>, <strong>FB3</strong>, <strong>EPUB</strong>, <strong>HTML</strong>, <strong>CHM</strong>, <strong>TXT</strong>, <strong>RTF</strong>, <strong>DOC</strong>, <strong>DOCX</strong>, <strong>ODT</strong></p>
+   <empty-line/>
+   <p>It has a table of contents, bookmarks, search, a list of the recently opened books, dictionaries and cites, a jump to any page, information about the open file and the program version, adjustable text styles and interface skins.</p>
+   <empty-line/>
+   <p>The program controls the front light and works with covers that put the device to sleep.</p>
+   <empty-line/>
+   <p>This build (CoolReader OPDS) also has: online OPDS book catalogs with search and download, StarDict and XDXF dictionaries, a word lookup in several dictionaries at once, reading statistics, automatic page rotation by the position sensor, and it runs on firmware 6.11.</p>
+   <cite>
+    <p><strong>Note:</strong></p>
+    <p>The settings described in this manual may differ from the current settings on your device.</p>
+   </cite>
+   <cite>
+    <p><strong>About this manual:</strong></p>
+    <p>The English edition has no screenshots. The Russian and Ukrainian manuals (<emphasis>cr3-manual-ru.fb2</emphasis>, <emphasis>cr3-manual-uk.fb2</emphasis> in <emphasis>system/share/cr3/manual</emphasis>) have them.</p>
+   </cite>
+  </section>
+  <section>
+   <title>
+    <p>General information</p>
+   </title>
+   <section>
+    <title>
+     <p>Touch control</p>
+    </title>
+    <p>The main control of the device is the touch screen. A touch of the screen is called a <strong>tap</strong>.</p>
+    <empty-line/>
+    <p>There are two kinds of taps:</p>
+    <p>• <strong><emphasis>short</emphasis></strong> – touch the screen and let go;</p>
+    <p>• <strong><emphasis>long</emphasis></strong> – touch and hold for more than a second.</p>
+    <empty-line/>
+    <p>A tap without a stated kind is always a short one; a long tap is always named.</p>
+    <empty-line/>
+    <p>The screen is divided into 9 areas with adjustable height and width, the <strong>tap zones</strong>. Each tap zone can have two actions: one for a short and one for a long tap.</p>
+    <empty-line/>
+    <p>The program also understands <strong>gestures</strong> (swipes):</p>
+    <p>• <strong><emphasis>line</emphasis></strong> – move a finger across the screen;</p>
+    <p>• <strong><emphasis>pinch</emphasis></strong> – move two fingers together or apart.</p>
+    <empty-line/>
+    <p>A vertical swipe changes the front light, a horizontal swipe turns the page, a pinch changes the font size.</p>
+    <empty-line/>
+    <p>Full-screen service windows have a status line at the bottom. A tap to the left or right of the page number turns the pages of the list; the arrow on the left closes the window.</p>
+    <empty-line/>
+    <p>A window that does not take the whole screen is usually closed by a tap outside of it.</p>
+   </section>
+   <section>
+    <title>
+     <p>Keys</p>
+    </title>
+    <p>On a touch device the keys are a secondary control, so this manual covers only what reading needs.</p>
+    <cite>
+     <p><strong>Important:</strong></p>
+     <p>The key assignments of PocketBook come before those of Cool Reader. To use your own actions, clear the keys in the PocketBook settings first.</p>
+    </cite>
+    <p>The keys: <strong>Home</strong>, <strong>Prev</strong> (back), <strong>Next</strong> (forward), <strong>Menu</strong>, <strong>Power</strong>.</p>
+    <empty-line/>
+    <p>The main key actions are set in the settings of the device:</p>
+    <p><strong>Settings</strong> &gt; <strong>Personalize</strong> &gt; <strong>Key mapping</strong></p>
+    <empty-line/>
+    <p>There are two kinds of key presses:</p>
+    <p>• <strong><emphasis>short</emphasis></strong> – press and release;</p>
+    <p>• <strong><emphasis>long</emphasis></strong> – press and hold for more than a second.</p>
+    <empty-line/>
+    <p>Keys cannot be reassigned in the Cool Reader settings: the file <emphasis>keymaps.ini</emphasis> is edited by hand (see «<emphasis><a l:href="#s_2">Key assignments</a></emphasis>»).</p>
+    <empty-line/>
+    <p>This manual assumes the following key actions:</p>
+    <cite>
+     <p>• In a book <strong>Menu</strong> opens the reading menu, a long press opens the main menu. <strong>Next/Prev</strong> turn pages.</p>
+     <p>• In service windows <strong>Menu</strong> confirms, a long press cancels the choice or closes the window. <strong>Next/Prev</strong> turn pages; <strong>Prev</strong> usually also closes the first or the only window.</p>
+     <p>• <strong>Home</strong> keeps the default PocketBook action.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Reading a book</p>
+    </title>
+    <p>The status line (page header) is at the top of the screen; the settings let you compose it or turn it off.</p>
+    <empty-line/>
+    <p>The status line can show, from left to right:</p>
+    <cite>
+     <p>• author / book title (in turn);</p>
+     <p>• current time;</p>
+     <p>• page / pages to the end of the chapter / total;</p>
+     <p>• how much is read, in percent;</p>
+     <p>• battery charge.</p>
+    </cite>
+    <p>Under them is the progress line; vertical marks on it show the chapters.</p>
+    <empty-line/>
+    <p>The text of the book is below the status line. It may have links and footnotes. Footnotes are shown in one of two ways, chosen in the settings:</p>
+    <cite>
+     <p>• as links to the notes at the end of the book;</p>
+     <p>• in full at the bottom of the page (the part that does not fit goes to the next page).</p>
+    </cite>
+    <p>A long tap on a link, a footnote or a comment opens their pop-up menu. The <strong>Prev</strong> key closes it.</p>
+    <empty-line/>
+    <p>The item «<emphasis>Go to link</emphasis>» or the <strong>Next</strong> key turns on the <strong>link mode</strong>. A navigation panel appears with the actions <emphasis>Back, Forward, Position, Cancel</emphasis>; its look depends on the interface skin.</p>
+    <empty-line/>
+    <p>The left arrow returns to the place of reading; the up arrow moves the panel to the opposite edge of the screen; the <strong>X</strong> on the right turns the link mode off.</p>
+   </section>
+  </section>
+  <section>
+   <title>
+    <p>Reading menu</p>
+   </title>
+   <section>
+    <p>The <strong>Menu</strong> key, or a tap in the centre of the page, gives quick access to the main features of the program.</p>
+    <empty-line/>
+    <p>Items of the reading menu, from left to right:</p>
+    <cite>
+     <p>• <strong>Exit the book</strong> – to the screen it was opened from;</p>
+     <p>• <strong>Contents</strong> – open the table of contents;</p>
+     <p>• <strong>Bookmarks</strong> – open the list of bookmarks;</p>
+     <p>• <strong>Dictionary</strong> – open the chosen dictionary;</p>
+     <p>• <strong>Search</strong> – look for a word or a phrase in the book;</p>
+     <p>• <strong>Book catalog</strong> – open an online catalog (OPDS);</p>
+     <p>• <strong>Reading statistics</strong> – open the reports of the reading time;</p>
+     <p>• <strong>Rotate</strong> – turn the screen in steps of 90°;</p>
+     <p>• <strong>Settings</strong> – open the settings menu.</p>
+    </cite>
+    <empty-line/>
+    <p>To go to any page, move the slider in the lower part of the reading menu, or tap the page numbers above the slider and type the number.</p>
+    <empty-line/>
+    <p>The front light is set in the <a l:href="#s_1">system panel</a>, opened by the button <image l:href="#i_010.png"/> / <image l:href="#i_011.png"/>. There it can be turned on or off and its brightness changed with a slider.</p>
+    <empty-line/>
+    <p>A vertical swipe along the right side of the screen also changes the front light.</p>
+    <empty-line/>
+    <subtitle>Classic reading menu</subtitle>
+    <p>If the interface skin is not one of <emphasis>pb617fw5, pb618fw5, pb626fw5, pb631fw5, pb700fw5, pb740fw5</emphasis> or <emphasis>pbXfw5</emphasis>, the reading menu has the classic look of the old PocketBook devices: a block of 9 icons in the centre of the screen.</p>
+    <empty-line/>
+    <p>Its items (left to right, top to bottom):</p>
+    <cite>
+     <p>• Go to page;</p>
+     <p>• Exit the book;</p>
+     <p>• Search for a word or a phrase;</p>
+     <p>• List of bookmarks;</p>
+     <p>• Close this menu;</p>
+     <p>• Rotate the screen;</p>
+     <p>• Dictionary;</p>
+     <p>• Contents;</p>
+     <p>• Settings.</p>
+    </cite>
+    <p>The commands of this menu can be changed in <emphasis>keymaps.ini</emphasis>; the look of the icons depends on the interface skin.</p>
+   </section>
+   <section>
+    <title>
+     <p>Contents</p>
+    </title>
+    <p>This item of the reading menu shows the table of contents and goes to a chapter of the open book. The page numbers of the chapters are turned on in the display settings («<emphasis>Page numbers in TOC</emphasis>»).</p>
+    <empty-line/>
+    <p>The current chapter has an angle mark. To go to another chapter, tap its row.</p>
+    <empty-line/>
+    <subtitle>Classic contents</subtitle>
+    <p>If «<emphasis>Use new TOC menu</emphasis>» is turned off in the display settings, the contents are a plain list of chapters with indents and page numbers. The list works with every interface skin and on every firmware.</p>
+    <cite>
+     <p><strong>Note:</strong></p>
+     <p>The contents window of the PocketBook theme used before closed the program on firmware 6.11, so this build replaces it.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Bookmarks</p>
+    </title>
+    <p>A short tap on this item of the reading menu opens the list of the bookmarks of the book; a long tap sets a bookmark on the current page.</p>
+    <empty-line/>
+    <p>In the list you can make new bookmarks and go to the pages of the old ones. The chosen bookmark has a triangle mark.</p>
+    <empty-line/>
+    <p>A long tap on a row opens the context menu: set a bookmark, delete it or go to its page.</p>
+    <empty-line/>
+    <p>Keys in the list of bookmarks:</p>
+    <p><strong>Next/Prev</strong> – turn pages;</p>
+    <p><strong>Next/Prev</strong> (<emphasis>long</emphasis>) – choose what a tap on a row does (go / set).</p>
+    <cite>
+     <p><strong>Attention!</strong></p>
+     <p>About 60 bookmarks can be made; after that an error message is shown.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Dictionary</p>
+    </title>
+    <p>The dictionary window opens in the lower part of the screen.</p>
+    <empty-line/>
+    <p>One word of the text is already underlined; the window shows its translation or a list of the nearest dictionary words. To choose another word, tap it.</p>
+    <empty-line/>
+    <p>The window has a caption with the name of the dictionary and a panel of six buttons, from left to right:</p>
+    <cite>
+     <p>• <strong>Close the dictionary window</strong>;</p>
+     <p>• <strong>Search in Google</strong> (needs a network);</p>
+     <p>• <strong>Search in Wiki</strong> (needs a network);</p>
+     <p>• <strong>List of dictionary words</strong>;</p>
+     <p>• <strong>Back to the book to choose a word</strong>;</p>
+     <p>• <strong>Type a word and look it up</strong>.</p>
+    </cite>
+    <p>To change the dictionary, tap the caption of the window and choose a dictionary in the list.</p>
+    <empty-line/>
+    <p>The arrow in the caption closes the dictionary window.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Which dictionaries work</subtitle>
+    <p>One list shows dictionaries of three kinds:</p>
+    <p>• PocketBook dictionaries (<emphasis>*.dic</emphasis>);</p>
+    <p>• <strong>StarDict</strong> dictionaries: the files <emphasis>.ifo</emphasis>, <emphasis>.idx</emphasis> (or <emphasis>.idx.gz</emphasis>), <emphasis>.dict</emphasis> (or <emphasis>.dict.dz</emphasis>) and, if there is one, <emphasis>.syn</emphasis> with word forms («houses» finds «house»);</p>
+    <p>• <strong>XDXF</strong> dictionaries: a plain <emphasis>.xdxf</emphasis> file, not compressed.</p>
+    <p>StarDict and XDXF dictionaries have their format after the name. All dictionaries go to the folder <emphasis>system/dictionaries</emphasis> of the internal memory or of the card: each dictionary in a folder of its own, or straight into that folder.</p>
+    <cite>
+     <p><strong>Note:</strong></p>
+     <p>The built-in dictionaries of firmware 6.11 are kept in a closed part of the memory, and the program cannot read them.</p>
+    </cite>
+    <image l:href="#i_026.png"/>
+    <subtitle>Selected dictionaries</subtitle>
+    <p>The first row of the dictionary list is «<emphasis>Selected dictionaries</emphasis>»: the word is looked up in several dictionaries at once (up to five). They are checked under «<emphasis>Check dictionaries...</emphasis>»: a tap on a row sets or clears the mark <strong>[x]</strong>.</p>
+    <p>The articles of different dictionaries are separated by a line, each with the name of its dictionary in small type. With no dictionary checked nothing is looked up, and the dictionary window says so.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Paging the article and the book</subtitle>
+    <p>A long article and the list of words are paged by a vertical swipe over the dictionary window; the caption shows the page number of the article. Turning the pages of the book with the keys or a horizontal swipe does not close the dictionary window.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Search keyboard</subtitle>
+    <p>A word is typed on the keyboard of the program: English, Russian and Ukrainian layouts, digits and signs; with the inverse display (night mode) it is dark. The firmware keyboard can be chosen instead (see «<emphasis>Settings</emphasis>» &gt; «<emphasis>Dictionary settings</emphasis>»). Devices without a touch screen always use the firmware keyboard.</p>
+   </section>
+   <section>
+    <title>
+     <p>Search</p>
+    </title>
+    <p>To look for a word or a phrase in the book, type it on the on-screen keyboard of the firmware. <strong>Next</strong> starts the search, <strong>Prev</strong> closes the keyboard.</p>
+   </section>
+   <section>
+    <title>
+     <p>Book catalog (OPDS)</p>
+    </title>
+    <p>This item of the reading menu opens an online library: browse its sections, search it, download a book and open it at once, without leaving the program. Wi-Fi is needed; if it is off, the program asks the device to connect.</p>
+    <empty-line/>
+    <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalogs</emphasis>».</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>List of catalogs</subtitle>
+    <p>Flibusta is always in the list: its address can be changed to a mirror, but it cannot be deleted or renamed. Other catalogs are added with «<emphasis>Add catalog...</emphasis>» (address and name).</p>
+    <p>«<emphasis>Edit catalogs...</emphasis>» changes the name and the address of a catalog, makes it the default catalog or deletes it.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Navigation</subtitle>
+    <p>The arrow in the caption and the first row of every screen go one level up; from the start page of the catalog, back to the book.</p>
+    <p>In a list of books each book takes two lines: the title and the author. In the bottom row «<emphasis>Back</emphasis>» is on the left and «<emphasis>Next</emphasis>» on the right; the page number in the centre opens the catalog menu: back to the list, search, catalog start page, other catalog, catalog address.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Search</subtitle>
+    <p>The search takes two steps, as the catalog serves it: first choose what to look for (authors or books), then the list of results opens.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Book screen</subtitle>
+    <p>The book screen shows the title and the author (a tap opens the full description: genres, year, format, language, size, series, annotation), the rows «<emphasis>Download and open</emphasis>» for every format the catalog offers, and links to other books of the author and of the series.</p>
+    <p>A downloaded book is saved to the folder <emphasis>Books/Flibusta</emphasis>, opens at once, and appears in the PocketBook library and in the list of recent books on the home screen. The position in the previous book is saved first.</p>
+   </section>
+   <section>
+    <title>
+     <p>Reading statistics</p>
+    </title>
+    <p>The program records how long every page stays on the screen and builds reports from that. Open them with the chart icon of the reading menu or with «<emphasis>Reading statistics</emphasis>» in the settings menu.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>What counts as reading</subtitle>
+    <p>• a page shown for less than 5 seconds was only turned over and is not counted;</p>
+    <p>• more than 2 minutes on one page counts as 2 minutes;</p>
+    <p>• standby and leaving the book stop the clock.</p>
+    <image l:href="#i_026.png"/>
+    <subtitle>Reports</subtitle>
+    <p>• the report of the current book: when it was started and finished, reading days, pages read of the total, total time, time left to the end, average time per page and per reading day, time by days;</p>
+    <p>• the reports of a period (today, this week from Monday, this month, this year, all time, or your own dates as <emphasis>dd.mm.yyyy-dd.mm.yyyy</emphasis>): pages and words, books, total time, time by days and by books;</p>
+    <p>• the list of all books with their total reading time; a tap opens the report of the book.</p>
+    <empty-line/>
+    <p>The log is the file <emphasis>system/state/cr3/cr3stats.txt</emphasis>; an update of the program keeps it. Delete the file to start the statistics over.</p>
+   </section>
+   <section>
+    <title>
+     <p>Rotate</p>
+    </title>
+    <p>This item of the reading menu turns the screen to one of four angles: <strong>0°</strong>; <strong>90°</strong>; <strong>180°</strong>; <strong>270°</strong>. Tap an icon: the panel closes and the screen turns.</p>
+    <empty-line/>
+    <p>On devices with a position sensor the page can turn by itself: with <strong>360°</strong> in «<emphasis>Control settings</emphasis>» &gt; «<emphasis>Rotate</emphasis>» it turns by 90° when the reader lies on its side. Only CoolReader is rotated; the orientation of the system stays.</p>
+   </section>
+   <section>
+    <title>
+     <p>Settings</p>
+    </title>
+    <section>
+     <p>This item of the reading menu changes the parameters of the program, so that the text of a book looks the way you like.</p>
+     <cite>
+      <p><strong>Note:</strong></p>
+      <p>A change of some parameters makes the program count the pages of the open book again.</p>
+     </cite>
+    </section>
+    <section>
+     <title>
+      <p>Default font face</p>
+     </title>
+     <p>A list, several pages long, of all fonts on the device, system and user ones. The current font has a triangle mark. Each font is shown as it looks in a book.</p>
+     <p><emphasis>Value:</emphasis> list of fonts</p>
+    </section>
+    <section>
+     <title>
+      <p>Default font size</p>
+     </title>
+     <p>A list of the sizes of the reading font, each shown in its own size. The current size has a triangle mark.</p>
+     <p><emphasis>Value:</emphasis> 16 to 300</p>
+    </section>
+    <section>
+     <title>
+      <p>Font settings</p>
+     </title>
+     <p>A submenu with the fine settings of the font.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font weight</subtitle>
+     <p>The stroke thickness of the main font. «Normal» is the weight 400, «Bold» is 700; the values between them make the text a little denser or lighter. It works with any font: when the family has no file of the weight, the program thickens the letters itself.</p>
+     <p><emphasis>Value:</emphasis> 300 / Normal (400) / 425 / 450 / 475 / 500 / 525 / 550 / 600 / 650 / Bold (700) / 800 / 900</p>
+     <cite>
+      <p><strong>Note:</strong></p>
+      <p>This item replaces the former «Normal / Bold» and «Font embolding»; the saved values are converted at the first start.</p>
+     </cite>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font antialiasing</subtitle>
+     <p>Smooths the jagged edges of the characters.</p>
+     <p><emphasis>Value:</emphasis> on for all fonts / on for big fonts only / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font hinting</subtitle>
+     <p>Adjusts the outline of a glyph to the pixel grid, for sharper small fonts and low-resolution screens.</p>
+     <p><emphasis>Value:</emphasis> no hinting / use bytecode / autohinting</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font kerning</subtitle>
+     <p>Changes the space between certain pairs of letters by their shape, for a more even look of the text.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Tracking</subtitle>
+     <p>An even change (unlike kerning) of the space between all letters, in 1/1000 of the font height. Negative values bring the letters closer.</p>
+     <p><emphasis>Value:</emphasis> -50 to 250</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font Gamma</subtitle>
+     <p>A factor for the drawing of the characters: the higher it is, the more contrast and the fewer halftones. With a very high value the letters get rough edges and the antialiasing is lost.</p>
+     <p><emphasis>Value:</emphasis> 0.3 to 11.0 (1 by default)</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Document embedded fonts</subtitle>
+     <p>Use the fonts that come inside the document.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Fallback font face</subtitle>
+     <p>The font for the characters that the reading font does not have.</p>
+     <p><emphasis>Value:</emphasis> list of fonts</p>
+    </section>
+    <section>
+     <title>
+      <p>Formatting settings</p>
+     </title>
+     <p>A submenu with the fine settings of the text on a page.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Interline space</subtitle>
+     <p>The space between the lines of the text.</p>
+     <p><emphasis>Value:</emphasis> 70% to 200%</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Hyphenation</subtitle>
+     <p>A hyphenation table, the algorithmic mode, or no hyphenation.</p>
+     <p>The tables (from AlReader) are in the folder <emphasis>system/share/cr3/hyph</emphasis> of the internal memory; other patterns can be added there.</p>
+     <p><emphasis>Value:</emphasis> list of hyphenation tables</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Preformatted text</subtitle>
+     <p>Text files formatted with spaces, tabs and line breaks.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Space condensing percent</subtitle>
+     <p>The smallest width a space may be squeezed to when a line is justified.</p>
+     <p><emphasis>Value:</emphasis> 25% to 100%</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Letter spacing in justified lines</subtitle>
+     <p>How much the program may add between the letters of a justified line, so as not to stretch the spaces too far. With 0% the letters are not spread.</p>
+     <p><emphasis>Value:</emphasis> 0% to 20%</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Floating punctuation</subtitle>
+     <p>With it on, only the letters are aligned to the right edge of the text, and the punctuation marks hang over that edge; otherwise all characters are aligned alike.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Image scaling</subtitle>
+     <p>The scaling mode and the largest scale of the pictures of a book.</p>
+     <empty-line/>
+     <p><strong><emphasis>Block image scaling mode</emphasis></strong></p>
+     <p><emphasis>Value:</emphasis> integer scale / arbitrary scale / disabled (1:1)</p>
+     <empty-line/>
+     <p><strong><emphasis>Block image max zoom</emphasis></strong></p>
+     <p><emphasis>Value:</emphasis> auto / *1 / *2 / *3</p>
+     <empty-line/>
+     <p><strong><emphasis>Inline image scaling mode</emphasis></strong></p>
+     <p><emphasis>Value:</emphasis> integer scale / arbitrary scale / disabled (1:1)</p>
+     <empty-line/>
+     <p><strong><emphasis>Inline image max zoom</emphasis></strong></p>
+     <p><emphasis>Value:</emphasis> auto / *1 / *2 / *3</p>
+    </section>
+    <section>
+     <title>
+      <p>Page settings</p>
+     </title>
+     <p>A submenu with the look of a book page.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Status line</subtitle>
+     <p>Show the status line with various information at the top of the reading screen.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Status line settings</subtitle>
+     <p>What the status line shows and how it looks.</p>
+     <empty-line/>
+     <p><strong><emphasis>Font face</emphasis></strong> – list of fonts</p>
+     <p><strong><emphasis>Font size</emphasis></strong> – 16 to 300</p>
+     <p><strong><emphasis>Font weight</emphasis></strong> – normal / bold</p>
+     <p><strong><emphasis>Time format</emphasis></strong> – 24h / AM/PM</p>
+     <p><strong><emphasis>Show time</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show title</emphasis></strong> – the author and the title of the book; when they do not fit together, they are shown in turn; on / off</p>
+     <p><strong><emphasis>Show battery</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show battery percent</emphasis></strong> – the exact charge instead of the segment indicator; on / off</p>
+     <p><strong><emphasis>Show position percent</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show page count</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show page count till chapter end</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show page number</emphasis></strong> – on / off</p>
+     <p><strong><emphasis>Show chapter marks</emphasis></strong> – the chapter marks on the progress line; on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Page margins</subtitle>
+     <p>The distance from the text to the edges of the screen: top, bottom, left and right.</p>
+     <p><emphasis>Value:</emphasis> 0 to 350</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Footnotes at page bottom</subtitle>
+     <p>Show the notes at the bottom of the page, under the text of the book.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+    </section>
+    <section>
+     <title>
+      <p>Display settings</p>
+     </title>
+     <p>A submenu with the visual settings of the pages.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Page orientation</subtitle>
+     <p>The orientation of the screen while reading.</p>
+     <p><emphasis>Value:</emphasis> 0° (portrait) / 90° / 180° / 270°</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Landscape pages</subtitle>
+     <p>The number of text columns in the landscape orientation.</p>
+     <p><emphasis>Value:</emphasis> one / two</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Inverse display</subtitle>
+     <p>The colors of the page and of the text: black on white, or white on black (night mode).</p>
+     <p><emphasis>Value:</emphasis> normal / inverse</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Highlight bookmarks</subtitle>
+     <p>How the saved cites are marked in the text of the book.</p>
+     <p><emphasis>Value:</emphasis> solid / underline / none</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Display update mode</subtitle>
+     <p>How often the screen is fully refreshed while reading.</p>
+     <p><emphasis>Value:</emphasis> never / always / every 2 to 50 pages</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Standby</subtitle>
+     <p>The time without actions after which the program enters the power saving mode.</p>
+     <p><emphasis>Value:</emphasis> off / 1 minute to 2 hours</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Gray buffer depth (needs restart)</subtitle>
+     <p>The number of gray shades of the page buffer.</p>
+     <p><emphasis>Value:</emphasis> auto / 2 / 3 / 4 / 8 bits per pixel</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Custom system theme (needs restart)</subtitle>
+     <p>A system theme that changes the look of PocketBook.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <cite>
+      <p><strong>Attention!</strong></p>
+      <p>A theme that does not suit your device may break the interface.</p>
+     </cite>
+     <image l:href="#i_026.png"/>
+     <subtitle>Use new TOC menu</subtitle>
+     <p>Show the table of contents in the new style; otherwise show a plain list of chapters with indents and page numbers.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Page numbers in TOC</subtitle>
+     <p>Show the page numbers of the chapters in the new table of contents.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Skin</subtitle>
+     <p>One of the interface skins, which change the look of the program.</p>
+     <p><emphasis>Value:</emphasis> list of skin files</p>
+     <cite>
+      <p><strong>Notes:</strong></p>
+      <p>Skins of other authors can be installed, with no promise that they fit.</p>
+      <p>The new reading menu works only with the skins pb617fw5 / pb618fw5 / pb626fw5 / pb631fw5 / pb700fw5 / pb740fw5 / pbXfw5.</p>
+      <p>When no skin is chosen, the program takes one by the size of the screen.</p>
+     </cite>
+    </section>
+    <section>
+     <title>
+      <p>Dictionary settings</p>
+     </title>
+     <p>A submenu with the settings of the dictionary window.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Dictionary window</subtitle>
+     <p>Where the dictionary window is shown: away from the chosen word (the window moves to the opposite edge of the screen by itself), always at the top or always at the bottom.</p>
+     <p><emphasis>Value:</emphasis> away from the word / at the top / at the bottom</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Word search</subtitle>
+     <p>What is shown when the dictionary does not have the word: the list of the nearest words, or a message that the word is not found.</p>
+     <p><emphasis>Value:</emphasis> with nearest words / exact</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Search keyboard</subtitle>
+     <p>The keyboard for typing a word. Only devices with a touch screen have this item.</p>
+     <p><emphasis>Value:</emphasis> CoolReader, with night mode / firmware</p>
+    </section>
+    <section>
+     <title>
+      <p>Control settings</p>
+     </title>
+     <p>The touch controls that work while reading.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Rotate</subtitle>
+     <p>What the program does when the device is turned. With 360° (the default) the page turns by 90° when the reader lies on its side, for example when you read lying down; with 180° it only turns upside down. With the «180+» values a tilt of the device also turns the pages of the book.</p>
+     <p><emphasis>Value:</emphasis> 360° / 180° / 180° with page turning by tilt (five variants)</p>
+     <cite>
+      <p><strong>Note:</strong></p>
+      <p>Only devices with a position sensor have this item. Only CoolReader is rotated; the orientation of the system stays.</p>
+     </cite>
+     <image l:href="#i_026.png"/>
+     <subtitle>Page turn angle</subtitle>
+     <p>The tilt of the device at which a page is turned, for the «180+» values.</p>
+     <p><emphasis>Value:</emphasis> list of angles</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Tap action / Long tap action</subtitle>
+     <p>The actions of the tap zones of the touch screen. The current actions are shown on a picture of the zones; a tap on a zone opens the list of actions, the current one has a triangle mark.</p>
+     <p><emphasis>Value:</emphasis> list of actions</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Height of the upper / middle tap zone</subtitle>
+     <p>The sizes of the horizontal bands (3 zones).</p>
+     <p><emphasis>Value:</emphasis> 20% to 60%</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Width of the left / middle tap zone</subtitle>
+     <p>The sizes of the vertical bands (3 zones).</p>
+     <p><emphasis>Value:</emphasis> 20% to 60%</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Page Turn Swipes</subtitle>
+     <p>Turn the pages with a horizontal swipe.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Front Light Swipes</subtitle>
+     <p>Change the front light with a vertical swipe.</p>
+     <p><emphasis>Value:</emphasis> off / fixed / dynamic</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Pinch zoom</subtitle>
+     <p>Change the font size with a pinch: fingers together make the letters smaller, fingers apart make them bigger.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <cite>
+      <p><strong>Note:</strong></p>
+      <p>This way of zooming does not work on firmware 6.</p>
+     </cite>
+    </section>
+    <section>
+     <title>
+      <p>Style settings</p>
+     </title>
+     <p>The look of separate elements of a book, over the common styles.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Document embedded styles</subtitle>
+     <p>Use the style sheets that come inside the document.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Elements</subtitle>
+     <p>Default paragraph formatting, Title, Subtitle, Preformatted text / code, Link, Cite, Epigraph, Poem, Text / Cite / Epigraph author, Footnote, Footnote link, Footnote title, Annotation.</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Parameters of each element</subtitle>
+     <p><strong><emphasis>Text alignment</emphasis></strong> – justify / left / center / right</p>
+     <p><strong><emphasis>First line indent</emphasis></strong> – no indent / small or big indent / small or big outdent</p>
+     <p><strong><emphasis>Font face</emphasis></strong> – list of fonts</p>
+     <p><strong><emphasis>Font size</emphasis></strong> – smaller, 95% to 60% / bigger, 105% to 150%</p>
+     <p><strong><emphasis>Font weight</emphasis></strong> – normal / bold / bolder / lighter</p>
+     <p><strong><emphasis>Font style</emphasis></strong> – normal / italic</p>
+     <p><strong><emphasis>Interline space</emphasis></strong> – 75% to 150%</p>
+     <p><strong><emphasis>Letter spacing</emphasis></strong> – 0px to 5px</p>
+     <p><strong><emphasis>Text decoration</emphasis></strong> – none / underline / line through / overline</p>
+     <p><strong><emphasis>Text vertical alignment</emphasis></strong> – baseline / subscript / superscript</p>
+     <p><strong><emphasis>Text color / Background color</emphasis></strong> – black / gray / white</p>
+     <p><strong><emphasis>Margin before / after</emphasis></strong> – 0 to 2 line heights</p>
+     <p><strong><emphasis>Margin left / right</emphasis></strong> – 0 to 4 line heights / 5% to 30% of the line width</p>
+    </section>
+    <section>
+     <title>
+      <p>Clear cache</p>
+     </title>
+     <p>Clears the cache of the documents, the cache of the open book included.</p>
+    </section>
+    <section>
+     <title>
+      <p>OPDS catalogs</p>
+     </title>
+     <p>Opens the list of the online book catalogs: open a catalog, add one, change a name and an address, set the default catalog (see «<emphasis>Book catalog (OPDS)</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Reading statistics</p>
+     </title>
+     <p>Opens the reports of the reading time (see «<emphasis>Reading statistics</emphasis>»).</p>
+    </section>
+   </section>
+  </section>
+  <section>
+   <title>
+    <p>Main menu</p>
+   </title>
+   <section>
+    <p>This menu has the features that are not in the reading menu. To open it, make a long tap on the centre tap zone of the reading screen.</p>
+    <cite>
+     <p><strong>Note:</strong></p>
+     <p>The items of the main menu can be changed, so the description below is true for the package this manual comes with.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Recent books list</p>
+    </title>
+    <p>Opens a book read before without leaving the program. The chosen book has a triangle mark.</p>
+    <empty-line/>
+    <p>A long tap on a row opens the context menu: open the book or delete its record.</p>
+    <cite>
+     <p><strong>Note:</strong></p>
+     <p>Deleting a record also deletes the bookmarks and the cites of that book.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Go to link</p>
+    </title>
+    <p>Turns on the <strong>link mode</strong> described above. A navigation panel appears with the actions <emphasis>Back, Forward, Position, Cancel</emphasis>.</p>
+    <empty-line/>
+    <p>The left and right arrows move through the links used in this reading session. The up or down arrow moves the panel to the opposite edge of the screen when it covers a link. The <strong>X</strong> on the right turns the link mode off; the book stays at the place of the last jump.</p>
+   </section>
+   <section>
+    <title>
+     <p>Citations list</p>
+    </title>
+    <p>Opens the list of all cites of the open book. Cites are saved as text files in the memory of the device (the folder <emphasis>cr3_notes</emphasis>). The chosen cite has a triangle mark.</p>
+    <empty-line/>
+    <p>A long tap on a row opens the context menu: delete the cite or go to its page.</p>
+    <cite>
+     <p><strong>Note:</strong></p>
+     <p>Only one cite can be made from this list. For more, use the item «<emphasis>Cite selection dialog</emphasis>» of the main menu.</p>
+    </cite>
+   </section>
+   <section>
+    <title>
+     <p>Cite selection dialog</p>
+    </title>
+    <p>Makes a new cite. The cite panel is shown on the page of the book; the middle paragraph is chosen to start with.</p>
+    <empty-line/>
+    <p>The cites saved before are underlined or filled with gray (see «<emphasis>Highlight bookmarks</emphasis>» in the display settings).</p>
+    <empty-line/>
+    <p>The panel at the bottom of the screen builds the block of the cite:</p>
+    <p><image l:href="#i_043.png"/>/<image l:href="#i_044.png"/> – confirm / cancel the choice;</p>
+    <p>the paragraph buttons – choose the first paragraph of the block, add a paragraph to the block, remove a paragraph from it;</p>
+    <p>the sentence buttons – add a sentence to the block, remove a sentence from it;</p>
+    <p>the up and down buttons – move the block.</p>
+    <empty-line/>
+    <p>Keys:</p>
+    <p><strong>Prev</strong> – move the start of the block up;</p>
+    <p><strong>Next</strong> – move the end of the block down;</p>
+    <p><strong>Menu</strong> – confirm; <strong>Menu</strong> (<emphasis>long</emphasis>) – cancel.</p>
+    <empty-line/>
+    <p>The cite panel closes only when the choice is confirmed or cancelled.</p>
+   </section>
+   <section>
+    <title>
+     <p>About</p>
+    </title>
+    <p>Shows information about the open book, the version of the program and other service data.</p>
+    <empty-line/>
+    <p>Keys: <strong>Next/Prev</strong> – turn pages; <strong>Next/Prev</strong> (<emphasis>long</emphasis>) – font size; <strong>Menu</strong> – close.</p>
+   </section>
+   <section>
+    <title>
+     <p>Controls</p>
+    </title>
+    <p>Shows the actions assigned to the hardware keys of the device for reading.</p>
+   </section>
+   <section>
+    <title>
+     <p>Show manual</p>
+    </title>
+    <p>Opens this manual. The program opens the manual in the language of the device; when there is none in that language, the English one.</p>
+    <empty-line/>
+    <p>Keys: <strong>Next/Prev</strong> – turn pages; <strong>Next/Prev</strong> (<emphasis>long</emphasis>) – font size; <strong>Menu</strong> – close the manual.</p>
+   </section>
+   <section id="s_1">
+    <title>
+     <p>Open system panel</p>
+    </title>
+    <p>Opens the system panel of the device at the top of the screen. There you can change the brightness of the front light or turn it on and off; some settings and applications of PocketBook are there too.</p>
+   </section>
+   <section>
+    <title>
+     <p>Close book</p>
+    </title>
+    <p>Closes the open book and goes to the place of the device the book was opened from: the home screen or the library.</p>
+   </section>
+  </section>
+  <section>
+   <title>
+    <p>Advanced parameters</p>
+   </title>
+   <section id="s_2">
+    <title>
+     <p>Key assignments (keymaps.ini)</p>
+    </title>
+    <p>The actions of the keys are assigned in the file <strong>keymaps.ini</strong> in the folder <emphasis>system/share/cr3/keymaps</emphasis> of the internal memory. The file of definitions next to it (<emphasis>keydefs.ini</emphasis>) lists all possible actions.</p>
+    <p>Short and long presses are supported; some commands repeat while the key is held.</p>
+    <empty-line/>
+    <subtitle>Key codes</subtitle>
+    <p>Home – <code>KEY_HOME</code>; Menu – <code>KEY_MENU</code>; the page keys – <code>KEY_NEXT</code>, <code>KEY_PREV</code></p>
+    <empty-line/>
+    <subtitle>Assigning an action</subtitle>
+    <p>A short press, no parameters:</p>
+    <p><code>KEY_NEXT = DCMD_PAGEDOWN</code></p>
+    <p>A long press, a command repeated while the key is held, 10 pages at a time:</p>
+    <p><code>KEY_NEXT, LONG = PB_CMD_PAGEDOWN_REPEAT, 10</code></p>
+    <empty-line/>
+    <subtitle>Sections of the file</subtitle>
+    <p><code>[main]</code> – the main window, where books are read;</p>
+    <p><code>[menu]</code> – the main menu and the settings;</p>
+    <p><code>[bookmarks]</code> – the lists of bookmarks, cites and recent books;</p>
+    <p><code>[cite]</code> – the cite panel;</p>
+    <p><code>[dict]</code> – the dictionary panel;</p>
+    <p><code>[dialog]</code> – dialog windows (About);</p>
+    <p><code>[browse]</code> – the manual and the list of key actions;</p>
+    <p><code>[quickMenuItems]</code> – the commands of the classic reading menu (9 commands, by item number);</p>
+    <p><code>[mainMenuItems]</code> – the commands of the main menu (any number, by item number).</p>
+    <empty-line/>
+    <subtitle>Some commands</subtitle>
+    <p><code>DCMD_PAGEDOWN</code>, <code>DCMD_PAGEUP</code> – next and previous page;</p>
+    <p><code>DCMD_BEGIN</code>, <code>DCMD_END</code> – start and end of the book;</p>
+    <p><code>DCMD_MOVE_BY_CHAPTER</code> – go by chapters;</p>
+    <p><code>DCMD_ZOOM_IN</code>, <code>DCMD_ZOOM_OUT</code> – bigger and smaller font;</p>
+    <p><code>PB_QUICK_MENU</code> – reading menu; <code>MCMD_MAIN_MENU</code> – main menu;</p>
+    <p><code>MCMD_SETTINGS</code> – settings; <code>MCMD_DICT</code> – dictionary; <code>MCMD_SEARCH</code> – search;</p>
+    <p><code>MCMD_BOOKMARK_LIST</code> – bookmarks; <code>MCMD_CITES_LIST</code>, <code>MCMD_CITE</code> – cites;</p>
+    <p><code>MCMD_RECENT_BOOK_LIST</code> – recent books; <code>MCMD_GO_PAGE</code> – go to page;</p>
+    <p><code>PB_CMD_CONTENTS</code> – contents; <code>PB_CMD_ROTATE</code> – rotate;</p>
+    <p><code>PB_CMD_FRONT_LIGHT</code>, <code>PB_CMD_FRONT_LIGHT_TOGGLE</code> – front light;</p>
+    <p><code>PB_CMD_SET_BOOKMARK</code>, <code>PB_CMD_UNSET_BOOKMARK</code> – set and delete a bookmark;</p>
+    <p><code>PB_CMD_FULL_UPDATE</code> – refresh the screen; <code>PB_CMD_INVERT_DISPLAY</code> – inverse display;</p>
+    <p><code>PB_CMD_OPEN_SYSTEM_PANEL</code> – system panel; <code>PB_CMD_CLEAR_CACHE</code> – clear cache;</p>
+    <p><code>MCMD_ABOUT</code> – about the book; <code>MCMD_HELP</code> – this manual; <code>MCMD_QUIT</code> – close the book.</p>
+   </section>
+   <section>
+    <title>
+     <p>Program configuration (cr3.ini)</p>
+    </title>
+    <p>The settings of Cool Reader are kept in the file <strong>cr3.ini</strong>, in one of these folders of the internal memory:</p>
+    <p><emphasis>system/config/cr3; profile/config/cr3</emphasis></p>
+    <empty-line/>
+    <p>The file appears after the settings are saved for the first time: open the reading menu in a book, open the settings and close them.</p>
+    <empty-line/>
+    <p>Full screen update (0 – never / 1 – always / every 2 to 50 pages):</p>
+    <p><strong>crengine.display.full.update.interval=6</strong></p>
+    <empty-line/>
+    <p>Font size of the book:</p>
+    <p><strong>crengine.font.size=24</strong></p>
+    <empty-line/>
+    <p>Font of the book:</p>
+    <p><strong>font.face.default=Droid Serif</strong></p>
+    <empty-line/>
+    <p>Weight of the main font (300 to 900; 400 – normal, 700 – bold):</p>
+    <p><strong>font.face.base.weight=400</strong></p>
+    <empty-line/>
+    <p>Tracking (in 1/1000 of the font height):</p>
+    <p><strong>crengine.font.tracking=0</strong></p>
+    <empty-line/>
+    <p>Interline space:</p>
+    <p><strong>crengine.interline.space=90</strong></p>
+    <empty-line/>
+    <p>Margins (bottom, left, right, top):</p>
+    <p><strong>crengine.page.margin.bottom=8</strong></p>
+    <p><strong>crengine.page.margin.left=8</strong></p>
+    <p><strong>crengine.page.margin.right=8</strong></p>
+    <p><strong>crengine.page.margin.top=8</strong></p>
+    <empty-line/>
+    <p>Highlight the text saved in a cite (1 – yes / 0 – no):</p>
+    <p><strong>crengine.highlight.bookmarks=0</strong></p>
+    <empty-line/>
+    <p>The smallest size of a book, in bytes, for saving it in the cache:</p>
+    <p><strong>crengine.cache.filesize.min=1048576</strong></p>
+    <empty-line/>
+    <p>Translate a word at once (1 – yes / 0 – no, only by OK):</p>
+    <p><strong>cr3.pocketbook.dict.auto=true</strong></p>
+    <empty-line/>
+    <p>Exact word search in the dictionary (1 – yes / 0 – with nearest words):</p>
+    <p><strong>cr3.pocketbook.dict.exact=0</strong></p>
+    <empty-line/>
+    <p>Search keyboard of the dictionary (0 – CoolReader / 1 – firmware):</p>
+    <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>
+    <empty-line/>
+    <p>OPDS catalogs (N is the number, 0 is Flibusta), the default catalog (its number plus one; 0 – none) and the folder for the downloaded books:</p>
+    <p><strong>cr3.pocketbook.opds.catalog.N.name=</strong></p>
+    <p><strong>cr3.pocketbook.opds.catalog.N.url=</strong></p>
+    <p><strong>cr3.pocketbook.opds.default=0</strong></p>
+    <p><strong>cr3.pocketbook.opds.dir=</strong></p>
+    <empty-line/>
+    <p>Direct copy of the page to the screen (0 – turn off if the picture is distorted):</p>
+    <p><strong>cr3.pocketbook.direct.blit=1</strong></p>
+    <empty-line/>
+    <p>Status line (font, size):</p>
+    <p><strong>crengine.page.header.font.face=serif</strong></p>
+    <p><strong>crengine.page.header.font.size=20</strong></p>
+    <empty-line/>
+    <p>Battery in the status line (1 – percent / 0 – icon) and whether it is shown:</p>
+    <p><strong>window.status.battery.percent=1</strong></p>
+    <p><strong>window.status.battery=1</strong></p>
+    <empty-line/>
+    <p>Page count, page number and percent in the status line (1 – yes / 0 – no):</p>
+    <p><strong>window.status.pos.page.count=1</strong></p>
+    <p><strong>window.status.pos.page.number=1</strong></p>
+    <p><strong>window.status.pos.percent=1</strong></p>
+   </section>
+  </section>
+ </body>
+ <binary id="cover.png" content-type="image/png">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
++NHTuic/loxlHHbJvQ8/NEXOOnC+Qjv6FCaFl35vt9KKDyJj2QC+6ekvmnyFPqzE+Ix37yOP
+w3jeZWPJeFE39ydVwpcG4Vd0HPaK2vzxJepbOvJmiD5kwlI+hIOreTd1WIXxYPUHW5WxSp0D
+4yU7EWHyx6fdjOn213+0G1zbxMf0Je1AxvZhdYzHtb5i0WKcf4yuFQRSdSh+NnczVgnkUwbe
+PD76BB6ML/w2jYOc6s/4Dfl4Ms6/hte3U0YUK+jV/8t+5dK5OsbnKJmPg4CXpNSEem9YwoNh
+PO9S8Rwwtg4rMf7aqurntiLj/Kk/8Lwb/xRvUzkufWNhXPre2nFpuP2P0h/teCv6/mFv57uk
+LsPBi2/2bpoVDrxLnxsPK8duSw+K09/xkXx8GTfTmDEzZsZszJgZM2M2ZsyM2ZgxM2bGbMyY
+GYus2OP/9o/D+Ndcxl9/3+teNhR7+WxTGT/52o7XEua1hW3UA+ezP9RUP37yla1Wp9Vpd8S/
+VqfT2pgHrme3pw1lvPwrQGEY9oNNbfP+r3Dil7z14WEYFRgvf/qvSZcfe/gjTWC8uL/T+oW/
+H+Y7flKOkN4pH8Co6qw1NL17PBl/sN35waG29o/iQDjMcqJqDl2YcddYMl4KOv7Job6hp+YI
+n9AVyceGvoLFUBnPdzpQO7L80JEj96BkrDx02/RbybWX33fbgXtO50v33D+XL91/z7vz7J77
+7r/nvnfln7wfHtwvjnvsr5L3k6wu/9X9f0i6s/Kp++/HZz8tdfjTDz+MZQRUzHIZ1NCS8x6y
+K2nGj/F7W/5pYt3pfBfEVg9c227vidDp/rsIuzq/nJ/vfMts/g+dzi/lfwsBwrfld2OksOd0
+vnJ4enr6wLsA8R+Ih3cgqAdvE8++W8I+PJ2Kyovpm7Ub3/n4Yw88SxZt/Pojn4Cpw8Ovxhom
+4+Wgg/U5nxPRRav9QvHoX/fK4Ha7vG1XftMTHFtHxas7RN1PR3wd7wG0z115JTK+cjZfFjCn
+p2+U39SH5aPpX5fn+yI8vFG4uXj9ZP6F6WmMjc9ReeYj4jplQRJM44MC+88Ps3BzmIyzTgcL
+gD7a2fa8TvtKUYb8xlZnz7Ud6JI9CoHztpPCe6/OFzptUft2t+hMdNo/vLyvI7ptnZYvJGR6
++naBWSznsiio3i68Vzjy8mF8Vsy5E6+fXnnn9E3oo8f0FLEVqPl6Qk9nOlVcS2N8GP9z61tR
+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</binary>
+ <binary id="i_010.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAADYAAAAMBAMAAADbilMlAAAAGFBMVEX///8zMzMAAABVVVWZ
+mZkRERFERESIiIhEAvxgAAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEgAACxIB0t1+/AAAADFJ
+REFUGNNjYCATMCrhAgIMTDjlFBiYccoZMFACWNCNU3WAy7Fh2JUAl2PHkCugxBkAlIcSR3vS
+JZAAAAAASUVORK5CYII=</binary>
+ <binary id="i_011.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAADQAAAAMBAMAAADff4MYAAAAHlBMVEX///+IiIhERESZmZm7
+u7tmZmbMzMwAAABVVVUiIiK5CkiZAAAAAXRSTlMAQObYZgAAAAlwSFlzAAALEgAACxIB0t1+
+/AAAAHJJREFUGJVjYFRmwApc1RjSy4sMMCXYwssrGNjLy8ub0WUYp5eXFzIwGAHlSh1QZMBC
+CVAllWIICeZ2oEwI1GBxIBvuGlcgpwJhPYgLcQ3QfiRlyIaADRdAcxTYarj9qCARqAEIWrD5
+H2QNNu+DgQeK/QB4vSdrUk8yOwAAAABJRU5ErkJggg==</binary>
+ <binary id="i_026.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAAu4AAAAeAQMAAABJ3gm5AAAABlBMVEX///8AAABVwtN+AAAA
+AXRSTlMAQObYZgAAAAlwSFlzAAALEgAACxIB0t1+/AAAACJJREFUGBntwbENAAAIA6D+f3MT
+fcHFDQgAV/OpmU8NAEcLjWW7P7FQ5wsAAAAASUVORK5CYII=</binary>
+ <binary id="i_043.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAABMAAAATBAMAAACAfiv/AAAAMFBMVEX9/f3Z2dnGxsa3t7fm
+5uaIiIg3NzcBAQEXFxdkZGR1dXWWlpYnJydHR0elpaVXV1ekLWEYAAAAAXRSTlMAQObYZgAA
+AAlwSFlzAAALEgAACxIB0t1+/AAAAJNJREFUCB0FwaESwQAAgOF/4ySHME8gEL0ETZYlReHO
+/nHbLa44gRdYW9VUbXVN1fYIguL7AIJJBAAstiY3ADqFagnwVE0zIFS1qUroqWbd+gCtarMy
+h6+asVao1VeoQqHOlyrU/k5UKtQxm44qVDmjvprCNIa1eoahn4HqHoLi2qo+gJmqR4DgrSYP
+gO545+UewR/IGEENiEN1xAAAAABJRU5ErkJggg==</binary>
+ <binary id="i_044.png" content-type="image/png">iVBORw0KGgoAAAANSUhEUgAAABMAAAATBAMAAACAfiv/AAAAMFBMVEX9/f3Z2dmIiIhHR0c3
+NzdXV1elpaXm5uYBAQEXFxfGxsYnJyd1dXW3t7dkZGSWlpYQJ2WTAAAAAXRSTlMAQObYZgAA
+AAlwSFlzAAALEgAACxIB0t1+/AAAAJtJREFUCB0FwbEKAXEAwOFfwhWdQYliMBqUhTLeojzC
+jTarRR7gdP3kzC5P8H8Eo9EokzyBN1Am3wfQni7WANBRD0OAeqmaAQRVTSC6eteZBVTMY/ek
+QtMLr4SPEPTR2NQUguaQKgTNooYKQRN4KfTMNq1VrFD1THpiJNTNtvouj8DcUg/mQF9Vb0C0
+VC0AGJS6/wKwe44nvy78AZMEQKvSmekSAAAAAElFTkSuQmCC</binary>
+</FictionBook>
