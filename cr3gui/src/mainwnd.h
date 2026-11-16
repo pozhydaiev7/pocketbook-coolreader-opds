@@ -119,6 +119,7 @@ protected:
     bool _historySaveFailed;
     void reportSaveResult(bool saved, bool history);
     void convertFontWeight();
+    void setDeviceDefaults();
     time_t _loadFileStart;
     lString32 _fileName;
     // Layout of the open book after a change of the settings, of the font size or a rotation:
@@ -194,7 +195,8 @@ public:
 
     void applySettings();
 
-    void showSettingsMenu();
+    /// showItem: id of the menu item to open the menu at (0: the first page)
+    void showSettingsMenu( int showItem = 0 );
 
 #ifdef POCKETBOOK_PRO
     void showTocTouchMenu(tocentry *toc, int length, int currentPage);

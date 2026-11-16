@@ -9796,7 +9796,7 @@ void setNodeStyle( ldomNode * enode, css_style_ref_t parent_style, LVFontRef par
             // We can't get the codeBase of this node anymore at this point, which
             // would be needed to resolve "background-image: url(...)" relative
             // file path... So these won't work when defined in a style= attribute.
-            if ( decl.parse( s, domVersionRequested, false, doc ) ) {
+            if ( decl.parse( s, domVersionRequested, false, doc, lString32::empty_str, true ) ) {
                 decl.apply( pstyle );
             }
         }

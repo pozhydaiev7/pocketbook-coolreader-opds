@@ -212,6 +212,7 @@ LVDocView::LVDocView(int bitsPerPixel, bool noDefaultDocument) :
             m_backgroundTiled(true),
             m_stylesheetNeedsUpdate(true),
             m_highlightBookmarks(1),
+            m_hiddenBookmark(NULL),
 			m_pageMargins(DEFAULT_PAGE_MARGIN,
 					DEFAULT_PAGE_MARGIN / 2 /*+ INFO_FONT_SIZE + 4 */,
 					DEFAULT_PAGE_MARGIN, DEFAULT_PAGE_MARGIN / 2),
@@ -3489,6 +3490,8 @@ void LVDocView::updateBookMarksRanges()
         LVPtrVector<CRBookmark> &bookmarks = rec->getBookmarks();
         for (int i = 0; i < bookmarks.length(); i++) {
             CRBookmark * bmk = bookmarks[i];
+            if (bmk == m_hiddenBookmark)
+                continue;
             int t = bmk->getType();
             if (t != bmkt_lastpos) {
                 ldomXPointer p = m_doc->createXPointer(bmk->getStartPos());
@@ -5854,6 +5857,37 @@ CRBookmark * LVDocView::saveRangeBookmark(ldomXRange & range, bmk_type type,
 	return bmk;
 }
 
+/// moves a bookmark of the current book to another range, keeps its type and comment
+bool LVDocView::updateRangeBookmark(CRBookmark * bmk, ldomXRange & range) {
+	if (!bmk || range.isNull() || range.getStart().isNull())
+		return false;
+	CRFileHistRecord * rec = getCurrentFileHistRecord();
+	if (!rec || rec->getBookmarks().indexOf(bmk) < 0)
+		return false;
+	bmk->setStartPos(range.getStart().toString());
+	bmk->setEndPos(range.getEnd().isNull() ? lString32::empty_str : range.getEnd().toString());
+	int p = range.getStart().toPoint().y;
+	int fh = m_doc->getFullHeight();
+	int percent = fh > 0 ? (int) (p * (lInt64) 10000 / fh) : 0;
+	if (percent < 0)
+		percent = 0;
+	if (percent > 10000)
+		percent = 10000;
+	bmk->setPercent(percent);
+	bmk->setPosText(range.getRangeText());
+	bmk->setTitleText(CRBookmark::getChapterName(range.getStart()));
+	updateBookMarksRanges();
+	return true;
+}
+
+/// stops highlighting one bookmark in the text, NULL highlights all the bookmarks again
+void LVDocView::setHiddenBookmark(CRBookmark * bmk) {
+	if (m_hiddenBookmark == bmk)
+		return;
+	m_hiddenBookmark = bmk;
+	updateBookMarksRanges();
+}
+
 /// sets new list of bookmarks, removes old values
 void LVDocView::setBookmarkList(LVPtrVector<CRBookmark> & bookmarks)
 {
@@ -5861,6 +5895,7 @@ void LVDocView::setBookmarkList(LVPtrVector<CRBookmark> & bookmarks)
     if (!rec)
         return;
     LVPtrVector<CRBookmark>  & v = rec->getBookmarks();
+    m_hiddenBookmark = NULL;
     v.clear();
     for (int i=0; i<bookmarks.length(); i++) {
         v.add(new CRBookmark(*bookmarks[i]));
@@ -5875,6 +5910,8 @@ bool LVDocView::removeBookmark(CRBookmark * bm) {
 		return false;
 	bm = rec->getBookmarks().remove(bm);
 	if (bm) {
+        if (bm == m_hiddenBookmark)
+            m_hiddenBookmark = NULL;
         updateBookMarksRanges();
         delete bm;
 		return true;

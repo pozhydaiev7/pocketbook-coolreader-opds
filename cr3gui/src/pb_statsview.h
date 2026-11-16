@@ -49,8 +49,8 @@ public:
     /// the book is no longer read (exit, standby): writes the timed page
     static void flush();
 
-    /// opens the list of the statistics
-    void open(CRGUIWindowManager * wm);
+    /// opens the list of the statistics; fromSettings: "Back" opens the settings menu again
+    void open(CRGUIWindowManager * wm, bool fromSettings = false);
     /// handles PB_STATS_CMD_FIRST..PB_STATS_CMD_LAST; true when consumed
     bool onCommand(CRGUIWindowManager * wm, int command, int params);
 
@@ -80,6 +80,7 @@ private:
     int _screen;               // screen of the shown report
     int _booksScreen;          // screen of the book list
     Mode _mode;                // the screen shown last
+    bool _fromSettings;        // opened from the settings menu
     int _reportBack;           // command that leaves the report
     lString32 _reportCaption;
     std::vector<Line> _report;

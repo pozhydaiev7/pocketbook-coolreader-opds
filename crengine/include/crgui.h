@@ -1177,7 +1177,13 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual bool onItemSelect(int command, int params = 0 );
         int getLastOnPage();
         void doCloseMenu(int command, bool highlight = false, int param = 0);
+        // true (devices with keys): the cursor moves to the same row of the page a menu is turned to.
+        // false (touch screens): in a list of the values of a setting the selected row stays where
+        // it is, so that the mark of the current value is seen on its own page only.
+        static bool s_cursorFollowsPage;
+        bool cursorFollowsPage() { return s_cursorFollowsPage || getSelectedItemIndex() < 0; }
     public:
+        static void setCursorFollowsPage( bool follows ) { s_cursorFollowsPage = follows; }
         virtual void highlightCommandItem( int cmd );
         /// returns index of selected item, -1 if no item selected
         virtual int getSelectedItemIndex();
@@ -1245,6 +1251,8 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual int getPageCount();
         /// returns true if current page is changed
         virtual bool setCurPage( int nPage );
+        /// turns the menu to the page of the item with this id and selects the item
+        void showItem( int id );
         virtual void setCurItem(int nItem);
         virtual int getCurPage( );
         virtual int getTopItem();

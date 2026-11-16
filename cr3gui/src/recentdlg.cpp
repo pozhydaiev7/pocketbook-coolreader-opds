@@ -105,9 +105,11 @@ void CRRecentBooksMenu::showContextMenu()
 
 void CRRecentBooksMenu::handleContextMenu(int index)
 {
-    _wm->postCommand(index, 0);
-    _wm->processPostedEvents();
-    _wm->resetTillUp();
+    // the command may close the menu, which is deleted then: see CRCitesMenu::handleContextMenu
+    CRGUIWindowManager * wm = _wm;
+    wm->postCommand(index, 0);
+    wm->processPostedEvents();
+    wm->resetTillUp();
 }
 #endif
 

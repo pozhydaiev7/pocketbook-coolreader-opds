@@ -14,6 +14,7 @@
 #include "citecore.h"
 #ifdef CR_POCKETBOOK
 #include "cr3pocketbook.h"
+#include <sys/time.h>
 #endif
 
 #ifdef POCKETBOOK_PRO
@@ -72,15 +73,49 @@ public:
         }
     }
 #ifdef POCKETBOOK_PRO
+    // The role of a button, for every skin:
+    //   - a skin that lists the buttons in the [cite-toolbar] section of its keymaps.ini
+    //     (pb618fw5, pb631fw5, pb700fw5, pb740fw5, pbXfw5) gives every button a command, and
+    //     the command says what the button is: MCMD_CANCEL, MCMD_OK, MCMD_SCROLL_FORWARD (the
+    //     Down arrow), MCMD_SCROLL_BACK (the Up arrow); the buttons with MCMD_SELECT are, in
+    //     their order, A, A+, A-, C+, C-. The place of a button in such a toolbar does not matter;
+    //   - the default buttons (pb62x, pb626fw5: no such section) have their roles by place.
+    // Before, the role was taken by the id of the button, which is its place for the default
+    // buttons only; the listed ones have the ids 1, 2, ...: every button had the role of its
+    // right neighbour, and the Up arrow saved the citation.
     CiteButtonRole roleOf(int index)
     {
         if (index < 0 || index >= m_buttons.length())
             return CITE_ROLE_NONE;
-        int id = m_buttons[index]->getId();
-        if (m_buttons.length() == 9 && id >= 0 && id < 9)
-            return citeLayout9[id];
-        if (id >= 0 && id < 7)
-            return citeLayout7[id];
+        int command = m_buttons[index]->getCommand();
+        if (command != DCMD_BUTTON_PRESSED) {
+            static const CiteButtonRole selectRoles[] = {
+                CITE_ROLE_MOVE, CITE_ROLE_GROW, CITE_ROLE_SHRINK, CITE_ROLE_GROW_PHRASE, CITE_ROLE_SHRINK_PHRASE
+            };
+            switch (command) {
+            case MCMD_CANCEL:
+                return CITE_ROLE_CANCEL;
+            case MCMD_OK:
+                return CITE_ROLE_SAVE;
+            case MCMD_SCROLL_FORWARD:
+                return CITE_ROLE_DOWN;
+            case MCMD_SCROLL_BACK:
+                return CITE_ROLE_UP;
+            case MCMD_SELECT: {
+                int n = 0;
+                for (int i = 0; i < index; i++)
+                    if (m_buttons[i]->getCommand() == MCMD_SELECT)
+                        n++;
+                return n < 5 ? selectRoles[n] : CITE_ROLE_NONE;
+            }
+            default:
+                return CITE_ROLE_NONE;
+            }
+        }
+        if (m_buttons.length() == 9)
+            return citeLayout9[index];
+        if (index < 7)
+            return citeLayout7[index];
         return CITE_ROLE_NONE;
     }
     int indexOfRole(CiteButtonRole role)
@@ -112,8 +147,153 @@ class CiteWindow : public BackgroundFitWindow
     CiteToolBar *toolbar;
     lvRect toolbarRect;
     bool isDefaultToolBar;
+    // The saved citation that is being edited, NULL for a new citation. It stays in the bookmarks
+    // of the book; only its highlight in the text is hidden while the window is open, so that
+    // the selection alone shows what will be saved.
+    CRBookmark * _edited;
+    // The window was opened from the list of citations: when it closes, the page that was open
+    // is restored and the list is shown again.
+    bool _returnToList;
+    ldomXPointer _returnPos;
+
+    // Opens the saved citation number `index` of the bookmarks of the book for editing.
+    // If its text is not found in the book, the window stays a window of a new citation.
+    void startEditing( int index )
+    {
+        LVDocView * docview = mainwin_->getDocView();
+        CRFileHistRecord * rec = docview->getCurrentFileHistRecord();
+        if ( !rec || index < 0 || index >= rec->getBookmarks().length() )
+            return;
+        CRBookmark * bmk = rec->getBookmarks()[index];
+        ldomXPointerEx start = docview->getDocument()->createXPointer( bmk->getStartPos() );
+        ldomXPointerEx end = docview->getDocument()->createXPointer( bmk->getEndPos() );
+        if ( start.isNull() || end.isNull() ) {
+            CRLog::info("Cite: the text of citation %d is not found, a new citation instead", index);
+            return;
+        }
+        CRLog::info("Cite: editing citation %d", index);
+        _edited = bmk;
+        docview->setHiddenBookmark( bmk );
+        selector_.setRange( start, end );
+    }
 #ifdef CR_POCKETBOOK
     bool _noClose;
+
+    // ---- Selection of the text by touch, on the page above the toolbar.
+    //   a drag from a word to a word    selects the text between them, the two words included;
+    //                                   the selection follows the finger, redrawn at most every
+    //                                   TOUCH_REDRAW_MS
+    //   a tap on a word                 moves a bound of the selection to it: a word before the
+    //                                   selection becomes its first word, a word inside or after
+    //                                   it becomes its last word
+    //   a long tap on a word            selects that word alone (the window manager drops the
+    //                                   rest of a touch after its long tap)
+    // The buttons of the toolbar work as before, on the selection made either way.
+    enum { TOUCH_REDRAW_MS = 400 };
+    bool _touchSelecting;       // a touch that started on the page is going on
+    bool _touchDragged;         // it has moved far enough to be a drag
+    bool _touchAnchorValid;     // there was a word under the finger when it went down
+    bool _touchLastValid;       // _touchLastStart, _touchLastEnd are set
+    lvPoint _touchDownPt;
+    ldomXPointerEx _touchAnchorStart;   // the word the drag started at
+    ldomXPointerEx _touchAnchorEnd;
+    ldomXPointerEx _touchLastStart;     // the word the selection was last drawn up to
+    ldomXPointerEx _touchLastEnd;
+    long long _touchLastRedrawMs;
+
+    static long long touchNowMs()
+    {
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        return (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    }
+
+    // The page is drawn squeezed into the part of the screen above the toolbar
+    // (BackgroundFitWindow::draw). A point of the screen gives the point of the page image.
+    lvPoint toPagePoint(lvPoint pt)
+    {
+        lvRect full = _wm->getScreen()->getRect();
+        int shown = _rect.top - full.top;
+        if (shown > 0)
+            pt.y = full.top + (full.height() * (pt.y - full.top)) / shown + 1;
+        return pt;
+    }
+
+    // Selects from the word the drag started at to the word under the finger.
+    // Returns true if the selection has changed.
+    bool dragSelectionTo(lvPoint pt)
+    {
+        ldomXPointerEx wordStart, wordEnd;
+        if (!selector_.wordAt(toPagePoint(pt), wordStart, wordEnd))
+            return false;
+        if (!_touchAnchorValid) {
+            // the finger went down beside the text: the drag starts at the first word it reaches
+            _touchAnchorStart = wordStart;
+            _touchAnchorEnd = wordEnd;
+            _touchAnchorValid = true;
+        }
+        if (_touchLastValid && wordStart.compare(_touchLastStart) == 0 && wordEnd.compare(_touchLastEnd) == 0)
+            return false;
+        _touchLastStart = wordStart;
+        _touchLastEnd = wordEnd;
+        _touchLastValid = true;
+        selector_.selectWords(_touchAnchorStart, _touchAnchorEnd, wordStart, wordEnd);
+        _touchLastRedrawMs = touchNowMs();
+        setDirty();
+        return true;
+    }
+
+    // A touch on the page above the toolbar. Returns true if the screen is to be redrawn.
+    bool onPageTouch(lvPoint pt, CRGUITouchEventType evType)
+    {
+        switch (evType) {
+        case CRTOUCH_DOWN:
+            _touchSelecting = true;
+            _touchDragged = false;
+            _touchLastValid = false;
+            _touchDownPt = pt;
+            _touchAnchorValid = selector_.wordAt(toPagePoint(pt), _touchAnchorStart, _touchAnchorEnd);
+            return false;
+        case CRTOUCH_MOVE:
+            if (!_touchSelecting)
+                return false;
+            if (!_touchDragged) {
+                int limit = _wm->getScreen()->getWidth() / 40;
+                int dx = pt.x - _touchDownPt.x;
+                int dy = pt.y - _touchDownPt.y;
+                if (dx > -limit && dx < limit && dy > -limit && dy < limit)
+                    return false;
+                _touchDragged = true;
+            }
+            if (touchNowMs() - _touchLastRedrawMs < TOUCH_REDRAW_MS)
+                return false;
+            return dragSelectionTo(pt);
+        case CRTOUCH_DOWN_LONG: {
+            _touchSelecting = false;
+            ldomXPointerEx wordStart, wordEnd;
+            if (!selector_.wordAt(toPagePoint(pt), wordStart, wordEnd))
+                return false;
+            selector_.selectWords(wordStart, wordEnd, wordStart, wordEnd);
+            setDirty();
+            return true;
+        }
+        case CRTOUCH_UP: {
+            if (!_touchSelecting)
+                return false;
+            _touchSelecting = false;
+            if (_touchDragged)
+                return dragSelectionTo(pt);
+            ldomXPointerEx wordStart, wordEnd;
+            if (!selector_.wordAt(toPagePoint(pt), wordStart, wordEnd))
+                return false;
+            selector_.moveBoundTo(wordStart, wordEnd);
+            setDirty();
+            return true;
+        }
+        default:
+            return false;
+        }
+    }
 
     int getSelectedIndex()
     {
@@ -222,7 +402,38 @@ class CiteWindow : public BackgroundFitWindow
         case CITE_ROLE_NONE:
             break;
         default:
-            _action = role; // A, A+, A-, C+, C-: choose the action
+            // A, A+, A-, C+, C-: the button is the action the arrows apply from now on, and the
+            // action is done once at the end of the selection, so that every tap is seen.
+            // Before, such a tap only chose the action and nothing changed on the page until an
+            // arrow was tapped; reported as "the buttons do nothing".
+            //   A    whole paragraphs of the selection; if it is whole paragraphs already,
+            //        the next paragraph
+            //   A+   the next paragraph is added          A-   the last paragraph is removed
+            //   C+   the next sentence is added           C-   the last sentence is removed
+            // An arrow then moves a bound of the selection in its direction: with A+ and C+ Down
+            // extends the end and Up the start; with A- and C- Up pulls the end back and Down
+            // the start; with A they select the next or the previous paragraph.
+            _action = role;
+            switch (role) {
+            case CITE_ROLE_MOVE:
+                if (!selector_.selectWholeParagraphs())
+                    selector_.moveDown();
+                break;
+            case CITE_ROLE_GROW:
+                selector_.growDown();
+                break;
+            case CITE_ROLE_SHRINK:
+                selector_.shrinkUp();
+                break;
+            case CITE_ROLE_GROW_PHRASE:
+                selector_.growDownPhrase();
+                break;
+            case CITE_ROLE_SHRINK_PHRASE:
+                selector_.shrinkUpPhrase();
+                break;
+            default:
+                break;
+            }
             setDirty();
             break;
         }
@@ -287,7 +498,8 @@ protected:
     }
 
 public:
-    CiteWindow( CRGUIWindowManager * wm, V3DocViewWin * mainwin) :
+    /// mode: the parameter of MCMD_CITE, see citedlg.h
+    CiteWindow( CRGUIWindowManager * wm, V3DocViewWin * mainwin, int mode) :
         BackgroundFitWindow(wm, mainwin),
         selector_(*mainwin->getDocView()),
         mainwin_(mainwin)
@@ -298,6 +510,12 @@ public:
         else
             setAccelerators( acc );
         _rect = _wm->getScreen()->getRect();
+        _edited = NULL;
+        _returnToList = mode >= CITE_PARAM_FROM_LIST;
+        if ( _returnToList )
+            _returnPos = mainwin->getDocView()->getBookmark();
+        if ( mode >= CITE_PARAM_EDIT_BASE )
+            startEditing( mode - CITE_PARAM_EDIT_BASE );
         selector_.highlight();
         setDirty();
         setSkinName(U"#cite-dialog");
@@ -328,6 +546,8 @@ public:
         }
 #ifdef CR_POCKETBOOK
       _noClose= true;
+      _touchSelecting = _touchDragged = _touchAnchorValid = _touchLastValid = false;
+      _touchLastRedrawMs = 0;
 #endif
 #ifdef POCKETBOOK_PRO
       _action = CITE_ROLE_MOVE;
@@ -349,6 +569,10 @@ public:
         switch ( command ) {
 #ifdef POCKETBOOK_PRO
         case DCMD_BUTTON_PRESSED:
+        // MCMD_SELECT: the command the 9-button skins give to the buttons A, A+, A-, C+, C- in
+        // the [cite-toolbar] section of their keymaps.ini. It was not handled, so those buttons
+        // did nothing and the arrows always moved the selection by a paragraph.
+        case MCMD_SELECT:
             onButtonTapped();
             break;
 #endif
@@ -399,6 +623,18 @@ public:
             int cmd = getCommandFromIndex(command);
             if (cmd != -1)
                 _wm->postCommand(cmd, params);
+#ifdef POCKETBOOK_PRO
+            // An arrow button was tapped and became the current button: the button of the
+            // action the arrows apply is made current again, so that it stays highlighted.
+            if (toolbar != NULL) {
+                CiteButtonRole role = toolbar->roleOf(toolbar->getCurrentButtonIndex());
+                int actionIndex = toolbar->indexOfRole(_action);
+                if ((role == CITE_ROLE_UP || role == CITE_ROLE_DOWN) && actionIndex >= 0) {
+                    toolbar->selectButton(actionIndex);
+                    setDirty();
+                }
+            }
+#endif
         }
 #endif
             break;
@@ -406,8 +642,12 @@ public:
         {
             ldomXRange range;
             selector_.getRange(range);
-            if ( !range.isNull() ) {
-                mainwin_->getDocView()->saveRangeBookmark( range, bmkt_comment, lString32::empty_str);
+            // a selection without text is not saved
+            if ( !range.isNull() && range.getStart().compare( range.getEnd() ) < 0 ) {
+                if ( _edited )
+                    mainwin_->getDocView()->updateRangeBookmark( _edited, range );
+                else
+                    mainwin_->getDocView()->saveRangeBookmark( range, bmkt_comment, lString32::empty_str);
                 mainwin_->saveHistory(lString32::empty_str);
             }
             close();
@@ -437,6 +677,25 @@ public:
     }
 
 #ifdef CR_POCKETBOOK
+    /// The whole screen belongs to the window: the toolbar, and the page above it, where the
+    /// text is selected. Before, a touch on the page went to the window of the book under it.
+    virtual bool onTouch( int x, int y, CRGUITouchEventType evType )
+    {
+        CRGUIEvent * event = new CRGUITouchEvent( x, y, evType );
+        event->setTargetWindow( this );
+        _wm->postEvent( event );
+        return true;
+    }
+
+    virtual bool onTouchEvent( int x, int y, CRGUITouchEventType evType )
+    {
+        lvPoint pt( x, y );
+        // a drag that started on the page goes on over the toolbar too
+        if ( !_touchSelecting && _rect.isPointInside( pt ) )
+            return BackgroundFitWindow::onTouchEvent( x, y, evType );
+        return onPageTouch( pt, evType );
+    }
+
     virtual void covered() {
         if ( _noClose ) {
             CRGUIWindowManager * wm = 0;
@@ -451,17 +710,26 @@ public:
     void close() {
         _noClose= false;
         CRLog::info("Closing cite");
-        _mainwin->getDocView()->clearSelection();
-        _mainwin->getDocView()->updateBookMarksRanges();
-        _wm->closeWindow(this);
+        LVDocView * docview = _mainwin->getDocView();
+        docview->clearSelection();
+        docview->setHiddenBookmark( NULL );
+        if ( _returnToList && !_returnPos.isNull() )
+            docview->goToBookmark( _returnPos );
+        docview->updateBookMarksRanges();
+        // the window is deleted by closeWindow()
+        CRGUIWindowManager * wm = _wm;
+        bool returnToList = _returnToList;
+        wm->closeWindow(this);
+        if ( returnToList )
+            wm->postCommand( MCMD_CITES_LIST, 0 );
     }
 
 protected:
     CiteWindow(const CiteWindow&); //non-copyable
 };
 
-void activate_cite( CRGUIWindowManager *wm, V3DocViewWin * mainwin)
+void activate_cite( CRGUIWindowManager *wm, V3DocViewWin * mainwin, int mode)
 {
-    CRLog::info("Entering cite mode\n");
-    wm->activateWindow(new CiteWindow(wm, mainwin));
+    CRLog::info("Entering cite mode %d\n", mode);
+    wm->activateWindow(new CiteWindow(wm, mainwin, mode));
 }

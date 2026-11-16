@@ -267,6 +267,26 @@ int CRControlsMenuItem::onSelect()
     return 1;
 }
 
+// An item of the settings menu that opens a screen (the OPDS catalogs, the reading statistics)
+// the user comes back from to the settings. The settings changed in the menu are applied first
+// (the command of the menu itself), then the command of the item goes with the parameter 1:
+// "opened from the settings", so that "Back" on that screen opens the settings again.
+class CRSettingsScreenItem : public CRMenuItem
+{
+public:
+    CRSettingsScreenItem( CRMenu * menu, int id, const char * label )
+    : CRMenuItem( menu, id, label, LVImageSourceRef(), LVFontRef() )
+    {
+    }
+    /// called on item selection
+    virtual int onSelect()
+    {
+        _menu->getWindowManager()->postCommand( _menu->getId(), 0 );
+        _menu->closeAllMenu( getId(), 1 );
+        return 1;
+    }
+};
+
 class CRActionsMenu : public CRFullScreenMenu
 {
 public:
@@ -1929,16 +1949,10 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
 
     // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
-    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OPDS_CATALOGS,
-                _("OPDS catalogs"),
-                LVImageSourceRef(),
-                LVFontRef() ) );
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
 
     // READING STATISTICS
-    mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_READING_STATS,
-                _("Reading statistics"),
-                LVImageSourceRef(),
-                LVFontRef() ) );
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_READING_STATS, _("Reading statistics") ) );
 
     // OTA UPDATE: hidden in this build, it would replace it with the original upstream build.
     #ifdef POCKETBOOK_PRO

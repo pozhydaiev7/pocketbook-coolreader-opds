@@ -5026,7 +5026,8 @@ public:
             }
         }
         _nestingLevel -= 1;
-        return (_document->getStyleSheet()->parse(s, false, codeBase) || ret);
+        // a stylesheet of the book: its font-family is dropped when the fonts of the book are off
+        return (_document->getStyleSheet()->parse(s, false, codeBase, true) || ret);
     }
 private:
     ldomDocument  *_document;
@@ -5197,7 +5198,7 @@ void ldomDocument::applyDocumentStyleSheet()
             lString32 css = ss.getText('\n');
             if ( !css.empty() ) {
                 CRLog::debug("applyDocumentStyleSheet() : Using internal FB2 document stylesheet:\n%s", LCSTR(css));
-                _stylesheet.parse(LCSTR(css));
+                _stylesheet.parse(LCSTR(css), false, lString32::empty_str, true);
             } else {
                 CRLog::trace("applyDocumentStyleSheet() : stylesheet under /FictionBook/stylesheet is empty");
             }

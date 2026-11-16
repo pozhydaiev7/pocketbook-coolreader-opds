@@ -342,6 +342,8 @@ private:
     bool m_backgroundTiled;
     bool m_stylesheetNeedsUpdate;
     int m_highlightBookmarks;
+    /// the bookmark that is not highlighted in the text (see setHiddenBookmark()), NULL: none
+    CRBookmark * m_hiddenBookmark;
     LVPtrVector<LVBookMarkPercentInfo> m_bookmarksPercents;
 
 protected:
@@ -524,6 +526,12 @@ public:
 	bool moveByPage( int delta );
 	/// saves new bookmark
     CRBookmark * saveRangeBookmark( ldomXRange & range, bmk_type type, lString32 comment );
+    /// moves a bookmark of the current book to another range: its positions, text, percent and
+    /// chapter are set from the range, its type and comment are kept; false if nothing was changed
+    bool updateRangeBookmark( CRBookmark * bmk, ldomXRange & range );
+    /// stops highlighting one bookmark in the text, e.g. the citation that is being edited, so
+    /// that only the selection is seen; NULL highlights all the bookmarks again
+    void setHiddenBookmark( CRBookmark * bmk );
 	/// export bookmarks to text file
 	bool exportBookmarks( lString32 filename );
 	/// saves current page bookmark under numbered shortcut

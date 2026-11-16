@@ -13,6 +13,7 @@
 #include <cri18n.h>
 #include "bmkdlg.h"
 #include "mainwnd.h"
+#include "citedlg.h"
 
 
 CRBookmarkMenuItem::CRBookmarkMenuItem( CRMenu * menu, int shortcut, CRBookmark * bookmark, int page )
@@ -170,9 +171,11 @@ void CRBookmarkMenu::showContextMenu()
 
 void CRBookmarkMenu::handleContextMenu(int index)
 {
-    _wm->postCommand(index, 0);
-    _wm->processPostedEvents();
-    _wm->resetTillUp();
+    // the command may close the menu, which is deleted then: see CRCitesMenu::handleContextMenu
+    CRGUIWindowManager * wm = _wm;
+    wm->postCommand(index, 0);
+    wm->processPostedEvents();
+    wm->resetTillUp();
 }
 
 #endif
@@ -284,10 +287,16 @@ bool CRBookmarkMenu::onCommand( int command, int params )
 }
 
 #ifdef CR_POCKETBOOK
+extern V3DocViewWin * main_win;
+
 static CRCitesMenu *citesDialog = NULL;
 
+// The actions with a citation of the list: shown by a tap on the citation on the devices with a
+// touch screen, by a long press of OK on the others. The index of an item is the command the
+// list gets.
 static imenu _cites_contextMenu[] = {
         {ITEM_ACTIVE, DCMD_BOOKMARK_GO_N, NULL, NULL},
+        {ITEM_ACTIVE, MCMD_CITE, NULL, NULL},
         {ITEM_ACTIVE, PB_CMD_BOOKMARK_REMOVE, NULL, NULL},
         { 0, 0, NULL, NULL }
 };
@@ -314,7 +323,8 @@ void CRCitesMenu::showContextMenu()
                         ((itemSize.y + separatorHeight)/4);
     if (_cites_contextMenu[0].text == NULL) {
         _cites_contextMenu[0].text = (char *)_("Go to citation");
-        _cites_contextMenu[1].text = (char *)_("Delete citation");
+        _cites_contextMenu[1].text = (char *)_("Edit citation");
+        _cites_contextMenu[2].text = (char *)_("Delete citation");
     }
     OpenMenu(_cites_contextMenu, DCMD_BOOKMARK_GO_N, ScreenWidth()/4, y,
                 handle_citesContextMenu);
@@ -322,9 +332,19 @@ void CRCitesMenu::showContextMenu()
 
 void CRCitesMenu::handleContextMenu(int index)
 {
-    _wm->postCommand(index, 0);
-    _wm->processPostedEvents();
-    _wm->resetTillUp();
+    // "Go to citation" and "Edit citation" close the list, and the list is deleted while its
+    // command is processed: the window manager is taken before that. It was read from the
+    // deleted list after it; with "Edit citation", which opens a window in the memory just
+    // freed, the program stopped with a segmentation fault.
+    CRGUIWindowManager * wm = _wm;
+    // index <= 0: the menu was closed without a choice
+    if (index > 0) {
+        CRLog::info("CRCitesMenu: action %d of the citation menu", index);
+        wm->postCommand(index, 0);
+        wm->processPostedEvents();
+    }
+    wm->resetTillUp();
+    CRLog::info("CRCitesMenu: action done");
 }
 #endif
 
@@ -340,6 +360,9 @@ CRCitesMenu::CRCitesMenu(CRGUIWindowManager * wm, LVDocView * docview, int numIt
     int mc = getSkin()->getMinItemCount();
     if ( _pageItems < mc )
         _pageItems = mc;
+    // The first row of the list always opens the window of a new citation. Before, that row was
+    // shown only while the book had no citations, so a second citation could not be added here.
+    createDefaultItem();
     CRFileHistRecord * rec = docview->getCurrentFileHistRecord();
     LVPtrVector < CRBookmark > &bookmarks = rec->getBookmarks();
     for ( int i=0; i < bookmarks.length(); i++ ) {
@@ -359,8 +382,6 @@ CRCitesMenu::CRCitesMenu(CRGUIWindowManager * wm, LVDocView * docview, int numIt
 #ifdef CR_POCKETBOOK
     citesDialog = this;
 #endif
-    if (_items.length() == 0)
-        createDefaultItem();
 }
 
 /// returns true if command is processed
@@ -374,12 +395,23 @@ bool CRCitesMenu::onCommand( int command, int params )
             return true;
         }
     } else if (command == MCMD_SELECT) {
-        if (_selectedItem >= 0)
+        if (_selectedItem >= 0 && _selectedItem < _items.length()) {
+#ifdef CR_POCKETBOOK
+            // A tap on a citation shows what can be done with it: go to it, edit it, delete it.
+            // Before, the tap went to the citation, and the menu was shown only by a long tap,
+            // which nothing on the screen tells about.
+            CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[_selectedItem]);
+            if (item->getBookmark() != NULL && QueryTouchpanel() != 0) {
+                showContextMenu();
+                return true;
+            }
+#endif
             goToCitePage(_selectedItem );
+        }
         return true;
     } else if (command == MCMD_SELECT_LONG) {
 #ifdef CR_POCKETBOOK
-        if (_selectedItem >= 0)
+        if (_selectedItem >= 0 && _selectedItem < _items.length())
             showContextMenu();
 #endif
         return true;
@@ -393,19 +425,26 @@ bool CRCitesMenu::onCommand( int command, int params )
     else if (command == DCMD_BOOKMARK_GO_N) {
         goToCitePage( _selectedItem );
         return true;
-    } else if (command == PB_CMD_BOOKMARK_REMOVE && _selectedItem >= 0) {
+    } else if (command == MCMD_CITE) {
+        editCite( _selectedItem );
+        return true;
+    } else if (command == PB_CMD_BOOKMARK_REMOVE && _selectedItem >= 0 && _selectedItem < _items.length()) {
         CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[_selectedItem]);
         CRBookmark *bm = item->getBookmark();
         if (bm && _docview->removeBookmark(bm)) {
-            item = static_cast<CRBookmarkMenuItem *>(_items.remove(_selectedItem));
+            // saved at once, as a new citation is; before, a deleted citation was back after a
+            // failure of the program
+            if (main_win != NULL)
+                main_win->saveHistory(lString32::empty_str);
+            item =static_cast<CRBookmarkMenuItem *>(_items.remove(_selectedItem));
             delete item;
-            if (_selectedItem >= _items.length()) {
-                _selectedItem = _items.length() -1;
-                if (_selectedItem < 0) {
-                    createDefaultItem();
-                    _selectedItem = 0;
-                }
-            }
+            // the first row (new citation) is always there, so the list is never empty
+            if (_selectedItem >= _items.length())
+                _selectedItem = _items.length() - 1;
+            // the last page may have become empty
+            if (_topItem >= _items.length())
+                _topItem = (_items.length() - 1) / _pageItems * _pageItems;
+            invalidateControls();
             setDirty();
             _pageUpdate = true;
         }
@@ -423,12 +462,24 @@ bool CRCitesMenu::onCommand( int command, int params )
 void CRCitesMenu::goToCitePage(int selecteditem)
 {
     if (selecteditem >= 0 && selecteditem < _items.length()) {
-        CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[_selectedItem]);
+        CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[selecteditem]);
         if (item->getBookmark() == NULL)
-            closeMenu(MCMD_CITE);
+            closeMenu(MCMD_CITE, CITE_PARAM_FROM_LIST); // the row of a new citation
         else
             closeMenu( DCMD_GO_PAGE, item->getPage() );
     }
+}
+
+/// Closes the list and opens the window of citations on a saved citation, to change its text.
+void CRCitesMenu::editCite(int selecteditem)
+{
+    if (selecteditem < 0 || selecteditem >= _items.length())
+        return;
+    CRBookmark * bmk = static_cast<CRBookmarkMenuItem *>(_items[selecteditem])->getBookmark();
+    CRFileHistRecord * rec = _docview->getCurrentFileHistRecord();
+    int index = (bmk && rec) ? rec->getBookmarks().indexOf(bmk) : -1;
+    if (index >= 0)
+        closeMenu(MCMD_CITE, CITE_PARAM_EDIT_BASE + index);
 }
 
 int CRCitesMenu::getSelectedItemIndex()
@@ -436,7 +487,7 @@ int CRCitesMenu::getSelectedItemIndex()
     int curPage = _docview->getCurPage();
     for (int i = 0; i < _items.length(); i++) {
         CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[i]);
-        if (item->getPage() == curPage)
+        if (item->getBookmark() != NULL && item->getPage() == curPage)
             return i;
     }
     return -1;

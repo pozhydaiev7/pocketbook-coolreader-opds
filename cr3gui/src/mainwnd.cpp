@@ -741,6 +741,7 @@ bool V3DocViewWin::loadSettings( lString32 filename )
     LVStreamRef stream = LVOpenFileStream( filename.c_str(), LVOM_READ );
     if ( stream.isNull() ) {
 		CRLog::debug("settings file not found: %s", LCSTR(filename));
+        setDeviceDefaults();
         _docview->propsUpdateDefaults( _props );
         _docview->propsApply( _props );
         initTapDefaultActions(_props);
@@ -752,6 +753,7 @@ bool V3DocViewWin::loadSettings( lString32 filename )
     if ( _props->loadFromStream( stream.get() ) ) {
         convertFontWeight();
         _props->setIntDef(PROP_FILE_PROPS_FONT_SIZE, 26);
+        setDeviceDefaults();
         _docview->propsUpdateDefaults( _props );
         initTapDefaultActions(_props);
         _docview->propsApply( _props );
@@ -760,6 +762,7 @@ bool V3DocViewWin::loadSettings( lString32 filename )
         setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
         return true;
     }
+    setDeviceDefaults();
     _docview->propsUpdateDefaults( _props );
     initTapDefaultActions(_props);
     _docview->propsApply( _props );
@@ -767,6 +770,23 @@ bool V3DocViewWin::loadSettings( lString32 filename )
     _wm->getScreen()->setTurboUpdateEnabled(_props->getIntDef(PROP_DISPLAY_TURBO_UPDATE_MODE, 0));
     //setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
     return false;
+}
+
+// Values for the settings that are not saved yet (the first start), by the device.
+// PocketBook: the engine would take the font size at 2/3 of the list of sizes, 125 for the list
+// 16..300, and two pages in the landscape orientation. The text size is 1/28 of the shorter side
+// of the screen (38 for 1072 x 1448, 50 for 1404 x 1872), one page in the landscape orientation.
+void V3DocViewWin::setDeviceDefaults()
+{
+#ifdef CR_POCKETBOOK
+    lvRect rc = _wm->getScreen()->getRect();
+    int side = rc.width() < rc.height() ? rc.width() : rc.height();
+    int size = side / 28;
+    if ( size < 16 )
+        size = 16;
+    _props->setIntDef( PROP_FONT_SIZE, size );
+    _props->setIntDef( PROP_LANDSCAPE_PAGES, 1 );
+#endif
 }
 
 // CREngine 3.2 has one setting for the weight of the text, the base font weight (400 regular,
@@ -854,7 +874,7 @@ void V3DocViewWin::applySettings()
     setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
 }
 
-void V3DocViewWin::showSettingsMenu()
+void V3DocViewWin::showSettingsMenu( int showItem )
 {
     LVFontRef menuFont( fontMan->GetFont( MENU_FONT_SIZE, 600, true, css_ff_sans_serif, lString8("Arial")) );
     //_props->set( _docview->propsGetCurrent() );
@@ -864,6 +884,10 @@ void V3DocViewWin::showSettingsMenu()
     CRMenu * mainMenu = new CRSettingsMenu( _wm, _newProps, MCMD_SETTINGS_APPLY, menuFont,
                                            getMenuAccelerators(), rc );
     _wm->activateWindow( mainMenu );
+    // back from a screen opened by an item of the menu: the page of that item
+    // (1 is not an item: the parameter of a long press on "Settings" in the main menu)
+    if ( showItem > 1 )
+        mainMenu->showItem( showItem );
 }
 
 #ifdef POCKETBOOK_PRO
@@ -1000,10 +1024,23 @@ VIEWER_MENU_4ABOUT=About...
 	CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString32("mainMenuItems"));
 	if ( !menuItems.isNull() && menuItems->length()>1 ) {
 		// get menu from file
+#ifdef CR_POCKETBOOK
+        // The list of citations has the row of a new citation, so a menu that has the list does
+        // not show the window of a new citation as a second item. Done here, not in the keymap
+        // files: every device and skin has its own [mainMenuItems], users have theirs.
+        bool hasCitesList = false;
+        for (int i=0; i < menuItems->length(); i++)
+            if ( menuItems->get( i )->commandId == MCMD_CITES_LIST )
+                hasCitesList = true;
+#endif
         for (int i=0; i < menuItems->length(); i++) {
 			const CRGUIAccelerator * acc = menuItems->get( i );
 			int cmd = acc->commandId;
 			int param = acc->commandParam;
+#ifdef CR_POCKETBOOK
+            if ( cmd == MCMD_CITE && hasCitesList )
+                continue;
+#endif
 			const char * name = getCommandName( cmd, param );
 			int key = 0;
 			int keyFlags = 0;
@@ -1099,7 +1136,7 @@ VIEWER_MENU_4ABOUT=About...
 void addPropLine( lString8 & buf, const char * description, const lString32 & value )
 {
     if ( !value.empty() ) {
-        buf << "<tr><td>" << description << "</td><td>" << UnicodeToUtf8(value).c_str() << "</td></tr>\n";
+        buf << "<tr><td class=\"name\">" << description << "</td><td>" << UnicodeToUtf8(value).c_str() << "</td></tr>\n";
     }
 }
 
@@ -1170,7 +1207,7 @@ lString32 getDocAuthors( ldomDocument * doc, const char * path, const char * del
 static void addInfoSection( lString8 & buf, lString8 data, const char * caption )
 {
     if ( !data.empty() )
-        buf << "<tr><td colspan=\"2\" style=\"font-weight: bold; text-align: center\">" << caption << "</td></tr>" << data;
+        buf << "<tr><td colspan=\"2\" class=\"section\">" << caption << "</td></tr>" << data;
 }
 
 lString32 V3DocViewWin::getBookLanguage() {
@@ -1189,7 +1226,7 @@ void V3DocViewWin::showAboutDialog()
 
     lString8 txt;
     //=========================================================
-    txt << "<table><col width=\"30%\"/><col width=\"70%\"/>\n";
+    txt << "<table><col width=\"34%\"/><col width=\"66%\"/>\n";
     CRPropRef props = _docview->getDocProps();
 
     lString8 statusInfo;
@@ -1298,7 +1335,7 @@ bool V3DocViewWin::onCommand( int command, int params )
         return true;
 #endif
     case MCMD_SETTINGS:
-        showSettingsMenu();
+        showSettingsMenu( params );
         return true;
     case MCMD_RECENT_BOOK_LIST:
         showRecentBooksMenu();
@@ -1319,7 +1356,8 @@ bool V3DocViewWin::onCommand( int command, int params )
         showAboutDialog();
         return true;
     case MCMD_CITE:
-        activate_cite( _wm, this);
+        // params: a new citation, or the citation of the list to edit (see citedlg.h)
+        activate_cite( _wm, this, params);
         return true;
     case MCMD_GO_PAGE_APPLY:
         _docview->doCommand( DCMD_GO_PAGE, params-1 );

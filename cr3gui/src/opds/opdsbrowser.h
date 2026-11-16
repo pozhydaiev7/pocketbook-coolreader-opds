@@ -79,6 +79,8 @@ public:
     void open(CRGUIWindowManager * wm);
     // The book menu: the list of catalogs.
     void openCatalogs(CRGUIWindowManager * wm);
+    // The settings menu (fromSettings): the list of catalogs whose "Back" opens the settings again.
+    void openCatalogs(CRGUIWindowManager * wm, bool fromSettings);
     // Opens the on-screen keyboard to edit the address of the open catalog.
     void editUrl(CRGUIWindowManager * wm);
     // Handles OPDS_CMD_FIRST..OPDS_CMD_LAST. Returns true when the command was consumed.
@@ -90,7 +92,8 @@ public:
     char keyBuffer[1024];
 
 private:
-    OpdsBrowser() : _bookIndex(-1), _rows(0), _catalog(-1), _editCatalog(-1), _catalogsEdit(false), _catalogRows(0)
+    OpdsBrowser() : _bookIndex(-1), _rows(0), _catalog(-1), _editCatalog(-1), _catalogsEdit(false), _catalogRows(0),
+        _fromSettings(false)
     {
         keyBuffer[0] = 0;
     }
@@ -105,6 +108,7 @@ private:
     bool _catalogsEdit;               // the list of catalogs was shown to edit them
     lString32 _newUrl;                // address of the catalog being added
     int _catalogRows;                 // rows of the screen of the catalog list
+    bool _fromSettings;               // the list of catalogs was opened from the settings menu
 
     std::string rootUrl();
     // reads the catalogs from the settings: Flibusta, then the catalogs of the user; the first

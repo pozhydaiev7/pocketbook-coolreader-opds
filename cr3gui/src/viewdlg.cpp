@@ -91,9 +91,17 @@ static const char * def_view_css =
 "h3 { font-size: 130% }\n"
 "h4 { font-size: 120% }\n"
 "h5 { font-size: 110% }\n"
-"table { font-size: 80% }\n"
-"td, th { text-indent: 0px; padding: 3px }\n"
-"th {  font-size: 120%; font-weight: bold; background-color: #DDD  }\n"
+// Tables of the text windows (the key functions, the book information). CREngine 3.2 draws no
+// cell borders of its own and sizes the columns by their text, so the look is set here: the table
+// takes the whole width, the rows are separated by a thin line, the header has a background.
+// td.section: the caption of a group of rows; td.name: the name of a value.
+// With border-collapse the engine keeps the top and the left border of a cell, so the line of a
+// row is its top border, and the last line is the bottom border of the table.
+"table { font-size: 80%; width: 100%; border-collapse: collapse; border-bottom: 1px solid #999999 }\n"
+"td, th { text-indent: 0px; text-align: left; vertical-align: top; padding: 0.25em 0.5em; border-top: 1px solid #999999 }\n"
+"th { font-weight: bold; background-color: #DDDDDD; border-top: 2px solid #000000 }\n"
+"td.section { font-weight: bold; text-align: center; background-color: #DDDDDD; border-top: 2px solid #000000; padding-top: 0.4em; padding-bottom: 0.4em }\n"
+"td.name { color: #505050; hyphenate: none }\n"
 "table > caption { text-indent: 0px; padding: 4px; background-color: #EEE }\n"
 "code, pre { display: block; white-space: pre; text-align: left; font-weight: bold; font-family: \"Courier New\", \"Courier\", monospace; text-align: left }\n"
 "description { display: none; }\n"
@@ -101,7 +109,8 @@ static const char * def_view_css =
 ;
 
 CRViewDialog::CRViewDialog(CRGUIWindowManager * wm, lString32 title, lString8 text, lvRect rect, bool showScroll, bool showFrame )
-    : CRDocViewWindow(wm), _text(text), _showScroll( showScroll ), _showFrame( showFrame ), _lastNavigationDirection(0)
+    : CRDocViewWindow(wm), _text(text), _showScroll( showScroll ), _showFrame( showFrame ), _lastNavigationDirection(0),
+      _touchStarted(false)
 {
     _passKeysToParent = _passCommandsToParent = false;
     if ( _showFrame ) {
@@ -432,7 +441,80 @@ bool CRViewDialog::onCommand( int command, int params )
     return CRDocViewWindow::onCommand( command, params );
 }
 
-static 
+#ifdef CR_POCKETBOOK
+extern V3DocViewWin * main_win;
+#endif
+
+// Touch screens: the pages of a text window (the manual, the key functions, the book information)
+// are turned by a tap or a swipe, not only by the scroll buttons of the title.
+// PocketBook: by the settings of the book window (Control settings).
+//   - A tap or a long tap in a tap zone whose action there is a page turn (one page or ten, the
+//     first or the last page) does the same here. The zones are the same parts of the window.
+//   - A zone with any other action (dictionary, menus, bookmarks, a link) does nothing here.
+//   - A horizontal swipe of 1/10 of the screen width turns the page if "Page turn swipes" is on.
+// Other platforms: a swipe of 1/10 of the window width or more turns the page by its direction
+// (to the left or up: the next page); a tap turns back in the left third of the window and
+// forward in the rest.
+bool CRViewDialog::onClientTouch( lvPoint &pt, CRGUITouchEventType evType )
+{
+    if ( CRTOUCH_DOWN == evType ) {
+        _touchStart = pt;
+        _touchStarted = true;
+        return false;
+    }
+#ifdef CR_POCKETBOOK
+    bool longTap = ( CRTOUCH_DOWN_LONG == evType );
+    if ( ( CRTOUCH_UP != evType && !longTap ) || !_touchStarted )
+        return false;
+    // the release that follows a long tap is not a tap
+    _touchStarted = false;
+    if ( main_win == NULL )
+        return false;
+    CRPropRef props = main_win->getProps();
+    int swipeDx = pt.x - _touchStart.x;
+    if ( !longTap && ( swipeDx < 0 ? -swipeDx : swipeDx ) >= ScreenWidth() * MIN_PAGE_TURN_SWIPE_WIDTH ) {
+        if ( props->getIntDef( PROP_CTRL_PAGE_TURN_SWIPES, 1 ) != 1 )
+            return false;
+        _wm->postCommand( swipeDx < 0 ? DCMD_PAGEDOWN : DCMD_PAGEUP, 1 );
+        return true;
+    }
+    int zone = getTapZone( pt.x, pt.y, props );
+    if ( zone != getTapZone( _touchStart.x, _touchStart.y, props ) )
+        return false;
+    int tapCommand = 0;
+    int tapParam = 0;
+    getCommandForTapZone( zone, props, longTap, tapCommand, tapParam );
+    if ( tapCommand != DCMD_PAGEDOWN && tapCommand != DCMD_PAGEUP && tapCommand != DCMD_BEGIN && tapCommand != DCMD_END )
+        return false;
+    _wm->postCommand( tapCommand, tapParam );
+    return true;
+#else
+    if ( CRTOUCH_UP != evType || !_touchStarted )
+        return false;
+    _touchStarted = false;
+    lvRect rc = _rect;
+    if ( _showFrame )
+        getClientRect( rc );
+    int width = rc.width();
+    if ( width <= 0 )
+        return false;
+    int dx = pt.x - _touchStart.x;
+    int dy = pt.y - _touchStart.y;
+    int adx = dx < 0 ? -dx : dx;
+    int ady = dy < 0 ? -dy : dy;
+    int swipe = width / 10;
+    bool forward;
+    if ( adx >= swipe || ady >= swipe )
+        forward = adx >= ady ? dx < 0 : dy < 0;
+    else
+        forward = pt.x >= rc.left + width / 3;
+    // the parameter 0, as the scroll buttons of the title give it
+    _wm->postCommand( forward ? DCMD_PAGEDOWN : DCMD_PAGEUP, 0 );
+    return true;
+#endif
+}
+
+static
 const char * getKeyName( int keyCode )
 {
 	static char name[256];
@@ -656,8 +738,8 @@ void CRViewDialog::showKeymapDialog()
 	if ( _acceleratorTable.isNull() )
 		return;
 	lString8 txt;
-	txt << "<table><tr><th>";
-	txt << "<b>" << _("Key") << "</b></th><th><b>"<< _("Assigned function") <<"</b></th></tr>";
+	txt << "<table><col width=\"40%\"/><col width=\"60%\"/><tr><th>";
+	txt << _("Key") << "</th><th>"<< _("Assigned function") <<"</th></tr>";
     for ( int i=0; i<_acceleratorTable->length(); i++ ) {
 		const CRGUIAccelerator * acc = _acceleratorTable->get( i );
 		txt << "<tr><td>";

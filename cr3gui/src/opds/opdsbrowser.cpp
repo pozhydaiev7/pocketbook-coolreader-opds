@@ -386,6 +386,7 @@ int OpdsBrowser::maxCatalogs()
 
 void OpdsBrowser::open(CRGUIWindowManager * wm)
 {
+    _fromSettings = false;
     loadCatalogs();
     int def = defaultCatalog();
     if (def < 0) {
@@ -399,6 +400,12 @@ void OpdsBrowser::openCatalogs(CRGUIWindowManager * wm)
 {
     loadCatalogs();
     showCatalogs(wm, false);
+}
+
+void OpdsBrowser::openCatalogs(CRGUIWindowManager * wm, bool fromSettings)
+{
+    _fromSettings = fromSettings;
+    openCatalogs(wm);
 }
 
 void OpdsBrowser::openCatalog(CRGUIWindowManager * wm, int index, bool fromList)
@@ -418,6 +425,8 @@ void OpdsBrowser::openCatalog(CRGUIWindowManager * wm, int index, bool fromList)
         }
     }
     _bookIndex = -1;
+    // inside a catalog "Back to the book" leaves to the book, wherever the list was opened from
+    _fromSettings = false;
     showList(wm);
 }
 
@@ -431,7 +440,8 @@ void OpdsBrowser::showCatalogs(CRGUIWindowManager * wm, bool edit)
         menu->setCloseCommand(OPDS_CMD_CATALOGS);
         menu->add(OPDS_CMD_CATALOGS, backTo(lString32(_("OPDS catalogs"))));
     } else {
-        menu->add(OPDS_CMD_CLOSE, lString32(MARK_PREV) + lString32(_("Back to the book")));
+        menu->add(OPDS_CMD_CLOSE, lString32(MARK_PREV) +
+                  lString32(_fromSettings ? _("Back to settings") : _("Back to the book")));
     }
     int def = defaultCatalog();
     for (int i = 0; i < (int)_catalogs.size(); i++) {
@@ -869,6 +879,11 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
     CRLog::trace("OpdsBrowser::onCommand(%d)", command);
     switch (command) {
     case OPDS_CMD_CLOSE:
+        // the list of catalogs opened from the settings menu: back to that menu, at its item
+        if (_fromSettings) {
+            _fromSettings = false;
+            wm->postCommand(MCMD_SETTINGS, PB_CMD_OPDS_CATALOGS);
+        }
         return true;
     case OPDS_CMD_SHOW_LIST:
         showList(wm);

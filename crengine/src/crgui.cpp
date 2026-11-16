@@ -1369,6 +1369,8 @@ int CRMenu::getPageCount()
     return (_items.length() + _pageItems - 1) / _pageItems;
 }
 
+bool CRMenu::s_cursorFollowsPage = true;
+
 bool CRMenu::setCurPage( int nPage )
 {
     int oldTop = _topItem;
@@ -1389,6 +1391,22 @@ bool CRMenu::setCurPage( int nPage )
         return true;
     }
     return false;
+}
+
+/// turns the menu to the page of the item with this id and selects the item
+void CRMenu::showItem( int id )
+{
+    if ( _pageItems <= 0 )
+        return;
+    for ( int i=0; i<_items.length(); i++ ) {
+        if ( _items[i]->getId()==id ) {
+            setCurPage( i / _pageItems );
+            _selectedItem = i;
+            _pageUpdate = true;
+            setDirty();
+            return;
+        }
+    }
 }
 
 int CRMenu::getCurPage( )
@@ -2037,20 +2055,20 @@ bool CRMenu::onCommand( int command, int params )
 		return true;
     case MCMD_NEXT_PAGE:
 		if (setCurPage(getCurPage() + 1))
-			if (_selectedItem >= 0)	
+			if (_selectedItem >= 0 && cursorFollowsPage())
 				setCurItem(_selectedItem + _pageItems);
 		return true;
     case MCMD_PREV_PAGE:
 		if (_topItem == 0) {
 			doCloseMenu(getId(), false, params);
-		} else if (setCurPage(getCurPage() - 1) && _selectedItem >= 0)
+		} else if (setCurPage(getCurPage() - 1) && _selectedItem >= 0 && cursorFollowsPage())
 			setCurItem(_selectedItem - _pageItems);
 		return true;
     case MCMD_SELECT:
 		onItemSelect(_selectedItem, params);
 		return true;
     case DCMD_GO_PAGE:
-        if (setCurPage(params) && _selectedItem >= 0)
+        if (setCurPage(params) && _selectedItem >= 0 && cursorFollowsPage())
             setCurItem(_selectedItem - _pageItems);
         return true;
     }

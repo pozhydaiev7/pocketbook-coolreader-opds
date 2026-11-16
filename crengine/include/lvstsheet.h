@@ -75,7 +75,11 @@ private:
 public:
     void apply( css_style_rec_t * style );
     bool empty() { return _data==NULL; }
-    bool parse( const char * & decl, lUInt32 domVersionRequested, bool higher_importance=false, lxmlDocBase * doc=NULL, lString32 codeBase=lString32::empty_str );
+    /// document_styles: the declaration comes from the book (its stylesheets, style= attributes),
+    /// not from the stylesheet of the program. With the fonts of the document turned off
+    /// (DOC_FLAG_ENABLE_DOC_FONTS) font-family of such a declaration is dropped, so that the text
+    /// is drawn with the font chosen by the user; only the monospace family is kept.
+    bool parse( const char * & decl, lUInt32 domVersionRequested, bool higher_importance=false, lxmlDocBase * doc=NULL, lString32 codeBase=lString32::empty_str, bool document_styles=false );
     lUInt32 getHash();
     LVCssDeclaration() : _data(NULL) { }
     ~LVCssDeclaration() { if (_data) delete[] _data; }
@@ -260,7 +264,8 @@ public:
     /// copy constructor
     LVStyleSheet( LVStyleSheet & sheet );
     /// parse stylesheet, compile and add found rules to sheet
-    bool parse( const char * str, bool higher_importance=false, lString32 codeBase=lString32::empty_str );
+    /// document_styles: the stylesheet comes from the book (see LVCssDeclaration::parse)
+    bool parse( const char * str, bool higher_importance=false, lString32 codeBase=lString32::empty_str, bool document_styles=false );
     /// parse @charset rule
     bool parseCharsetRule( const char * &str );
     /// apply stylesheet to node style

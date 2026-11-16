@@ -77,6 +77,47 @@ public:
             range.setEnd( end_ );
     }
 
+    /// Selects a given range and opens the page of its start (editing of a saved citation).
+    void setRange( const ldomXPointerEx & start, const ldomXPointerEx & end ) {
+        start_ = start;
+        end_ = end;
+        last_move_ = not_moved;
+        view_.goToBookmark( start_ );
+        highlight();
+    }
+
+    /// The word of the open page at a point of the page image (selection by touch).
+    /// A word is the text between two spaces, with its punctuation. False: no text at the point.
+    bool wordAt( lvPoint pt, ldomXPointerEx & wordStart, ldomXPointerEx & wordEnd ) {
+        ldomXPointer p = view_.getNodeByPoint( pt );
+        if ( p.isNull() )
+            return false;
+        ldomXRange word;
+        if ( !ldomXRange::getWordRange( word, p ) )
+            return false;
+        wordStart = word.getStart();
+        wordEnd = word.getEnd();
+        return true;
+    }
+
+    /// Selects the text from one word to another, whichever of them is the first in the book.
+    void selectWords( const ldomXPointerEx & start1, const ldomXPointerEx & end1,
+                      const ldomXPointerEx & start2, const ldomXPointerEx & end2 ) {
+        start_ = start1.compare( start2 ) <= 0 ? start1 : start2;
+        end_ = end1.compare( end2 ) >= 0 ? end1 : end2;
+        highlight();
+    }
+
+    /// Moves a bound of the selection to a word: a word before the selection becomes its first
+    /// word; a word inside or after the selection becomes its last word.
+    void moveBoundTo( const ldomXPointerEx & wordStart, const ldomXPointerEx & wordEnd ) {
+        if ( wordStart.compare( start_ ) < 0 )
+            start_ = wordStart;
+        else
+            end_ = wordEnd;
+        highlight();
+    }
+
     void
     highlight() {
         // show what we try to highlight
@@ -121,27 +162,110 @@ public:
         };
     }
 
+    /// The first paragraph leaves the selection. Refused if nothing would be left.
+    /// Before, a refused step still moved the start to the beginning of its text node.
     void shrinkDown() {
         CRLog::info("shrink down\n");
         ldomXPointerEx ptr(start_);
-        if (nextPara(ptr)) {
-            if (end_.compare(ptr) >= 0)
-                start_ = ptr;
-            point_to_begin(start_);
-            move_to_upper_bound();
-        }
+        if (!nextPara(ptr))
+            return;
+        point_to_begin(ptr);
+        if (ptr.compare(end_) >= 0)
+            return;
+        start_ = ptr;
+        move_to_upper_bound();
     }
 
+    /// The last paragraph leaves the selection. Refused if nothing would be left.
+    /// Before, the step compared the start with the element of the previous paragraph: a start
+    /// inside that paragraph (the selection the window opens with, or one made by touch) is
+    /// after its element, so the step was refused and only moved the end to the end of its
+    /// text node.
     void shrinkUp() {
         CRLog::info("shrink up\n");
         ldomXPointerEx ptr(end_);
-        if (prevPara(ptr)) {
-            if (start_.compare(ptr) <= 0)
-                end_ = ptr;
-            point_to_end(end_);
-            move_to_lower_bound();
-        };
+        if (!prevPara(ptr))
+            return;
+        point_to_end(ptr);
+        if (start_.compare(ptr) >= 0)
+            return;
+        end_ = ptr;
+        move_to_lower_bound();
     }
+
+    /// Makes the selection whole paragraphs: from the beginning of the paragraph of its first
+    /// word to the end of the paragraph of its last word. False if it was that already.
+    bool selectWholeParagraphs() {
+        ldomXPointerEx s(start_);
+        ldomXPointerEx e(end_);
+        if (!s.isVisibleFinal() && !s.ensureFinal())
+            return false;
+        if (e.isVisibleFinal() || !e.ensureFinal())
+            return false;
+        point_to_begin(s);
+        point_to_end(e);
+        if (s.compare(e) >= 0)
+            return false;
+        if (ldomXRange(s, e).getRangeText() == ldomXRange(start_, end_).getRangeText())
+            return false;
+        start_ = s;
+        end_ = e;
+        move_to_upper_bound();
+        return true;
+    }
+
+    /// True if the text between two positions (a before b) has something to read: a letter or
+    /// a digit.
+    static bool hasWords(const ldomXPointerEx & a, const ldomXPointerEx & b) {
+        lString32 text = ldomXRange(a, b).getRangeText();
+        for (int i = 0; i < text.length(); i++)
+            if (lGetCharProps(text[i]) & (CH_PROP_ALPHA | CH_PROP_DIGIT))
+                return true;
+        return false;
+    }
+
+    /// A step by a sentence that the reader sees. The step of the engine functions alone
+    /// (rawStep) has two faults:
+    ///   - it can move a bound over spaces and punctuation only. A text node of an EPUB often
+    ///     ends with a space or a line break, the position after it is a start of an (empty)
+    ///     sentence for the engine, and "remove the last sentence" of a whole paragraph removed
+    ///     that one character. Such a step is repeated, up to three times, until the bound has
+    ///     passed a word;
+    ///   - a shrink step of a short selection (one word chosen by touch) moved the start behind
+    ///     the end: nothing was highlighted any more and such a citation could be saved. A step
+    ///     that leaves no text is undone.
+    void phraseStep( void (CiteSelection::*rawStep)() ) {
+        ldomXPointerEx start0(start_);
+        ldomXPointerEx end0(end_);
+        for (int i = 0; i < 3; i++) {
+            ldomXPointerEx s(start_);
+            ldomXPointerEx e(end_);
+            (this->*rawStep)();
+            if (start_.compare(end_) >= 0) {
+                start_ = s;
+                end_ = e;
+                move_to_upper_bound();
+                return;
+            }
+            if (start_.compare(s) == 0 && end_.compare(e) == 0)
+                return;
+            int ds = start_.compare(start0);
+            int de = end_.compare(end0);
+            if (ds < 0 && hasWords(start_, start0))
+                return;
+            if (ds > 0 && hasWords(start0, start_))
+                return;
+            if (de < 0 && hasWords(end_, end0))
+                return;
+            if (de > 0 && hasWords(end0, end_))
+                return;
+        }
+    }
+
+    void growUpPhrase() { phraseStep(&CiteSelection::rawGrowUpPhrase); }
+    void shrinkDownPhrase() { phraseStep(&CiteSelection::rawShrinkDownPhrase); }
+    void shrinkUpPhrase() { phraseStep(&CiteSelection::rawShrinkUpPhrase); }
+    void growDownPhrase() { phraseStep(&CiteSelection::rawGrowDownPhrase); }
 
     void growDown() {
         CRLog::info("grow down\n");
@@ -153,7 +277,7 @@ public:
         }
     }
 
-    void growUpPhrase() {
+    void rawGrowUpPhrase() {
         ldomXPointerEx xp = start_;
         if (!xp.isFirstVisibleTextInBlock()) {
             ldomXPointerEx pptr(start_);
@@ -171,7 +295,7 @@ public:
         }
     }
 
-    void shrinkDownPhrase() {
+    void rawShrinkDownPhrase() {
         ldomXPointerEx pptr(start_);
         bool np = nextPara(pptr);
         ldomXPointerEx xp = start_;
@@ -188,7 +312,7 @@ public:
     }
 
 
-    void shrinkUpPhrase() {
+    void rawShrinkUpPhrase() {
         ldomXPointerEx xp(end_);
         if (!xp.prevSentenceEnd())
             return;
@@ -198,7 +322,7 @@ public:
         move_to_lower_bound();
     }
 
-    void growDownPhrase() {
+    void rawGrowDownPhrase() {
         ldomXPointerEx xp(end_);
         if (!xp.isLastVisibleTextInBlock()) {
             ldomXPointerEx pptr(xp);

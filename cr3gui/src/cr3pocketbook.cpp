@@ -3089,7 +3089,8 @@ public:
             return true;
         }
         if (command == PB_CMD_OPDS_CATALOGS) {
-            OpdsBrowser::instance().openCatalogs(_wm);
+            // parameter 1: from the settings menu, "Back" returns there
+            OpdsBrowser::instance().openCatalogs(_wm, params == 1);
             return true;
         }
         // Contents in the plain list mode
@@ -3099,7 +3100,7 @@ public:
         if (PbStatsView::isStatsCommand(command))
             return PbStatsView::instance().onCommand(_wm, command, params);
         if (command == PB_CMD_READING_STATS) {
-            PbStatsView::instance().open(_wm);
+            PbStatsView::instance().open(_wm, params == 1);
             return true;
         }
 
@@ -6385,6 +6386,8 @@ int InitDoc(const char *exename, char *fileName)
         CRLog::debug("settings at %s", UnicodeToUtf8(ini).c_str() );
         CRLog::trace("creating window manager...");
         CRPocketBookWindowManager * wm = new CRPocketBookWindowManager(ScreenWidth(), ScreenHeight(), bpp);
+        // touch screen: the mark of the current value does not move with the pages of a list
+        CRMenu::setCursorFollowsPage(QueryTouchpanel() == 0);
 
         CRPbIniFile devices;
         if ( devices.loadFromFile(USERDATA"/share/cr3/devices.ini") ) {

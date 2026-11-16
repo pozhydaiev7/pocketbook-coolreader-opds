@@ -28,6 +28,9 @@ protected:
     bool _showFrame;
     int _lastNavigationDirection;
     lString32 _searchPattern;
+    // where the finger went down on the page, to tell a swipe from a tap
+    lvPoint _touchStart;
+    bool _touchStarted;
 	static LVRef<CRDictionary> _dict;
     virtual void draw( int pageOffset );
     virtual void draw();
@@ -75,6 +78,8 @@ public:
     CRViewDialog(CRGUIWindowManager * wm, lString32 title, lString8 text, lvRect rect, bool showScroll, bool showFrame );
 
     virtual bool onCommand( int command, int params = 0 );
+    /// a tap or a swipe on the page turns it
+    virtual bool onClientTouch( lvPoint &pt, CRGUITouchEventType evType );
 };
 
 const char * getCommandName( int command, int param );

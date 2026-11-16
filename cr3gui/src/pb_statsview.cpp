@@ -195,7 +195,7 @@ void PbStatsView::flush()
 // ------------------------------------------------------------ screens
 
 PbStatsView::PbStatsView()
-    : _screen(0), _booksScreen(0), _mode(MODE_MENU), _reportBack(PB_STATS_CMD_MENU)
+    : _screen(0), _booksScreen(0), _mode(MODE_MENU), _fromSettings(false), _reportBack(PB_STATS_CMD_MENU)
 {
     keyBuffer[0] = 0;
 }
@@ -212,8 +212,9 @@ void PbStatsView::reload()
     _log.load(PbStatsRecorder::instance().file());
 }
 
-void PbStatsView::open(CRGUIWindowManager * wm)
+void PbStatsView::open(CRGUIWindowManager * wm, bool fromSettings)
 {
+    _fromSettings = fromSettings;
     LVDocView * doc = openBook();
     _thisBookKey = doc ? bookKey(doc) : std::string();
     _thisBookTitle = doc ? bookTitle(doc) : std::string();
@@ -235,7 +236,8 @@ void PbStatsView::showMenu(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, tr("Reading statistics"), rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(PB_STATS_CMD_CLOSE);
-    menu->add(PB_STATS_CMD_CLOSE, lString32(MARK_PREV) + tr("Back to the book"));
+    menu->add(PB_STATS_CMD_CLOSE, lString32(MARK_PREV) +
+              (_fromSettings ? tr("Back to settings") : tr("Back to the book")));
     if (!_thisBookKey.empty())
         menu->add(PB_STATS_CMD_THIS_BOOK, tr("This book"), u16(_thisBookTitle));
     menu->add(PB_STATS_CMD_TODAY, tr("Today"), dayText(today));
@@ -442,6 +444,11 @@ bool PbStatsView::onCommand(CRGUIWindowManager * wm, int command, int params)
         showMenu(wm);
         return true;
     case PB_STATS_CMD_CLOSE:
+        // opened from the settings menu: back to that menu, at its item
+        if (_fromSettings) {
+            _fromSettings = false;
+            wm->postCommand(MCMD_SETTINGS, PB_CMD_READING_STATS);
+        }
         return true;
     case PB_STATS_CMD_THIS_BOOK: {
         int index = _log.find(_thisBookKey);

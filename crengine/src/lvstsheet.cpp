@@ -1930,10 +1930,12 @@ enum cr_only_if_t {
     cr_only_if_fb2_document, // fb2 or fb3
 };
 
-bool LVCssDeclaration::parse( const char * &decl, lUInt32 domVersionRequested, bool higher_importance, lxmlDocBase * doc, lString32 codeBase )
+bool LVCssDeclaration::parse( const char * &decl, lUInt32 domVersionRequested, bool higher_importance, lxmlDocBase * doc, lString32 codeBase, bool document_styles )
 {
     if ( !decl )
         return false;
+    // styles of the book with the fonts of the book turned off: font-family is dropped
+    bool drop_font_family = document_styles && doc && !doc->getDocFlag(DOC_FLAG_ENABLE_DOC_FONTS);
     skip_spaces( decl );
     if ( *decl != '{' )
         return false;
@@ -2293,6 +2295,13 @@ bool LVCssDeclaration::parse( const char * &decl, lUInt32 domVersionRequested, b
                     // a font)
                     if (n == -1)
                         n = css_ff_sans_serif;
+                    if ( drop_font_family && n != css_ff_monospace ) {
+                        // The font of the book is not used: the names and the family are
+                        // dropped, so that the element keeps the font chosen by the user.
+                        // A monospace declaration stays as it is (code, tables of characters).
+                        strValue.clear();
+                        n = -1;
+                    }
                 }
                 break;
             case cssd_font_style:
@@ -4632,7 +4641,7 @@ lUInt32 LVStyleSheet::getHash()
     return hash;
 }
 
-bool LVStyleSheet::parse( const char * str, bool higher_importance, lString32 codeBase )
+bool LVStyleSheet::parse( const char * str, bool higher_importance, lString32 codeBase, bool document_styles )
 {
     if ( !_doc ) {
         // We can't parse anything if no _doc to get element name ids from
@@ -4676,7 +4685,7 @@ bool LVStyleSheet::parse( const char * str, bool higher_importance, lString32 co
             }
             // parse declaration
             LVCssDeclRef decl( new LVCssDeclaration );
-            if ( !decl->parse( str, domVersionRequested, higher_importance, _doc, codeBase ) )
+            if ( !decl->parse( str, domVersionRequested, higher_importance, _doc, codeBase, document_styles ) )
             {
                 err = true;
                 err_count++;

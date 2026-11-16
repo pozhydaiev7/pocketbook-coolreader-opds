@@ -413,6 +413,10 @@ msgstr "Перейти к цитате"
 msgid "Delete citation"
 msgstr "Удалить цитату"
 
+#: ../src/bmkdlg.cpp
+msgid "Edit citation"
+msgstr "Изменить цитату"
+
 #: ../src/bmkdlg.cpp:332
 msgid "Citations"
 msgstr "Цитаты"
@@ -1207,7 +1211,7 @@ msgstr "Гамма-коррекция шрифта"
 
 #: ../src/settings.cpp:1572
 msgid "Document embedded fonts"
-msgstr "Встроенные шрифты документа"
+msgstr "Шрифты книги"
 
 #: ../src/settings.cpp:1575
 msgid "Fallback font face"
@@ -2005,6 +2009,10 @@ msgstr "Назад к списку"
 #: ../src/opds/opdsbrowser.cpp
 msgid "Back to the book"
 msgstr "Назад к книге"
+
+#: ../src/opds/opdsbrowser.cpp ../src/pb_statsview.cpp
+msgid "Back to settings"
+msgstr "Назад в настройки"
 
 #: ../src/opds/opdsbrowser.cpp
 msgid "Genre"
