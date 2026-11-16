@@ -2368,8 +2368,8 @@ msgid "Check automatically"
 msgstr "Перевіряти автоматично"
 
 #: ../src/ota_update.cpp
-msgid "At the start, once a day, when Wi-Fi is on"
-msgstr "Під час запуску, раз на добу, якщо Wi-Fi увімкнено"
+msgid "At every start of the program, when Wi-Fi is on"
+msgstr "Під час кожного запуску програми, якщо Wi-Fi увімкнено"
 
 #: ../src/ota_update.cpp
 msgid "Test versions"
@@ -2518,3 +2518,11 @@ msgstr "Файл журналу"
 #: ../src/pb_debug.cpp
 msgid "KB"
 msgstr "КБ"
+
+#: ../src/ota_update.cpp
+msgid "newer than the installed one"
+msgstr "новіша за встановлену"
+
+#: ../src/ota_update.cpp
+msgid "older than the installed one"
+msgstr "старіша за встановлену"

@@ -47,7 +47,9 @@ struct InfoLine {
     int indent;
     // a thin line above it: the line starts a section of the screen
     bool rule;
-    InfoLine() : indent(0), rule(false) {}
+    // in the middle of the row, not at its left edge
+    bool center;
+    InfoLine() : indent(0), rule(false), center(false) {}
 };
 
 // color of the labels of text lines
@@ -77,6 +79,9 @@ public:
     lString32 aside;
     // Regular row: the triangle mark of the current row before the title
     bool mark;
+    // Regular row drawn as a button: a dark bar with the title in the middle, light on dark.
+    // The main action of a screen, so that it does not look like a line of its text.
+    bool button;
 
 private:
     void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline);
@@ -97,6 +102,9 @@ class OpdsMenu : public CRFullScreenMenu
     int _closeCommand;
     int _screen;   // screen of the list shown, from 0
     int _screens;  // screens of the list; 0: the menu counts its own pages
+    bool _swipes;  // a horizontal swipe turns the screens
+    lvPoint _touchStart;
+    bool _touchStarted;
 protected:
     // the page counter of the title shows the screens of the list
     virtual void drawTitleBar();
@@ -121,6 +129,10 @@ public:
     void setCloseCommand(int command) { _closeCommand = command; }
     // Rows without separator lines between them (text screens), when the skin has such a menu.
     void setPlainRows();
+    // A horizontal swipe turns the screens of the list (setPageCommands), as the arrows of the
+    // title do: for the screens of text, which are read rather than chosen from.
+    void setSwipeTurnsScreens(bool on) { _swipes = on; }
+    virtual bool onTouchEvent(int x, int y, CRGUITouchEventType evType);
 
     // Shortens the caption so it does not run under the close button and the page counter.
     void fitCaption();

@@ -41,10 +41,12 @@
 // The first version with this update. Older versions are not offered: a device that got one
 // could not be updated over the network again.
 #define OTA_FIRST_VERSION "0.0.6-17-67-opds-alpha18"
-// seconds between the automatic checks
-#define OTA_CHECK_PERIOD (24 * 60 * 60)
+// Seconds between the automatic checks; 0: at every start of the program. A check once a day
+// (the first builds) looked like an update that does not work: a version published an hour
+// after the check was not offered until the next day.
+#define OTA_CHECK_PERIOD 0
 
-// 1: checks for a newer version at the start of the program (once in OTA_CHECK_PERIOD, Wi-Fi on)
+// 1: checks for a newer version at every start of the program, when Wi-Fi is connected already
 #define PROP_POCKETBOOK_OTA_AUTO "cr3.pocketbook.ota.auto"
 // 1: test versions (alpha, beta, pre-releases of GitHub) are offered too
 #define PROP_POCKETBOOK_OTA_TEST "cr3.pocketbook.ota.test"

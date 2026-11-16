@@ -18,6 +18,8 @@
 #include "web.h"
 
 extern V3DocViewWin * main_win;
+// language of the interface, as the firmware names it ("ru", "uk", "en")
+extern lString32 currentLang;
 
 using namespace opdsui;
 
@@ -112,10 +114,18 @@ bool startsWith(const std::string & s, const char * head)
     return s.compare(0, strlen(head), head) == 0;
 }
 
-// "2026-12-01  ·  7.0 MB  ·  test  ·  installed"
+// "2026-12-01" of GitHub as "01.12.2026"
+lString32 dateText(const std::string & date)
+{
+    if (date.size() != 10 || date[4] != '-' || date[7] != '-')
+        return u16(date);
+    return u16(date.substr(8, 2) + "." + date.substr(5, 2) + "." + date.substr(0, 4));
+}
+
+// "01.12.2026  ·  7.0 MB  ·  test  ·  installed"
 lString32 releaseInfo(const ota::Release & r)
 {
-    lString32 s = u16(r.date);
+    lString32 s = dateText(r.date);
     if (r.size > 0)
         s << lString32(DOT) << sizeText(r.size);
     if (r.test)
@@ -449,7 +459,7 @@ void PbOta::showMenu(CRGUIWindowManager * wm)
         menu->addItem(textRow(menu, _error));
     menu->add(PB_OTA_CMD_VERSIONS, tr("Choose a version"), tr("Any version from GitHub, the installed one too"));
     menu->add(PB_OTA_CMD_TOGGLE_AUTO, tr("Check automatically") + U": " + onOff(autoCheckOn()),
-              tr("At the start, once a day, when Wi-Fi is on"));
+              tr("At every start of the program, when Wi-Fi is on"));
     menu->add(PB_OTA_CMD_TOGGLE_TEST, tr("Test versions") + U": " + onOff(testVersionsOn()),
               tr("Alpha and beta versions"));
     activate(wm, menu);
@@ -496,7 +506,21 @@ void PbOta::openCard(CRGUIWindowManager * wm, const ota::Release & release, int 
     showCard(wm);
 }
 
-// The card of a version: the row that installs it and its release notes, two lines in a row
+// A line of the release notes as the card draws it
+struct CardLine {
+    lString32 text;
+    LVFontRef font;
+    int indent;
+    bool rule;   // a heading: a thin line above it
+    bool newRow; // starts a row of the list
+    CardLine() : indent(0), rule(false), newRow(false) {}
+};
+
+// The card of a version. The first screen: the row back, the button that installs the version,
+// a line about the version, then its release notes. The next screens: the row back and the
+// notes. The notes are in the language of the interface (ota::notesForLanguage); a heading is
+// bold with a line above it, a list item has a bullet and its next lines start under its text.
+// A row of the list holds two lines.
 void PbOta::showCard(CRGUIWindowManager * wm)
 {
     _mode = MODE_CARD;
@@ -504,29 +528,64 @@ void PbOta::showCard(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, fill("Version $1", u16(_card.version)), rc, false);
     // a row holds two lines of the notes: separator lines of the skin would cut the text
     menu->setPlainRows();
+    menu->setSwipeTurnsScreens(true);
     int rows = menu->setupRows(true);
     int width = menu->rowTextWidth();
+    LVFontRef body = menu->bodyFont;
+    LVFontRef head = menu->titleFont;
+    lString32 bullet(U"\x2022 ");
+    int bulletWidth = textWidth(body, bullet);
 
-    std::vector<lString32> lines;
-    std::vector<std::string> notes = ota::noteLines(_card.notes);
+    std::vector<CardLine> lines;
+    std::vector<ota::Note> notes = ota::parseNotes(ota::notesForLanguage(_card.notes, utf8(currentLang)));
     if (notes.empty()) {
-        lines.push_back(tr("The version has no description."));
-    } else {
-        for (size_t i = 0; i < notes.size(); i++) {
-            if (notes[i].empty()) {
-                lines.push_back(lString32::empty_str);
-                continue;
+        CardLine line;
+        line.text = tr("The version has no description.");
+        line.font = body;
+        lines.push_back(line);
+    }
+    for (size_t i = 0; i < notes.size(); i++) {
+        const ota::Note & note = notes[i];
+        LVFontRef font = note.kind == ota::NOTE_HEADING ? head : body;
+        int base = 0;
+        std::vector<lString32> wrapped;
+        if (note.kind == ota::NOTE_BULLET) {
+            base = note.level * bulletWidth;
+            wrapped = wrapText(font, bullet + u16(note.text), width - base, width - base - bulletWidth);
+        } else {
+            wrapped = wrapText(font, u16(note.text), width, width);
+        }
+        for (size_t k = 0; k < wrapped.size(); k++) {
+            CardLine line;
+            line.text = wrapped[k];
+            line.font = font;
+            line.indent = base + (note.kind == ota::NOTE_BULLET && k > 0 ? bulletWidth : 0);
+            if (k == 0) {
+                // a heading starts a row; so does a paragraph that follows a paragraph
+                line.rule = note.kind == ota::NOTE_HEADING;
+                line.newRow = note.kind == ota::NOTE_HEADING
+                              || (note.kind == ota::NOTE_TEXT && i > 0 && notes[i - 1].kind == ota::NOTE_TEXT);
             }
-            std::vector<lString32> wrapped = wrapText(menu->bodyFont, u16(notes[i]), width, width);
-            lines.insert(lines.end(), wrapped.begin(), wrapped.end());
+            lines.push_back(line);
         }
     }
-    int total = ((int)lines.size() + 1) / 2;
-    // the first two rows go back and install
-    int perScreen = rows - 2;
-    if (perScreen < 1)
-        perScreen = 1;
-    int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;
+    // two lines in a row
+    std::vector<std::pair<int, int> > packed;
+    for (int i = 0; i < (int)lines.size(); i++) {
+        if (!packed.empty() && packed.back().second < 0 && !lines[i].newRow)
+            packed.back().second = i;
+        else
+            packed.push_back(std::make_pair(i, -1));
+    }
+    int total = (int)packed.size();
+    // the first screen has three rows of its own, the other screens have the row back
+    int firstRows = rows - 3;
+    if (firstRows < 1)
+        firstRows = 1;
+    int otherRows = rows - 1;
+    if (otherRows < 1)
+        otherRows = 1;
+    int screens = total <= firstRows ? 1 : 1 + (total - firstRows + otherRows - 1) / otherRows;
     if (_cardScreen >= screens)
         _cardScreen = screens - 1;
     if (_cardScreen < 0)
@@ -545,19 +604,39 @@ void PbOta::showCard(CRGUIWindowManager * wm)
     menu->add(PB_OTA_CMD_BACK, lString32(MARK_PREV) + back);
 
     int order = ota::compareVersions(_card.parsed, installedVersion());
-    menu->add(PB_OTA_CMD_INSTALL,
-              tr(order > 0 ? "Download and install" : (order == 0 ? "Install again" : "Go back to this version")),
-              releaseInfo(_card));
+    if (_cardScreen == 0) {
+        OpdsItem * install = new OpdsItem(menu, PB_OTA_CMD_INSTALL,
+            tr(order > 0 ? "Download and install" : (order == 0 ? "Install again" : "Go back to this version")),
+            lString32::empty_str);
+        install->button = true;
+        menu->addItem(install);
 
-    int first = _cardScreen * perScreen;
-    for (int i = first; i < total && i < first + perScreen; i++) {
+        OpdsItem * about = new OpdsItem(menu, PB_OTA_CMD_LAST, lString32::empty_str, lString32::empty_str,
+                                        OpdsItem::TEXT);
+        about->first.label = releaseInfo(_card);
+        if (order != 0)
+            about->first.label << lString32(DOT)
+                               << tr(order > 0 ? "newer than the installed one" : "older than the installed one");
+        about->first.font = menu->subFont;
+        about->first.center = true;
+        menu->addItem(about);
+    }
+
+    int first = _cardScreen == 0 ? 0 : firstRows + (_cardScreen - 1) * otherRows;
+    int count = _cardScreen == 0 ? firstRows : otherRows;
+    for (int i = first; i < total && i < first + count; i++) {
         OpdsItem * item = new OpdsItem(menu, PB_OTA_CMD_LAST, lString32::empty_str, lString32::empty_str,
                                        OpdsItem::TEXT);
-        item->first.text = lines[i * 2];
-        item->first.font = menu->bodyFont;
-        if (i * 2 + 1 < (int)lines.size()) {
-            item->second.text = lines[i * 2 + 1];
-            item->second.font = menu->bodyFont;
+        for (int k = 0; k < 2; k++) {
+            int index = k == 0 ? packed[i].first : packed[i].second;
+            if (index < 0)
+                continue;
+            const CardLine & l = lines[index];
+            InfoLine & info = k == 0 ? item->first : item->second;
+            info.text = l.text;
+            info.font = l.font;
+            info.indent = l.indent;
+            info.rule = l.rule;
         }
         menu->addItem(item);
     }
@@ -613,7 +692,7 @@ void PbOta::autoCheck()
         }
         CRLog::warn("OTA: automatic check failed: %s", UnicodeToUtf8(error).c_str());
     }
-    // one attempt in the period, successful or not: a dead network must not hold every start
+    // the time of the check is shown on the screen "Program update"
     props()->setInt(PROP_POCKETBOOK_OTA_LAST_CHECK, (int)time(NULL));
     saveProps();
     if (!error.empty())
@@ -631,7 +710,7 @@ void PbOta::autoCheck()
     }
     _card = list[0];
     lString32 text = fill("Version $1 is available.", u16(_card.version));
-    std::string notes = ota::shortNotes(_card.notes, 5, 400);
+    std::string notes = ota::shortNotes(ota::notesForLanguage(_card.notes, utf8(currentLang)), 5, 400);
     if (!notes.empty())
         text << "\n\n" << u16(notes);
     _question = UnicodeToUtf8(text);

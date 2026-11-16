@@ -344,6 +344,145 @@ inline std::string shortNotes(const std::string & notes, int maxLines, size_t ma
     return text;
 }
 
+// A line without the Markdown marks of bold and code, from the position given; no trailing spaces
+inline std::string cleanNoteText(const std::string & line, size_t from)
+{
+    std::string clean;
+    for (size_t i = from; i < line.size(); i++) {
+        char c = line[i];
+        if (c == '\r' || c == '`')
+            continue;
+        if (c == '*' && i + 1 < line.size() && line[i + 1] == '*') {
+            i++;
+            continue;
+        }
+        clean += c;
+    }
+    while (!clean.empty() && (clean[clean.size() - 1] == ' ' || clean[clean.size() - 1] == '\t'))
+        clean.erase(clean.size() - 1);
+    return clean;
+}
+
+// The language a heading of the release notes names ("## English"); empty for any other heading.
+// The notes are written in Russian; a section under such a heading is the same text in that
+// language.
+inline std::string noteSectionLanguage(const std::string & heading)
+{
+    static const char * const names[][2] = {
+        { "English", "en" }, { "english", "en" },
+        { "\xD0\xA0\xD1\x83\xD1\x81\xD1\x81\xD0\xBA\xD0\xB8\xD0\xB9", "ru" },                                 // Russian
+        { "\xD0\xA3\xD0\xBA\xD1\x80\xD0\xB0\xD1\x97\xD0\xBD\xD1\x81\xD1\x8C\xD0\xBA\xD0\xB0", "uk" },         // Ukrainian
+        { NULL, NULL }
+    };
+    for (int i = 0; names[i][0]; i++)
+        if (heading == names[i][0])
+            return names[i][1];
+    return std::string();
+}
+
+// The part of the release notes for the language of the interface: the section under the heading
+// of that language; without one, the text before the first language heading for Russian,
+// Ukrainian and Belarusian, the English section for the other languages. The whole text when
+// the notes have no such part.
+inline std::string notesForLanguage(const std::string & notes, const std::string & lang)
+{
+    std::vector<std::string> langs;  // language of every part; "" is the text before the headings
+    std::vector<std::string> parts;
+    langs.push_back(std::string());
+    parts.push_back(std::string());
+    size_t pos = 0;
+    while (pos < notes.size()) {
+        size_t end = notes.find('\n', pos);
+        if (end == std::string::npos)
+            end = notes.size();
+        std::string line = notes.substr(pos, end - pos);
+        pos = end + 1;
+        size_t i = 0;
+        while (i < line.size() && line[i] == '#')
+            i++;
+        if (i > 0) {
+            while (i < line.size() && line[i] == ' ')
+                i++;
+            std::string name = noteSectionLanguage(cleanNoteText(line, i));
+            if (!name.empty()) {
+                langs.push_back(name);
+                parts.push_back(std::string());
+                continue;
+            }
+        }
+        parts.back() += line;
+        parts.back() += '\n';
+    }
+    std::string wanted[3];
+    wanted[0] = lang;
+    wanted[1] = (lang == "ru" || lang == "uk" || lang == "be") ? "" : "en";
+    wanted[2] = "";
+    for (int w = 0; w < 3; w++) {
+        for (size_t i = 0; i < parts.size(); i++) {
+            // the text before the headings is never asked for by a language code
+            if (langs[i] != wanted[w] || (i == 0 && w == 0 && !lang.empty()))
+                continue;
+            if (parts[i].find_first_not_of(" \t\r\n") != std::string::npos)
+                return parts[i];
+        }
+    }
+    return notes;
+}
+
+enum NoteKind { NOTE_TEXT, NOTE_HEADING, NOTE_BULLET };
+
+// A paragraph, a heading or a list item of the release notes
+struct Note {
+    int kind;
+    int level;        // of a list item: 0, or 1 for an item inside an item
+    std::string text;
+    Note() : kind(NOTE_TEXT), level(0) {}
+};
+
+// The release notes as paragraphs, headings and list items. Lines of one paragraph and the
+// lines that continue a list item are joined.
+inline std::vector<Note> parseNotes(const std::string & notes)
+{
+    std::vector<Note> list;
+    bool open = false; // the last note takes the next plain line
+    size_t pos = 0;
+    while (pos < notes.size()) {
+        size_t end = notes.find('\n', pos);
+        if (end == std::string::npos)
+            end = notes.size();
+        std::string line = notes.substr(pos, end - pos);
+        pos = end + 1;
+        size_t i = 0;
+        while (i < line.size() && (line[i] == ' ' || line[i] == '\t'))
+            i++;
+        size_t indent = i;
+        Note note;
+        if (i < line.size() && line[i] == '#') {
+            while (i < line.size() && line[i] == '#')
+                i++;
+            while (i < line.size() && line[i] == ' ')
+                i++;
+            note.kind = NOTE_HEADING;
+        } else if (i + 1 < line.size() && (line[i] == '-' || line[i] == '*') && line[i + 1] == ' ') {
+            i += 2;
+            note.kind = NOTE_BULLET;
+            note.level = indent >= 2 ? 1 : 0;
+        }
+        note.text = cleanNoteText(line, i);
+        if (note.text.empty()) {
+            open = false;
+            continue;
+        }
+        if (note.kind == NOTE_TEXT && open && !list.empty() && list.back().kind != NOTE_HEADING) {
+            list.back().text += " " + note.text;
+            continue;
+        }
+        list.push_back(note);
+        open = note.kind != NOTE_HEADING;
+    }
+    return list;
+}
+
 // ------------------------------------------------------------ SHA-256
 
 class Sha256

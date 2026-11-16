@@ -96,7 +96,7 @@ lString32 menuSkinName(CRGUIWindowManager * wm)
 OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged)
     : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _paged(paged),
       _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE),
-      _screen(0), _screens(0)
+      _screen(0), _screens(0), _swipes(false), _touchStarted(false)
 {
     if (!fontAntiAliasingActivated())
         forcePartialBwUpdates = true;
@@ -223,6 +223,33 @@ bool OpdsMenu::onCommand(int command, int params)
     return CRFullScreenMenu::onCommand(command, params);
 }
 
+// A horizontal swipe turns the screens of the list, when the list asks for it. The command goes
+// the way of the page keys (onCommand), so the list is closed by its own command handler and
+// not inside the handling of the touch. Anything else is a tap on a row or on the title.
+bool OpdsMenu::onTouchEvent(int x, int y, CRGUITouchEventType evType)
+{
+    if (_swipes && _paged) {
+        if (evType == CRTOUCH_DOWN) {
+            _touchStart = lvPoint(x, y);
+            _touchStarted = true;
+        } else if (evType == CRTOUCH_UP && _touchStarted) {
+            _touchStarted = false;
+            int dx = x - _touchStart.x;
+            int dy = y - _touchStart.y;
+            int adx = dx < 0 ? -dx : dx;
+            int ady = dy < 0 ? -dy : dy;
+            if (adx >= _wm->getScreen()->getWidth() * MIN_PAGE_TURN_SWIPE_WIDTH && adx > ady) {
+                // to the left: the next screen, as a page of a book is turned
+                bool next = dx < 0;
+                if (isScrollEnabled(next))
+                    _wm->postCommand(next ? MCMD_NEXT_PAGE : MCMD_PREV_PAGE, 1);
+                return true;
+            }
+        }
+    }
+    return CRFullScreenMenu::onTouchEvent(x, y, evType);
+}
+
 int OpdsMenu::rowTextWidth()
 {
     lvRect client;
@@ -245,7 +272,7 @@ void OpdsMenu::add(int command, const lString32 & title, const lString32 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      indent(0), mark(false), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
+      indent(0), mark(false), button(false), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
 }
 
@@ -305,6 +332,27 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
         }
         drawLine(buf, first, r, y, first.font.isNull() ? 0 : first.font->getBaseline());
         drawLine(buf, second, r, y + h1 + gap, second.font.isNull() ? 0 : second.font->getBaseline());
+    } else if (button) {
+        // a dark bar with the corners cut, the title in its middle; drawn here and not by the
+        // skin, so it is the same in every skin
+        int margin = tf->getHeight() / 5;
+        lvRect bar(r.left, r.top + margin, r.right, r.bottom - margin);
+        int corner = tf->getHeight() / 6;
+        if (corner < 2)
+            corner = 2;
+        lUInt32 dark = 0x000000;
+        buf.FillRect(bar.left + corner, bar.top, bar.right - corner, bar.bottom, dark);
+        buf.FillRect(bar.left, bar.top + corner, bar.right, bar.bottom - corner, dark);
+        lString32 t = fitText(tf, _title, bar.width() - 2 * pad);
+        lUInt32 textColor = buf.GetTextColor();
+        lUInt32 backColor = buf.GetBackgroundColor();
+        buf.SetTextColor(0xFFFFFF);
+        buf.SetBackgroundColor(dark);
+        tf->DrawTextString(&buf, bar.left + (bar.width() - textWidth(tf, t)) / 2,
+                           bar.top + (bar.height() - tf->getHeight()) / 2,
+                           t.c_str(), t.length(), U'?', NULL, false, 0);
+        buf.SetTextColor(textColor);
+        buf.SetBackgroundColor(backColor);
     } else if (_subtitle.empty()) {
         lvRect tr = r;
         tr.left += indent;
@@ -340,6 +388,11 @@ void OpdsItem::drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r
     // the label and the text share the font and the baseline; the label is gray
     int top = y + baseline - line.font->getBaseline();
     int x = r.left + line.indent;
+    if (line.center) {
+        int width = textWidth(line.font, line.label) + textWidth(line.font, line.text);
+        if (width < r.width())
+            x = r.left + (r.width() - width) / 2;
+    }
     if (!line.label.empty()) {
         lUInt32 color = buf.GetTextColor();
         buf.SetTextColor(OPDSUI_LABEL_COLOR);
