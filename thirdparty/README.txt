@@ -38,6 +38,10 @@ This software is based in part on the work of the Independent JPEG Group.
 Portions of this software are copyright 2026 The FreeType Project
 (https://freetype.org). All rights reserved.
 
+cJSON 1.7.18 (cjson/: cJSON.c, cJSON.h and LICENSE of the release archive,
+unmodified, MIT license) reads the list of releases of the program update
+(cr3gui/src/ota_core.h). It is compiled into the program by cr3gui.
+
 The CREngine migration additionally uses QImageScale from the same pinned
 CoolReader source commit, without linking the Qt framework. GPLv2 is the chosen
 Qt source-license alternative; source notices and the image-transform notices

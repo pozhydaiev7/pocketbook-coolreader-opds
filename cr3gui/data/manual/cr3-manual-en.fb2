@@ -643,6 +643,20 @@
      </title>
      <p>Opens the reports of the reading time (see «<emphasis>Reading statistics</emphasis>»).</p>
     </section>
+    <section>
+     <title>
+      <p>Program update</p>
+     </title>
+     <p>Opens the screen of the program update over the network. New versions are taken from the releases of the project on GitHub. The item is shown on devices with Wi-Fi.</p>
+     <p>• <strong>Installed version</strong> – the number and the date of the installed build;</p>
+     <p>• <strong>Check for updates</strong> – check now; when Wi-Fi is off, the device offers to turn it on. When there is a newer version, its card is opened;</p>
+     <p>• <strong>Choose a version</strong> – the list of versions: any of them can be installed, an older one or the installed one again too;</p>
+     <p>• <strong>Check automatically</strong> – a check at the start of the program, once a day at most and only when Wi-Fi is on already. A newer version is announced by a window with the buttons «<emphasis>Details</emphasis>» and «<emphasis>Not now</emphasis>»; after «<emphasis>Not now</emphasis>» this version is not offered again by itself;</p>
+     <p>• <strong>Test versions</strong> – show alpha and beta versions too.</p>
+     <p>The card of a version shows what is new in it and the row «<emphasis>Download and install</emphasis>». The program asks to confirm before the download. The downloaded package is checked (size, checksum, contents), then CoolReader restarts and shows the number of the new version.</p>
+     <p>An update does not touch the settings, the reading history, the bookmarks and the statistics (the folders <code>system/config</code> and <code>system/state</code>). Your fonts, the book cache and other files you put into <code>system/share/cr3</code> are moved to the new version. The files of the program itself in that folder are replaced: keep your own styles and key maps in <code>system/config/cr3</code>.</p>
+     <p>When the new version does not start, the previous one comes back and the program says so.</p>
+    </section>
    </section>
   </section>
   <section>

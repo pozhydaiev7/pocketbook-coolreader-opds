@@ -2350,3 +2350,167 @@ msgstr "Не удалось сохранить позицию чтения и з
 #: ../src/mainwnd.cpp
 msgid "Could not save settings. Changes may be lost when CoolReader closes."
 msgstr "Не удалось сохранить настройки. Изменения могут быть потеряны при закрытии CoolReader."
+
+#: ../src/ota_update.cpp
+msgid "Program update"
+msgstr "Обновление программы"
+
+#: ../src/ota_update.cpp
+msgid "Installed version"
+msgstr "Установленная версия"
+
+#: ../src/ota_update.cpp
+msgid "Check for updates"
+msgstr "Проверить обновления"
+
+#: ../src/ota_update.cpp
+msgid "Not checked yet"
+msgstr "Ещё не проверялось"
+
+#: ../src/ota_update.cpp
+msgid "Last check: $1"
+msgstr "Последняя проверка: $1"
+
+#: ../src/ota_update.cpp
+msgid "no newer version"
+msgstr "новых версий нет"
+
+#: ../src/ota_update.cpp
+msgid "version $1 is available"
+msgstr "доступна версия $1"
+
+#: ../src/ota_update.cpp
+msgid "Choose a version"
+msgstr "Выбрать версию"
+
+#: ../src/ota_update.cpp
+msgid "Any version from GitHub, the installed one too"
+msgstr "Любая версия с GitHub, в том числе установленная"
+
+#: ../src/ota_update.cpp
+msgid "Check automatically"
+msgstr "Проверять автоматически"
+
+#: ../src/ota_update.cpp
+msgid "At the start, once a day, when Wi-Fi is on"
+msgstr "При запуске, раз в сутки, если Wi-Fi включён"
+
+#: ../src/ota_update.cpp
+msgid "Test versions"
+msgstr "Тестовые версии"
+
+#: ../src/ota_update.cpp
+msgid "Alpha and beta versions"
+msgstr "Альфа- и бета-версии"
+
+#: ../src/ota_update.cpp
+msgid "Versions"
+msgstr "Версии"
+
+#: ../src/ota_update.cpp
+msgid "installed"
+msgstr "установлена"
+
+#: ../src/ota_update.cpp
+msgid "test"
+msgstr "тестовая"
+
+#: ../src/ota_update.cpp
+msgid "MB"
+msgstr "МБ"
+
+#: ../src/ota_update.cpp
+msgid "Version $1"
+msgstr "Версия $1"
+
+#: ../src/ota_update.cpp
+msgid "Download and install"
+msgstr "Скачать и установить"
+
+#: ../src/ota_update.cpp
+msgid "Install again"
+msgstr "Установить заново"
+
+#: ../src/ota_update.cpp
+msgid "Go back to this version"
+msgstr "Вернуться на эту версию"
+
+#: ../src/ota_update.cpp
+msgid "The version has no description."
+msgstr "У версии нет описания."
+
+#: ../src/ota_update.cpp
+msgid "There are no versions with the update over the network on GitHub yet."
+msgstr "На GitHub пока нет версий с обновлением по сети."
+
+#: ../src/ota_update.cpp
+msgid "Cannot get the list of versions. Check Wi-Fi."
+msgstr "Не удалось получить список версий. Проверьте Wi-Fi."
+
+#: ../src/ota_update.cpp
+msgid "GitHub limits the number of requests. Try again in an hour."
+msgstr "GitHub ограничил число запросов. Повторите через час."
+
+#: ../src/ota_update.cpp
+msgid "GitHub answered with an error: $1"
+msgstr "GitHub ответил ошибкой: $1"
+
+#: ../src/ota_update.cpp
+msgid "Download and install version $1 ($2)?"
+msgstr "Скачать и установить версию $1 ($2)?"
+
+#: ../src/ota_update.cpp
+msgid "It is older than the installed version $1."
+msgstr "Она старее установленной версии $1."
+
+#: ../src/ota_update.cpp
+msgid "CoolReader will restart itself."
+msgstr "CoolReader перезапустится."
+
+#: ../src/ota_update.cpp
+msgid "Yes"
+msgstr "Да"
+
+#: ../src/ota_update.cpp
+msgid "No"
+msgstr "Нет"
+
+#: ../src/ota_update.cpp
+msgid "Version $1 is available."
+msgstr "Доступна версия $1."
+
+#: ../src/ota_update.cpp
+msgid "Details"
+msgstr "Подробнее"
+
+#: ../src/ota_update.cpp
+msgid "Not now"
+msgstr "Не сейчас"
+
+#: ../src/ota_update.cpp
+msgid "The battery is low. Charge the device to 20% and try again."
+msgstr "Батарея разряжена. Зарядите читалку хотя бы до 20 % и повторите."
+
+#: ../src/ota_update.cpp
+msgid "Not enough free space for the update: $1 is needed."
+msgstr "Мало свободного места для обновления: нужно $1."
+
+#: ../src/ota_update.cpp
+msgid "The downloaded file has a wrong size."
+msgstr "Скачанный файл неверного размера."
+
+#: ../src/ota_update.cpp
+msgid "The downloaded file is damaged: the checksum is wrong."
+msgstr "Скачанный файл повреждён: контрольная сумма не совпала."
+
+#: ../src/ota_update.cpp
+msgid "The downloaded file is not an update package."
+msgstr "Скачанный файл не является пакетом обновления."
+
+#: ../src/ota_update.cpp
+msgid "The update was not installed: the package is damaged. Version $1 is working."
+msgstr "Обновление не установлено: пакет повреждён. Работает версия $1."
+
+#: ../src/ota_update.cpp
+msgid "The update to version $1 was not installed: it did not start or the package is damaged. Version $2 is working."
+msgstr "Обновление до версии $1 не установлено: оно не запустилось или пакет повреждён. Работает версия $2."

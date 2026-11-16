@@ -5,13 +5,53 @@
 # Older firmware ignores it.
 export GLIBC_TUNABLES=glibc.rtld.execstack=2
 
-WORK_DIR="/mnt/ext1"
+# CR3_WORK_DIR: another root folder, for the tests of the update on a PC
+WORK_DIR="${CR3_WORK_DIR:-/mnt/ext1}"
+SELF="$WORK_DIR/system/bin/cr3-pb.app"
 RESTART_MARK="$WORK_DIR/.cr3restart"
 UPDATE_PACKAGE="$WORK_DIR/latest.zip"
 TEMP_DIR="$WORK_DIR/.cr3update"
 INSTALLER="$TEMP_DIR/install.sh"
 CR3_DIR="$WORK_DIR/system/share/cr3"
 CR3_BIN="$CR3_DIR/bin/cr3-pb.app"
+# Update over the network (see install.sh of the package):
+# the previous version, kept until the new one shows its first screen
+OLD_DIR="$WORK_DIR/system/share/cr3.old"
+# a version that did not start
+FAILED_DIR="$WORK_DIR/system/share/cr3.failed"
+# written by the installer, removed by CR3 at its first screen
+UPDATE_MARKER="$WORK_DIR/system/.cr3updated"
+# the update failed: CR3 tells the user
+FAILED_MARKER="$WORK_DIR/system/.cr3rollback"
+
+# Moves the files of the user from the folder $1 to the folder $2: the book cache, the fonts and
+# every file that the package of $1 did not bring (package.files of $1 lists the package).
+# The same function is in install.sh.
+carry_user_files() {
+    for name in .cache fonts; do
+        if [ -e "$1/$name" ] && [ ! -e "$2/$name" ]; then
+            mv "$1/$name" "$2/$name"
+        fi
+    done
+    if [ -f "$1/package.files" ]; then
+        ( cd "$1" && find . -type f ) | while IFS= read -r f; do
+            f="${f#./}"
+            grep -qxF -e "$f" "$1/package.files" && continue
+            [ -e "$2/$f" ] && continue
+            case "$f" in
+                */*) mkdir -p "$2/${f%/*}" ;;
+            esac
+            mv "$1/$f" "$2/$f"
+        done
+    else
+        # a version without the list: the known files of the user
+        for name in crlog.ini cr3.ini; do
+            if [ -f "$1/$name" ] && [ ! -e "$2/$name" ]; then
+                mv "$1/$name" "$2/$name"
+            fi
+        done
+    fi
+}
 
 # CD to working dir
 cd "$WORK_DIR"
@@ -36,14 +76,26 @@ if [ -f "$UPDATE_PACKAGE" ]; then
     # If the update package has been removed and there's an installer
     if [ -f "$INSTALLER" -a ! -f "$UPDATE_PACKAGE" ]; then
 
-        # Full backup. It'll be done at some point
-
-        # Launch installer
+        # Launch installer: it keeps the installed version in $OLD_DIR
         sh "$INSTALLER" "$1"
 
         # Stop script. It's relaunched from the installer.
         exit
     fi
+
+    # Not an update package: the installed version stays, CR3 tells the user
+    rm -rf "$TEMP_DIR"
+    echo "" > "$FAILED_MARKER"
+fi
+
+# The previous version is not needed after the new one has shown its first screen
+if [ ! -f "$UPDATE_MARKER" ]; then
+    if [ -d "$OLD_DIR" -o -f "$SELF.old" ]; then
+        ( rm -rf "$OLD_DIR"; rm -f "$SELF.old" ) &
+    fi
+fi
+if [ -d "$FAILED_DIR" ]; then
+    rm -rf "$FAILED_DIR" &
 fi
 
 # Keep starting time
@@ -52,9 +104,32 @@ startedTime="`date +"%s"`"
 # Launch CR3
 #"$CR3_BIN" "$1" > $WORK_DIR/system/cr3-pb.normal.log 2> $WORK_DIR/system/cr3-pb.crash.log
 "$CR3_BIN" "$1"
+status=$?
 
 # Stopped time
 stoppedTime="`date +"%s"`"
+runTime=$(($stoppedTime-$startedTime))
+
+# A new version that stopped at once without its first screen: back to the previous version.
+# Exit codes 1 and 2 are "no book" and "the book cannot be opened", not a broken version.
+if [ -f "$UPDATE_MARKER" -a -d "$OLD_DIR" ] && [ $runTime -lt 10 ] && [ $status -gt 2 ]; then
+    failedVersion="`cat "$UPDATE_MARKER"`"
+    rm -rf "$FAILED_DIR"
+    if mv "$CR3_DIR" "$FAILED_DIR"; then
+        if mv "$OLD_DIR" "$CR3_DIR"; then
+            carry_user_files "$FAILED_DIR" "$CR3_DIR"
+            rm -f "$UPDATE_MARKER" "$RESTART_MARK"
+            echo "$failedVersion" > "$FAILED_MARKER"
+            if [ -f "$SELF.old" ]; then
+                rm -f "$SELF"
+                mv "$SELF.old" "$SELF"
+            fi
+            sh "$SELF" "$1" &
+            exit
+        fi
+        mv "$FAILED_DIR" "$CR3_DIR"
+    fi
+fi
 
 # If restart required
 if [ -f "$RESTART_MARK" ]; then
@@ -63,15 +138,8 @@ if [ -f "$RESTART_MARK" ]; then
     rm -f "$RESTART_MARK"
 
     # Relaunch this script
-    sh $WORK_DIR/system/bin/cr3-pb.app "$1" &
+    sh "$SELF" "$1" &
 
     # Stop script
     exit
-fi
-
-# Try detecting crash (less than 5 seconds of running time)
-runTime=$(($stoppedTime-$startedTime))
-if [ $runTime -lt 5 ]; then
-    # Restore backup if needed (will be done at some point)
-    :
 fi

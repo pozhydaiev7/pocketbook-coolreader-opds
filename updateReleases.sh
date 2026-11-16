@@ -121,6 +121,15 @@ function doUpdate {
 			echo "Branch:  master" >> "$package/package.version"
 		fi
 
+		# The list of the files of system/share/cr3, the list itself included. The installer of
+		# an update (install.sh) checks the unpacked package by it and tells the files of the
+		# user, which it keeps, from the files of the previous package.
+		echo " - list of the package files > package"
+		rm -f "$package/system/share/cr3/package.files"
+		( cd "$package/system/share/cr3" && find . -type f | sed 's|^\./||' | sort > "$package/package.files.list" )
+		echo "package.files" >> "$package/package.files.list"
+		mv "$package/package.files.list" "$package/system/share/cr3/package.files"
+
 		echo " - package > zip"
 		zip="$releases/dev/cr3-v$VERSION-$1.zip"
 		rm -f "$zip"

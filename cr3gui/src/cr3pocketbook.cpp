@@ -3103,6 +3103,11 @@ public:
             PbStatsView::instance().open(_wm, params == 1);
             return true;
         }
+        #ifdef POCKETBOOK_PRO
+        // Program update over the network
+        if (PbOta::isOtaCommand(command))
+            return PbOta::instance().onCommand(_wm, command, params);
+        #endif
 
         #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
         if( systemPanelShown() ) {
@@ -3219,21 +3224,11 @@ public:
             return true;
 
         case PB_CMD_OTA_UPDATE:
-            CRLog::trace("Launch OTA Update from "OTA_BRANCH_STABLE" branch");
-            if( !OTA_update(OTA_BRANCH_STABLE) )
-                CRLog::trace("Returned from OTA_update()");
-            else
-                CRLog::trace("Returned from OTA_update(). Download is running.");
-            PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
-            return true;
-
         case PB_CMD_OTA_UPDATE_DEV:
-            CRLog::trace("Launch OTA Update from "OTA_BRANCH_DEV" branch");
-            if( !OTA_update(OTA_BRANCH_DEV) )
-                CRLog::trace("Returned from OTA_update()");
-            else
-                CRLog::trace("Returned from OTA_update(). Download is running.");
-            PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
+            // the screen "Program update"; parameter 1: from the settings menu, "Back" returns there
+            // (the second command is the test channel of the earlier versions: a switch of the screen now)
+            if (PbOta::supported())
+                PbOta::instance().open(_wm, params == 1);
             return true;
         #endif
 
@@ -6513,6 +6508,9 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_EXACT, 0);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
+        #ifdef POCKETBOOK_PRO
+        PbOta::setDefaults(main_win->getProps());
+        #endif
 
         int orient;
         if (GetGlobalOrientation() == -1 || pbGlobals->getKeepOrientation() == 0 || pbGlobals->getKeepOrientation() == 2) {
@@ -7183,6 +7181,10 @@ int main_handler(int type, int par1, int par2)
             }
 
             need_save_cover = false;
+            #ifdef POCKETBOOK_PRO
+            // a failed update is reported, the automatic check for a newer version is planned
+            PbOta::started();
+            #endif
             if (pbPerfOn())
                 CRLog::info("perf: first show: cover for the power-off logo and the rest %.1f ms",
                             PB_PERF_MS(pbPerfNow() - perfCover));

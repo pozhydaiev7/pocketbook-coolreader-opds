@@ -195,6 +195,110 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
     return false;
 }
 //---------------------------------------------------------------------------
+static size_t requestToString(char *data, size_t size, size_t nmemb, void *target)
+{
+    ((string *)target)->append(data, size * nmemb);
+    return size * nmemb;
+}
+
+static size_t requestToFile(char *data, size_t size, size_t nmemb, void *target)
+{
+    return fwrite(data, size, nmemb, (FILE *)target);
+}
+
+// libcurl stops the transfer when the callback returns non-zero
+static int requestProgress(void *data, double dltotal, double dlnow, double ultotal, double ulnow)
+{
+    (void)ultotal;
+    (void)ulnow;
+    WebRequest *rq = (WebRequest *)data;
+    return rq->progress(dlnow, dltotal, rq->progressData) ? 0 : 1;
+}
+
+bool web::request(const string &url, WebRequest &rq, string *body, const char *outFile)
+{
+    rq.httpCode = 0;
+    rq.curlCode = CURLE_FAILED_INIT;
+    rq.error.clear();
+    if (body)
+        body->clear();
+
+    CURL *curl = curl_easy_init();
+    if (!curl) {
+        rq.error = "curl_easy_init failed";
+        return false;
+    }
+    FILE *fp = NULL;
+    if (outFile) {
+        fp = fopen(outFile, "wb");
+        if (!fp) {
+            rq.curlCode = CURLE_WRITE_ERROR;
+            rq.error = string("cannot write ") + outFile;
+            curl_easy_cleanup(curl);
+            return false;
+        }
+    }
+    char errorText[CURL_ERROR_SIZE];
+    errorText[0] = 0;
+    struct curl_slist *headers = NULL;
+    if (rq.accept)
+        headers = curl_slist_append(headers, (string("Accept: ") + rq.accept).c_str());
+
+    curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorText);
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 10L);
+    if (fp) {
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, requestToFile);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)fp);
+    } else {
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, requestToString);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)body);
+    }
+    if (headers)
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    if (rq.userAgent)
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, rq.userAgent);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, rq.verifyPeer ? 2L : 0L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, rq.verifyPeer ? 1L : 0L);
+    if (rq.verifyPeer && rq.caInfo)
+        curl_easy_setopt(curl, CURLOPT_CAINFO, rq.caInfo);
+    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, rq.connectTimeout);
+    if (rq.timeout > 0) {
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, rq.timeout);
+    } else {
+        curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 100L);
+        curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 60L);
+    }
+    if (rq.progress) {
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+        curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, requestProgress);
+        curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, (void *)&rq);
+    }
+
+    CURLcode result = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &rq.httpCode);
+    curl_easy_cleanup(curl);
+    if (headers)
+        curl_slist_free_all(headers);
+    if (fp && fclose(fp) != 0 && result == CURLE_OK)
+        result = CURLE_WRITE_ERROR;
+
+    rq.curlCode = (int)result;
+    if (result != CURLE_OK)
+        rq.error = errorText[0] ? errorText : curl_easy_strerror(result);
+    CRLog::info("web::request(%s): curl %d, HTTP %ld, certificate check %s%s%s", url.c_str(), (int)result,
+                rq.httpCode, rq.verifyPeer ? "on" : "off", rq.error.empty() ? "" : ": ", rq.error.c_str());
+    return result == CURLE_OK;
+}
+
+bool web::isCertificateError(int curlCode)
+{
+    return curlCode == CURLE_SSL_CACERT || curlCode == CURLE_PEER_FAILED_VERIFICATION
+        || curlCode == CURLE_SSL_CACERT_BADFILE;
+}
 //---------------------------------------------------------------------------
 int web::writer(char *data, size_t size, size_t nmemb, string *buffer)
 {

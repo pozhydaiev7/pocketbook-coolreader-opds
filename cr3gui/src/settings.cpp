@@ -1954,15 +1954,10 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     // READING STATISTICS
     mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_READING_STATS, _("Reading statistics") ) );
 
-    // OTA UPDATE: hidden in this build, it would replace it with the original upstream build.
+    // PROGRAM UPDATE: the screen that checks the releases of the repository (ota_update.h)
     #ifdef POCKETBOOK_PRO
-
-    // OTA UPDATE DEV
-    if( useDeveloperFeatures ) {
-        mainMenu->addItem( new CRMenuItem( mainMenu, PB_CMD_OTA_UPDATE_DEV,
-                _("OTA Update Dev"),
-                LVImageSourceRef(),
-                LVFontRef() ) );
+    if( isNetworkSupported() ) {
+        mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OTA_UPDATE, _("Program update") ) );
     }
     #endif
 
