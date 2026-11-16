@@ -719,6 +719,7 @@ void PbOta::autoCheck()
 
 void PbOta::offerAnswered(int button)
 {
+    CRLog::info("OTA: version %s is offered: answer %d", _card.version.c_str(), button);
     if (button == 1) {
         SetWeakTimer("OtaOpenCard", openCardTimer, OTA_AFTER_WINDOW_MS);
         return;
@@ -736,14 +737,23 @@ void PbOta::askInstall()
         text << "\n" << fill("It is older than the installed version $1.", lString32(CR_PB_VERSION));
     text << "\n" << tr("CoolReader will restart itself.");
     _question = UnicodeToUtf8(text);
+    CRLog::info("OTA: asks to download and install %s", _card.version.c_str());
     Dialog(ICON_QUESTION, WINDOW_TITLE, _question.c_str(), _("Yes"), _("No"), installHandler);
+    CRLog::info("OTA: the question is on the screen");
 }
 
-// "Details" of the window of the automatic check: the card of the version over the book
+// "Details" of the window of the automatic check. The user goes to the program update as if
+// the screen were opened from the settings and the version chosen there: the command is posted
+// and handled as a tap in a list is, the card leaves to the screen "Program update", and that
+// screen leaves to the book. Seen on InkPad 4 with 0.0.7-opds-alpha3: the card opened straight
+// from the timer over the book left to the book when its install button was tapped, while the
+// same button of a card opened from the list worked.
 void PbOta::openOfferedCard()
 {
-    _fromSettings = false;
-    openCard(main_win->getWindowManager(), _card, PB_OTA_CMD_CLOSE);
+    CRGUIWindowManager * wm = main_win->getWindowManager();
+    CRLog::info("OTA: details of the offered version %s", _card.version.c_str());
+    wm->postCommand(PB_OTA_CMD_OFFERED, 0);
+    wm->processPostedEvents();
 }
 
 void PbOta::installAnswered(int button)
@@ -876,14 +886,19 @@ bool PbOta::onCommand(CRGUIWindowManager * wm, int command, int params)
     case PB_OTA_CMD_BACK:
         if (_cardBack == PB_OTA_CMD_VERSIONS)
             showList(wm);
-        else if (_cardBack == PB_OTA_CMD_MENU)
+        else
             showMenu(wm);
-        // otherwise the card was opened over the book by the automatic check
         return true;
     case PB_OTA_CMD_INSTALL:
         // the card stays on the screen under the question
         showCard(wm);
         askInstall();
+        return true;
+    case PB_OTA_CMD_OFFERED:
+        _fromSettings = false;
+        _error.clear();
+        _result = fill("version $1 is available", u16(_card.version));
+        openCard(wm, _card, PB_OTA_CMD_MENU);
         return true;
     case PB_OTA_CMD_LAST:
         // a tap on a text row: the list closed, show the same screen again

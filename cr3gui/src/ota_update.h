@@ -71,6 +71,7 @@ enum PbOtaCommands {
     PB_OTA_CMD_NEXT,
     PB_OTA_CMD_BACK,          // from the card of a version to the screen it was opened from
     PB_OTA_CMD_INSTALL,       // asks to confirm the download of the version of the card
+    PB_OTA_CMD_OFFERED,       // "Details" of the window of the automatic check: the card of that version
     PB_OTA_CMD_VERSION = 66100, // + index in the list: the card of the version
     PB_OTA_CMD_LAST = 66999
 };
@@ -101,7 +102,8 @@ public:
     void offerAnswered(int button);
     /// answer of the window "download and install?"
     void installAnswered(int button);
-    /// "Details" was answered: the card of the offered version (by a timer, after the window is gone)
+    /// "Details" was answered (by a timer, after the window is gone): posts PB_OTA_CMD_OFFERED,
+    /// so the card is opened the way a tap in the list of versions opens it
     void openOfferedCard();
     /// "Yes" was answered: downloads and checks the package of the card, then asks to restart
     /// (by a timer, after the window is gone)

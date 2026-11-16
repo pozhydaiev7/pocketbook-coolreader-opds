@@ -93,6 +93,7 @@ void turnOff()
     if (strncmp(named.c_str(), "/mnt/", 5) == 0 && strcmp(named.c_str(), PB_LOG_FILE) != 0)
         unlink(named.c_str());
     unlink(PB_LOG_FILE);
+    unlink(PB_LOG_FILE_PREV);
 }
 
 // "24 KB" of the log file; empty when there is no file

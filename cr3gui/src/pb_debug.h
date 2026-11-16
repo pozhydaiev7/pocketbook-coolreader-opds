@@ -15,6 +15,8 @@
 #define PB_LOG_CONFIG_FILE "/mnt/ext1/system/share/cr3/crlog.ini"
 /// the log file the screen turns on: the root of the device memory, seen from a computer
 #define PB_LOG_FILE "/mnt/ext1/cr3log.txt"
+/// the log of the previous run of the program, kept by InitCREngineLog
+#define PB_LOG_FILE_PREV "/mnt/ext1/cr3log.prev.txt"
 /// level of the log the screen turns on: INFO (the work of the program and errors) or ERROR
 #define PROP_POCKETBOOK_LOG_LEVEL "cr3.pocketbook.log.level"
 

@@ -387,8 +387,22 @@ void InitCREngineLog( const char * cfgfile )
             CRLog::setStdoutLogger();
         else if (logfname == "stderr")
             CRLog::setStderrLogger();
-        else
-            CRLog::setFileLogger( UnicodeToUtf8( logfname ).c_str(), autoFlush );
+        else {
+            lString8 fname = UnicodeToUtf8( logfname );
+#ifdef __arm__
+            // The log file is started anew here. The log of the previous run is kept as
+            // "<name>.prev.txt": a fault is often looked at after the program was started
+            // again, and an update of the program restarts it by itself.
+            int len = fname.length();
+            if ( len > 4 && strcmp( fname.c_str() + len - 4, ".txt" ) == 0 ) {
+                lString8 prev = fname.substr( 0, len - 4 );
+                prev << ".prev.txt";
+                remove( prev.c_str() );
+                rename( fname.c_str(), prev.c_str() );
+            }
+#endif
+            CRLog::setFileLogger( fname.c_str(), autoFlush );
+        }
     }
     CRLog::setLogLevel( level );
     CRLog::trace("Log initialization done.");
