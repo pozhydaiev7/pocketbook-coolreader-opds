@@ -100,7 +100,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.7-opds-alpha3"
+#define CR_PB_VERSION "0.0.7-opds-alpha4"
 #define CR_PB_BUILD_DATE "2026-11-16"
 
 #define PB_ROTATE_MODE_360 0
@@ -198,6 +198,10 @@ bool isTouchFw5Skin();
 
 // Saves the position of the current book and opens a downloaded file in the reader.
 void pbOpenDownloadedBook(const lString32 & path);
+
+// Starts the scan of the firmware library in the background, so that the library shows a file
+// CoolReader has written or deleted (a downloaded book, the log file). See opdsbrowser.cpp.
+void pbRequestLibraryScan();
 
 // Opens the firmware on-screen keyboard safely from a CR3 menu command (see CRPocketBookKeyboardWindow).
 // The handler gets the entered text, or an empty string/NULL on cancel.

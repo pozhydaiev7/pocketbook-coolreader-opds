@@ -162,6 +162,8 @@ bool PbDebug::onCommand(CRGUIWindowManager * wm, int command, int params)
             turnOff();
         else
             turnOn();
+        // the library of the firmware shows the new log file, or no longer shows the deleted one
+        pbRequestLibraryScan();
         showMenu(wm);
         return true;
     case PB_DEBUG_CMD_LEVEL: {

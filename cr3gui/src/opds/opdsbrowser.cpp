@@ -280,6 +280,11 @@ bool looksLikeBook(const std::string & path, const std::string & extension, std:
 
 } // namespace
 
+void pbRequestLibraryScan()
+{
+    requestLibraryScan();
+}
+
 OpdsBrowser & OpdsBrowser::instance()
 {
     static OpdsBrowser browser;
