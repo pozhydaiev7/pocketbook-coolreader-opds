@@ -657,6 +657,16 @@
      <p>An update does not touch the settings, the reading history, the bookmarks and the statistics (the folders <code>system/config</code> and <code>system/state</code>). Your fonts, the book cache and other files you put into <code>system/share/cr3</code> are moved to the new version. The files of the program itself in that folder are replaced: keep your own styles and key maps in <code>system/config/cr3</code>.</p>
      <p>When the new version does not start, the previous one comes back and the program says so.</p>
     </section>
+    <section>
+     <title>
+      <p>Debugging</p>
+     </title>
+     <p>Opens the screen that turns on the log of the program. The log helps to find the cause of a fault: turn the debugging on, repeat what leads to the fault and give the log file to the developer.</p>
+     <p>• <strong>Debugging</strong> – turn the log on or off. The log starts at once. Turning it off deletes the log file;</p>
+     <p>• <strong>Log level</strong> – <emphasis>Info</emphasis>: the work of the program and errors; <emphasis>Error</emphasis>: errors only;</p>
+     <p>• <strong>Log file</strong> – where the log is and how big it is: <code>cr3log.txt</code> in the root of the device memory. The file starts anew at every start of the program.</p>
+     <p>The program is a little slower with the log, so turn the debugging off when the fault is found.</p>
+    </section>
    </section>
   </section>
   <section>

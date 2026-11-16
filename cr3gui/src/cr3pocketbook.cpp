@@ -29,6 +29,7 @@
 #include "opdsbrowser.h"
 #include "pb_dict.h"
 #include "pb_statsview.h"
+#include "pb_debug.h"
 #include "pb_toclist.h"
 #include "pb_keyboard.h"
 
@@ -3108,6 +3109,13 @@ public:
         if (PbOta::isOtaCommand(command))
             return PbOta::instance().onCommand(_wm, command, params);
         #endif
+        // Debugging: the log of the program
+        if (PbDebug::isDebugCommand(command))
+            return PbDebug::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_DEBUG) {
+            PbDebug::instance().open(_wm, params == 1);
+            return true;
+        }
 
         #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
         if( systemPanelShown() ) {

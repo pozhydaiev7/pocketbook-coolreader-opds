@@ -2490,3 +2490,31 @@ msgstr "Оновлення не встановлено: пакет пошкод�
 #: ../src/ota_update.cpp
 msgid "The update to version $1 was not installed: it did not start or the package is damaged. Version $2 is working."
 msgstr "Оновлення до версії $1 не встановлено: воно не запустилося або пакет пошкоджено. Працює версія $2."
+
+#: ../src/pb_debug.cpp
+msgid "Debugging"
+msgstr "Налагодження"
+
+#: ../src/pb_debug.cpp
+msgid "Turn off and delete the log file"
+msgstr "Вимкнути й видалити файл журналу"
+
+#: ../src/pb_debug.cpp
+msgid "Turn on: the program writes a log of its work"
+msgstr "Увімкнути: програма почне писати журнал роботи"
+
+#: ../src/pb_debug.cpp
+msgid "Log level"
+msgstr "Рівень журналу"
+
+#: ../src/pb_debug.cpp
+msgid "Info: the work of the program and errors. Error: errors only"
+msgstr "Info – перебіг роботи та помилки. Error – лише помилки"
+
+#: ../src/pb_debug.cpp
+msgid "Log file"
+msgstr "Файл журналу"
+
+#: ../src/pb_debug.cpp
+msgid "KB"
+msgstr "КБ"

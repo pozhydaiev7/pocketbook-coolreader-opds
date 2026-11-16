@@ -1961,6 +1961,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
     #endif
 
+    // DEBUGGING: the screen that turns the log of the program on and off (pb_debug.h)
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_DEBUG, _("Debugging") ) );
+
     reconfigure(0);
 
     if( forcePartialBwUpdates )
