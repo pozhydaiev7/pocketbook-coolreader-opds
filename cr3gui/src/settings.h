@@ -116,6 +116,9 @@ enum MainMenuItems_t {
     mm_dictExact,
 #endif
     mm_TouchTOC,
+#ifdef CR_POCKETBOOK
+    mm_pagePrepare,
+#endif
     mm_Last
 };
 

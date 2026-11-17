@@ -195,6 +195,9 @@ public:
 
     void applySettings();
 
+    /// one setting changed outside the settings menu: applied to the book and saved
+    void applySetting( const char * name, const lString32 & value );
+
     /// showItem: id of the menu item to open the menu at (0: the first page)
     void showSettingsMenu( int showItem = 0 );
 

@@ -75,7 +75,7 @@ if (${GUI} STREQUAL CRGUI_PB)
     SET (CR3_STYLES
          data/epub.css  data/fb2.css  data/htm.css  data/rtf.css  data/txt.css data/chm.css data/doc.css data/dict.css
         )
-    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp src/pb_xdxf.cpp src/pb_stats.cpp src/pb_statsview.cpp src/pb_debug.cpp)
+    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp src/pb_xdxf.cpp src/pb_stats.cpp src/pb_statsview.cpp src/pb_debug.cpp src/pb_fontpick.cpp)
     SET (CR3_BIN_DESTINATION system/bin)
 else ()
     SET (CR3_STYLES

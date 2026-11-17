@@ -30,6 +30,7 @@
 #include "pb_dict.h"
 #include "pb_statsview.h"
 #include "pb_debug.h"
+#include "pb_fontpick.h"
 #include "pb_toclist.h"
 #include "pb_keyboard.h"
 
@@ -249,11 +250,15 @@ struct PbPerf {
     long long start;    // the event came
     long long toScreen; // from the event to the first screen update call
     int updates;        // screen updates made
+    int imageReady;     // the page image was there before the page was drawn: 1, 0; -1 no page drawn
+    const char * imageWhy; // imageReady 0: what became of the preparation of that page
     const char * mode;  // the last update call
     void reset()
     {
         draw = stats = battery = compare = blit = eink = toScreen = 0;
         updates = 0;
+        imageReady = -1;
+        imageWhy = "";
         mode = "";
         start = pbPerfNow();
     }
@@ -824,6 +829,7 @@ public:
     }
     void updateCache();
 #endif
+    void preparePage();
 };
 
 CRPocketBookWindowManager * CRPocketBookWindowManager::instance = NULL;
@@ -1162,9 +1168,123 @@ void CRPocketBookScreen::draw(int x, int y, int w, int h)
     }
 }
 
+// The page after the one being read is drawn ahead (LVDocView::preparePageImage), so that a page
+// turn only has to show it: the text of a page takes most of the time a page turn is handled.
+//  - It is drawn after a pause without taps and key presses, PB_PAGE_PREPARE_MS after the page
+//    has gone to the screen: the screen is being updated at that time anyway. A tap or a key
+//    press starts the pause anew.
+//  - A reader who leafs through the book gets no pages drawn that are not read: when the page
+//    before was on the screen for less than PB_PAGE_LEAFING_US, the pause is
+//    PB_PAGE_PREPARE_LEAFING_MS, longer than the time between such page turns.
+//  - The page is the next one in the direction of the last page turn.
+//  - Nothing is drawn while a menu or another window is over the book, in the standby mode and
+//    while CoolReader is not on the screen. The book is never laid out for it.
+// Display settings, "Prepare next page" (cr3.pocketbook.page.prepare), turns it off.
+#define PB_PAGE_PREPARE_MS 400
+#define PB_PAGE_PREPARE_LEAFING_MS 1500
+#define PB_PAGE_LEAFING_US 1000000
+static bool pbPagePrepareWanted = false;
+static int pbPagePrepareDelay = PB_PAGE_PREPARE_MS;
+static int pbPagePrepareDir = 1;      // 1 the next page, -1 the previous one
+static int pbPageShownNumber = -1;    // the page on the screen
+static long long pbPageShownAt = 0;   // moment of pbPerfNow() it went there
+// What became of the page that was to be prepared, for the log: a line of an event that had
+// to draw its page says why the image was not there. Constant strings, compared by address.
+static const char * const PB_PREPARE_NONE = "not asked for";
+static const char * const PB_PREPARE_OFF = "turned off in the settings";
+static const char * const PB_PREPARE_WAITING = "the pause without input was not over";
+static const char * const PB_PREPARE_COVERED = "a window or the menu was over the book";
+static const char * const PB_PREPARE_LEFT = "the program left the screen or went to standby";
+static const char * const PB_PREPARE_DONE = "prepared, then dropped: the page, the selection, a bookmark or the settings changed";
+static const char * pbPagePrepareState = PB_PREPARE_NONE;
+
+static void page_prepare_timer()
+{
+    if (CRPocketBookWindowManager::instance != NULL)
+        CRPocketBookWindowManager::instance->preparePage();
+}
+
+// starts the pause, or starts it anew
+static void pbPagePrepareArm()
+{
+    if (pbPagePrepareWanted)
+        SetHardTimer(const_cast<char *>("PagePrepare"), page_prepare_timer, pbPagePrepareDelay);
+}
+
+static void pbPagePrepareCancel()
+{
+    if (pbPagePrepareWanted) {
+        pbPagePrepareWanted = false;
+        pbPagePrepareState = PB_PREPARE_LEFT;
+        ClearTimer(page_prepare_timer);
+    }
+}
+
+// A page of the book has gone to the screen
+static void pbPageShown()
+{
+    if (main_win == NULL || isStandByMode)
+        return;
+    bool on = main_win->getProps()->getIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1) != 0;
+    // once, and when the setting is changed: what the log lines below are about
+    static int logged = -1;
+    if (logged != (on ? 1 : 0) && pbPerfOn()) {
+        logged = on ? 1 : 0;
+        CRLog::info("page prepare: %s; the pause without input is %d ms, %d ms when the page before was shown for less "
+                    "than %d ms", on ? "on" : "off", PB_PAGE_PREPARE_MS, PB_PAGE_PREPARE_LEAFING_MS,
+                    PB_PAGE_LEAFING_US / 1000);
+    }
+    if (!on) {
+        pbPagePrepareState = PB_PREPARE_OFF;
+        return;
+    }
+    int page = main_win->getDocView()->getCurPage();
+    long long now = pbPerfNow();
+    if (page != pbPageShownNumber) {
+        bool leafing = pbPageShownAt != 0 && now - pbPageShownAt < PB_PAGE_LEAFING_US;
+        pbPagePrepareDelay = leafing ? PB_PAGE_PREPARE_LEAFING_MS : PB_PAGE_PREPARE_MS;
+        pbPagePrepareDir = page == pbPageShownNumber - 1 ? -1 : 1;
+        pbPageShownNumber = page;
+        pbPageShownAt = now;
+    }
+    pbPagePrepareWanted = true;
+    pbPagePrepareState = PB_PREPARE_WAITING;
+    pbPagePrepareArm();
+}
+
+void CRPocketBookWindowManager::preparePage()
+{
+    if (!pbPagePrepareWanted || main_win == NULL)
+        return;
+    // a command runs or events wait: a moment later
+    if (m_incommand || !_events.empty()) {
+        pbPagePrepareArm();
+        return;
+    }
+    pbPagePrepareWanted = false;
+    // a window or the touch menu is over the book: the page is shown again when it is closed,
+    // and the pause starts then
+    if (isStandByMode || isTouchMenuVisible || main_win != getTopVisibleWindow()) {
+        pbPagePrepareState = isStandByMode ? PB_PREPARE_LEFT : PB_PREPARE_COVERED;
+        if (pbPerfOn())
+            CRLog::info("perf: page %d not prepared: %s", pbPageShownNumber + 1 + pbPagePrepareDir, pbPagePrepareState);
+        return;
+    }
+    long long perfT0 = pbPerfNow();
+    // the engine names the reason of a refusal with a constant string
+    const char * reason = "";
+    bool done = main_win->getDocView()->preparePageImage(pbPagePrepareDir, &reason);
+    pbPagePrepareState = done ? PB_PREPARE_DONE : reason;
+    if (pbPerfOn())
+        CRLog::info("perf: page %d %s%s in %.1f ms, %d ms after the page before was shown (pause %d ms)",
+                    pbPageShownNumber + 1 + pbPagePrepareDir, done ? "prepared ahead" : "not prepared: ",
+                    done ? "" : reason, PB_PERF_MS(pbPerfNow() - perfT0),
+                    (int)((perfT0 - pbPageShownAt) / 1000), pbPagePrepareDelay);
+}
+
 // Reading statistics of the page just drawn. Counted when the page has gone to the screen, at
 // every exit of CRPocketBookScreen::flush(): the word count and the write to the log do not
-// delay the page.
+// delay the page. The pause before the next page is drawn ahead starts here too.
 static bool pbStatsPagePending = false;
 struct PbStatsAfterFlush {
     ~PbStatsAfterFlush()
@@ -1176,6 +1296,7 @@ struct PbStatsAfterFlush {
         if (main_win != NULL)
             PbStatsView::pageShown(main_win->getDocView());
         pbPerf.stats += pbPerfNow() - perfT0;
+        pbPageShown();
     }
 };
 
@@ -2729,6 +2850,19 @@ protected:
             buf->Rect(rc, _docview->getTextColor());
             skin->drawText(*buf, rc, text);
         } else {
+            // for the log: was the image of the page prepared ahead or kept from before
+            if (pbPerfOn()) {
+                pbPerf.imageReady = _docview->isPageImageReady(0) ? 1 : 0;
+                pbPerf.imageWhy = pbPagePrepareState;
+                if (pbPagePrepareState == PB_PREPARE_WAITING) {
+                    // the timer has not come: too early, or it does not come on this device.
+                    // The times tell which; a tap or a key press starts the pause anew.
+                    static char waiting[112];
+                    snprintf(waiting, sizeof(waiting), "the timer has not come, %d ms after the page before was shown "
+                             "(pause %d ms)", (int)((pbPerfNow() - pbPageShownAt) / 1000), pbPagePrepareDelay);
+                    pbPerf.imageWhy = waiting;
+                }
+            }
             long long perfT0 = pbPerfNow();
             V3DocViewWin::draw();
             pbPerf.draw += pbPerfNow() - perfT0;
@@ -3114,6 +3248,15 @@ public:
             return PbDebug::instance().onCommand(_wm, command, params);
         if (command == PB_CMD_DEBUG) {
             PbDebug::instance().open(_wm, params == 1);
+            return true;
+        }
+        // Font face, font size and font weight chosen by a sample
+        if (PbFontPick::isFontPickCommand(command))
+            return PbFontPick::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_FONT_FACE || command == PB_CMD_FONT_SIZE || command == PB_CMD_FONT_WEIGHT) {
+            PbFontPick::instance().open(_wm, command == PB_CMD_FONT_FACE ? PbFontPick::FACE
+                                             : command == PB_CMD_FONT_SIZE ? PbFontPick::SIZE : PbFontPick::WEIGHT,
+                                        params == 1, command);
             return true;
         }
 
@@ -6516,6 +6659,7 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_EXACT, 0);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
         #ifdef POCKETBOOK_PRO
         PbOta::setDefaults(main_win->getProps());
         #endif
@@ -6799,6 +6943,7 @@ void enterStandByMode() {
 
     // the page is not read while the device is in standby
     PbStatsView::flush();
+    pbPagePrepareCancel();
 
     #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
 
@@ -6884,11 +7029,14 @@ static void pbPerfLog(const char * what, long long start)
     long long other = total - pbPerf.draw - pbPerf.stats - pbPerf.battery - pbPerf.compare - pbPerf.blit -
             pbPerf.eink;
     CRLog::info("perf: %s: total %.1f ms, to screen %.1f: page draw %.1f, stats %.1f, battery %.1f, compare %.1f, "
-                "blit %.1f, %s %.1f, other %.1f; updates %d, page %d", what, PB_PERF_MS(total),
+                "blit %.1f, %s %.1f, other %.1f; updates %d, page %d%s%s%s", what, PB_PERF_MS(total),
                 PB_PERF_MS(pbPerf.toScreen), PB_PERF_MS(pbPerf.draw),
                 PB_PERF_MS(pbPerf.stats), PB_PERF_MS(pbPerf.battery), PB_PERF_MS(pbPerf.compare),
                 PB_PERF_MS(pbPerf.blit), pbPerf.mode, PB_PERF_MS(pbPerf.eink), PB_PERF_MS(other), pbPerf.updates,
-                main_win != NULL ? main_win->getDocView()->getCurPage() + 1 : 0);
+                main_win != NULL ? main_win->getDocView()->getCurPage() + 1 : 0,
+                pbPerf.imageReady == 1 ? ", image ready" : (pbPerf.imageReady == 0 ? ", image drawn now" : ""),
+                pbPerf.imageReady == 0 && *pbPerf.imageWhy ? ": page prepare " : "",
+                pbPerf.imageReady == 0 ? pbPerf.imageWhy : "");
 }
 
 static bool need_save_cover = false;
@@ -6925,6 +7073,30 @@ int main_handler(int type, int par1, int par2)
 
     if (pbStaleInput(type, par1))
         return 0;
+
+    // the next page is drawn ahead after a pause without input: a tap or a key press starts the
+    // pause anew; nothing is drawn for a program that leaves the screen
+    switch (type) {
+    case EVT_POINTERDOWN:
+    case EVT_POINTERUP:
+    case EVT_POINTERMOVE:
+    case EVT_POINTERLONG:
+    case EVT_POINTERHOLD:
+    case EVT_KEYPRESS:
+    case EVT_KEYREPEAT:
+    case EVT_KEYRELEASE:
+        pbPagePrepareArm();
+        break;
+    case EVT_HIDE:
+    case EVT_EXIT:
+#ifdef POCKETBOOK_PRO
+    case EVT_BACKGROUND:
+#endif
+        pbPagePrepareCancel();
+        break;
+    default:
+        break;
+    }
 
     // the layout follows the screen of the firmware and the G-sensor polling is alive: checked
     // at the events of the user and when CoolReader comes to the screen

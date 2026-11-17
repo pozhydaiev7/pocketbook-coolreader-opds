@@ -272,7 +272,8 @@ void OpdsMenu::add(int command, const lString32 & title, const lString32 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      indent(0), mark(false), button(false), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
+      indent(0), mark(false), button(false), panel(NULL), panelRows(0),
+      _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
 }
 
@@ -301,7 +302,19 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
     buf.SetTextColor(skin->getTextColor());
     buf.SetBackgroundColor(skin->getBackgroundColor());
 
-    LVFontRef tf = _owner->titleFont;
+    if (panel != NULL && panelRows > 0) {
+        // the rows above are drawn already, with the lines between them: the panel goes over
+        lvRect area(rc.left, rc.bottom - panelRows * rc.height(), rc.right, rc.bottom);
+        lvRect oldClip;
+        buf.GetClipRect(&oldClip);
+        buf.SetClipRect(&area);
+        buf.FillRect(area, skin->getBackgroundColor());
+        panel->drawPanel(buf, area, skin->getTextColor());
+        buf.SetClipRect(&oldClip);
+        return;
+    }
+
+    LVFontRef tf = _kind == ROW && _subtitle.empty() && !button && !font.isNull() ? font : _owner->titleFont;
     LVFontRef sf = _owner->subFont;
     lvRect borders = skin->getBorderWidths();
     int pad = tf->getHeight() / 3;

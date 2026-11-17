@@ -287,6 +287,48 @@ public:
     }
 };
 
+#ifdef CR_POCKETBOOK
+// Such an item for a setting chosen on a screen of its own (the font face, the font size and the
+// font weight, chosen by a sample: pb_fontpick.h). The value of the setting is shown in the menu
+// as the value of any other item is.
+class CRSettingsPickItem : public CRSettingsScreenItem
+{
+    CRPropRef _props;
+    lString8 _propName;
+    bool _weight;
+public:
+    CRSettingsPickItem( CRMenu * menu, int id, const char * label, const char * imageId, CRPropRef props,
+                        const char * propName, bool weight = false )
+    : CRSettingsScreenItem( menu, id, label ), _props( props ), _propName( propName ), _weight( weight )
+    {
+        _imageId = lString32( imageId );
+    }
+    virtual lString32 getSubmenuValue()
+    {
+        lString32 value = _props->getStringDef( _propName.c_str(), "" );
+        if ( _weight ) {
+            // the names of the item "Font weight"
+            if ( value == "400" )
+                return lString32( _("Normal") );
+            if ( value == "700" )
+                return lString32( _("Bold") );
+        }
+        return value;
+    }
+    /// An item that is not a submenu draws as its value what follows a tab in its label
+    /// (CRMenuItem::Draw): the value of the setting is put there while the item is drawn.
+    virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected )
+    {
+        lString32 label = _label;
+        lString32 value = getSubmenuValue();
+        if ( !value.empty() )
+            _label = label + cs32("\t") + value;
+        CRSettingsScreenItem::Draw( buf, rc, skin, valueSkin, selected );
+        _label = label;
+    }
+};
+#endif
+
 class CRActionsMenu : public CRFullScreenMenu
 {
 public:
@@ -1569,18 +1611,32 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     CRMenu * mainMenu = this;
     mainMenu->setAccelerators( _menuAccelerators );
 
+#ifdef CR_POCKETBOOK
+    // The face, the size and the weight of the font are chosen by a sample on a screen of their
+    // own (pb_fontpick.h): three items in a row here. The font weight was an item of "Font
+    // settings"; an item of a submenu cannot open a screen and come back to its place.
+    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_FACE, _("Default font face"),
+                                               "cr3_option_font_face", props, PROP_FONT_FACE ) );
+    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_SIZE, _("Default font size"),
+                                               "cr3_option_font_size", props, PROP_FONT_SIZE ) );
+    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_WEIGHT, _("Font weight"),
+                                               "cr3_option_font_weight", props, PROP_FONT_BASE_WEIGHT, true ) );
+#else
     createFontFaceMenuItem(mainMenu, valueFont, mm_FontFace, _("Default font face"),
                            "cr3_option_font_face", PROP_FONT_FACE);
     createFontSizeMenu( _wm, mainMenu, cr_font_sizes, sizeof(cr_font_sizes)/sizeof(int),
                        "cr3_option_font_size", props, PROP_FONT_SIZE);
+#endif
 
     CRMenu * fontSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Font settings"),
                                            "cr3_option_font_settings", LVFontRef(), valueFont, CRPropRef());
     fontSettingsMenu->setSkinName(lString32("#settings"));
     fontSettingsMenu->setAccelerators( _menuAccelerators );
 
+#ifndef CR_POCKETBOOK
     createSettingsMenuItem(fontSettingsMenu, mm_Embolden, _("Font weight"), "cr3_option_font_weight",
                            valueFont, PROP_FONT_BASE_WEIGHT, font_weights);
+#endif
     createSettingsMenuItem(fontSettingsMenu, mm_FontAntiAliasing, _("Font antialiasing"),
                            "cr3_option_font_antialiasing", valueFont,
                            PROP_FONT_ANTIALIASING, antialiasing_modes);
@@ -1789,6 +1845,11 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                turbo_update_options);
     }
 #ifdef CR_POCKETBOOK
+    // The next page is drawn while the page shown is read, so that a page turn only shows it
+    // (pbPageShown in cr3pocketbook.cpp). With the items about the speed of the screen.
+    createSettingsMenuItem(displaySettingsMenu, mm_pagePrepare, _("Prepare next page"),
+                           "cr3_option_display_page_prepare", valueFont, PROP_POCKETBOOK_PAGE_PREPARE,
+                           on_off_option);
     createSettingsMenuItem(displaySettingsMenu, mm_grayBufferMode, _("Gray buffer depth (needs restart)"),
                            "cr3_option_display_buffer_depth", valueFont, PROP_POCKETBOOK_GRAYBUFFER_BPP,
                            gray_buffer_bpp);

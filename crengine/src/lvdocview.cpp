@@ -743,11 +743,29 @@ LVDocImageRef LVDocView::getPageImage( int delta )
 		p++;
 		if ( p<0 || p>=m_pages.length() )
 		return ref;
+		// The image of a page shown before is kept with the header of that time. Shown
+		// again a minute later (a page turn back), it would have the old clock: such an
+		// image is dropped and the page is drawn again.
+		lString32 stamp = pageHeaderStamp();
+		if ( delta == 0 )
+			m_imageCache.dropStale( p, stamp );
 		ref = m_imageCache.get( -1, p );
 		if ( !ref.isNull() ) {
 			//CRLog::trace("getPageImage: + page [%d] found in cache", offset);
+			// an image prepared ahead gets its header now: the clock, the battery and the
+			// position are those of the moment the page is shown
+			if ( m_imageCache.takeHeaderPending( -1, p ) ) {
+				drawLeftOutPageHeader( ref->getDrawBuf(), p );
+				m_imageCache.setHeaderStamp( p, stamp );
+			}
 			return ref;
 		}
+		while ( ref.isNull() ) {
+			cachePageImage( delta );
+			ref = m_imageCache.get( -1, p );
+		}
+		m_imageCache.setHeaderStamp( p, stamp );
+		return ref;
 	} else {
 		offset = _pos;
 		if ( delta<0 )
@@ -834,24 +852,178 @@ void LVDocView::cachePageImage( int delta )
 		return;
 	}
 	//CRLog::trace("cachePageImage: starting new render task for page [%d]", offset);
-	LVDrawBuf * buf = NULL;
-	if ( m_bitsPerPixel==-1 ) {
-#if (COLOR_BACKBUFFER==1)
-        buf = new LVColorDrawBuf( m_dx, m_dy, DEF_COLOR_BUFFER_BPP );
-#else
-		buf = new LVGrayDrawBuf( m_dx, m_dy, m_drawBufferBits );
-#endif
-	} else {
-        if ( m_bitsPerPixel==32 || m_bitsPerPixel==16 ) {
-            buf = new LVColorDrawBuf( m_dx, m_dy, m_bitsPerPixel );
-		} else {
-			buf = new LVGrayDrawBuf( m_dx, m_dy, m_bitsPerPixel );
-		}
-	}
-	LVRef<LVDrawBuf> drawbuf( buf );
+	LVRef<LVDrawBuf> drawbuf( createPageImageBuf() );
 	LVRef<LVThread> thread( new LVDrawThread( this, offset, p, drawbuf ) );
 	m_imageCache.set( offset, p, drawbuf, thread );
 	//CRLog::trace("cachePageImage: caching page [%d] is finished", offset);
+}
+
+LVDrawBuf * LVDocView::createPageImageBuf()
+{
+	if ( m_bitsPerPixel==-1 ) {
+#if (COLOR_BACKBUFFER==1)
+        return new LVColorDrawBuf( m_dx, m_dy, DEF_COLOR_BUFFER_BPP );
+#else
+		return new LVGrayDrawBuf( m_dx, m_dy, m_drawBufferBits );
+#endif
+	}
+	if ( m_bitsPerPixel==32 || m_bitsPerPixel==16 )
+		return new LVColorDrawBuf( m_dx, m_dy, m_bitsPerPixel );
+	return new LVGrayDrawBuf( m_dx, m_dy, m_bitsPerPixel );
+}
+
+// The rows of a page image its header is drawn in: from the top edge of the page to the bottom
+// of the header, or from the top of the header to the bottom edge of the page. A glyph of the
+// header that goes below its rectangle is drawn down to the edge of the image in the page mode
+// (LVGrayDrawBuf::Draw with hidePartialGlyphs), so the band goes on to the edge.
+static bool pageHeaderBand( int headerPos, const lvRect & headerRc, int bufHeight, int & top, int & bottom )
+{
+	if ( headerRc.isEmpty() )
+		return false;
+	if ( headerPos == PAGE_HEADER_POS_TOP ) {
+		top = 0;
+		bottom = headerRc.bottom;
+	} else if ( headerPos == PAGE_HEADER_POS_BOTTOM ) {
+		top = headerRc.top;
+		bottom = bufHeight;
+	} else {
+		return false;
+	}
+	if ( top < 0 )
+		top = 0;
+	if ( bottom > bufHeight )
+		bottom = bufHeight;
+	return top < bottom;
+}
+
+bool LVDocView::isPageHeaderBandClean( LVDrawBuf * buf, int page )
+{
+	lvRect info;
+	getPageHeaderRectangle( page, info );
+	int top, bottom;
+	if ( !pageHeaderBand( m_pageHeaderPos, info, buf->GetHeight(), top, bottom ) )
+		return true; // no header: nothing is drawn later
+	// a row of the plain background, made the way the page image is
+	LVDrawBuf * row = NULL;
+	if ( buf->GetBitsPerPixel() == 32 || buf->GetBitsPerPixel() == 16 )
+		row = new LVColorDrawBuf( buf->GetWidth(), 1, buf->GetBitsPerPixel() );
+	else
+		row = new LVGrayDrawBuf( buf->GetWidth(), 1, buf->GetBitsPerPixel() );
+	row->SetBackgroundColor( m_backgroundColor );
+	row->Clear( m_backgroundColor );
+	int size = row->GetRowSize();
+	bool clean = size == buf->GetRowSize();
+	for ( int y = top; clean && y < bottom; y++ ) {
+		clean = memcmp( buf->GetScanLine( y ), row->GetScanLine( 0 ), size ) == 0;
+		if ( !clean )
+			CRLog::debug( "isPageHeaderBandClean: page %d, row %d of the rows %d..%d is painted", page, y, top, bottom - 1 );
+	}
+	delete row;
+	return clean;
+}
+
+lString32 LVDocView::pageHeaderStamp() const
+{
+	if ( m_pageHeaderPos != PAGE_HEADER_POS_NONE && ( m_pageHeaderInfo & PGHDR_CLOCK ) && m_pageHeaderOverride.empty() )
+		return getTimeString();
+	return lString32::empty_str;
+}
+
+void LVDocView::drawLeftOutPageHeader( LVDrawBuf * buf, int page )
+{
+	if ( page < 0 || page >= m_pages.length() )
+		return;
+	// as LVDocView::Draw() and drawPageTo() call it for one visible page
+	buf->SetBackgroundColor( m_backgroundColor );
+	buf->SetTextColor( m_textColor );
+	buf->SetClipRect( NULL );
+	lvRect info;
+	getPageHeaderRectangle( m_pages[page]->index, info );
+	drawPageHeader( buf, info, m_pages[page]->index, m_pageHeaderInfo, m_pages.length() );
+	buf->SetClipRect( NULL );
+}
+
+bool LVDocView::preparePageImage( int delta, const char ** reason )
+{
+#if CR_USE_THREADS==0
+	// why no image was drawn, for the log of the caller
+	const char * unused;
+	if ( !reason )
+		reason = &unused;
+	*reason = "";
+	// the image is drawn here, in the thread of the caller: with drawing threads the header
+	// left out would be a state shared with a page being drawn
+	if ( ( delta != 1 && delta != -1 ) || !m_doc || !m_is_rendered || !_posIsSet || m_font.isNull() ) {
+		*reason = "the book is not laid out or has no position yet";
+		return false;
+	}
+	if ( !isPageMode() || getVisiblePageCount() != 1 ) {
+		*reason = "the scroll mode or two pages on the screen";
+		return false;
+	}
+#if CR_INTERNAL_PAGE_ORIENTATION==1
+	// a rotated image has its header elsewhere
+	if ( m_rotateAngle != CR_ROTATE_ANGLE_0 ) {
+		*reason = "the page is rotated by the engine";
+		return false;
+	}
+#endif
+	// the band of the header is compared with the plain background below
+	if ( !m_backgroundImage.isNull() ) {
+		*reason = "a background picture";
+		return false;
+	}
+	int p = _page + delta;
+	if ( p < 0 || p >= m_pages.length() ) {
+		*reason = "no page on that side";
+		return false;
+	}
+	// the page shown must be drawn already: this call never delays it
+	if ( !m_imageCache.has( -1, _page ) ) {
+		*reason = "the page shown is not drawn yet";
+		return false;
+	}
+	// An image of that page kept from the time it was shown has the clock of that time and
+	// would be dropped at the page turn: an image without a header takes its place. Without
+	// a clock the kept image is as good as a new one.
+	lString32 stamp = pageHeaderStamp();
+	if ( !stamp.empty() )
+		m_imageCache.dropStale( p, stamp, true );
+	if ( m_imageCache.has( -1, p ) ) {
+		*reason = "its image is kept from before";
+		return false;
+	}
+	bool hasHeader = ( ( m_pageHeaderPos != PAGE_HEADER_POS_NONE && m_pageHeaderInfo ) || !m_pageHeaderOverride.empty() )
+			&& ( m_pages[p]->flags & RN_PAGE_TYPE_NORMAL );
+	// With a top margin smaller than HEADER_MARGIN the area of the text starts inside the
+	// header at the top (drawPageTo: the text starts info.height() below the margin, the
+	// header ends HEADER_MARGIN lower). A block with a background of its own then paints over
+	// the bottom rows of a header drawn before it, and would be painted over by a header
+	// drawn after it: seen on the PC bench with the Bible of Project Gutenberg and margins 0.
+	if ( hasHeader && m_pageHeaderPos == PAGE_HEADER_POS_TOP && m_pageMargins.top < HEADER_MARGIN ) {
+		*reason = "the top margin is smaller than the gap of the header";
+		return false;
+	}
+	LVRef<LVDrawBuf> drawbuf( createPageImageBuf() );
+	m_pageHeaderLeftOut = hasHeader;
+	Draw( *drawbuf, -1, p, true );
+	m_pageHeaderLeftOut = false;
+	// The header is drawn first and the text over it when a page is drawn at once; here the
+	// header comes later. The two give the same image when the text has left the band of the
+	// header untouched; a text that reaches into it (a page margin of a few pixels) gets no
+	// image prepared, and the page is drawn in the usual way when it is shown.
+	if ( hasHeader && !isPageHeaderBandClean( drawbuf.get(), p ) ) {
+		*reason = "the text reaches into the rows of the header";
+		return false;
+	}
+	m_imageCache.set( -1, p, drawbuf, LVRef<LVThread>(), hasHeader );
+	return true;
+#else
+	CR_UNUSED(delta);
+	if ( reason )
+		*reason = "this build draws pages in threads";
+	return false;
+#endif
 }
 #endif
 
@@ -2090,6 +2262,10 @@ void LVDocView::drawPageTo(LVDrawBuf * drawbuf, LVRendPageInfo & page,
 		}
 		lvRect info;
 		getPageHeaderRectangle(page.index, info);
+#if CR_ENABLE_PAGE_IMAGE_CACHE==1
+		// an image prepared ahead gets its header when the page is shown
+		if (!m_pageHeaderLeftOut)
+#endif
 		drawPageHeader(drawbuf, info, page.index - 1 + basePage, phi, pageCount
 				- 1 + basePage);
 		if (PAGE_HEADER_POS_TOP == m_pageHeaderPos) {

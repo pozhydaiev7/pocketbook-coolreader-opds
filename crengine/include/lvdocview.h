@@ -124,28 +124,52 @@ class LVDocViewImageCache
                 int _page;
                 bool _ready;
                 bool _valid;
+                /// the image has the text of the page only: its header is drawn when the page
+                /// is shown, see LVDocView::preparePageImage()
+                bool _headerPending;
+                /// see setHeaderStamp()
+                lString32 _headerStamp;
+                /// moment of the last use, of _useCounter
+                unsigned _used;
         };
-        Item _items[2];
-        int _last;
+        /// the page shown and its two neighbours: a page prepared ahead in the direction of
+        /// reading does not push out the page the reader may go back to
+        enum { ITEM_COUNT = 3 };
+        Item _items[ITEM_COUNT];
+        unsigned _useCounter;
     public:
         /// return mutex
         LVMutex & getMutex() { return _mutex; }
-        /// set page to cache
-        void set( int offset, int page, LVRef<LVDrawBuf> drawbuf, LVRef<LVThread> thread )
+        /// set page to cache: to a free place, or instead of the page used longest ago
+        void set( int offset, int page, LVRef<LVDrawBuf> drawbuf, LVRef<LVThread> thread, bool headerPending = false )
         {
             LVLock lock( _mutex );
-            _last = (_last + 1) & 1;
-            _items[_last]._ready = false;
-            _items[_last]._thread = thread;
-            _items[_last]._drawbuf = drawbuf;
-            _items[_last]._offset = offset;
-            _items[_last]._page = page;
-            _items[_last]._valid = true;
+            int place = 0;
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
+                if ( !_items[i]._valid ) {
+                    place = i;
+                    break;
+                }
+                if ( _items[i]._used < _items[place]._used )
+                    place = i;
+            }
+            if ( _items[place]._valid && !_items[place]._ready )
+                _items[place]._thread->join();
+            // an image drawn already has no thread to wait for
+            _items[place]._ready = thread.isNull();
+            _items[place]._thread = thread;
+            _items[place]._drawbuf = drawbuf;
+            _items[place]._offset = offset;
+            _items[place]._page = page;
+            _items[place]._valid = true;
+            _items[place]._headerPending = headerPending;
+            _items[place]._headerStamp.clear();
+            _items[place]._used = ++_useCounter;
         }
         /// return page image, wait until ready
         LVRef<LVDrawBuf> getWithoutLock( int offset, int page )
         {
-            for ( int i=0; i<2; i++ ) {
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
                 if ( _items[i]._valid &&
                      ( (_items[i]._offset == offset && offset!=-1)
                       || (_items[i]._page==page && page!=-1)) ) {
@@ -154,11 +178,49 @@ class LVDocViewImageCache
                         _items[i]._thread = NULL;
                         _items[i]._ready = true;
                     }
-                    _last = i;
+                    _items[i]._used = ++_useCounter;
                     return _items[i]._drawbuf;
                 }
             }
             return LVRef<LVDrawBuf>();
+        }
+        /// what the header drawn on the image of the page shows of the things that change with
+        /// time (the clock); set when the header is drawn
+        void setHeaderStamp( int page, const lString32 & stamp )
+        {
+            LVLock lock( _mutex );
+            for ( int i=0; i<ITEM_COUNT; i++ )
+                if ( _items[i]._valid && _items[i]._page==page && page!=-1 )
+                    _items[i]._headerStamp = stamp;
+        }
+        /// drops the image of the page when its header is drawn and shows something else;
+        /// any: whatever its header shows
+        void dropStale( int page, const lString32 & stamp, bool any = false )
+        {
+            LVLock lock( _mutex );
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
+                if ( _items[i]._valid && _items[i]._ready && !_items[i]._headerPending
+                     && _items[i]._page==page && page!=-1 && ( any || _items[i]._headerStamp != stamp ) ) {
+                    _items[i]._valid = false;
+                    _items[i]._drawbuf.Clear();
+                    _items[i]._offset = -1;
+                    _items[i]._page = -1;
+                }
+            }
+        }
+        /// true once for an image whose header is still to be drawn; the mark is taken off
+        bool takeHeaderPending( int offset, int page )
+        {
+            LVLock lock( _mutex );
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
+                if ( _items[i]._valid && _items[i]._headerPending &&
+                     ( (_items[i]._offset == offset && offset!=-1)
+                      || (_items[i]._page==page && page!=-1)) ) {
+                    _items[i]._headerPending = false;
+                    return true;
+                }
+            }
+            return false;
         }
         /// return page image, wait until ready
         LVDocImageRef get( int offset, int page )
@@ -172,7 +234,7 @@ class LVDocViewImageCache
         bool has( int offset, int page )
         {
             _mutex.lock();
-            for ( int i=0; i<2; i++ ) {
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
                 if ( _items[i]._valid && ( (_items[i]._offset == offset && offset!=-1)
                       || (_items[i]._page==page && page!=-1)) ) {
                     return true;
@@ -183,22 +245,27 @@ class LVDocViewImageCache
         void clear()
         {
             LVLock lock( _mutex );
-            for ( int i=0; i<2; i++ ) {
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
                 if ( _items[i]._valid && !_items[i]._ready ) {
                     _items[i]._thread->join();
                 }
                 _items[i]._thread.Clear();
                 _items[i]._valid = false;
+                _items[i]._headerPending = false;
                 _items[i]._drawbuf.Clear();
                 _items[i]._offset = -1;
                 _items[i]._page = -1;
             }
         }
         LVDocViewImageCache()
-        : _last(0)
+        : _useCounter(0)
         {
-            for ( int i=0; i<2; i++ )
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
                 _items[i]._valid = false;
+                _items[i]._ready = false;
+                _items[i]._headerPending = false;
+                _items[i]._used = 0;
+            }
         }
         ~LVDocViewImageCache()
         {
@@ -389,6 +456,16 @@ private:
     LVMutex _mutex;
 #if CR_ENABLE_PAGE_IMAGE_CACHE==1
     LVDocViewImageCache m_imageCache;
+    /// drawPageTo() leaves the page header out: the image is prepared ahead, see preparePageImage()
+    bool m_pageHeaderLeftOut = false;
+    /// a new buffer of a page image, of the size and the format of the view
+    LVDrawBuf * createPageImageBuf();
+    /// true when no pixel of the header band of the page differs from the plain background
+    bool isPageHeaderBandClean( LVDrawBuf * buf, int page );
+    /// draws the header of the page on its image prepared without one
+    void drawLeftOutPageHeader( LVDrawBuf * buf, int page );
+    /// what a page header drawn now shows of the things that change with time: the clock
+    lString32 pageHeaderStamp() const;
 #endif
 
 
@@ -659,6 +736,13 @@ public:
     bool IsDrawed();
     /// cache page image (render in background if necessary) (0=current, -1=prev, 1=next)
     void cachePageImage( int delta );
+    /// Draws the image of the next (1) or the previous (-1) page ahead, while the reader reads
+    /// the page shown, so that a page turn only has to show it. The text is drawn now; the
+    /// header (clock, battery, position) is drawn when the page is shown. Never lays the book
+    /// out. Returns true when an image was drawn; false when there is nothing to do or the
+    /// view is not one the image can be prepared for (scroll mode, two pages, a texture);
+    /// reason, when given, gets the cause then, a constant string for a log.
+    bool preparePageImage( int delta, const char ** reason = NULL );
 #endif
     /// return view mutex
     LVMutex & getMutex() { return _mutex; }

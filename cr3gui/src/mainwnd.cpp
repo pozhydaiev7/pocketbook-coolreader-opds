@@ -874,6 +874,16 @@ void V3DocViewWin::applySettings()
     setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
 }
 
+void V3DocViewWin::applySetting( const char * name, const lString32 & value )
+{
+    // as the settings menu does: the settings of the view, one of them changed
+    _props = _docview->propsGetCurrent() | _props;
+    _newProps = LVClonePropsContainer( _props );
+    _newProps->setString( name, value );
+    applySettings();
+    saveSettings( lString32::empty_str );
+}
+
 void V3DocViewWin::showSettingsMenu( int showItem )
 {
     LVFontRef menuFont( fontMan->GetFont( MENU_FONT_SIZE, 600, true, css_ff_sans_serif, lString8("Arial")) );

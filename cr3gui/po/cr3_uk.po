@@ -2526,3 +2526,27 @@ msgstr "новіша за встановлену"
 #: ../src/ota_update.cpp
 msgid "older than the installed one"
 msgstr "старіша за встановлену"
+
+#: ../src/pb_fontpick.cpp
+msgid "Sample"
+msgstr "Зразок"
+
+#: ../src/pb_fontpick.cpp
+msgid "in the book"
+msgstr "у книзі"
+
+#: ../src/pb_fontpick.cpp
+msgid "The quick brown fox jumps over the lazy dog. 0123456789"
+msgstr "Жебракують філософи при ґанку церкви в Гадячі, ще й шатро їхнє п’яне знаємо. 0123456789"
+
+#: ../src/settings.cpp
+msgid "Prepare next page"
+msgstr "Готувати наступну сторінку"
+
+#: ../src/pb_fontpick.cpp
+msgid "size"
+msgstr "розмір"
+
+#: ../src/pb_fontpick.cpp
+msgid "weight"
+msgstr "насиченість"

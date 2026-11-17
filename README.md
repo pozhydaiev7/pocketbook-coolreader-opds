@@ -31,7 +31,8 @@ of [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolr
 - **Speed:**
   - the page is written straight to the screen canvas of the firmware instead of the firmware call `Stretch()`, which took 88 ms of the 145 ms of a page turn on InkPad 4;
   - the touch menu opens in 45–56 ms instead of 132–220 ms;
-  - glyph, skin and paragraph caches, faster parsing of EPUB, a faster start.
+  - glyph, skin and paragraph caches, faster parsing of EPUB, a faster start;
+  - since 0.0.7.1: the next page is drawn in memory while a page is read, so a page turn only shows it (*Display settings → Prepare next page*, on by default).
 - **Wait icon** while a big book is laid out again; taps made meanwhile are dropped.
 - Reading positions and bookmarks of the earlier versions are converted. A book is laid out again at its first opening: the cache files of the old engine are not used.
 
@@ -152,6 +153,7 @@ That build was published as a binary only. Its changes are re-implemented here f
 ### Other changes
 
 - **Debugging.** Logging is off by default. *Settings → Debugging* turns the log on and off on the device, with the level *Info* or *Error*. The log is `/mnt/ext1/cr3log.txt`; the log of the previous run is kept as `cr3log.prev.txt`. Turning the debugging off deletes both.
+- **Font chosen by a sample** (since 0.0.7.1): the lists of the font face, the font size and the font weight have a sample under them, the first lines of the page being read drawn with the value tapped. The value chosen is set when the list is left.
 - **Text windows** (the manual, *Key functions*, *Book information*): pages are turned by the tap zones and swipes of the book.
 - ***Document embedded fonts*** turned off also drops the font family named by the styles of a book, so the text is drawn with the chosen font.
 - **Manuals** in Russian, Ukrainian and English.

@@ -333,15 +333,29 @@
      <title>
       <p>Default font face</p>
      </title>
-     <p>A list, several pages long, of all fonts on the device, system and user ones. The current font has a triangle mark. Each font is shown as it looks in a book.</p>
+     <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: the first lines of the page you are reading.</p>
+     <p>A tap on a font chooses it: the font gets a triangle mark and the sample is drawn with it. The font of the book has the note «in the book». The screens of the list are turned with the arrows of the title or by a swipe.</p>
+     <p>The font chosen is set when you leave the list (the row «Back to settings», the arrow at the title or the Back key), and the book is laid out again. To keep the font of the book, tap the font with the note «in the book» before leaving.</p>
      <p><emphasis>Value:</emphasis> list of fonts</p>
     </section>
     <section>
      <title>
       <p>Default font size</p>
      </title>
-     <p>A list of the sizes of the reading font, each shown in its own size. The current size has a triangle mark.</p>
+     <p>A list of the sizes of the reading font with the same sample under it. A tap on a size shows the sample in that size; the size chosen is set when you leave the list.</p>
      <p><emphasis>Value:</emphasis> 16 to 300</p>
+    </section>
+    <section>
+     <title>
+      <p>Font weight</p>
+     </title>
+     <p>The stroke thickness of the main font. «Normal» is the weight 400, «Bold» is 700; the values between them make the text a little denser or lighter. It works with any font: when the family has no file of the weight, the program thickens the letters itself.</p>
+     <p>It is chosen in a list with a sample, as the font and its size are.</p>
+     <p><emphasis>Value:</emphasis> 300 / Normal (400) / 425 / 450 / 475 / 500 / 525 / 550 / 600 / 650 / Bold (700) / 800 / 900</p>
+     <cite>
+      <p><strong>Note:</strong></p>
+      <p>This item replaces the former «Normal / Bold» and «Font embolding»; the saved values are converted at the first start.</p>
+     </cite>
     </section>
     <section>
      <title>
@@ -349,14 +363,6 @@
      </title>
      <p>A submenu with the fine settings of the font.</p>
      <empty-line/>
-     <image l:href="#i_026.png"/>
-     <subtitle>Font weight</subtitle>
-     <p>The stroke thickness of the main font. «Normal» is the weight 400, «Bold» is 700; the values between them make the text a little denser or lighter. It works with any font: when the family has no file of the weight, the program thickens the letters itself.</p>
-     <p><emphasis>Value:</emphasis> 300 / Normal (400) / 425 / 450 / 475 / 500 / 525 / 550 / 600 / 650 / Bold (700) / 800 / 900</p>
-     <cite>
-      <p><strong>Note:</strong></p>
-      <p>This item replaces the former «Normal / Bold» and «Font embolding»; the saved values are converted at the first start.</p>
-     </cite>
      <image l:href="#i_026.png"/>
      <subtitle>Font antialiasing</subtitle>
      <p>Smooths the jagged edges of the characters.</p>
@@ -499,6 +505,10 @@
      <subtitle>Standby</subtitle>
      <p>The time without actions after which the program enters the power saving mode.</p>
      <p><emphasis>Value:</emphasis> off / 1 minute to 2 hours</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Prepare next page</subtitle>
+     <p>While a page is read, the program draws the next one in memory, so that a page turn only has to show it. It happens after a short pause without taps, and not while you leaf through the book quickly. Turn it off if page turns have become slower or the battery runs down faster on your device.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
      <image l:href="#i_026.png"/>
      <subtitle>Gray buffer depth (needs restart)</subtitle>
      <p>The number of gray shades of the page buffer.</p>

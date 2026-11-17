@@ -2550,3 +2550,27 @@ msgstr "новее установленной"
 #: ../src/ota_update.cpp
 msgid "older than the installed one"
 msgstr "старее установленной"
+
+#: ../src/pb_fontpick.cpp
+msgid "Sample"
+msgstr "Образец"
+
+#: ../src/pb_fontpick.cpp
+msgid "in the book"
+msgstr "в книге"
+
+#: ../src/pb_fontpick.cpp
+msgid "The quick brown fox jumps over the lazy dog. 0123456789"
+msgstr "Съешь же ещё этих мягких французских булок, да выпей чаю. 0123456789"
+
+#: ../src/settings.cpp
+msgid "Prepare next page"
+msgstr "Готовить следующую страницу"
+
+#: ../src/pb_fontpick.cpp
+msgid "size"
+msgstr "размер"
+
+#: ../src/pb_fontpick.cpp
+msgid "weight"
+msgstr "жирность"

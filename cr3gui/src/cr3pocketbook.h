@@ -60,6 +60,10 @@ enum CRPbCommands {
     PB_CMD_OPDS_CATALOGS,
     PB_CMD_READING_STATS,
     PB_CMD_DEBUG,
+    // the lists of the font face, the font size and the font weight with a sample (pb_fontpick.h)
+    PB_CMD_FONT_FACE,
+    PB_CMD_FONT_SIZE,
+    PB_CMD_FONT_WEIGHT,
 
     PB_CMD_NONE
 };
@@ -92,6 +96,9 @@ enum CRPbCommands {
 #define PROP_POCKETBOOK_DICT_EXACT "cr3.pocketbook.dict.exact"
 // 0 turns off the direct copy of the page to the screen canvas (no menu item, cr3.ini only)
 #define PROP_POCKETBOOK_DIRECT_BLIT "cr3.pocketbook.direct.blit"
+// 0: the image of the next page is not drawn ahead while a page is read
+// (Display settings: Prepare next page)
+#define PROP_POCKETBOOK_PAGE_PREPARE "cr3.pocketbook.page.prepare"
 // dictionaries searched together, names separated by '|'; fewer than two means one dictionary
 #define PROP_POCKETBOOK_DICT_MULTI "cr3.pocketbook.dict.multi"
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
@@ -100,7 +107,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.7-opds"
+#define CR_PB_VERSION "0.0.7.1-opds-alpha1"
 #define CR_PB_BUILD_DATE "2026-11-17"
 
 #define PB_ROTATE_MODE_360 0

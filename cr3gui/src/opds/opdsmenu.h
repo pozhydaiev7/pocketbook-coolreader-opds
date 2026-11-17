@@ -61,6 +61,15 @@ lString32 menuSkinName(CRGUIWindowManager * wm);
 
 class OpdsMenu;
 
+// A part of a list screen drawn by its owner, not as rows: see OpdsItem::panel.
+class OpdsPanel
+{
+public:
+    virtual ~OpdsPanel() {}
+    // rc: the rectangle of the panel, filled with the background of the rows already
+    virtual void drawPanel(LVDrawBuf & buf, const lvRect & rc, lUInt32 textColor) = 0;
+};
+
 // One row of a list: title (bold) and an optional second line, or two lines of plain text.
 // A tap closes the list and posts the id of the row.
 class OpdsItem : public CRMenuItem
@@ -82,6 +91,13 @@ public:
     // Regular row drawn as a button: a dark bar with the title in the middle, light on dark.
     // The main action of a screen, so that it does not look like a line of its text.
     bool button;
+    // Regular row without a second line: the font of its title, when it is not the one of the
+    // list (a font face shown in its own letters)
+    LVFontRef font;
+    // The row is the last of panelRows rows the panel takes: the rows above it are empty text
+    // rows, and the panel is drawn over all of them when this row is drawn.
+    OpdsPanel * panel;
+    int panelRows;
 
 private:
     void drawLine(LVDrawBuf & buf, const InfoLine & line, const lvRect & r, int y, int baseline);
