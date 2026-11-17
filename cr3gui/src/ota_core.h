@@ -364,8 +364,8 @@ inline std::string cleanNoteText(const std::string & line, size_t from)
 }
 
 // The language a heading of the release notes names ("## English"); empty for any other heading.
-// The notes are written in Russian; a section under such a heading is the same text in that
-// language.
+// The notes of a release start in English and have the sections "## Русский" and "## Українська";
+// the notes of the test versions start in Russian and have the section "## English".
 inline std::string noteSectionLanguage(const std::string & heading)
 {
     static const char * const names[][2] = {
@@ -381,9 +381,10 @@ inline std::string noteSectionLanguage(const std::string & heading)
 }
 
 // The part of the release notes for the language of the interface: the section under the heading
-// of that language; without one, the text before the first language heading for Russian,
-// Ukrainian and Belarusian, the English section for the other languages. The whole text when
-// the notes have no such part.
+// of that language (the Russian section for Belarusian); without one, the text before the first
+// language heading for Russian, Ukrainian and Belarusian, the English section for the other
+// languages, and then the text before the first language heading. The whole text when the notes
+// have no such part.
 inline std::string notesForLanguage(const std::string & notes, const std::string & lang)
 {
     std::vector<std::string> langs;  // language of every part; "" is the text before the headings
@@ -413,11 +414,12 @@ inline std::string notesForLanguage(const std::string & notes, const std::string
         parts.back() += line;
         parts.back() += '\n';
     }
-    std::string wanted[3];
+    std::string wanted[4];
     wanted[0] = lang;
-    wanted[1] = (lang == "ru" || lang == "uk" || lang == "be") ? "" : "en";
-    wanted[2] = "";
-    for (int w = 0; w < 3; w++) {
+    wanted[1] = (lang == "be") ? "ru" : lang;
+    wanted[2] = (lang == "ru" || lang == "uk" || lang == "be") ? "" : "en";
+    wanted[3] = "";
+    for (int w = 0; w < 4; w++) {
         for (size_t i = 0; i < parts.size(); i++) {
             // the text before the headings is never asked for by a language code
             if (langs[i] != wanted[w] || (i == 0 && w == 0 && !lang.empty()))

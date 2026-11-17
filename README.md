@@ -4,15 +4,56 @@
 [![License: GPL v2](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](LICENSE)
 
 A fork of [blchinezu/pocketbook-coolreader](https://github.com/blchinezu/pocketbook-coolreader) (0.0.6-17-62.1)
-that adds a built-in **OPDS catalog browser**, runs on **PocketBook firmware 6.11**, and brings in the
-changes of the community build 0.0.6-17-62.2 by sergkv12
-([4pda](https://4pda.to/forum/index.php?showtopic=886480&st=2420#entry76669650)).
+for PocketBook readers on firmware 5.x and 6.x, **firmware 6.11** included. It is built on **CREngine 3.2.59**,
+the current engine of CoolReader, and adds:
 
-Tested on **PocketBook 743G (InkPad 4)** with firmware **U743g 6.8.4143** and **U743g 6.11.1683**.
+- a built-in **OPDS catalog browser**;
+- **StarDict and XDXF dictionaries**, several dictionaries looked up at once;
+- **reading statistics**;
+- **updates over the network**, from the releases of this repository;
+- citations selected by touch, auto rotation, six touch skins and the changes of the community build
+  0.0.6-17-62.2 by sergkv12 ([4pda](https://4pda.to/forum/index.php?showtopic=886480&st=2420#entry76669650)).
+
+Tested on **PocketBook 743G (InkPad 4)** with firmware **U743g 6.11.1683**.
 
 --------------------------------------------------------------------------------
 
 ## What's new in this fork
+
+### CREngine 3.2.59
+
+Since 0.0.7-opds the program is built on CREngine 3.2.59-1 (official CoolReader, 2026) with the PocketBook port
+of [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader), instead of CREngine 3.1.2 of 2014.
+
+- **Page layout by CSS:** tables, floats, borders and margins of a book are drawn as its stylesheet asks.
+- **More formats:** DOCX, ODT and FB3 books.
+- **Font weight** from 300 to 900, *Letter spacing in justified lines*, hyphenation dictionaries in the format of the new engine.
+- **Speed:**
+  - the page is written straight to the screen canvas of the firmware instead of the firmware call `Stretch()`, which took 88 ms of the 145 ms of a page turn on InkPad 4;
+  - the touch menu opens in 45–56 ms instead of 132–220 ms;
+  - glyph, skin and paragraph caches, faster parsing of EPUB, a faster start.
+- **Wait icon** while a big book is laid out again; taps made meanwhile are dropped.
+- Reading positions and bookmarks of the earlier versions are converted. A book is laid out again at its first opening: the cache files of the old engine are not used.
+
+### Program update
+
+*Settings → Program update* installs a newer version from the [releases](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases) of this repository.
+
+- **Check for updates** asks GitHub now. **Check automatically** (on by default) does it at every start of the program, only when Wi-Fi is connected already; a version answered with *Not now* is not announced again.
+- **The card of a version** shows its date, size and release notes in the language of the interface. The download starts only after a *Yes*.
+- **Choose a version:** any published version can be installed, an older one too.
+- **Test versions:** a switch that also offers alpha and beta versions (pre-releases).
+- **Checks:** the package is checked by its size, SHA-256 and contents before it is installed.
+- **Your files are kept:** settings, reading history and statistics are never touched; the book cache, your fonts and every file you added to `system/share/cr3` are carried over.
+- **Rollback:** when the new version does not start, the launcher brings the previous one back.
+
+Release notes are written in English; a section under the heading `## Русский` or `## Українська` is shown instead to an interface in that language.
+
+### Citations
+
+- **Text selected by touch** in the citation window: drag from a word to a word, tap a word to move a bound of the selection, long tap to select one word.
+- **Buttons** *A*, *A+*, *A−*, *C+*, *C−* add or remove a paragraph or a sentence at a tap; the arrows move a bound of the selection.
+- **List of citations:** a tap on a citation offers *Go to*, *Edit* and *Delete*; the first row starts a new citation. An edited citation keeps its type, comment and place in the list.
 
 ### OPDS catalog browser
 
@@ -25,9 +66,9 @@ Browse an online library, search it, download a book and open it in the reader, 
   - *Other catalog…* in the catalog menu switches catalogs.
 - **Navigation:** the arrow at the caption and the first row of every screen go one level up; from the catalog start page, back to the book.
 - **Catalog sections and search.** Search is two-step, as the catalog serves it: first choose authors or books, then the result list.
-- **Book lists.** Each book takes two lines, title and author, in a compact font. The bottom row is the pager:
-  - *Back* on the left, *Next* on the right; the next catalog page is loaded on demand;
-  - the page number in the centre opens the catalog menu: back, search, catalog start page, catalog address, close.
+- **Book lists.** Each book takes two lines, title and author, in a compact font.
+  - The screens are turned with the arrows of the title; the next part of the catalog is loaded on demand.
+  - The row *Catalog menu* opens the catalog menu: back, search, catalog start page, catalog address, close.
 - **Book screen.** It shows:
   - the full title and author; tap it to open the description screen (title, author, genres, year, format, language, size, series and the description);
   - *Download and open* for every format the catalog offers, best first: FB2.ZIP, EPUB, MOBI, RTF, TXT, HTML, DOC, CHM;
@@ -47,10 +88,10 @@ Browse an online library, search it, download a book and open it in the reader, 
 
 On firmware 6.11 the earlier CoolReader builds do not start: the firmware no longer ships `libpng12.so.0`. This fork changes two things:
 
-- **libpng and libjpeg are linked statically.** They are built from `thirdparty/` with `-Wl,--exclude-libs,ALL`, so the reader does not export them. The firmware's `libinkview` keeps using its own libraries.
+- **libpng, libjpeg-turbo, FreeType and zlib are linked statically.** They are built from `thirdparty/` with `-Wl,--exclude-libs,ALL`, so the reader does not export them. The firmware's `libinkview` keeps using its own libraries.
 - **The launcher** (`system/bin/cr3-pb.app`) exports `GLIBC_TUNABLES=glibc.rtld.execstack=2`. This is the workaround for the 6.11 rule against system libraries that request an executable stack; KOReader hit the same rule ([koreader#15720](https://github.com/koreader/koreader/issues/15720)). Older firmware ignores the variable.
 
-The binary still needs only `libinkview`, `libcurl`, `libz` and the C/C++ runtime from the firmware, so it also runs on the earlier 6.x firmware.
+The binary needs only `libinkview`, `libcurl` and the C/C++ runtime from the firmware, so it also runs on the earlier 6.x firmware.
 
 ### StarDict and XDXF dictionaries
 
@@ -66,7 +107,7 @@ Besides the PocketBook `.dic` dictionaries (read by the firmware), CoolReader re
 - **Dictionary settings** (*Settings → Dictionary settings*):
   - *Dictionary window*: away from the selected word, at the top or at the bottom of the screen;
   - *Word search*: *With nearest words* (a word that is not in the dictionary opens the list of the nearest words) or *Exact* (only the article of the word itself, otherwise "word not found");
-  - *Search keyboard* (touch devices only): the keyboard of CoolReader (English, Russian and Ukrainian layouts, digits and signs), which follows the night mode, or the firmware keyboard. Without a touch screen the firmware keyboard is always used.
+  - *Search keyboard* (touch devices only): the keyboard of CoolReader (the English, Russian and Ukrainian layouts of the firmware keyboard), which follows the night mode, or the firmware keyboard. Without a touch screen the firmware keyboard is always used.
 - **Selected dictionaries:** the first row of the dictionary list. With it, both a tap on a word and the search look the word up in the dictionaries checked under *Check dictionaries…*, up to 5, of any kind; with none checked, nothing is looked up. The articles of different dictionaries are separated by a line, each with a small subtitle naming the dictionary; a word found through a word form also names the dictionary word.
 
 Free StarDict dictionaries: [FreeDict](https://freedict.org/downloads/) (choose the StarDict format), [Wiktionary dictionaries by Vuizur](https://github.com/Vuizur/Wiktionary-Dictionaries).
@@ -110,16 +151,11 @@ That build was published as a binary only. Its changes are re-implemented here f
 
 ### Other changes
 
-- The *OTA update* item is hidden. It would replace this build with the upstream one.
-- Logging is off by default. To turn it on, create `system/share/cr3/crlog.ini`:
-
-  ```ini
-  crengine.log.filename=/mnt/ext1/crengine.log.txt
-  crengine.log.autoflush=true
-  crengine.log.level=INFO
-  ```
-
-- Russian translation for all new strings.
+- **Debugging.** Logging is off by default. *Settings → Debugging* turns the log on and off on the device, with the level *Info* or *Error*. The log is `/mnt/ext1/cr3log.txt`; the log of the previous run is kept as `cr3log.prev.txt`. Turning the debugging off deletes both.
+- **Text windows** (the manual, *Key functions*, *Book information*): pages are turned by the tap zones and swipes of the book.
+- ***Document embedded fonts*** turned off also drops the font family named by the styles of a book, so the text is drawn with the chosen font.
+- **Manuals** in Russian, Ukrainian and English.
+- Russian and Ukrainian translations for all new strings.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
@@ -127,7 +163,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Install
 
-1. Download `cr3-v0.0.6-17-65-opds-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
+The first install is by USB:
+
+1. Download `cr3-v<version>-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
 2. Connect the reader by USB. Back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
 3. Copy the `system` folder from the archive to the root of the reader's storage, replacing the existing files.
 
@@ -137,6 +175,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
    *Settings → Display settings → Skin → pb740fw5.cr3skin*.
 
 To roll back, restore the files saved in step 2.
+
+Every later version is installed from the program: *Settings → Program update → Check for updates*.
+Versions older than `0.0.6-17-67-opds-alpha18` have no working update and are replaced by USB.
 
 The package is the `pro5` build, for PocketBook devices on firmware 5.x and 6.x. Only this target is built and tested in this fork.
 
@@ -182,7 +223,7 @@ g++ -std=c++11 -Wall -I.. opdsfeed_test.cpp ../opdsfeed.cpp -o opdsfeed_test && 
     cr3gui/src/opds   - OPDS feed parser (opdsfeed.*), catalog browser UI (opdsbrowser.*), touch lists (opdsmenu.*)
     cr3gui/src        - CR3 GUI for e-ink devices, PocketBook frontend in cr3pocketbook.*
     crengine          - CREngine, the DOM/XML/CSS e-book rendering library
-    thirdparty        - third-party libraries (libpng, libjpeg, freetype, ... are built from here)
+    thirdparty        - third-party libraries (libpng, libjpeg-turbo, freetype, zlib, cJSON are built from here)
     tinydict          - .dict dictionary support
     data              - files packaged with the reader (launcher, keymaps, manuals, css)
     tools             - toolchain and configuration files
@@ -192,7 +233,7 @@ g++ -std=c++11 -Wall -I.. opdsfeed_test.cpp ../opdsfeed.cpp -o opdsfeed_test && 
 ## Credits
 
 - **CoolReader 3 and CREngine:** Vadim Lopatin ([buggins/coolreader](https://github.com/buggins/coolreader)).
-- **PocketBook port of CREngine 3.2.59 and the updated bundled libraries** (branch `engine-3.2.59`): Dmitrij Derjugin ([dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader)).
+- **PocketBook port of CREngine 3.2.59 and the updated bundled libraries:** Dmitrij Derjugin ([dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader)).
 - **PocketBook port:** pkb ([sourceforge](https://sourceforge.net/p/crengine/crengine/ci/pocketbook-port/tree/)).
 - **PocketBook fork 0.0.6-17-62.1:** blchinezu ([blchinezu/pocketbook-coolreader](https://github.com/blchinezu/pocketbook-coolreader)) and its contributors.
 - **Community build 0.0.6-17-62.2 and the pb740fw5 skin:** sergkv12 ([4pda](https://4pda.to/forum/index.php?showtopic=886480)).
