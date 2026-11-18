@@ -330,3 +330,33 @@ with text*).
    stripped now); ask the owner about Chinese, Japanese and Korean PDFs first.
 
 Asked of the owner: more of the files he really reads, to see where the translators fail.
+
+## Levelling a page by itself: the scale "automatic" (alpha7, 2026-11-18)
+
+The owner asked for two things. Arrows that shift the frame in *Set the frame* are done
+(`pb_pageview.cpp`, `CHANGELOG.md`). And: can the way of KOReader find the place of every page of
+a crooked scan, and at what cost. `CHANGELOG.md` (alpha7) has what k2pdfopt does, why it is not
+linked in, the method written here and its numbers. In short: `PbPageDoc::levelView(page,
+maxDegrees, width, height, view)` gives the frame of a page levelled and cut to its content, from
+one small picture; 5 to 6 ms a page on the PC, the error under a tenth of a degree on 48 pages
+with known angles up to 14 degrees, for PDF and DjVu alike (it works on the picture of the page,
+so the format does not matter).
+
+Run it again (inside WSL): `build_pagebench.sh`, then
+`pagebench level <file> <first page> <pages> <max degrees> <out prefix>`; it prints the turn of
+every page, how clear it was, the time and the tilt left on the levelled frame, and writes the
+frames before and after as PGM. What a page costs with it and without it:
+`pagebench turns without <file> <first page> <pages> 15` and the same with `with`, each a run of
+its own (DjVuLibre keeps decoded pages for the whole program); 2 to 7 ms a page more on the PC. Pages with known angles: `PB_SAMPLE_ANGLES="3,-8,13"
+PB_SAMPLE_SHIFTS="0.40:0.42,0.60:0.60" python3 make_samples.py compose . <pages>` (the steps
+around it are those of `make_samples.sh`; such files are not kept in the repository).
+
+In the reader since the owner saw the frames and the numbers: `PB_PAGE_SCALE_AUTO` (value 5; 4
+stays the own frame) in `PbPageDoc::framesOf`, the item *Automatic, every page levelled* in the
+list of scales of a file and in the two settings folders, the time and the turn in the log line
+of a frame. *Set the frame* starts from the automatic frame and *Done* sets the own frame, as
+the owner asked. The range is 15 degrees (`PB_LEVEL_DEGREES`): the tester met 10 to 15. Not seen
+on a reader yet: the item, the time of a page there (the log has it).
+
+Open: the shadow at the spine is still taken into the content (seen as a band at the side of the
+levelled frames); a page that is all a picture with a slanted line in it is left as it lies.

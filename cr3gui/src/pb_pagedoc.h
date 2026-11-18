@@ -50,6 +50,7 @@ enum PbPageScale {
     PB_PAGE_SCALE_CONTENT,        ///< the whole content in the screen
     PB_PAGE_SCALE_CONTENT_WIDTH,  ///< the content as wide as the screen
     PB_PAGE_SCALE_OWN,            ///< the frame set by the reader
+    PB_PAGE_SCALE_AUTO,           ///< every page levelled by itself and its content in the screen (levelView)
     PB_PAGE_SCALE_COUNT
 };
 
@@ -80,7 +81,7 @@ public:
     /// Opens the file; NULL and the reason in error when it cannot be opened.
     static PbPageDoc * open(const char * path, std::string * error = NULL);
 
-    PbPageDoc() : readMs(0), boxMs(0), _detailZoom(0), _detailLow(0) { }
+    PbPageDoc() : readMs(0), boxMs(0), levelMs(0), _detailZoom(0), _detailLow(0) { }
     virtual ~PbPageDoc() { }
     /// For the log of the caller, who clears them: the time of reading and decoding pages, and of
     /// finding content boxes without the page read for them. Only added to here.
@@ -108,10 +109,35 @@ public:
     /// The frame that shows the box, turned by angle, whole in a buffer of width x height.
     static PbPageView viewOfBox(const PbPageBox & box, float angle, int width, int height);
 
+    // Levelling a page by itself: every page of a book photographed or scanned by hand is crooked
+    // in its own way. The scale PB_PAGE_SCALE_AUTO of framesOf; measured on the PC bench
+    // (dev/pdfdjvu/pagebench.cpp, "level" and "turns").
+
+    /// The tilt of the lines of a gray picture of a page (w x h): degrees is the angle the picture
+    /// has to be turned by clockwise (PbPageView::angle) for its lines to lie level. Looked for
+    /// within maxDegrees to both sides: the dark pixels are summed along lines of every tilt, and
+    /// the tilt at which the sums of neighbouring lines differ most is that of the text (the way
+    /// k2pdfopt of KOReader goes, on a small picture and in two passes instead of two hundred
+    /// angles over the whole page). False, and degrees 0, when no tilt stands out (a blank page, a
+    /// photograph) or the best one lies at the limit. clear, when asked for: how many times the
+    /// best tilt is above the usual one.
+    static bool skewOfPicture(const unsigned char * gray, int w, int h, int stride, float maxDegrees,
+                              float & degrees, float * clear = NULL);
+    /// The same for a page: found on a small picture of it and kept.
+    bool skewOf(int page, float maxDegrees, float & degrees);
+    /// The frame that shows the content of the page levelled, whole in a buffer of width x height:
+    /// the picture turned by the angle of skewOf, the margins cut off as they lie then. A page
+    /// with no clear tilt gets the frame of its content box, upright. False when no content is
+    /// found: the frame is the whole page then. Kept per page.
+    bool levelView(int page, float maxDegrees, int width, int height, PbPageView & view);
+    /// For the log of the caller, as boxMs: the time of skewOf and of the content of the levelled page.
+    double levelMs;
+
     /// The frames of a page for a window of width x height, in the order they are read; at least
     /// one. scale: PbPageScale; leafing: PbPageLeafing ("next page at once" gives the first frame
     /// alone); angle: the turn of the picture; own: the frame of the reader, used by
     /// PB_PAGE_SCALE_OWN when it is set (the frames then go on from it to the end of the content).
+    /// PB_PAGE_SCALE_AUTO takes the angle of the page itself in place of angle.
     void framesOf(int page, int scale, int leafing, float angle, const PbPageOwnFrame & own,
                   int width, int height, std::vector<PbPageView> & frames);
 
@@ -131,6 +157,23 @@ protected:
         PbPageBox box;
     };
     std::vector<KeptBox> _boxes;
+
+    struct KeptSkew {
+        int page;
+        float maxDegrees;
+        bool found;
+        float degrees;
+    };
+    std::vector<KeptSkew> _skews;
+    /// The content of a page levelled: the angle, the middle of the content (page units) and its
+    /// size as it lies on the turned page (page units).
+    struct KeptLevel {
+        int page;
+        float maxDegrees;
+        bool found;
+        float angle, cx, cy, w, h;
+    };
+    std::vector<KeptLevel> _levels;
 };
 
 /// Draws an 8-bit gray picture into another through an affine map: the pixel (x, y) of dst takes

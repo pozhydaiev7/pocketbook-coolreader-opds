@@ -10,10 +10,24 @@
  *   content  the content box in the screen (margins cut off)
  *   turned   the content box turned by [angle] (default 1.5 degrees)
  *   zoom     the middle of the page at twice the zoom of "content"
+ *
+ *   pagebench level <file> <first page from 0> <pages> <max degrees> <out prefix>
+ *
+ * Levelling every page by itself: the tilt found for each page, its time, the frames before and after.
+ *
+ *   pagebench turns <without|with> <file> <first page from 0> <pages> <max degrees>
+ *
+ * What a page costs without the levelling and with it, by parts: run once each way.
+ *
+ *   pagebench cost <file> <page from 0> <max degrees>
+ *
+ * What levelling costs: ours, a turned frame against an upright one, and the amount of work of k2pdfopt.
  */
 #include "pb_pagedoc.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -57,8 +71,267 @@ static void frame(PbPageDoc * doc, int page, const PbPageView & view, int w, int
     save(prefix, name, buf, w, h);
 }
 
+// pagebench level <file> <first page from 0> <pages> <max degrees> <out prefix>
+// Levelling every page by itself (PbPageDoc::skewOf, levelView): for each page the tilt found, how
+// clear it was, the time, and the tilt left on the levelled frame. <prefix>-p<N>-before.pgm is the
+// frame of the content box upright, <prefix>-p<N>-after.pgm the levelled one, 702 x 936 each.
+static int levelMode(int argc, char ** argv)
+{
+    if (argc < 7) {
+        fprintf(stderr, "usage: pagebench level <file> <first page> <pages> <max degrees> <out prefix>\n");
+        return 2;
+    }
+    const int first = atoi(argv[3]), count = atoi(argv[4]);
+    const float maxDegrees = (float)atof(argv[5]);
+    const char * prefix = argv[6];
+    const int w = 702, h = 936;
+    std::string error;
+    PbPageDoc * doc = PbPageDoc::open(argv[2], &error);
+    if (!doc) {
+        fprintf(stderr, "%s: %s\n", argv[2], error.c_str());
+        return 1;
+    }
+    printf("%s: %s, %d pages; tilt looked for within %.1f degrees\n", argv[2],
+           doc->kind() == PB_PAGEDOC_PDF ? "PDF" : "DjVu", doc->pageCount(), maxDegrees);
+    double sumLevel = 0, sumAlone = 0, worstSkew = 0;
+    int pages = 0;
+    for (int p = first; p < first + count && p < doc->pageCount(); p++) {
+        PbPageSize size;
+        if (!doc->pageSize(p, size))
+            continue;
+        // as the window does it: the frames of "whole content" are laid out (the page is read and
+        // its content box found), and the first frame is drawn
+        std::vector<PbPageView> frames;
+        std::vector<unsigned char> before((size_t)w * h), after((size_t)w * h);
+        double t0 = now_ms();
+        doc->framesOf(p, PB_PAGE_SCALE_CONTENT, PB_PAGE_LEAF_PAGE, 0, PbPageOwnFrame(), w * 2, h * 2, frames);
+        PbPageBox box;
+        doc->contentBox(p, box);
+        doc->render(p, PbPageDoc::viewOfBox(box, 0, w, h), &before[0], w, h, w);
+        const double tRead = now_ms() - t0;
+        // the levelling, asked for after the page is read: the tilt and the content of the turned
+        // page, from one small picture
+        t0 = now_ms();
+        PbPageView view;
+        const bool content = doc->levelView(p, maxDegrees, w, h, view);
+        const double tLevel = now_ms() - t0;
+        float degrees = 0;
+        const bool found = doc->skewOf(p, maxDegrees, degrees);   // kept by levelView
+        doc->render(p, view, &after[0], w, h, w);
+        // the arithmetic alone, on a picture as skewOf makes it: the best of five
+        const int W = 512;
+        int H = (int)(size.height * W / size.width + 0.5f);
+        if (H < 64) H = 64;
+        if (H > 1024) H = 1024;
+        std::vector<unsigned char> small((size_t)W * H);
+        PbPageView whole;
+        whole.cx = size.width * 0.5f;
+        whole.cy = size.height * 0.5f;
+        whole.zoom = W / size.width < H / size.height ? W / size.width : H / size.height;
+        doc->render(p, whole, &small[0], W, H, W);
+        float clear = 0, d2 = 0;
+        double alone = 1e9;
+        for (int i = 0; i < 5; i++) {
+            t0 = now_ms();
+            PbPageDoc::skewOfPicture(&small[0], W, H, W, maxDegrees, d2, &clear);
+            const double t = now_ms() - t0;
+            if (t < alone)
+                alone = t;
+        }
+        // what is left of the tilt on the levelled frame
+        float left = 0;
+        const bool leftFound = PbPageDoc::skewOfPicture(&after[0], w, h, w, 3.0f, left);
+        printf("page %d: turn %+.2f %s, clear %.1f; levelling %.1f ms (the arithmetic of the tilt alone %.2f ms), "
+               "content %s; left on the levelled frame %+.2f%s; frame centre %.0f,%.0f zoom %.3f; "
+               "page read and first frame %.1f ms\n",
+               p, degrees, found ? "found" : "none found", clear, tLevel, alone,
+               content ? "found" : "NOT FOUND", left, leftFound ? "" : " (no lines)", view.cx, view.cy, view.zoom, tRead);
+        char name[64];
+        snprintf(name, sizeof(name), "p%d-before", p);
+        save(prefix, name, before, w, h);
+        snprintf(name, sizeof(name), "p%d-after", p);
+        save(prefix, name, after, w, h);
+        sumLevel += tLevel;
+        sumAlone += alone;
+        if (tLevel > worstSkew)
+            worstSkew = tLevel;
+        pages++;
+    }
+    if (pages > 0)
+        printf("mean of %d pages: levelling %.1f ms (the arithmetic of the tilt alone %.2f ms), the slowest page %.1f ms\n",
+               pages, sumLevel / pages, sumAlone / pages, worstSkew);
+    delete doc;
+    return 0;
+}
+
+// pagebench cost <file> <page from 0> <max degrees>
+// What levelling costs, three numbers for one page and a frame of 1404 x 1872:
+//   ours      PbPageDoc::levelView, the page read before it
+//   frames    the frame of the levelled page against the same frame upright (a turned frame costs more)
+//   k2pdfopt  the amount of work of bmp_autostraighten of k2pdfopt (willuslib/bmp.c), written anew
+//             here by its description: every angle of the range in steps of 0.05 degrees, for each
+//             the dark pixels of the whole frame summed along tilted lines, up to 400 points a line;
+//             then the whole frame turned (pbRotateGray). Not its code: the same loops over the
+//             same number of pixels, to have a measured number beside ours.
+static int costMode(int argc, char ** argv)
+{
+    if (argc < 5) {
+        fprintf(stderr, "usage: pagebench cost <file> <page> <max degrees>\n");
+        return 2;
+    }
+    const int p = atoi(argv[3]);
+    const float maxDegrees = (float)atof(argv[4]);
+    const int w = 1404, h = 1872;
+    std::string error;
+    PbPageDoc * doc = PbPageDoc::open(argv[2], &error);
+    if (!doc) {
+        fprintf(stderr, "%s: %s\n", argv[2], error.c_str());
+        return 1;
+    }
+    std::vector<PbPageView> frames;
+    std::vector<unsigned char> upright((size_t)w * h), turned((size_t)w * h), out((size_t)w * h);
+    double t0 = now_ms();
+    doc->framesOf(p, PB_PAGE_SCALE_CONTENT, PB_PAGE_LEAF_PAGE, 0, PbPageOwnFrame(), w, h, frames);
+    doc->render(p, frames[0], &upright[0], w, h, w);
+    const double tRead = now_ms() - t0;
+    t0 = now_ms();
+    PbPageView view;
+    doc->levelView(p, maxDegrees, w, h, view);
+    const double tOurs = now_ms() - t0;
+    double tUp = 1e9, tTurned = 1e9;
+    PbPageView same = view;
+    same.angle = 0;
+    for (int i = 0; i < 3; i++) {
+        t0 = now_ms();
+        doc->render(p, same, &upright[0], w, h, w);
+        double t = now_ms() - t0;
+        if (t < tUp) tUp = t;
+        t0 = now_ms();
+        doc->render(p, view, &turned[0], w, h, w);
+        t = now_ms() - t0;
+        if (t < tTurned) tTurned = t;
+    }
+    // the work of k2pdfopt on the frame as it is shown
+    t0 = now_ms();
+    const float step = 0.05f;
+    const int na = (int)(maxDegrees / step + 0.5f);
+    const int c1 = w / 15, c2 = w - c1;
+    int dw = (c2 - c1) / 400;
+    if (dw < 1) dw = 1;
+    std::vector<int> off;
+    double bestDev = -1;
+    int bestI = 0;
+    for (int i = -na; i <= na; i++) {
+        const float t = tanf(i * step * 3.14159265f / 180.0f);
+        off.clear();
+        for (int c = c1; c < c2; c += dw)
+            off.push_back((int)(t * c) * w + c);
+        const int lost = (int)(fabsf(t) * w) + 1 + h / 15;
+        double sum = 0, sumSq = 0;
+        int n = 0;
+        for (int r = lost; r < h - lost; r++) {
+            const unsigned char * row = &upright[(size_t)r * w];
+            int count = 0;
+            for (size_t k = 0; k < off.size(); k++)
+                if (row[off[k]] < 128)
+                    count++;
+            const double d = 100.0 * count / off.size();
+            sum += d;
+            sumSq += d * d;
+            n++;
+        }
+        const double dev = n > 0 ? sqrt(fabs((sum / n) * (sum / n) - sumSq / n)) : 0;
+        if (dev > bestDev) {
+            bestDev = dev;
+            bestI = i;
+        }
+    }
+    const double tAngles = now_ms() - t0;
+    t0 = now_ms();
+    pbRotateGray(&upright[0], w, h, w, w * 0.5f, h * 0.5f, &out[0], w, h, w, w * 0.5f, h * 0.5f, -bestI * step);
+    const double tTurn = now_ms() - t0;
+    printf("%s page %d, within %.0f degrees: ours %.1f ms (turn %+.2f); the frame upright %.1f ms, turned %.1f ms; "
+           "the work of k2pdfopt %.0f ms (%d angles %.0f ms, the frame turned %.1f ms; tilt %+.2f); "
+           "page read and first frame %.1f ms\n",
+           argv[2], p, maxDegrees, tOurs, view.angle, tUp, tTurned, tAngles + tTurn, na * 2 + 1, tAngles, tTurn,
+           -bestI * step, tRead);
+    delete doc;
+    return 0;
+}
+
+// pagebench turns <without|with> <file> <first page from 0> <pages> <max degrees>
+// What a page costs with the levelling and without it: run once each way on the same pages and the
+// two means are compared. One way a run, because the library of DjVu keeps the pages it has
+// decoded for the whole program: a second document of the same run got them for nothing, and the
+// first cut of this bench showed the levelling as the faster way. Nothing is prepared ahead, so
+// this is the whole work of a page (on a reader it is done in the pause, while the page before is
+// read). Frame of 1404 x 1872.
+//   without   the frames of "whole content" are laid out (the page is read, its content box found)
+//             and the first one is drawn upright
+//   with      the same laying out, which tells the document the zoom of the frames to come so
+//             that it decodes the page once at that size; then levelView (the tilt of the page
+//             and its content as it lies turned) and that frame is drawn, turned when the page is
+//             tilted. So "with" has the content box of the upright page in it too, which a turned
+//             page does not need: the number is the upper bound.
+// The time of a page is given whole and by parts: the page read, the search, the frame.
+static int turnsMode(int argc, char ** argv)
+{
+    if (argc < 7 || (strcmp(argv[2], "with") != 0 && strcmp(argv[2], "without") != 0)) {
+        fprintf(stderr, "usage: pagebench turns <without|with> <file> <first page> <pages> <max degrees>\n");
+        return 2;
+    }
+    const bool levelling = strcmp(argv[2], "with") == 0;
+    const int first = atoi(argv[4]), count = atoi(argv[5]);
+    const float maxDegrees = (float)atof(argv[6]);
+    const int w = 1404, h = 1872;
+    std::string error;
+    PbPageDoc * doc = PbPageDoc::open(argv[3], &error);
+    if (!doc) {
+        fprintf(stderr, "%s: %s\n", argv[3], error.c_str());
+        return 1;
+    }
+    std::vector<unsigned char> buffer((size_t)w * h);
+    double sum = 0, sumRead = 0, sumSearch = 0, sumFrame = 0, worst = 0;
+    int pages = 0, turnedPages = 0;
+    for (int p = first; p < first + count && p < doc->pageCount(); p++) {
+        std::vector<PbPageView> frames;
+        doc->readMs = doc->boxMs = doc->levelMs = 0;
+        const double t0 = now_ms();
+        doc->framesOf(p, PB_PAGE_SCALE_CONTENT, PB_PAGE_LEAF_PAGE, 0, PbPageOwnFrame(), w, h, frames);
+        PbPageView view = frames[0];
+        if (levelling)
+            doc->levelView(p, maxDegrees, w, h, view);
+        doc->render(p, view, &buffer[0], w, h, w);
+        const double all = now_ms() - t0, search = doc->boxMs + doc->levelMs, frame = all - doc->readMs - search;
+        if (getenv("PB_BY_PAGE"))
+            printf("page %d %s: %.1f ms (read %.1f, %s %.1f, frame %.1f), turn %+.2f\n", p, argv[2], all, doc->readMs,
+                   levelling ? "content box and levelling" : "content box", search, frame, view.angle);
+        sum += all;
+        sumRead += doc->readMs;
+        sumSearch += search;
+        sumFrame += frame;
+        if (all > worst)
+            worst = all;
+        pages++;
+        if (view.angle != 0)
+            turnedPages++;
+    }
+    if (pages > 0)
+        printf("%-7s mean of %d pages (%d turned): %.1f ms (read %.1f, %s %.1f, frame %.1f), the slowest page %.1f ms\n",
+               argv[2], pages, turnedPages, sum / pages, sumRead / pages,
+               levelling ? "content box and levelling" : "content box", sumSearch / pages, sumFrame / pages, worst);
+    delete doc;
+    return 0;
+}
+
 int main(int argc, char ** argv)
 {
+    if (argc > 1 && strcmp(argv[1], "level") == 0)
+        return levelMode(argc, argv);
+    if (argc > 1 && strcmp(argv[1], "turns") == 0)
+        return turnsMode(argc, argv);
+    if (argc > 1 && strcmp(argv[1], "cost") == 0)
+        return costMode(argc, argv);
     if (argc < 6) {
         fprintf(stderr, "usage: pagebench <file> <page> <width> <height> <out prefix> [angle]\n");
         return 2;
@@ -154,7 +427,8 @@ int main(int argc, char ** argv)
     }
     // the frames of the page for every scale and both ways of leafing, as the window of the
     // picture mode asks for them; the frames of "content width, by frames" are drawn
-    static const char * const scales[] = { "whole page", "page width", "whole content", "content width", "own frame" };
+    static const char * const scales[] = { "whole page", "page width", "whole content", "content width", "own frame",
+                                           "automatic" };
     PbPageOwnFrame own;
     own.cx = box.x0 + (box.x1 - box.x0) * 0.3f;
     own.cy = box.y0 + (box.y1 - box.y0) * 0.2f;

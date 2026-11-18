@@ -569,7 +569,7 @@
      <p>The contents (when the file has them), go to a page, the scale, the leafing, the frame, a bookmark on the current page, the list of bookmarks, the settings of the program, closing the book. The arrow of the title and the Back key return to the page.</p>
      <image l:href="#i_026.png"/>
      <subtitle>Scale</subtitle>
-     <p>What is shown on the screen. "Whole page": the page with its margins. "Page width": the page as wide as the screen. "Whole content": the margins are cut off automatically, and for a page photographed on a dark table the table is cut off too. "Content width": the same, as wide as the screen. "Own frame": the frame you have set in "Set the frame".</p>
+     <p>What is shown on the screen. "Whole page": the page with its margins. "Page width": the page as wide as the screen. "Whole content": the margins are cut off automatically, and for a page photographed on a dark table the table is cut off too. "Content width": the same, as wide as the screen. "Own frame": the frame you have set in "Set the frame". "Automatic, every page levelled": for a book scanned or photographed crookedly. The program finds the tilt of the lines of every page by itself, turns the page level and cuts off its margins; with the leafing "By frames" the content is as wide as the screen. A page without lines of text (a picture, an empty page) is left as it is. If the automatic frame does not fit, open "Set the frame": it starts from what is on the screen, and "Done" sets "Own frame".</p>
      <p><emphasis>Value:</emphasis> whole page / page width / whole content / content width / own frame</p>
      <image l:href="#i_026.png"/>
      <subtitle>Leafing</subtitle>
@@ -577,7 +577,7 @@
      <p><emphasis>Value:</emphasis> next page at once / by frames</p>
      <image l:href="#i_026.png"/>
      <subtitle>Set the frame</subtitle>
-     <p>The frame is the part of a page seen on the screen: its zoom, position and turn. The buttons at the bottom of the screen: "−" and "+" change the zoom, "−0.5°" and "+0.5°" turn the page by a small step to level the lines of a crooked scan, "90°" turns the page on its side. A drag moves the page. "Reset" brings back the whole content without a turn, "Cancel" leaves the frame as it was, "Done" keeps the frame and sets the scale "Own frame".</p>
+     <p>The frame is the part of a page seen on the screen: its zoom, position and turn. The buttons at the bottom of the screen: "−" and "+" change the zoom, "−0.5°" and "+0.5°" turn the page by a small step to level the lines of a crooked scan, "90°" turns the page on its side. The arrows of the upper row shift the frame over the page by a small step, each to its side: the arrow to the right shows what lies further right. A drag moves the page too. "Reset" brings back the whole content without a turn, "Cancel" leaves the frame as it was, "Done" keeps the frame and sets the scale "Own frame".</p>
      <p>The frame and the angle are kept apart for odd and even pages: a photographed book has its margins mirrored. Until the frame of the pages of the other parity is set, they are shown with the same frame. The scale, the leafing, the frames, the page and the bookmarks are remembered for every file.</p>
      <image l:href="#i_026.png"/>
      <subtitle>PDF view settings, DjVu view settings</subtitle>

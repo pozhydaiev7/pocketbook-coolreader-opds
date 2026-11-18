@@ -184,6 +184,7 @@ const char * scaleName(int scale)
     case PB_PAGE_SCALE_WIDTH: return _("Page width");
     case PB_PAGE_SCALE_CONTENT: return _("Whole content");
     case PB_PAGE_SCALE_CONTENT_WIDTH: return _("Content width");
+    case PB_PAGE_SCALE_AUTO: return _("Automatic, every page levelled");
     default: return _("Own frame");
     }
 }
@@ -339,7 +340,8 @@ void PbPageWindow::readDefaults()
     _scale = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_SCALE : PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_CONTENT);
     _leafing = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_LEAFING : PROP_POCKETBOOK_DJVU_LEAFING, PB_PAGE_LEAF_PAGE);
     _showNumber = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_PAGE_NUMBER : PROP_POCKETBOOK_DJVU_PAGE_NUMBER, 1) != 0;
-    if (_scale < 0 || _scale >= PB_PAGE_SCALE_OWN)
+    // the own frame belongs to a file, it is no value of the settings
+    if (_scale < 0 || _scale >= PB_PAGE_SCALE_COUNT || _scale == PB_PAGE_SCALE_OWN)
         _scale = PB_PAGE_SCALE_CONTENT;
 }
 
@@ -443,6 +445,7 @@ void PbPageWindow::drawShot(Shot & shot, int page, int frame)
     // the parts of the time, for the log of the callers
     _doc->readMs = 0;
     _doc->boxMs = 0;
+    _doc->levelMs = 0;
     framesOfPage(page, frames);
     if (frame >= (int)frames.size())
         frame = (int)frames.size() - 1;
@@ -454,6 +457,7 @@ void PbPageWindow::drawShot(Shot & shot, int page, int frame)
     shot.page = page;
     shot.frame = frame;
     shot.stamp = _stamp;
+    shot.angle = frames[frame].angle;
     shot.ready = true;
 }
 
@@ -527,8 +531,9 @@ void PbPageWindow::prepareAhead()
     // the page after the prepared one is read beside, while this one is on the screen
     _doc->hintNext(page + _direction);
     if (CRLog::isInfoEnabled())
-        CRLog::info("perf: picture mode: page %d frame %d prepared ahead in %.1f ms: page read %.1f, content box %.1f",
-                    page + 1, frame, nowMs() - t0, _doc->readMs, _doc->boxMs);
+        CRLog::info("perf: picture mode: page %d frame %d prepared ahead in %.1f ms: page read %.1f, content box %.1f, "
+                    "levelling %.1f (turn %+.2f)", page + 1, frame, nowMs() - t0, _doc->readMs, _doc->boxMs,
+                    _doc->levelMs, _ahead.angle);
 }
 
 // ------------------------------------------------------------------------------------ drawing
@@ -596,8 +601,9 @@ void PbPageWindow::draw()
         drawNumber(canvas);
     if (CRLog::isInfoEnabled()) {
         if (drawnNow)
-            CRLog::info("perf: picture mode: page %d frame %d drawn now in %.1f ms: page read %.1f, content box %.1f; "
-                        "to the canvas %.1f ms", _page + 1, _frame, t1 - t0, _doc->readMs, _doc->boxMs, nowMs() - t1);
+            CRLog::info("perf: picture mode: page %d frame %d drawn now in %.1f ms: page read %.1f, content box %.1f, "
+                        "levelling %.1f (turn %+.2f); to the canvas %.1f ms", _page + 1, _frame, t1 - t0, _doc->readMs,
+                        _doc->boxMs, _doc->levelMs, _shown.angle, nowMs() - t1);
         else
             CRLog::info("perf: picture mode: page %d frame %d %s in %.1f ms, to the canvas %.1f ms", _page + 1, _frame,
                         how, t1 - t0, nowMs() - t1);
@@ -634,19 +640,58 @@ void PbPageWindow::drawNumber(LVDrawBuf * canvas)
 }
 
 // ------------------------------------------------------------------------------------ the frame being set
-static const char * const ADJUST_LABELS[8] = {
+// The buttons of the panel, row by row. The first row shifts the frame: reported from InkPad 4,
+// "there is no way to move the frame"; a drag moved it, and nothing on the screen told of that.
+enum {
+    ADJ_LEFT = 0, ADJ_UP, ADJ_DOWN, ADJ_RIGHT,
+    ADJ_ZOOM_OUT, ADJ_ZOOM_IN, ADJ_TURN_BACK, ADJ_TURN,
+    ADJ_QUARTER, ADJ_RESET, ADJ_CANCEL, ADJ_DONE,
+    ADJ_COUNT
+};
+
+static const char * const ADJUST_LABELS[ADJ_COUNT] = {
+    NULL, NULL, NULL, NULL,          // arrows, drawn
     "\xE2\x88\x92", "+", "\xE2\x88\x92" "0.5\xC2\xB0", "+0.5\xC2\xB0",
     "90\xC2\xB0", NULL, NULL, NULL   // the last three are words: Reset, Cancel, Done
 };
 
+/// The frame goes over the page by (sx, sy) pixels of the screen; the picture is turned by angle.
+static void shiftFrame(PbPageOwnFrame & frame, float angle, float sx, float sy)
+{
+    const float a = angle * PI_F / 180.0f;
+    const float c = cosf(a), s = sinf(a);
+    frame.cx += (sx * c + sy * s) / frame.zoom;
+    frame.cy += (-sx * s + sy * c) / frame.zoom;
+}
+
+/// The arrow of a shift button: a filled triangle in the middle of the button. Drawn, so that it
+/// does not depend on the font having the arrow signs.
+static void drawArrow(LVDrawBuf * canvas, const lvRect & rc, int button)
+{
+    const int half = rc.height() / 5 > 4 ? rc.height() / 5 : 4;   // half of the base
+    const int len = half * 3 / 2;                                  // from the base to the point
+    const int cx = (rc.left + rc.right) / 2, cy = (rc.top + rc.bottom) / 2;
+    for (int d = -half; d <= half; d++) {
+        const int l = len * (half + 1 - (d < 0 ? -d : d)) / (half + 1);
+        if (l <= 0)
+            continue;
+        switch (button) {
+        case ADJ_LEFT:  canvas->FillRect(cx + len / 2 - l, cy + d, cx + len / 2, cy + d + 1, 0x000000); break;
+        case ADJ_RIGHT: canvas->FillRect(cx - len / 2, cy + d, cx - len / 2 + l, cy + d + 1, 0x000000); break;
+        case ADJ_UP:    canvas->FillRect(cx + d, cy + len / 2 - l, cx + d + 1, cy + len / 2, 0x000000); break;
+        default:        canvas->FillRect(cx + d, cy - len / 2, cx + d + 1, cy - len / 2 + l, 0x000000); break;
+        }
+    }
+}
+
 void PbPageWindow::adjustButtons(std::vector<lvRect> & rects)
 {
-    // two rows of four buttons at the bottom of the window
+    // three rows of four buttons at the bottom of the window
     rects.clear();
     const int W = _rect.width();
     const int bh = _rect.height() / 14;
-    const int top = _rect.bottom - bh * 2;
-    for (int i = 0; i < 8; i++) {
+    const int top = _rect.bottom - bh * (ADJ_COUNT / 4);
+    for (int i = 0; i < ADJ_COUNT; i++) {
         lvRect rc;
         rc.left = _rect.left + W * (i % 4) / 4;
         rc.right = _rect.left + W * (i % 4 + 1) / 4;
@@ -664,12 +709,16 @@ void PbPageWindow::drawAdjustPanel(LVDrawBuf * canvas)
     if (font.isNull())
         return;
     canvas->SetTextColor(0x000000);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < ADJ_COUNT; i++) {
         const lvRect & rc = rects[i];
         canvas->FillRect(rc.left, rc.top, rc.right, rc.bottom, 0x000000);
         canvas->FillRect(rc.left + 2, rc.top + 2, rc.right - 2, rc.bottom - 2, 0xFFFFFF);
+        if (i <= ADJ_RIGHT) {
+            drawArrow(canvas, rc, i);
+            continue;
+        }
         lString32 text = ADJUST_LABELS[i] != NULL ? Utf8ToUnicode(lString8(ADJUST_LABELS[i]))
-                       : i == 5 ? tr("Reset") : i == 6 ? tr("Cancel") : tr("Done");
+                       : i == ADJ_RESET ? tr("Reset") : i == ADJ_CANCEL ? tr("Cancel") : tr("Done");
         const int tw = font->getTextWidth(text.c_str(), text.length());
         font->DrawTextString(canvas, rc.left + (rc.width() - tw) / 2, rc.top + (rc.height() - font->getHeight()) / 2,
                              text.c_str(), text.length(), '?', NULL, false);
@@ -726,17 +775,24 @@ bool PbPageWindow::adjustTouch(int x, int y, CRGUITouchEventType evType)
     const int dx = x - _touchStart.x, dy = y - _touchStart.y;
     const int moved = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
     if (moved < _rect.width() / 40) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < ADJ_COUNT; i++) {
             if (!rects[i].isPointInside(lvPoint(x, y)))
                 continue;
+            // The frame goes over the page to the side the arrow shows, so what lies there comes
+            // into view: a twentieth of the width of the window a step.
+            const float step = _rect.width() / 20.0f;
             switch (i) {
+            case ADJ_LEFT: shiftFrame(_adjFrame, _adjAngle, -step, 0); break;
+            case ADJ_RIGHT: shiftFrame(_adjFrame, _adjAngle, step, 0); break;
+            case ADJ_UP: shiftFrame(_adjFrame, _adjAngle, 0, -step); break;
+            case ADJ_DOWN: shiftFrame(_adjFrame, _adjAngle, 0, step); break;
             // (a twentieth a step: a tenth was too coarse to fit a column to the screen)
-            case 0: _adjFrame.zoom /= 1.05f; break;
-            case 1: _adjFrame.zoom *= 1.05f; break;
-            case 2: _adjAngle -= 0.5f; break;
-            case 3: _adjAngle += 0.5f; break;
-            case 4: _adjAngle += 90.0f; break;
-            case 5: {
+            case ADJ_ZOOM_OUT: _adjFrame.zoom /= 1.05f; break;
+            case ADJ_ZOOM_IN: _adjFrame.zoom *= 1.05f; break;
+            case ADJ_TURN_BACK: _adjAngle -= 0.5f; break;
+            case ADJ_TURN: _adjAngle += 0.5f; break;
+            case ADJ_QUARTER: _adjAngle += 90.0f; break;
+            case ADJ_RESET: {
                 // the whole content, upright
                 PbPageSize size;
                 PbPageBox box;
@@ -751,7 +807,7 @@ bool PbPageWindow::adjustTouch(int x, int y, CRGUITouchEventType evType)
                 }
                 break;
             }
-            case 6: adjustEnd(false); return redrawAfterTouch();
+            case ADJ_CANCEL: adjustEnd(false); return redrawAfterTouch();
             default: adjustEnd(true); return redrawAfterTouch();
             }
             if (_adjAngle > 180.0f)
@@ -762,11 +818,8 @@ bool PbPageWindow::adjustTouch(int x, int y, CRGUITouchEventType evType)
         }
         return true;
     }
-    // a drag moves the page under the finger: the centre of the frame goes the other way
-    const float a = _adjAngle * PI_F / 180.0f;
-    const float c = cosf(a), s = sinf(a);
-    _adjFrame.cx -= (dx * c + dy * s) / _adjFrame.zoom;
-    _adjFrame.cy -= (-dx * s + dy * c) / _adjFrame.zoom;
+    // a drag moves the page under the finger: the frame goes the other way
+    shiftFrame(_adjFrame, _adjAngle, (float)-dx, (float)-dy);
     return redrawAfterTouch();
 }
 
@@ -1032,10 +1085,17 @@ void PbPageWindow::showScaleList()
         _("The page as wide as the screen"),
         _("The margins cut off, the content whole in the screen"),
         _("The margins cut off, the content as wide as the screen"),
-        _("The frame you have set: zoom, position and turn")
+        _("The frame you have set: zoom, position and turn"),
+        _("A crooked scan: each page turned level by itself, its margins cut off")
+    };
+    // in the order of the list: the automatic scale stands with the other ready ones, the own frame last
+    static const int order[PB_PAGE_SCALE_COUNT] = {
+        PB_PAGE_SCALE_PAGE, PB_PAGE_SCALE_WIDTH, PB_PAGE_SCALE_CONTENT, PB_PAGE_SCALE_CONTENT_WIDTH,
+        PB_PAGE_SCALE_AUTO, PB_PAGE_SCALE_OWN
     };
     const int par = _page & 1;
-    for (int i = 0; i < PB_PAGE_SCALE_COUNT; i++) {
+    for (int n = 0; n < PB_PAGE_SCALE_COUNT; n++) {
+        const int i = order[n];
         // the own frame is offered once it is set
         if (i == PB_PAGE_SCALE_OWN && !_own[par].set && !_own[par ^ 1].set)
             continue;

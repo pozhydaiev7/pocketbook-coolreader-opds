@@ -367,10 +367,29 @@ def cmd_compose(folder, pages):
         odd = n % 2 == 1
         # the page takes 58 % of the width of the frame; the spine is at the left on odd pages
         scale = PHOTO_W * 0.58 / 420.0
-        angle = math.radians((1.3 if odd else -1.1) + rnd.uniform(-0.4, 0.4))
+        # PB_SAMPLE_ANGLES="3,-8,13": the frames are turned by these angles in turn instead (the
+        # tests of levelling, dev/pdfdjvu/pagebench "level"; such files are not kept in the repository)
+        given = os.environ.get("PB_SAMPLE_ANGLES", "")
+        if given:
+            turns = [float(v) for v in given.split(",")]
+            degrees = turns[(n - 1) % len(turns)]
+        else:
+            degrees = (1.3 if odd else -1.1) + rnd.uniform(-0.4, 0.4)
+        # on the screen the page is turned counter-clockwise by a positive angle: levelling it
+        # takes a turn of the picture clockwise by the same angle (PbPageDoc::skewOf gives that)
+        print("frame %d: the page is turned by %+.2f degrees" % (n, degrees))
+        angle = math.radians(degrees)
         pwid, phei = 420.0 * scale, 595.0 * scale
         cx = PHOTO_W * (0.55 if odd else 0.45) + rnd.uniform(-8, 8)
         cy = PHOTO_H * 0.52 + rnd.uniform(-10, 10)
+        # PB_SAMPLE_SHIFTS="0.40:0.42,0.60:0.60": the middle of the page stands at these parts of
+        # the frame instead, x:y with y counted from the top, in turn (a page photographed off the middle)
+        places = [v for v in os.environ.get("PB_SAMPLE_SHIFTS", "").split(",") if v]
+        if places:
+            place = places[(n - 1) % len(places)].split(":")
+            cx = PHOTO_W * float(place[0])
+            cy = PHOTO_H * (1.0 - float(place[1]))
+            print("frame %d: the middle of the page at %s of the width and %s of the height" % (n, place[0], place[1]))
         ca, sa = math.cos(angle), math.sin(angle)
         # unit square -> rotated rectangle of the page centred at cx, cy
         a, b, c, d = pwid * ca, pwid * sa, -phei * sa, phei * ca

@@ -1506,6 +1506,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("Page width"), "1"},
         {_("Whole content"), "2"},
         {_("Content width"), "3"},
+        {_("Automatic, every page levelled"), "5"},     // PB_PAGE_SCALE_AUTO; 4 is the own frame of a file
         {NULL, NULL}
     };
     item_def_t page_leafing_options[] = {

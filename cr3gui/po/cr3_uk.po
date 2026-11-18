@@ -2636,6 +2636,14 @@ msgid "The frame you have set: zoom, position and turn"
 msgstr "Заданий вами кадр: масштаб, положення та поворот"
 
 #: ../src/pb_pageview.cpp
+msgid "Automatic, every page levelled"
+msgstr "Авто: вирівняти кожну сторінку"
+
+#: ../src/pb_pageview.cpp
+msgid "A crooked scan: each page turned level by itself, its margins cut off"
+msgstr "Кривий скан: кожна сторінка вирівнюється сама, поля обрізаються"
+
+#: ../src/pb_pageview.cpp
 msgid "Reset"
 msgstr "Скинути"
 

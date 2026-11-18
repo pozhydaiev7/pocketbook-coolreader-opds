@@ -2660,6 +2660,14 @@ msgid "The frame you have set: zoom, position and turn"
 msgstr "Заданный вами кадр: масштаб, положение и поворот"
 
 #: ../src/pb_pageview.cpp
+msgid "Automatic, every page levelled"
+msgstr "Авто: выровнять каждую страницу"
+
+#: ../src/pb_pageview.cpp
+msgid "A crooked scan: each page turned level by itself, its margins cut off"
+msgstr "Кривой скан: каждая страница выравнивается сама, поля обрезаются"
+
+#: ../src/pb_pageview.cpp
 msgid "Reset"
 msgstr "Сброс"
 

@@ -91,8 +91,9 @@ private:
         int page, frame;
         unsigned stamp;     // of the settings it was drawn with
         bool ready;
+        float angle;        // the turn it was drawn with, for the log
         std::vector<unsigned char> pixels;
-        Shot() : page(-1), frame(-1), stamp(0), ready(false) { }
+        Shot() : page(-1), frame(-1), stamp(0), ready(false), angle(0) { }
     };
     /// The own frame of the reader for the odd or for the even pages.
     typedef PbPageOwnFrame OwnFrame;

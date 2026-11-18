@@ -1087,6 +1087,10 @@ static void pbFramePositions(float lo, float hi, float span, bool many, bool fro
         out.push_back(lo + span * 0.5f + (length - span) * i / (n - 1));
 }
 
+// The tilt looked for by the scale "automatic", degrees to both sides: a book photographed by hand
+// was reported with pages tilted by 10 to 15.
+static const float PB_LEVEL_DEGREES = 15.0f;
+
 void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const PbPageOwnFrame & own,
                          int width, int height, std::vector<PbPageView> & frames)
 {
@@ -1098,6 +1102,8 @@ void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const Pb
         return;
     }
     PbPageBox box(0, 0, size.width, size.height);
+    // PB_PAGE_SCALE_AUTO: the page levelled, which gives the angle in place of the one of the caller
+    const KeptLevel * level = NULL;
     // The content box is found on a small picture of the page. A page that is a photograph would
     // be decoded small for it and then again for its frame: the zoom the frame will have at
     // least (the whole page in the window; the content is larger than that) is told beforehand.
@@ -1115,33 +1121,55 @@ void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const Pb
             if (own.zoom > _detailZoom)
                 _detailZoom = own.zoom;
         }
-        contentBox(page, box);
+        if (scale == PB_PAGE_SCALE_AUTO) {
+            // every page by itself: its own angle, and its content as it lies turned by it
+            PbPageView whole;
+            levelView(page, PB_LEVEL_DEGREES, width, height, whole);
+            for (size_t i = 0; i < _levels.size(); i++)
+                if (_levels[i].page == page && _levels[i].maxDegrees == PB_LEVEL_DEGREES) {
+                    level = &_levels[i];
+                    angle = level->angle;
+                }
+        } else {
+            contentBox(page, box);
+        }
         _detailZoom = 0;
         _detailLow = 0;
     }
     // the turned page: q = R(angle) * p; a frame is an upright rectangle there
     const float a = angle * PB_PI / 180.0f;
     const float c = cosf(a), s = sinf(a);
-    const float xs[4] = { box.x0, box.x1, box.x0, box.x1 };
-    const float ys[4] = { box.y0, box.y0, box.y1, box.y1 };
     float qx0 = 0, qx1 = 0, qy0 = 0, qy1 = 0;
-    for (int i = 0; i < 4; i++) {
-        const float qx = xs[i] * c - ys[i] * s, qy = xs[i] * s + ys[i] * c;
-        if (i == 0 || qx < qx0) qx0 = qx;
-        if (i == 0 || qx > qx1) qx1 = qx;
-        if (i == 0 || qy < qy0) qy0 = qy;
-        if (i == 0 || qy > qy1) qy1 = qy;
+    if (level != NULL) {
+        // the content of the levelled page is kept as it lies on the turned page
+        const float qcx = level->cx * c - level->cy * s, qcy = level->cx * s + level->cy * c;
+        qx0 = qcx - level->w * 0.5f;
+        qx1 = qcx + level->w * 0.5f;
+        qy0 = qcy - level->h * 0.5f;
+        qy1 = qcy + level->h * 0.5f;
+    } else {
+        const float xs[4] = { box.x0, box.x1, box.x0, box.x1 };
+        const float ys[4] = { box.y0, box.y0, box.y1, box.y1 };
+        for (int i = 0; i < 4; i++) {
+            const float qx = xs[i] * c - ys[i] * s, qy = xs[i] * s + ys[i] * c;
+            if (i == 0 || qx < qx0) qx0 = qx;
+            if (i == 0 || qx > qx1) qx1 = qx;
+            if (i == 0 || qy < qy0) qy0 = qy;
+            if (i == 0 || qy > qy1) qy1 = qy;
+        }
     }
     const float bw = qx1 - qx0 > 1 ? qx1 - qx0 : 1, bh = qy1 - qy0 > 1 ? qy1 - qy0 : 1;
     const bool fromOwn = scale == PB_PAGE_SCALE_OWN && own.set && own.zoom > 0;
+    const bool many = leafing == PB_PAGE_LEAF_FRAMES;
     float zoom;
     if (fromOwn)
         zoom = own.zoom;
-    else if (scale == PB_PAGE_SCALE_WIDTH || scale == PB_PAGE_SCALE_CONTENT_WIDTH)
+    else if (scale == PB_PAGE_SCALE_WIDTH || scale == PB_PAGE_SCALE_CONTENT_WIDTH
+             || (scale == PB_PAGE_SCALE_AUTO && many))
+        // (the levelled content read by frames is as wide as the screen, as "content width" is)
         zoom = W / bw;
     else
         zoom = W / bw < H / bh ? W / bw : H / bh;
-    const bool many = leafing == PB_PAGE_LEAF_FRAMES;
     std::vector<float> px, py;
     pbFramePositions(qx0, qx1, W / zoom, many, fromOwn, own.cx * c - own.cy * s, px);
     pbFramePositions(qy0, qy1, H / zoom, many, fromOwn, own.cx * s + own.cy * c, py);
@@ -1182,6 +1210,83 @@ static int pbOtsu(const int * hist, int total)
     return level;
 }
 
+/// The content of a small gray picture of a page (W x H, rows of W bytes): x0..x1, y0..y1 in its
+/// pixels, with a little air around. A page photographed on a dark table: the paper is found
+/// first. level: the level between the paper and its text. False when nothing is found.
+static bool pbContentOfPicture(const unsigned char * small, int W, int H, int & x0, int & y0, int & x1, int & y1,
+                               int & level)
+{
+    const size_t count = (size_t)W * H;
+    int hist[256];
+    memset(hist, 0, sizeof(hist));
+    for (size_t i = 0; i < count; i++)
+        hist[small[i]]++;
+    level = pbOtsu(hist, (int)count);
+
+    // a page photographed on a dark table: the rim of the picture is dark. The paper is then
+    // the rows and the columns that are light for the most part.
+    int px0 = 0, py0 = 0, px1 = W, py1 = H;
+    const int rim = W / 25 > 2 ? W / 25 : 2;
+    int rimDark = 0, rimAll = 0;
+    for (int y = 0; y < H; y++)
+        for (int x = 0; x < W; x++)
+            if (x < rim || x >= W - rim || y < rim || y >= H - rim) {
+                rimAll++;
+                if (small[(size_t)y * W + x] < level)
+                    rimDark++;
+            }
+    if (rimDark * 10 > rimAll * 6) {
+        std::vector<int> colLight(W, 0), rowLight(H, 0);
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+                if (small[(size_t)y * W + x] >= level) {
+                    colLight[x]++;
+                    rowLight[y]++;
+                }
+        while (px0 < W && colLight[px0] * 2 < H) px0++;
+        while (px1 > px0 && colLight[px1 - 1] * 2 < H) px1--;
+        while (py0 < H && rowLight[py0] * 2 < W) py0++;
+        while (py1 > py0 && rowLight[py1 - 1] * 2 < W) py1--;
+        // the edge of the paper and its shadow stay outside
+        const int inX = (px1 - px0) / 30 + 1, inY = (py1 - py0) / 30 + 1;
+        px0 += inX; px1 -= inX; py0 += inY; py1 -= inY;
+        if (px1 - px0 > 16 && py1 - py0 > 16) {
+            // the level between the paper and its text, by the paper alone
+            memset(hist, 0, sizeof(hist));
+            for (int y = py0; y < py1; y++)
+                for (int x = px0; x < px1; x++)
+                    hist[small[(size_t)y * W + x]]++;
+            level = pbOtsu(hist, (px1 - px0) * (py1 - py0));
+        } else {
+            px0 = 0; py0 = 0; px1 = W; py1 = H;
+        }
+    }
+    // the content: the rows and the columns of the paper with enough dark pixels; a speck is not content
+    const int pw = px1 - px0, ph = py1 - py0;
+    std::vector<int> colDark(W, 0), rowDark(H, 0);
+    for (int y = py0; y < py1; y++)
+        for (int x = px0; x < px1; x++)
+            if (small[(size_t)y * W + x] < level) {
+                colDark[x]++;
+                rowDark[y]++;
+            }
+    const int needCol = ph / 120 + 2, needRow = pw / 120 + 2;
+    x0 = px0; x1 = px1; y0 = py0; y1 = py1;
+    while (x0 < x1 && colDark[x0] < needCol) x0++;
+    while (x1 > x0 && colDark[x1 - 1] < needCol) x1--;
+    while (y0 < y1 && rowDark[y0] < needRow) y0++;
+    while (y1 > y0 && rowDark[y1 - 1] < needRow) y1--;
+    if (x1 - x0 <= 8 || y1 - y0 <= 8)
+        return false;
+    // a little air around the content
+    const int air = W / 64;
+    x0 = x0 - air > px0 ? x0 - air : px0;
+    y0 = y0 - air > py0 ? y0 - air : py0;
+    x1 = x1 + air < px1 ? x1 + air : px1;
+    y1 = y1 + air < py1 ? y1 + air : py1;
+    return true;
+}
+
 bool PbPageDoc::contentBox(int page, PbPageBox & box)
 {
     for (size_t i = 0; i < _boxes.size(); i++)
@@ -1214,72 +1319,8 @@ bool PbPageDoc::contentBox(int page, PbPageBox & box)
     if (zoomY < view.zoom)
         view.zoom = zoomY;
     if (render(page, view, &small[0], W, H, W)) {
-        int hist[256];
-        memset(hist, 0, sizeof(hist));
-        for (size_t i = 0; i < small.size(); i++)
-            hist[small[i]]++;
-        int level = pbOtsu(hist, (int)small.size());
-
-        // a page photographed on a dark table: the rim of the picture is dark. The paper is then
-        // the rows and the columns that are light for the most part.
-        int px0 = 0, py0 = 0, px1 = W, py1 = H;
-        const int rim = W / 25 > 2 ? W / 25 : 2;
-        int rimDark = 0, rimAll = 0;
-        for (int y = 0; y < H; y++)
-            for (int x = 0; x < W; x++)
-                if (x < rim || x >= W - rim || y < rim || y >= H - rim) {
-                    rimAll++;
-                    if (small[(size_t)y * W + x] < level)
-                        rimDark++;
-                }
-        if (rimDark * 10 > rimAll * 6) {
-            std::vector<int> colLight(W, 0), rowLight(H, 0);
-            for (int y = 0; y < H; y++)
-                for (int x = 0; x < W; x++)
-                    if (small[(size_t)y * W + x] >= level) {
-                        colLight[x]++;
-                        rowLight[y]++;
-                    }
-            while (px0 < W && colLight[px0] * 2 < H) px0++;
-            while (px1 > px0 && colLight[px1 - 1] * 2 < H) px1--;
-            while (py0 < H && rowLight[py0] * 2 < W) py0++;
-            while (py1 > py0 && rowLight[py1 - 1] * 2 < W) py1--;
-            // the edge of the paper and its shadow stay outside
-            const int inX = (px1 - px0) / 30 + 1, inY = (py1 - py0) / 30 + 1;
-            px0 += inX; px1 -= inX; py0 += inY; py1 -= inY;
-            if (px1 - px0 > 16 && py1 - py0 > 16) {
-                // the level between the paper and its text, by the paper alone
-                memset(hist, 0, sizeof(hist));
-                for (int y = py0; y < py1; y++)
-                    for (int x = px0; x < px1; x++)
-                        hist[small[(size_t)y * W + x]]++;
-                level = pbOtsu(hist, (px1 - px0) * (py1 - py0));
-            } else {
-                px0 = 0; py0 = 0; px1 = W; py1 = H;
-            }
-        }
-        // the content: the rows and the columns of the paper with enough dark pixels; a speck is not content
-        const int pw = px1 - px0, ph = py1 - py0;
-        std::vector<int> colDark(W, 0), rowDark(H, 0);
-        for (int y = py0; y < py1; y++)
-            for (int x = px0; x < px1; x++)
-                if (small[(size_t)y * W + x] < level) {
-                    colDark[x]++;
-                    rowDark[y]++;
-                }
-        const int needCol = ph / 120 + 2, needRow = pw / 120 + 2;
-        int x0 = px0, x1 = px1, y0 = py0, y1 = py1;
-        while (x0 < x1 && colDark[x0] < needCol) x0++;
-        while (x1 > x0 && colDark[x1 - 1] < needCol) x1--;
-        while (y0 < y1 && rowDark[y0] < needRow) y0++;
-        while (y1 > y0 && rowDark[y1 - 1] < needRow) y1--;
-        if (x1 - x0 > 8 && y1 - y0 > 8) {
-            // a little air around the content
-            const int air = W / 64;
-            x0 = x0 - air > px0 ? x0 - air : px0;
-            y0 = y0 - air > py0 ? y0 - air : py0;
-            x1 = x1 + air < px1 ? x1 + air : px1;
-            y1 = y1 + air < py1 ? y1 + air : py1;
+        int x0, y0, x1, y1, level;
+        if (pbContentOfPicture(&small[0], W, H, x0, y0, x1, y1, level)) {
             // back from the small picture to the page: its middle is the middle of the page
             const float ox = size.width * 0.5f - W * 0.5f / view.zoom;
             const float oy = size.height * 0.5f - H * 0.5f / view.zoom;
@@ -1300,4 +1341,415 @@ bool PbPageDoc::contentBox(int page, PbPageBox & box)
     box = kept.box;
     boxMs += pbNowMs() - t0 - (readMs - read0);
     return kept.found;
+}
+
+// ------------------------------------------------------------------------------------ levelling a page
+
+/// How well the dark pixels gather into lines of the tilt t (the tangent of the angle): the mean
+/// square of the difference between the sums of neighbouring lines. dark: cw x ch bytes, 1 where
+/// the picture is dark. The lines are those through the rows margin..ch-margin, which every tilt
+/// asked for keeps inside the picture; step: every step-th column and row. off: room for cw numbers.
+static double pbSkewScore(const unsigned char * dark, int cw, int ch, int margin, float t, int step, int * off)
+{
+    const float xc = (cw - 1) * 0.5f;
+    int n = 0;
+    for (int x = 0; x < cw; x += step)
+        off[n++] = (int)lrintf(t * (x - xc)) * cw + x;
+    double score = 0;
+    int prev = 0, count = 0;
+    bool first = true;
+    for (int r = margin; r < ch - margin; r += step) {
+        const unsigned char * row = dark + (size_t)r * cw;
+        int sum = 0;
+        for (int i = 0; i < n; i++)
+            sum += row[off[i]];
+        if (!first) {
+            const int d = sum - prev;
+            score += (double)d * d;
+            count++;
+        }
+        prev = sum;
+        first = false;
+    }
+    return count > 0 ? score / count : 0;
+}
+
+/// The lines of text read along the tilt t: how many times the sum of a row rises above the mean
+/// of all the rows. On a small picture the rows between two lines are not empty (a line is six
+/// pixels high there), but they hold less than the mean. sums: room for ch numbers.
+static int pbSkewLines(const unsigned char * dark, int cw, int ch, int margin, float t, int * off, int * sums)
+{
+    const float xc = (cw - 1) * 0.5f;
+    for (int x = 0; x < cw; x++)
+        off[x] = (int)lrintf(t * (x - xc)) * cw + x;
+    long total = 0;
+    int rows = 0;
+    for (int r = margin; r < ch - margin; r++) {
+        const unsigned char * row = dark + (size_t)r * cw;
+        int sum = 0;
+        for (int x = 0; x < cw; x++)
+            sum += row[off[x]];
+        sums[r] = sum;
+        total += sum;
+        rows++;
+    }
+    if (rows < 2 || total == 0)
+        return 0;
+    // sums[r] > mean, without a division
+    int lines = 0;
+    bool above = (long)sums[margin] * rows > total;
+    for (int r = margin + 1; r < ch - margin; r++) {
+        const bool now = (long)sums[r] * rows > total;
+        if (now && !above)
+            lines++;
+        above = now;
+    }
+    return lines;
+}
+
+// The best tilt has to stand this many times above the usual one to be taken. Pages of text gave
+// 15 to 55 on the bench, black and white ones the least; pages with next to no lines 2 to 8.
+static const float PB_SKEW_CLEAR = 8.0f;
+// and the page has to have this many lines: a title page, a slide with a picture and three words
+// gave tilts that were not there
+static const int PB_SKEW_LINES = 6;
+// a tilt under this is none: a turn costs time and sharpness, and nobody sees a tenth of a degree
+static const float PB_SKEW_LEAST = 0.15f;
+
+bool PbPageDoc::skewOfPicture(const unsigned char * gray, int w, int h, int stride, float maxDegrees,
+                              float & degrees, float * clear)
+{
+    degrees = 0;
+    if (clear)
+        *clear = 0;
+    if (w < 64 || h < 64 || maxDegrees <= 0)
+        return false;
+    std::vector<unsigned char> pic((size_t)w * h);
+    for (int y = 0; y < h; y++)
+        memcpy(&pic[(size_t)y * w], gray + (size_t)y * stride, w);
+    int x0, y0, x1, y1, level;
+    if (!pbContentOfPicture(&pic[0], w, h, x0, y0, x1, y1, level))
+        return false;
+    // the content alone, 1 where it is dark: the table and the margins tell nothing of the lines
+    const int cw = x1 - x0, ch = y1 - y0;
+    const float tMax = tanf(maxDegrees * PB_PI / 180.0f);
+    const int margin = (int)(tMax * cw * 0.5f) + 2;
+    if (cw < 48 || ch - margin * 2 < 24)
+        return false;
+    std::vector<unsigned char> dark((size_t)cw * ch);
+    for (int y = 0; y < ch; y++) {
+        const unsigned char * src = &pic[(size_t)(y + y0) * w + x0];
+        unsigned char * dst = &dark[(size_t)y * cw];
+        for (int x = 0; x < cw; x++)
+            dst[x] = src[x] < level ? 1 : 0;
+    }
+    std::vector<int> off(cw);
+
+    // the first pass: half a degree a step, every second column and row
+    const float coarse = 0.5f;
+    const int nc = (int)(maxDegrees / coarse + 0.5f);
+    std::vector<double> scores(nc * 2 + 1);
+    int best = 0;
+    for (int i = -nc; i <= nc; i++) {
+        scores[i + nc] = pbSkewScore(&dark[0], cw, ch, margin, tanf(i * coarse * PB_PI / 180.0f), 2, &off[0]);
+        if (scores[i + nc] > scores[best + nc])
+            best = i;
+    }
+    std::vector<double> sorted(scores);
+    for (size_t i = 1; i < sorted.size(); i++)          // a few dozen numbers: by insertion
+        for (size_t k = i; k > 0 && sorted[k] < sorted[k - 1]; k--) {
+            const double v = sorted[k];
+            sorted[k] = sorted[k - 1];
+            sorted[k - 1] = v;
+        }
+    const double usual = sorted[sorted.size() / 2];
+    const float ratio = usual > 0 ? (float)(scores[best + nc] / usual) : (scores[best + nc] > 0 ? 1000.0f : 0.0f);
+    if (clear)
+        *clear = ratio;
+    if (scores[best + nc] <= 0 || ratio < PB_SKEW_CLEAR || best == -nc || best == nc)
+        return false;
+
+    // the second pass: a tenth of a degree a step, every pixel, half a degree to both sides
+    const float fine = 0.1f;
+    double f[11];
+    for (int k = 0; k <= 10; k++) {
+        const float deg = best * coarse + (k - 5) * fine;
+        f[k] = pbSkewScore(&dark[0], cw, ch, margin, tanf(deg * PB_PI / 180.0f), 1, &off[0]);
+    }
+    int top = 5;
+    for (int k = 0; k <= 10; k++)
+        if (f[k] > f[top])
+            top = k;
+    // On a small picture a tenth of a degree moves the ends of a line by half a pixel: steps
+    // beside the best one may read the same pixels and score the same. The middle of such a run.
+    int lo = top, hi = top;
+    while (lo > 0 && f[lo - 1] >= f[top] * 0.995) lo--;
+    while (hi < 10 && f[hi + 1] >= f[top] * 0.995) hi++;
+    float tilt = best * coarse + ((lo + hi) * 0.5f - 5) * fine;
+    // one best step: the top of the parabola through it and its neighbours
+    if (lo == hi && top > 0 && top < 10) {
+        const double bend = f[top - 1] - 2 * f[top] + f[top + 1];
+        if (bend < 0)
+            tilt += fine * (float)(0.5 * (f[top - 1] - f[top + 1]) / bend);
+    }
+    std::vector<int> sums(ch);
+    if (pbSkewLines(&dark[0], cw, ch, margin, tanf(tilt * PB_PI / 180.0f), &off[0], &sums[0]) < PB_SKEW_LINES)
+        return false;
+    // lines that go down to the right by the tilt are levelled by turning the picture back;
+    // a page that lies level is found too, with no turn to make
+    degrees = fabsf(tilt) < PB_SKEW_LEAST ? 0.0f : -tilt;
+    return true;
+}
+
+bool PbPageDoc::skewOf(int page, float maxDegrees, float & degrees)
+{
+    degrees = 0;
+    for (size_t i = 0; i < _skews.size(); i++)
+        if (_skews[i].page == page && _skews[i].maxDegrees == maxDegrees) {
+            degrees = _skews[i].degrees;
+            return _skews[i].found;
+        }
+    PbPageSize size;
+    if (!pageSize(page, size))
+        return false;
+    const double t0 = pbNowMs(), read0 = readMs;
+    KeptSkew kept;
+    kept.page = page;
+    kept.maxDegrees = maxDegrees;
+    kept.found = false;
+    kept.degrees = 0;
+    // the lines of a text need more pixels than the content box does
+    const int W = 512;
+    int H = (int)lrintf(size.height * W / size.width);
+    if (H < 64)
+        H = 64;
+    if (H > 1024)
+        H = 1024;
+    std::vector<unsigned char> small((size_t)W * H);
+    PbPageView view;
+    view.cx = size.width * 0.5f;
+    view.cy = size.height * 0.5f;
+    view.zoom = W / size.width;
+    const float zoomY = H / size.height;
+    if (zoomY < view.zoom)
+        view.zoom = zoomY;
+    if (render(page, view, &small[0], W, H, W))
+        kept.found = skewOfPicture(&small[0], W, H, W, maxDegrees, kept.degrees);
+    if (_skews.size() >= 64)
+        _skews.erase(_skews.begin());
+    _skews.push_back(kept);
+    degrees = kept.degrees;
+    levelMs += pbNowMs() - t0 - (readMs - read0);
+    return kept.found;
+}
+
+/// The content of a small picture of a page as it lies after the picture is turned clockwise by
+/// angle (degrees) about its middle: u0..u1, v0..v1 in pixels of the turned picture counted from
+/// its middle (u to the right, v down). What pbContentOfPicture does, with the pixels counted into
+/// the columns and the rows of the turned picture; the picture itself is not turned, so its
+/// corners bring in nothing that is not of the page.
+static bool pbContentOfPictureTurned(const unsigned char * small, int W, int H, float angle,
+                                     float & u0, float & v0, float & u1, float & v1)
+{
+    const size_t count = (size_t)W * H;
+    int hist[256];
+    memset(hist, 0, sizeof(hist));
+    for (size_t i = 0; i < count; i++)
+        hist[small[i]]++;
+    int level = pbOtsu(hist, (int)count);
+
+    // the column and the row of the turned picture every pixel falls into
+    const float a = angle * PB_PI / 180.0f;
+    const float c = cosf(a), s = sinf(a);
+    const int half = (int)(sqrtf((float)W * W + (float)H * H) * 0.5f) + 2;
+    const int N = half * 2;
+    std::vector<short> bu(count), bv(count);
+    int pu0 = N, pu1 = 0, pv0 = N, pv1 = 0;
+    for (int y = 0; y < H; y++) {
+        const float dx = 0.5f - W * 0.5f, dy = y + 0.5f - H * 0.5f;
+        float u = dx * c - dy * s, v = dx * s + dy * c;
+        short * ru = &bu[(size_t)y * W];
+        short * rv = &bv[(size_t)y * W];
+        for (int x = 0; x < W; x++) {
+            const int iu = (int)floorf(u) + half, iv = (int)floorf(v) + half;
+            ru[x] = (short)iu;
+            rv[x] = (short)iv;
+            if (iu < pu0) pu0 = iu;
+            if (iu >= pu1) pu1 = iu + 1;
+            if (iv < pv0) pv0 = iv;
+            if (iv >= pv1) pv1 = iv + 1;
+            u += c;
+            v += s;
+        }
+    }
+    const int allU0 = pu0, allU1 = pu1, allV0 = pv0, allV1 = pv1;
+
+    // a page photographed on a dark table: the rim of the picture is dark. The paper is then the
+    // columns and the rows of the turned picture that are light along half of the longest one.
+    const int rim = W / 25 > 2 ? W / 25 : 2;
+    int rimDark = 0, rimAll = 0;
+    for (int y = 0; y < H; y++)
+        for (int x = 0; x < W; x++)
+            if (x < rim || x >= W - rim || y < rim || y >= H - rim) {
+                rimAll++;
+                if (small[(size_t)y * W + x] < level)
+                    rimDark++;
+            }
+    if (rimDark * 10 > rimAll * 6) {
+        std::vector<int> lightU(N, 0), lightV(N, 0);
+        for (size_t i = 0; i < count; i++)
+            if (small[i] >= level) {
+                lightU[bu[i]]++;
+                lightV[bv[i]]++;
+            }
+        int mostU = 0, mostV = 0;
+        for (int i = 0; i < N; i++) {
+            if (lightU[i] > mostU) mostU = lightU[i];
+            if (lightV[i] > mostV) mostV = lightV[i];
+        }
+        while (pu0 < pu1 && lightU[pu0] * 2 < mostU) pu0++;
+        while (pu1 > pu0 && lightU[pu1 - 1] * 2 < mostU) pu1--;
+        while (pv0 < pv1 && lightV[pv0] * 2 < mostV) pv0++;
+        while (pv1 > pv0 && lightV[pv1 - 1] * 2 < mostV) pv1--;
+        // the edge of the paper and its shadow stay outside
+        const int inU = (pu1 - pu0) / 30 + 1, inV = (pv1 - pv0) / 30 + 1;
+        pu0 += inU; pu1 -= inU; pv0 += inV; pv1 -= inV;
+        if (pu1 - pu0 > 16 && pv1 - pv0 > 16) {
+            // the level between the paper and its text, by the paper alone
+            memset(hist, 0, sizeof(hist));
+            int paper = 0;
+            for (size_t i = 0; i < count; i++)
+                if (bu[i] >= pu0 && bu[i] < pu1 && bv[i] >= pv0 && bv[i] < pv1) {
+                    hist[small[i]]++;
+                    paper++;
+                }
+            if (paper > 0)
+                level = pbOtsu(hist, paper);
+        } else {
+            pu0 = allU0; pu1 = allU1; pv0 = allV0; pv1 = allV1;
+        }
+    }
+    // the content: the columns and the rows of the paper with enough dark pixels
+    std::vector<int> darkU(N, 0), darkV(N, 0);
+    for (size_t i = 0; i < count; i++)
+        if (small[i] < level && bu[i] >= pu0 && bu[i] < pu1 && bv[i] >= pv0 && bv[i] < pv1) {
+            darkU[bu[i]]++;
+            darkV[bv[i]]++;
+        }
+    const int needU = (pv1 - pv0) / 120 + 2, needV = (pu1 - pu0) / 120 + 2;
+    int x0 = pu0, x1 = pu1, y0 = pv0, y1 = pv1;
+    while (x0 < x1 && darkU[x0] < needU) x0++;
+    while (x1 > x0 && darkU[x1 - 1] < needU) x1--;
+    while (y0 < y1 && darkV[y0] < needV) y0++;
+    while (y1 > y0 && darkV[y1 - 1] < needV) y1--;
+    if (x1 - x0 <= 8 || y1 - y0 <= 8)
+        return false;
+    // a little air around the content
+    const int air = W / 64;
+    x0 = x0 - air > pu0 ? x0 - air : pu0;
+    y0 = y0 - air > pv0 ? y0 - air : pv0;
+    x1 = x1 + air < pu1 ? x1 + air : pu1;
+    y1 = y1 + air < pv1 ? y1 + air : pv1;
+    u0 = (float)(x0 - half);
+    u1 = (float)(x1 - half);
+    v0 = (float)(y0 - half);
+    v1 = (float)(y1 - half);
+    return true;
+}
+
+bool PbPageDoc::levelView(int page, float maxDegrees, int width, int height, PbPageView & view)
+{
+    view = PbPageView();
+    PbPageSize size;
+    if (!pageSize(page, size) || width < 1 || height < 1)
+        return false;
+    const KeptLevel * level = NULL;
+    for (size_t i = 0; i < _levels.size(); i++)
+        if (_levels[i].page == page && _levels[i].maxDegrees == maxDegrees)
+            level = &_levels[i];
+    if (level == NULL) {
+        const double t0 = pbNowMs(), read0 = readMs, box0 = boxMs;
+        KeptLevel kept;
+        kept.page = page;
+        kept.maxDegrees = maxDegrees;
+        kept.found = false;
+        kept.angle = 0;
+        kept.cx = size.width * 0.5f;
+        kept.cy = size.height * 0.5f;
+        kept.w = size.width;
+        kept.h = size.height;
+        // one small picture of the page serves both: the tilt, and the content as it lies turned
+        const int W = 512;
+        int H = (int)lrintf(size.height * W / size.width);
+        if (H < 64)
+            H = 64;
+        if (H > 1024)
+            H = 1024;
+        std::vector<unsigned char> small((size_t)W * H);
+        PbPageView whole;
+        whole.cx = size.width * 0.5f;
+        whole.cy = size.height * 0.5f;
+        whole.zoom = W / size.width;
+        const float zoomY = H / size.height;
+        if (zoomY < whole.zoom)
+            whole.zoom = zoomY;
+        // A page of a PDF that has text was drawn by the program that made the file: it lies
+        // level. The little such a page may hold beside the text (a map, a drawing) gave tilts
+        // that were not there, two pages of thirty of a book. A DjVu page is a scan with or
+        // without a text layer, and is always looked at.
+        const bool exact = kind() == PB_PAGEDOC_PDF && hasText(page);
+        const bool drawn = !exact && render(page, whole, &small[0], W, H, W);
+        KeptSkew skew;
+        skew.page = page;
+        skew.maxDegrees = maxDegrees;
+        skew.degrees = 0;
+        skew.found = drawn && skewOfPicture(&small[0], W, H, W, maxDegrees, skew.degrees);
+        bool known = false;
+        for (size_t i = 0; i < _skews.size(); i++)
+            if (_skews[i].page == page && _skews[i].maxDegrees == maxDegrees)
+                known = true;
+        if (!known) {
+            if (_skews.size() >= 64)
+                _skews.erase(_skews.begin());
+            _skews.push_back(skew);
+        }
+        kept.angle = skew.degrees;
+        if (kept.angle == 0) {
+            // no turn to make: the content box of the upright page
+            PbPageBox box(0, 0, size.width, size.height);
+            kept.found = contentBox(page, box);
+            kept.cx = (box.x0 + box.x1) * 0.5f;
+            kept.cy = (box.y0 + box.y1) * 0.5f;
+            kept.w = box.x1 - box.x0;
+            kept.h = box.y1 - box.y0;
+        } else {
+            const float a = kept.angle * PB_PI / 180.0f;
+            const float c = cosf(a), s = sinf(a);
+            float u0, v0, u1, v1;
+            if (pbContentOfPictureTurned(&small[0], W, H, kept.angle, u0, v0, u1, v1)) {
+                // from the middle of the content on the turned picture back to the page
+                const float qx = (u0 + u1) * 0.5f, qy = (v0 + v1) * 0.5f;
+                kept.cx = whole.cx + (qx * c + qy * s) / whole.zoom;
+                kept.cy = whole.cy + (-qx * s + qy * c) / whole.zoom;
+                kept.w = (u1 - u0) / whole.zoom;
+                kept.h = (v1 - v0) / whole.zoom;
+                kept.found = true;
+            } else {
+                // the whole page as it lies turned
+                kept.w = fabsf(size.width * c) + fabsf(size.height * s);
+                kept.h = fabsf(size.width * s) + fabsf(size.height * c);
+            }
+        }
+        if (_levels.size() >= 64)
+            _levels.erase(_levels.begin());
+        _levels.push_back(kept);
+        level = &_levels.back();
+        levelMs += pbNowMs() - t0 - (readMs - read0) - (boxMs - box0);
+    }
+    view.cx = level->cx;
+    view.cy = level->cy;
+    view.angle = level->angle;
+    const float zx = level->w > 0 ? width / level->w : 1, zy = level->h > 0 ? height / level->h : 1;
+    view.zoom = zx < zy ? zx : zy;
+    return level->found;
 }
