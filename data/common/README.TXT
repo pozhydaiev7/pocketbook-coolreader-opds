@@ -29,7 +29,8 @@ Package structure:
 
   /system/config/extensions.cfg
     The file associations that activate CR3. Must be copied to device; it replaces the
-    file of the device at every install.
+    file of the device at every install. In the package the folder is spelled
+    /system/Config: on the device it is the same folder.
 
   /applications/Cool Reader Selector.app
     The switch between CR3 and the reading programs of the firmware, an item of the

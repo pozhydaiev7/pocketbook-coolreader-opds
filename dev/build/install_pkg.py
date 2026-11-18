@@ -8,9 +8,10 @@ import os, sys, zipfile
 zip_path, root = sys.argv[1], sys.argv[2]
 z = zipfile.ZipFile(zip_path)
 names = [n for n in z.namelist() if not n.endswith('/')]
-# of the settings a package has the file associations only
-settings = [n for n in names if n.startswith('system/config') or n.startswith('system/state')]
-assert settings in ([], ['system/config/extensions.cfg']), settings
+# of the settings a package has the file associations only; their folder is spelled system/Config
+# in the package (build_package.sh tells why), which on the storage of a reader is system/config
+settings = [n for n in names if n.lower().startswith(('system/config', 'system/state'))]
+assert [n.lower() for n in settings] in ([], ['system/config/extensions.cfg']), settings
 root_files = [n for n in names if '/' not in n]
 assert sorted(root_files) == ['install.sh', 'package.version'], root_files
 names = [n for n in names if '/' in n]

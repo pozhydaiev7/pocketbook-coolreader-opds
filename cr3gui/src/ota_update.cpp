@@ -248,9 +248,9 @@ bool networkUp(bool connect)
 }
 
 // The downloaded file is the package GitHub lists: the size, the SHA-256 and the contents.
-// The contents: the installer, the program and the list of files; nothing for system/config and
-// system/state (settings, history, statistics), which an update never touches. The file
-// associations are let in (ota::forbiddenInPackage).
+// The contents: the installer, the program and the list of files. The other names of the package
+// are not looked at: what an update puts on the reader is decided by the installer of the package
+// (install.sh), which opens nothing of the settings but the file associations.
 bool packageIsGood(const char * path, const ota::Release & release, lString32 & problem)
 {
     std::string hex;
@@ -267,7 +267,7 @@ bool packageIsGood(const char * path, const ota::Release & release, lString32 & 
         problem = tr("The downloaded file is damaged: the checksum is wrong.");
         return false;
     }
-    bool installer = false, program = false, files = false, forbidden = false;
+    bool installer = false, program = false, files = false;
     {
         LVStreamRef stream = LVOpenFileStream(path, LVOM_READ);
         LVContainerRef archive;
@@ -288,14 +288,12 @@ bool packageIsGood(const char * path, const ota::Release & release, lString32 & 
                     program = true;
                 else if (name == "system/share/cr3/package.files")
                     files = true;
-                else if (ota::forbiddenInPackage(name))
-                    forbidden = true;
             }
         }
     }
-    CRLog::info("OTA: package %s: %lld bytes, sha256 %s, installer %d, program %d, list of files %d, settings inside %d",
-                path, size, hex.c_str(), installer, program, files, forbidden);
-    if (!installer || !program || !files || forbidden) {
+    CRLog::info("OTA: package %s: %lld bytes, sha256 %s, installer %d, program %d, list of files %d",
+                path, size, hex.c_str(), installer, program, files);
+    if (!installer || !program || !files) {
         problem = tr("The downloaded file is not an update package.");
         return false;
     }

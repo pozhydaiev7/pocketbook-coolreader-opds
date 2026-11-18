@@ -139,18 +139,6 @@ inline bool endsWith(const std::string & s, const std::string & tail)
     return s.size() >= tail.size() && s.compare(s.size() - tail.size(), tail.size(), tail) == 0;
 }
 
-// A name in a package (with "/") that an update must not bring: anything of system/config and
-// system/state, the settings, the history and the statistics of the user. Let in: the file
-// associations system/config/extensions.cfg and the entry of the folder they lie in: they are
-// part of every package and replace those of the reader at every install, by hand and by the
-// installer of an update (install.sh).
-inline bool forbiddenInPackage(const std::string & name)
-{
-    if (name == "system/config" || name == "system/config/" || name == "system/config/extensions.cfg")
-        return false;
-    return name.compare(0, 13, "system/config") == 0 || name.compare(0, 12, "system/state") == 0;
-}
-
 // size hex digits
 inline bool isHex(const std::string & s, size_t size)
 {
