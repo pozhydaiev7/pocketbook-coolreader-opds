@@ -12,7 +12,10 @@
 #  - moves the installed version aside (system/share/cr3.old) and puts the new one in its place;
 #  - moves the files of the user to the new folder: the book cache, the fonts and every file the
 #    old package did not bring (crlog.ini, own skins and so on);
-#  - never opens system/config and system/state: the settings, the history and the statistics.
+#  - replaces the file associations (system/config/extensions.cfg) and the switch of the
+#    Applications screen with those of the package;
+#  - opens nothing else of system/config and nothing of system/state: the settings, the history
+#    and the statistics.
 # When the new version does not start, the launcher brings system/share/cr3.old back.
 #
 
@@ -125,6 +128,18 @@ if ! mv "$NEW_LAUNCHER" "$LAUNCHER"; then
 	[ -f "$LAUNCHER.old" ] && mv "$LAUNCHER.old" "$LAUNCHER"
 fi
 chmod 755 "$LAUNCHER" "$CR3_DIR/bin/cr3-pb.app" 2>/dev/null
+
+# The file associations and the switch of the Applications screen of the package replace those
+# of the reader, as they do when the package is copied by hand: a new version may open more
+# kinds of files. A package of an older version has neither.
+if [ -f "$TEMP_DIR/system/config/extensions.cfg" ]; then
+	mkdir -p "$WORK_DIR/system/config"
+	cp -f "$TEMP_DIR/system/config/extensions.cfg" "$WORK_DIR/system/config/extensions.cfg"
+fi
+if [ -d "$TEMP_DIR/applications" ]; then
+	mkdir -p "$WORK_DIR/applications"
+	cp -f "$TEMP_DIR/applications/"*.app "$WORK_DIR/applications/" 2>/dev/null
+fi
 
 # remove temporary dir and update package
 rm -rf "$TEMP_DIR"

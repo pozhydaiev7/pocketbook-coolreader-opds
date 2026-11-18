@@ -38,7 +38,7 @@ can be built without a switch:
 | `cr3gui/src/opds/` | the OPDS browser and the touch list `OpdsMenu` every list screen is made of |
 | `cr3gui/po/` | translations (`cr3_ru.po`, `cr3_uk.po`, ...) |
 | `cr3gui/data/devices/pb360/skins/` | skins by screen (`pb740fw5`, `pbXfw5`, `pb626fw5`, ...) |
-| `data/common/` | what goes into a package as is: `system/share/cr3` (styles, manuals in ru, en, uk), `install.sh` |
+| `data/common/` | what goes into a package as is: `system/share/cr3` (styles, manuals in ru, en, uk), `install.sh`, `applications/` (the switch of the Applications screen); `data/firmware-specific/pro5` adds the files of firmware 5 and 6, the file associations `system/config/extensions.cfg` among them |
 | `thirdparty/` | bundled libraries, listed with versions in `thirdparty/versions.json` |
 | `tools/` | cmake toolchain files |
 | `CHANGELOG.md` | every change with the functions touched, the reason and the measurement |
@@ -117,6 +117,17 @@ script lies in. The script copies the clone into the tree (`sync.py`), runs cmak
 `<tree>/pbpro5`, strips the binary, runs `updateReleases.sh pro5` and writes the checked package
 `cr3-v<version>-pro5.zip` to `C:\Temp\cr3-opds-build\beta` (`CR3_OUT`). The first build of a tree
 is a full one; later builds compile what changed.
+
+The package sets up a reader that never had CoolReader as well as it updates one. Besides the
+program it has `system/config/extensions.cfg` (the file associations: the firmware offers a program
+for a book only by that file; the one of `data/firmware-specific/pro5`) and
+`applications/Cool Reader Selector.app` (the switch between CoolReader and the programs of the
+firmware; `data/common/applications`). Both replace those of the reader at every install, by hand
+and over the network (`install.sh`): the owner's decision, the archives of this program have
+always been copied whole. Nothing else of `system/config` and nothing of `system/state` may be in a
+package; the build script and the program check it (`ota::forbiddenInPackage`, `ota_core.h`). The
+versions `0.0.7-opds` to `0.0.7.1-opds-alpha10` refuse a package with the file associations inside,
+so a reader with one of them takes a later version by USB.
 
 `check` stops after the program is compiled and linked: no release archive and no package. It is
 for the times the owner says "do not build a package" and the code for the reader still has to be

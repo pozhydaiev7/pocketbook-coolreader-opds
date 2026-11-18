@@ -16,7 +16,9 @@
 # Steps: the clone is copied into the tree with LF line ends (sync.py); cmake and make in
 # <tree>/pbpro5; the binary is stripped; updateReleases.sh makes the release archive; the package
 # <out>/cr3-v<version>-pro5.zip is made from it and checked (the same archive is copied to the
-# reader by install_pkg.py and installed by the update over the network).
+# reader by install_pkg.py and installed by the update over the network). The package has the file
+# associations and the switch of the Applications screen: it sets up a reader that never had
+# CoolReader as well.
 #
 # Environment: PBDEV (default ~/PBDEV, holds SDK_481), CR3_OUT (default
 # /mnt/c/Temp/cr3-opds-build/beta), JOBS (default 4).
@@ -106,9 +108,18 @@ SRC=$PBDEV/releases/coolreader3/dev/cr3-v$VER-pro5.zip
 WORK=/tmp/cr3-package-check-$LINE
 rm -rf "$WORK"; mkdir -p "$WORK"; cd "$WORK" || exit 1
 unzip -q "$SRC" || exit 1
-rm -rf system/config
+# The file associations (system/config/extensions.cfg: the firmware offers a program for a book
+# only by that file) and the switch of the Applications screen are part of the package. A reader
+# is set up by copying the package whole, as it has always been done with this program, and both
+# replace those of the reader at every install. Nothing else of the settings may be in a package.
+[ "$(find system/config -type f | sort | tr '\n' ' ')" = "system/config/extensions.cfg " ] \
+    || { echo "system/config of the package is not extensions.cfg alone:"; find system/config -type f; exit 1; }
+# the line ends of Windows, as in the archives the readers have been set up from
+sed -i 's/\r$//; s/$/\r/' system/config/extensions.cfg
+grep -q "^fb2:.*:1:cr3-pb.app," system/config/extensions.cfg || { echo "extensions.cfg does not name CoolReader first"; exit 1; }
+[ "$(ls applications)" = "Cool Reader Selector.app" ] || { echo "applications of the package:"; ls applications; exit 1; }
 grep -q "$VER" system/share/cr3/bin/cr3-pb.app || { echo "version $VER not in the binary"; exit 1; }
-for f in system/bin/cr3-pb.app install.sh; do
+for f in system/bin/cr3-pb.app install.sh "applications/Cool Reader Selector.app"; do
     [ -f "$f" ] || { echo "no $f"; exit 1; }
     [ "$(tr -cd '\r' < "$f" | wc -c)" = 0 ] || { echo "$f has CRLF"; exit 1; }
     sh -n "$f" || { echo "$f: syntax error"; exit 1; }
@@ -122,7 +133,7 @@ cmp -s "$WORK/files.now" "$WORK/files.listed" \
 rm -f "$WORK/files.now" "$WORK/files.listed"
 PKG="$OUT/cr3-v$VER-pro5.zip"
 rm -f "$PKG"
-zip -q -r "$PKG" system install.sh package.version
-echo "package.files: $(wc -l < system/share/cr3/package.files) files"
+zip -q -r "$PKG" system applications install.sh package.version
+echo "package.files: $(wc -l < system/share/cr3/package.files) files; file associations: $(wc -l < system/config/extensions.cfg) kinds of files"
 ls -la "$PKG"
 sha256sum "$PKG"

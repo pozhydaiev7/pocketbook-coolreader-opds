@@ -234,7 +234,8 @@ bool downloadProgress(double now, double total, void * data)
 
 // The downloaded file is the package GitHub lists: the size, the SHA-256 and the contents.
 // The contents: the installer, the program and the list of files; nothing for system/config and
-// system/state (settings, history, statistics), which an update never touches.
+// system/state (settings, history, statistics), which an update never touches. The file
+// associations are let in (ota::forbiddenInPackage).
 bool packageIsGood(const char * path, const ota::Release & release, lString32 & problem)
 {
     std::string hex;
@@ -272,7 +273,7 @@ bool packageIsGood(const char * path, const ota::Release & release, lString32 & 
                     program = true;
                 else if (name == "system/share/cr3/package.files")
                     files = true;
-                else if (startsWith(name, "system/config") || startsWith(name, "system/state"))
+                else if (ota::forbiddenInPackage(name))
                     forbidden = true;
             }
         }
