@@ -232,6 +232,21 @@ bool downloadProgress(double now, double total, void * data)
     return true;
 }
 
+// The network for a request: true when it is connected. connect: Wi-Fi is turned on when it is
+// off. A reader turns Wi-Fi off by itself after a while without traffic (reported from a
+// PocketBook 632: the list of versions came, and the download a minute later could not resolve
+// the host), so every request the user asked for starts with this, not only the first one.
+bool networkUp(bool connect)
+{
+    if (QueryNetwork() & NET_CONNECTED)
+        return true;
+    if (!connect)
+        return false;
+    int rc = NetConnect(NULL);
+    CRLog::info("OTA: NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
+    return rc == NET_OK;
+}
+
 // The downloaded file is the package GitHub lists: the size, the SHA-256 and the contents.
 // The contents: the installer, the program and the list of files; nothing for system/config and
 // system/state (settings, history, statistics), which an update never touches. The file
@@ -358,18 +373,10 @@ bool PbOta::fetch(bool connect, lString32 & error)
     std::string url = utf8(props()->getStringDef(PROP_POCKETBOOK_OTA_URL, ""));
     if (url.empty())
         url = OTA_RELEASES_URL;
-    if (!startsWith(url, "file:")) {
-        int state = QueryNetwork();
-        if (!(state & NET_CONNECTED)) {
-            if (!connect)
-                return false;
-            int rc = NetConnect(NULL);
-            CRLog::info("OTA: NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
-            if (rc != NET_OK) {
-                error = tr("No network connection. Turn on Wi-Fi and try again.");
-                return false;
-            }
-        }
+    if (!startsWith(url, "file:") && !networkUp(connect)) {
+        if (connect)
+            error = tr("No network connection. Turn on Wi-Fi and try again.");
+        return false;
     }
 
     WebRequest rq;
@@ -785,6 +792,12 @@ void PbOta::download()
     iv_unlink(OTA_PACKAGE_PART);
     iv_unlink(OTA_PACKAGE_FILE);
 
+    // Wi-Fi may be off again since the list of versions was got
+    if (!startsWith(_card.url, "file:") && !networkUp(true)) {
+        message(ICON_WARNING, tr("No network connection. Turn on Wi-Fi and try again."), 5000);
+        return;
+    }
+
     DownloadProgress progress;
     progress.percent = 0;
     progress.text = UnicodeToUtf8(tr("Downloading..."));
@@ -806,6 +819,17 @@ void PbOta::download()
     }
     CRLog::info("OTA: download %s", _card.url.c_str());
     bool ok = web::request(_card.url, rq, NULL, OTA_PACKAGE_PART);
+    if (!ok && (rq.curlCode == CURLE_COULDNT_RESOLVE_HOST || rq.curlCode == CURLE_COULDNT_CONNECT)) {
+        // the firmware told of a connection that was gone: connected anew, the download is
+        // tried once more
+        int rc = NetConnect(NULL);
+        CRLog::info("OTA: the download failed (%s); NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rq.error.c_str(),
+                    rc, QueryNetwork());
+        if (rc == NET_OK) {
+            iv_unlink(OTA_PACKAGE_PART);
+            ok = web::request(_card.url, rq, NULL, OTA_PACKAGE_PART);
+        }
+    }
     CloseProgressbar();
 
     lString32 problem;
