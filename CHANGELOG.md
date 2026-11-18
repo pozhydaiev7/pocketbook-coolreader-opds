@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.8-opds (branch `pdf-djvu`, in work)
+
+PDF and DjVu. The line lives in the branch `pdf-djvu` and is not merged into `master`; `master` is merged into it. The plan and the state of the work: `dev/pdfdjvu/PLAN.ru.md`, `dev/pdfdjvu/STATUS.md`. No code of the program is changed yet: `0.0.8-opds-alpha1` is `0.0.7.1-opds-alpha10` with another version string.
+
+### Feasibility (stage 0)
+
+- **MuPDF 1.28.6 and DjVuLibre 3.5.29 build with the toolchain of the reader** (gcc 4.8.1, glibc 2.9) with no patch and no error (`dev/pdfdjvu/build_mupdf.sh`, `build_djvu.sh`). MuPDF needs `-std=gnu99`, and a `getentropy` of the program: glibc 2.9 has none. Stripped ARM probes: 4.06 MB with MuPDF and its own FreeType, zlib and libjpeg, 0.72 MB with DjVuLibre.
+- **Times on the PC**, a page drawn 1404 pixels wide (`pdfprobe.c`, `djvuprobe.cpp`): a text page of a PDF 0.3–5 ms and its structured text with the page segmentation, the paragraph breaks and the table hunt 0.3–2.7 ms; a JPEG scan of 3000 × 4000 50–70 ms; a DjVu photo page of that size 130–150 ms, a black and white one 35 ms. A reader is 30 to 50 times slower, so a photographed page takes seconds there and has to be prepared ahead.
+- **Diagnostic files** (`dev/pdfdjvu/samples`, made by `make_samples.sh` with MuPDF itself and the encoders of DjVuLibre): a text PDF with every element (headings, lists, verse, code, three kinds of tables, pictures, formulas, footnotes, two columns, running title, contents), the same pages as a DjVu with a text layer, and a book "photographed with a camera" (the page in the middle of the frame, wide margins, turned a little, the spine left and right in turn) as a PDF of JPEG pages, a DjVu of photo pages and a black and white DjVu.
+
 ## 0.0.7.1-opds (test versions)
 
 Test builds: `0.0.7.1-opds-alpha1` (the next page prepared ahead, the font chosen by a sample), `0.0.7.1-opds-alpha2` (speed review: the start, the cover, the catalog requests, timing in the log), `0.0.7.1-opds-alpha3` (the cover of an EPUB, the memory of the open book), `0.0.7.1-opds-alpha4` (speed of the layout, the list of the fonts kept), `0.0.7.1-opds-alpha5` (the settings written only when changed, the icons of the touch menu kept), `0.0.7.1-opds-alpha6` (back from the home screen to the book), `0.0.7.1-opds-alpha7` (pictures drawn at another size, the hyphenation headers kept), `0.0.7.1-opds-alpha8` (the book drawn on the way back, the index of an XDXF dictionary kept), `0.0.7.1-opds-alpha9` (remarks of a tester), `0.0.7.1-opds-alpha10` (the three font items in *Font settings*). Both ideas of alpha1 are in [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolreader) 1.0.5 and 1.0.6 (the idle prefetch of a page, the font sample of the settings); they are written anew here, in another way. Installed on InkPad 4 by USB and used by the user; the first runs of alpha2, alpha4 and alpha5 are in the logs quoted below.
