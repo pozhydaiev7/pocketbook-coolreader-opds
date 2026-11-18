@@ -72,6 +72,7 @@ enum PbOtaCommands {
     PB_OTA_CMD_BACK,          // from the card of a version to the screen it was opened from
     PB_OTA_CMD_INSTALL,       // asks to confirm the download of the version of the card
     PB_OTA_CMD_OFFERED,       // "Details" of the window of the automatic check: the card of that version
+    PB_OTA_CMD_INSTALLED,     // the row "Installed version": what is in that version
     PB_OTA_CMD_VERSION = 66100, // + index in the list: the card of the version
     PB_OTA_CMD_LAST = 66999
 };
@@ -119,6 +120,7 @@ private:
     ota::Release _card;              // the version of the card
     int _cardBack;                   // command that leaves the card
     int _cardScreen;                 // screen of the card
+    bool _cardInfoOnly;              // the card of the installed version: its notes, no button that installs
     int _listScreen;                 // screen of the list
     Mode _mode;                      // the screen shown last
     bool _fromSettings;              // opened from the settings menu
@@ -135,7 +137,8 @@ private:
     void showList(CRGUIWindowManager * wm);
     void showCard(CRGUIWindowManager * wm);
     void showCurrent(CRGUIWindowManager * wm);
-    void openCard(CRGUIWindowManager * wm, const ota::Release & release, int back);
+    void openCard(CRGUIWindowManager * wm, const ota::Release & release, int back, bool infoOnly = false);
+    void showInstalled(CRGUIWindowManager * wm);
     void askInstall();
 };
 

@@ -305,7 +305,7 @@ bool packageIsGood(const char * path, const ota::Release & release, lString32 & 
 // ------------------------------------------------------------ PbOta
 
 PbOta::PbOta()
-    : _cardBack(PB_OTA_CMD_MENU), _cardScreen(0), _listScreen(0), _mode(MODE_MENU), _fromSettings(false),
+    : _cardBack(PB_OTA_CMD_MENU), _cardScreen(0), _cardInfoOnly(false), _listScreen(0), _mode(MODE_MENU), _fromSettings(false),
       _fetched(0), _verified(-1)
 {
 }
@@ -447,7 +447,8 @@ void PbOta::showMenu(CRGUIWindowManager * wm)
     menu->setupRows(true);
     menu->setCloseCommand(PB_OTA_CMD_CLOSE);
     menu->add(PB_OTA_CMD_CLOSE, lString32(MARK_PREV) + (_fromSettings ? tr("Back to settings") : tr("Back to the book")));
-    menu->add(PB_OTA_CMD_MENU, tr("Installed version"),
+    // a tap shows what is in the installed version
+    menu->add(PB_OTA_CMD_INSTALLED, tr("Installed version"),
               lString32(CR_PB_VERSION) + lString32(DOT) + lString32(CR_PB_BUILD_DATE));
 
     lString32 checked;
@@ -504,12 +505,44 @@ void PbOta::showList(CRGUIWindowManager * wm)
     activate(wm, menu);
 }
 
-void PbOta::openCard(CRGUIWindowManager * wm, const ota::Release & release, int back)
+void PbOta::openCard(CRGUIWindowManager * wm, const ota::Release & release, int back, bool infoOnly)
 {
     _card = release;
     _cardBack = back;
     _cardScreen = 0;
+    _cardInfoOnly = infoOnly;
     showCard(wm);
+}
+
+// The row "Installed version": the card of that version with its release notes, the text the
+// reader saw before the version was downloaded, without the button that installs. The notes are
+// those of the release on GitHub, so the list of the versions is asked for as "Choose a version"
+// asks for it. A version that is not published there (a build put on the reader by USB) has no
+// notes: the screen says so.
+void PbOta::showInstalled(CRGUIWindowManager * wm)
+{
+    // the list of this run is good for ten minutes
+    if (_fetched == 0 || (long long)time(NULL) - _fetched > 600) {
+        ShowHourglassForce();
+        if (!fetch(true, _error)) {
+            CRLog::warn("OTA: notes of the installed version: the list of versions failed: %s",
+                        UnicodeToUtf8(_error).c_str());
+            showMenu(wm);
+            return;
+        }
+    }
+    ota::Version installed = installedVersion();
+    for (size_t i = 0; i < _all.size(); i++) {
+        if (ota::compareVersions(_all[i].parsed, installed) == 0) {
+            _error.clear();
+            openCard(wm, _all[i], PB_OTA_CMD_MENU, true);
+            return;
+        }
+    }
+    CRLog::info("OTA: notes of the installed version: %s is not among the %d versions of GitHub", CR_PB_VERSION,
+                (int)_all.size());
+    _error = fill("Version $1 has no description on GitHub.", lString32(CR_PB_VERSION));
+    showMenu(wm);
 }
 
 // A line of the release notes as the card draws it
@@ -584,8 +617,9 @@ void PbOta::showCard(CRGUIWindowManager * wm)
             packed.push_back(std::make_pair(i, -1));
     }
     int total = (int)packed.size();
-    // the first screen has two rows of its own
-    int firstRows = rows - 2;
+    // the first screen has two rows of its own: the button that installs and the line about the
+    // version; the card of the installed version has the line only
+    int firstRows = rows - (_cardInfoOnly ? 1 : 2);
     if (firstRows < 1)
         firstRows = 1;
     int otherRows = rows;
@@ -611,11 +645,13 @@ void PbOta::showCard(CRGUIWindowManager * wm)
 
     int order = ota::compareVersions(_card.parsed, installedVersion());
     if (_cardScreen == 0) {
-        OpdsItem * install = new OpdsItem(menu, PB_OTA_CMD_INSTALL,
-            tr(order > 0 ? "Download and install" : (order == 0 ? "Install again" : "Go back to this version")),
-            lString32::empty_str);
-        install->button = true;
-        menu->addItem(install);
+        if (!_cardInfoOnly) {
+            OpdsItem * install = new OpdsItem(menu, PB_OTA_CMD_INSTALL,
+                tr(order > 0 ? "Download and install" : (order == 0 ? "Install again" : "Go back to this version")),
+                lString32::empty_str);
+            install->button = true;
+            menu->addItem(install);
+        }
 
         OpdsItem * about = new OpdsItem(menu, PB_OTA_CMD_LAST, lString32::empty_str, lString32::empty_str,
                                         OpdsItem::TEXT);
@@ -868,6 +904,9 @@ bool PbOta::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case PB_OTA_CMD_CHECK:
         check(wm);
+        return true;
+    case PB_OTA_CMD_INSTALLED:
+        showInstalled(wm);
         return true;
     case PB_OTA_CMD_VERSIONS: {
         // the list of this run is good for ten minutes

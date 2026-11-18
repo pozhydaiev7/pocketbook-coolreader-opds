@@ -351,6 +351,48 @@ static void pbAddLastOpen(const lString32 & path)
                 addLastOpen != NULL ? "called" : "not in libinkview", flushLastOpen != NULL ? "called" : "not in libinkview");
 }
 
+// Tells the firmware which book this running program shows now. The firmware keeps the program
+// alive when the reader leaves to the home screen and remembers the book it was started for; a
+// tap on that book brings the program back to the screen as it is. After a book was opened from
+// inside CoolReader (a download from a catalog, the list of the recent books) the program was
+// still known by the book of its start: a tap on that book showed the other one, and went on
+// showing it until the program was closed (reported from InkPad 4).
+// The task functions are looked up at run time, as AddLastOpen is. The log has the book the
+// firmware knew before the call and the one it knows after.
+static void pbTellTaskBook(const lString32 & path, const lString32 & title)
+{
+    void * lib = dlopen("libinkview.so", RTLD_LAZY);
+    if (lib == NULL)
+        return;
+    int (*getCurrentTask)() = NULL;
+    taskinfo * (*getTaskInfo)(int) = NULL;
+    int (*setSubtaskInfo)(int, int, const char *, const char *) = NULL;
+    *(void **)(&getCurrentTask) = dlsym(lib, "GetCurrentTask");
+    *(void **)(&getTaskInfo) = dlsym(lib, "GetTaskInfo");
+    *(void **)(&setSubtaskInfo) = dlsym(lib, "SetSubtaskInfo");
+    if (getCurrentTask == NULL || getTaskInfo == NULL || setSubtaskInfo == NULL) {
+        CRLog::info("book of the task: the task functions are not in libinkview, the firmware is not told");
+        return;
+    }
+    int task = getCurrentTask();
+    taskinfo * info = getTaskInfo(task);
+    if (info == NULL || info->nsubtasks < 1 || info->subtasks == NULL) {
+        CRLog::info("book of the task: no information of the task %d, the firmware is not told", task);
+        return;
+    }
+    // the program has one subtask
+    int subtask = info->subtasks[0].id;
+    lString8 was(info->subtasks[0].book != NULL ? info->subtasks[0].book : "");
+    lString8 book = UnicodeToLocal(path);
+    lString8 name = UnicodeToUtf8(title.empty() ? LVExtractFilename(path) : title);
+    int rc = setSubtaskInfo(task, subtask, name.c_str(), book.c_str());
+    info = getTaskInfo(task);
+    const char * now = (info != NULL && info->nsubtasks >= 1 && info->subtasks != NULL && info->subtasks[0].book != NULL)
+                           ? info->subtasks[0].book : "";
+    CRLog::info("book of the task %d, subtask %d (of %d): was \"%s\", SetSubtaskInfo(\"%s\", \"%s\") = %d, is \"%s\"",
+                task, subtask, info != NULL ? info->nsubtasks : 0, was.c_str(), name.c_str(), book.c_str(), rc, now);
+}
+
 // The cache file of a new book is written in the background, in slices: the program does not
 // answer a tap while a slice runs. 150 ms of writing and 450 ms of pause take the same share
 // of the time as the former 500 and 1500, with a third of the longest delay of a tap.
@@ -3347,6 +3389,7 @@ public:
             Message(ICON_WARNING, const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
         } else {
             pbAddLastOpen(fn);
+            pbTellTaskBook(fn, _docview->getTitle());
         }
         _wm->update(true);
     }
@@ -3631,18 +3674,23 @@ public:
         case PB_CMD_VOLUME:
             SetVolume(GetVolume() + params);
             return true;
-        case MCMD_SWITCH_TO_RECENT_BOOK:
         case DCMD_SAVE_TO_CACHE:
 #ifdef BACKGROUND_CACHE_FILE_CREATION
             CRPocketBookWindowManager::instance->cancelCacheSwap();
 #endif
             break;
-        case MCMD_OPEN_RECENT_BOOK:
+        case MCMD_SWITCH_TO_RECENT_BOOK:
+        case MCMD_OPEN_RECENT_BOOK: {
 #ifdef BACKGROUND_CACHE_FILE_CREATION
             CRPocketBookWindowManager::instance->cancelCacheSwap();
 #endif
-            switchToRecentBook(params);
-            break;
+            // the book chosen in the list of the recent books, or the one read before this one
+            switchToRecentBook(command == MCMD_SWITCH_TO_RECENT_BOOK ? 1 : params);
+            bool handled = V3DocViewWin::onCommand( command, params );
+            // the firmware learns which book the program shows now
+            pbTellTaskBook(pbGlobals->getFileName(), _docview->getTitle());
+            return handled;
+        }
         case PB_CMD_PAGEUP_REPEAT:
         case PB_CMD_PAGEDOWN_REPEAT:
             if (m_skipEvent) {

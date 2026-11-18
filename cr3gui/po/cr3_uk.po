@@ -2416,6 +2416,10 @@ msgid "The version has no description."
 msgstr "Версія не має опису."
 
 #: ../src/ota_update.cpp
+msgid "Version $1 has no description on GitHub."
+msgstr "Версія $1 не має опису на GitHub."
+
+#: ../src/ota_update.cpp
 msgid "There are no versions with the update over the network on GitHub yet."
 msgstr "На GitHub ще немає версій з оновленням через мережу."
 
