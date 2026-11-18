@@ -337,12 +337,13 @@ void PbPageWindow::readDefaults()
 {
     CRPropRef props = main_win->getProps();
     bool pdf = _doc->kind() == PB_PAGEDOC_PDF;
-    _scale = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_SCALE : PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_CONTENT);
+    // the default is every page levelled by itself (the owner's word): a scan is crooked more often than not
+    _scale = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_SCALE : PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_AUTO);
     _leafing = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_LEAFING : PROP_POCKETBOOK_DJVU_LEAFING, PB_PAGE_LEAF_PAGE);
     _showNumber = props->getIntDef(pdf ? PROP_POCKETBOOK_PDF_PAGE_NUMBER : PROP_POCKETBOOK_DJVU_PAGE_NUMBER, 1) != 0;
     // the own frame belongs to a file, it is no value of the settings
     if (_scale < 0 || _scale >= PB_PAGE_SCALE_COUNT || _scale == PB_PAGE_SCALE_OWN)
-        _scale = PB_PAGE_SCALE_CONTENT;
+        _scale = PB_PAGE_SCALE_AUTO;
 }
 
 void PbPageWindow::loadState()
@@ -380,7 +381,7 @@ void PbPageWindow::loadState()
     if (_page < 0 || _page >= _doc->pageCount())
         _page = 0;
     if (_scale < 0 || _scale >= PB_PAGE_SCALE_COUNT)
-        _scale = PB_PAGE_SCALE_CONTENT;
+        _scale = PB_PAGE_SCALE_AUTO;
     if (_leafing != PB_PAGE_LEAF_FRAMES)
         _leafing = PB_PAGE_LEAF_PAGE;
     if (_frame < 0)

@@ -6967,12 +6967,13 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
 #ifdef CR3_PAGEDOC
-        // the picture mode: a new file starts with its whole content in the screen (the margins
-        // cut off) and a page turn that shows the next page at once
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_SCALE, PB_PAGE_SCALE_CONTENT);
+        // the picture mode: a new file starts with every page levelled by itself and its content
+        // in the screen (the owner's word: a scan is crooked more often than not), and a page turn
+        // that shows the next page at once
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_SCALE, PB_PAGE_SCALE_AUTO);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_LEAFING, PB_PAGE_LEAF_PAGE);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_PAGE_NUMBER, 1);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_CONTENT);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_AUTO);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_LEAFING, PB_PAGE_LEAF_PAGE);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_PAGE_NUMBER, 1);
         // a PDF with text and a DjVu with a text layer are read as books
