@@ -63,6 +63,51 @@ changes and build once; `wsl.exe --shutdown` when the work in WSL is over (a run
 took all the memory of the PC). From Git Bash a WSL script is started as
 `MSYS_NO_PATHCONV=1 wsl.exe -e bash /mnt/c/...`.
 
+## A new machine from scratch
+
+What it takes to go on with the work on a PC that has nothing yet. Steps 1 to 5 give a package;
+6 and 7 are for the bench and for the PDF and DjVu line.
+
+1. **Windows with WSL 2 and Ubuntu** (`wsl --install -d Ubuntu`; the first machine has Ubuntu
+   26.04). Git for Windows and Python 3 on the Windows side (the install and check scripts).
+2. **Packages inside WSL**:
+
+       sudo apt install build-essential cmake gettext zip unzip rsync python3 curl git
+
+   The cross compiler is a set of static 32-bit x86 programs; WSL 2 runs them as they are.
+3. **The SDK inside WSL**: `~/PBDEV` is a clone of the SDK collection, the toolchain for
+   firmware 5 and 6 is its folder `SDK_481`:
+
+       git clone https://github.com/blchinezu/pocketbook-sdk ~/PBDEV
+       ~/PBDEV/SDK_481/bin/arm-obreey-linux-gnueabi-gcc --version      # 4.8.1
+
+   Nothing else is installed for the device build: curl, inkview and the other device libraries
+   are in the sysroot of the SDK, the rest is in `thirdparty/` of this repository.
+4. **The clone on the Windows side**, with `core.autocrlf=true`. The paths of this guide are
+   those of the first machine (`C:\Temp\pocketbook-coolreader-opds.git` for `master`,
+   `C:\Temp\pocketbook-coolreader-opds-v8` for `pdf-djvu`); any folder will do, the build script
+   takes the clone it lies in:
+
+       git clone https://github.com/pozhydaiev7/pocketbook-coolreader-opds C:\Temp\pocketbook-coolreader-opds.git
+       git -C C:\Temp\pocketbook-coolreader-opds.git worktree add ../pocketbook-coolreader-opds-v8 pdf-djvu
+
+5. **The first build** (a full one, about ten minutes with 4 jobs), from Git Bash:
+
+       MSYS_NO_PATHCONV=1 wsl.exe -e bash -lc 'JOBS=4 bash /mnt/c/Temp/pocketbook-coolreader-opds.git/dev/build/build_package.sh master'
+
+   The package appears in `C:\Temp\cr3-opds-build\beta` (set `CR3_OUT` for another folder). A
+   correct environment gives 0 errors and the line `package.files: 115 files`.
+6. **The bench**: copy a few TrueType fonts into `~/PBDEV/bench/fonts` (the first machine has
+   Arial and Georgia with their bold and italic faces from `C:\Windows\Fonts`), then
+   `bash dev/bench/bench2.sh books` and the commands of "The PC bench" below. Page hashes depend
+   on the fonts, so pages are compared between two trees on one machine, not between machines.
+7. **PDF and DjVu** (branch `pdf-djvu`): `dev/pdfdjvu/STATUS.md` is the state of that work;
+   `fetch_sources.sh` downloads MuPDF and DjVuLibre into `~/PBDEV/pdfdjvu`, the `build_*.sh`
+   scripts build them for the reader and for the PC.
+
+What stays on the first machine and is not needed to go on: the packages already built, the logs
+taken from the reader, the books of the owner used by the bench.
+
 ## Building a package
 
     JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean]
