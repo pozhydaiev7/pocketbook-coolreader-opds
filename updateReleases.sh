@@ -7,9 +7,12 @@ while [ -h "$SOURCE" ]; do
   SOURCE="$(readlink "$SOURCE")"
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
-PBDEV_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )/../../"
+SELF_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+PBDEV_DIR="$SELF_DIR/../../"
 
-sdk="$PBDEV_DIR/sources/cr3-fork"
+# The source tree is the one this script lies in: every line of versions has a tree of its own
+# under <PBDEV>/sources (dev/README.md); it was the fixed folder sources/cr3-fork before.
+sdk="$SELF_DIR"
 package="/tmp/cr3-package-$1"
 releases="$PBDEV_DIR/releases/coolreader3"
 
@@ -20,7 +23,7 @@ DATE="`cat cr3gui/src/cr3pocketbook.h | grep CR_PB_BUILD_DATE | awk '{print $3}'
 
 function doUpdate {
 
-	sdk="$PBDEV_DIR/sources/cr3-fork"
+	sdk="$SELF_DIR"
 	package="/tmp/cr3-package-$1"
 	releases="$PBDEV_DIR/releases/coolreader3"
 

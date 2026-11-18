@@ -1,0 +1,11 @@
+# The scripts of this folder are run inside WSL straight from the Windows clone: LF line ends.
+*.sh text eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.c text eol=lf
+*.cpp text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+# The sample books are kept byte for byte.
+samples/** -text
+pdfdjvu/samples/** -text
