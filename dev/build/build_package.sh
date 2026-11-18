@@ -2,7 +2,11 @@
 # Builds the device package (pro5: firmware 5 and 6, SDK_481) of the clone this script lies in.
 # Run inside WSL:
 #
-#   JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean]
+#   JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean|check]
+#
+# "clean" builds the tree from nothing. "check" stops after the program is compiled and linked:
+# no release archive and no package (the owner had asked for no package; the code for the reader
+# still has to be known to build).
 #
 # <line> names the build tree: <PBDEV>/sources/cr3-line-<line>. Every line of versions (a branch
 # checked out in a clone or a git worktree of its own) has its tree and its object files, so a
@@ -17,7 +21,7 @@
 # Environment: PBDEV (default ~/PBDEV, holds SDK_481), CR3_OUT (default
 # /mnt/c/Temp/cr3-opds-build/beta), JOBS (default 4).
 set -u
-LINE=${1:?usage: build_package.sh <line> [clean]}
+LINE=${1:?usage: build_package.sh <line> [clean|check]}
 HERE=$(dirname "$(readlink -f "$0")")
 CLONE=$(cd "$HERE/../.." && pwd)
 PBDEV=${PBDEV:-$HOME/PBDEV}
@@ -46,8 +50,15 @@ rm -f cr3gui/*.cr3skin
 find i18n -name "*.mo" -delete 2>/dev/null
 [ -d i18n/ru/LC_MESSAGES ] || { [ -f Makefile ] && cmake . > /dev/null 2>&1; }
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
+# PDF and DjVu: the line that has the picture mode is built with the libraries of
+# dev/pdfdjvu/build_libs_arm.sh when they are there
+PAGEDOC=
+if [ -f "$TREE/cr3gui/src/pb_pagedoc.cpp" ] && [ -f "$PBDEV/pdfdjvu/arm/lib/libmupdf.a" ]; then
+    PAGEDOC="-D PDFDJVU_DIR=$PBDEV/pdfdjvu"
+    echo "PDF and DjVu: with the libraries of $PBDEV/pdfdjvu/arm/lib"
+fi
 if [ ! -f Makefile ]; then
-    cmake \
+    cmake $PAGEDOC \
         -D CMAKE_TOOLCHAIN_FILE="$TREE/tools/toolchain-arm-obreey-linux-gnueabi-pocketbook.cmake" \
         -D TARGET_TYPE=ARM \
         -D DEVICE_NAME=pb360 \
@@ -76,6 +87,11 @@ grep -E "error:|Error [0-9]|undefined reference|No rule to make|msgmerge failed"
     | sed -E "s|^.*cr3-line-$LINE/||" | sort | uniq -c | sort -rn | head -40
 echo "errors: $(grep -c -E 'error:' "$LOGS/make-$LINE.log")  warnings: $(grep -c 'warning:' "$LOGS/make-$LINE.log")"
 [ "$RC" = 0 ] || exit 1
+if [ "${2:-}" = check ]; then
+    echo "check only: the program compiles and links; no release archive and no package are made"
+    ls -la "$TREE/pbpro5/cr3gui/cr3-pb.app"
+    exit 0
+fi
 
 echo "===== $LINE: release archive"
 cd "$TREE" || exit 1

@@ -110,13 +110,18 @@ taken from the reader, the books of the owner used by the bench.
 
 ## Building a package
 
-    JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean]
+    JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean|check]
 
 `<line>` is `master` or `v8`; it only names the build tree, the sources are those of the clone the
 script lies in. The script copies the clone into the tree (`sync.py`), runs cmake and make in
 `<tree>/pbpro5`, strips the binary, runs `updateReleases.sh pro5` and writes the checked package
 `cr3-v<version>-pro5.zip` to `C:\Temp\cr3-opds-build\beta` (`CR3_OUT`). The first build of a tree
 is a full one; later builds compile what changed.
+
+`check` stops after the program is compiled and linked: no release archive and no package. It is
+for the times the owner says "do not build a package" and the code for the reader still has to be
+known to build. A line whose sources have the picture mode of PDF and DjVu is built with the
+libraries of `<PBDEV>/pdfdjvu/arm/lib` when they are there.
 
 Before a build: raise `CR_PB_VERSION` and `CR_PB_BUILD_DATE`, add the changelog entry.
 
