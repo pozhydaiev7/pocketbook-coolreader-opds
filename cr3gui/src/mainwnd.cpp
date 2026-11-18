@@ -641,6 +641,42 @@ bool V3DocViewWin::loadHistory( LVStreamRef stream )
     return true;
 }
 
+// The bytes of a memory stream the settings or the history were written to; false when they
+// cannot be read (the file is then written without the comparison with the last write)
+static bool streamContent( LVStreamRef stream, lString8 & content )
+{
+    content.clear();
+    if ( stream.isNull() )
+        return false;
+    lvsize_t size = stream->GetSize();
+    if ( size == 0 )
+        return true;
+    if ( size > 16 * 1024 * 1024 || stream->SetPos(0) != 0 )
+        return false;
+    content.append( (int)size, ' ' );
+    lvsize_t got = 0;
+    if ( stream->Read( content.modify(), size, &got ) != LVERR_OK || got != size ) {
+        content.clear();
+        return false;
+    }
+    return true;
+}
+
+// byte for byte, whatever the bytes are
+static bool sameContent( const lString8 & a, const lString8 & b )
+{
+    return a.length() == b.length() && ( a.length() == 0 || memcmp( a.c_str(), b.c_str(), a.length() ) == 0 );
+}
+
+// The bytes of a file as it is on the disk now, for the comparison at the first save of a run
+static void fileContent( const lString32 & filename, lString8 & content )
+{
+    content.clear();
+    LVStreamRef stream = LVOpenFileStream( filename.c_str(), LVOM_READ );
+    if ( !stream.isNull() && !streamContent( stream, content ) )
+        content.clear();
+}
+
 bool V3DocViewWin::saveHistory( LVStreamRef stream )
 {
     if ( stream.isNull() ) {
@@ -713,10 +749,30 @@ bool V3DocViewWin::saveHistory( lString32 filename, bool exportBookmarks )
         _docview->exportBookmarks(_bookmarkDir); //use default filename
     }
     _historyFileName = filename;
-    log << "V3DocViewWin::saveHistory(" << filename << ")";
     LVStreamRef serialized = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
-    bool saved = saveHistory(serialized) && LVWriteFileAtomic(filename, serialized);
+    bool made = saveHistory(serialized);
+    lString8 content;
+    bool known = made && streamContent(serialized, content);
+    if ( known && filename != _historySavedFile ) {
+        // the first save of this run: what the file has now
+        fileContent( filename, _historySaved );
+        _historySavedFile = filename;
+    }
+    if ( known && sameContent( content, _historySaved ) ) {
+        // the file has this very history already
+        log << "V3DocViewWin::saveHistory(" << filename << "): not changed, not written";
+        return true;
+    }
+    log << "V3DocViewWin::saveHistory(" << filename << ")";
+    bool saved = made && LVWriteFileAtomic(filename, serialized);
     if (!saved) CRLog::error("Cannot save reading history to %s", LCSTR(filename));
+    if ( saved && known ) {
+        _historySaved = content;
+        _historySavedFile = filename;
+    } else {
+        _historySaved.clear();
+        _historySavedFile.clear();
+    }
     reportSaveResult(saved, true);
     return saved;
 }
@@ -786,6 +842,17 @@ void V3DocViewWin::setDeviceDefaults()
         size = 16;
     _props->setIntDef( PROP_FONT_SIZE, size );
     _props->setIntDef( PROP_LANDSCAPE_PAGES, 1 );
+    // The text of "Book info" (cr3.file.props.font.size, no menu item): by the screen too. It
+    // was 26 px on every device, and its table is drawn at 80 % of it: 21 px, hardly readable
+    // on a 300 dpi screen (reported from a PocketBook 632). The former defaults 22 and 26 are
+    // saved in the settings files of the earlier versions, so they count as not set; a size
+    // set by hand in cr3.ini is kept.
+    int infoSize = side / 24;
+    if ( infoSize < 26 )
+        infoSize = 26;
+    int savedInfoSize = _props->getIntDef( PROP_FILE_PROPS_FONT_SIZE, 0 );
+    if ( savedInfoSize == 0 || savedInfoSize == 22 || savedInfoSize == 26 )
+        _props->setInt( PROP_FILE_PROPS_FONT_SIZE, infoSize );
 #endif
 }
 
@@ -846,11 +913,31 @@ bool V3DocViewWin::saveSettings( lString32 filename )
         return false;
     }
     _settingsFileName = filename;
-    log << "V3DocViewWin::saveSettings(" << filename << ")";
     LVStreamRef serialized = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
-    bool saved = _props->saveToStream(serialized.get()) && LVWriteFileAtomic(filename, serialized);
+    bool made = _props->saveToStream(serialized.get());
+    lString8 content;
+    bool known = made && streamContent(serialized, content);
+    if ( known && filename != _settingsSavedFile ) {
+        // the first save of this run: what the file has now
+        fileContent( filename, _settingsSaved );
+        _settingsSavedFile = filename;
+    }
+    if ( known && sameContent( content, _settingsSaved ) ) {
+        // the file has these very settings already
+        log << "V3DocViewWin::saveSettings(" << filename << "): not changed, not written";
+        return true;
+    }
+    log << "V3DocViewWin::saveSettings(" << filename << ")";
+    bool saved = made && LVWriteFileAtomic(filename, serialized);
     if (!saved)
         CRLog::error("Cannot save settings to %s", LCSTR(filename));
+    if ( saved && known ) {
+        _settingsSaved = content;
+        _settingsSavedFile = filename;
+    } else {
+        _settingsSaved.clear();
+        _settingsSavedFile.clear();
+    }
     reportSaveResult(saved, false);
     return saved;
 }
@@ -874,14 +961,15 @@ void V3DocViewWin::applySettings()
     setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
 }
 
-void V3DocViewWin::applySetting( const char * name, const lString32 & value )
+void V3DocViewWin::applySetting( const char * name, const lString32 & value, bool save )
 {
     // as the settings menu does: the settings of the view, one of them changed
     _props = _docview->propsGetCurrent() | _props;
     _newProps = LVClonePropsContainer( _props );
     _newProps->setString( name, value );
     applySettings();
-    saveSettings( lString32::empty_str );
+    if ( save )
+        saveSettings( lString32::empty_str );
 }
 
 void V3DocViewWin::showSettingsMenu( int showItem )
@@ -895,9 +983,19 @@ void V3DocViewWin::showSettingsMenu( int showItem )
                                            getMenuAccelerators(), rc );
     _wm->activateWindow( mainMenu );
     // back from a screen opened by an item of the menu: the page of that item
-    // (1 is not an item: the parameter of a long press on "Settings" in the main menu)
-    if ( showItem > 1 )
-        mainMenu->showItem( showItem );
+    // (1 is not an item: the parameter of a long press on "Settings" in the main menu).
+    // An item of a submenu (the font items of "Font settings"): that submenu is opened over
+    // the menu, at the item; Back there leads to the menu, at the item of the submenu.
+    if ( showItem > 1 ) {
+        CRMenu * owner = mainMenu->findMenuOfItem( showItem );
+        if ( owner != NULL && owner != mainMenu ) {
+            mainMenu->showItem( owner->getId() );
+            _wm->activateWindow( owner );
+            owner->showItem( showItem );
+        } else {
+            mainMenu->showItem( showItem );
+        }
+    }
 }
 
 #ifdef POCKETBOOK_PRO

@@ -29,6 +29,12 @@ public:
     bool load();
     void unload();
     bool isLoaded() const { return _loaded; }
+    /// The folder where the index of a dictionary is kept between the runs, so that the whole
+    /// file is not read again at the first lookup of every run. NULL or empty: nothing is kept.
+    /// A kept index is used while the dictionary file has the size and the time it was made for.
+    static void setIndexCacheDir(const char * dir);
+    /// the index of the last load() came from the kept file
+    bool indexFromCache() const { return _fromCache; }
     int wordCount() const { return (int)_entries.size(); }
     /// index of the first key equal to the word, or -1
     int findExact(const char * word) const;
@@ -50,12 +56,15 @@ private:
     std::string _bookName;
     std::string _error;
     bool _loaded;
+    bool _fromCache;
     FILE * _file;
     std::string _keys;             // keys, each ends with a zero
     std::vector<Entry> _entries;   // sorted by key in the StarDict order
 
     void addArticle(const char * text, size_t size, long long offset);
     void addKey(const std::string & key, long long offset, unsigned size);
+    bool readIndexCache(const std::string & file, long long dictSize, long long dictTime);
+    void writeIndexCache(const std::string & file, long long dictSize, long long dictTime) const;
 };
 
 /// XML text to plain UTF-8: entities decoded, tags dropped, spaces collapsed, trimmed.

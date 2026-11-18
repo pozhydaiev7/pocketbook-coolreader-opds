@@ -1253,6 +1253,10 @@ class CRMenu : public CRGUIWindowBase, public CRMenuItem {
         virtual bool setCurPage( int nPage );
         /// turns the menu to the page of the item with this id and selects the item
         void showItem( int id );
+        /// the menu that has the item with this id: this one, or a submenu of it; NULL when none
+        CRMenu * findMenuOfItem( int id );
+        /// the top level menu this one is a submenu of (the menu itself when it has no parent)
+        CRMenu * getRootMenu();
         virtual void setCurItem(int nItem);
         virtual int getCurPage( );
         virtual int getTopItem();

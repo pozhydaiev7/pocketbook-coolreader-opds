@@ -1243,6 +1243,8 @@ lString32 Utf8ToUnicode( const lString8 & str );
 lString32 Utf8ToUnicode( const char * s );
 /// converts utf-8 string fragment to wide unicode string
 lString32 Utf8ToUnicode( const char * s, int sz );
+/// the characters of Utf8ToUnicode( s, sz ) in a buffer of malloc(), decoded in one pass; NULL for an empty text
+lChar32 * Utf8ToUnicodeBuffer( const char * s, int sz, int & len );
 /// converts utf-8 string fragment to wide unicode string
 void Utf8ToUnicode(const lUInt8 * src,  int &srclen, lChar32 * dst, int &dstlen);
 /// converts utf-16 string to wide unicode string

@@ -42,9 +42,9 @@ void PbTocList::show(CRGUIWindowManager * wm)
     menu->setCloseCommand(PB_TOC_LIST_CMD_CLOSE);
     menu->setPageCommands(PB_TOC_LIST_CMD_PREV, PB_TOC_LIST_CMD_NEXT);
 
-    // the first row goes back to the book; a long list is turned with the arrows of the title
+    // a long list is turned with the arrows of the title
     int total = (int)_entries.size();
-    _perScreen = rows - 1;
+    _perScreen = rows;
     if (_perScreen < 1)
         _perScreen = 1;
     int screens = total > 0 ? (total + _perScreen - 1) / _perScreen : 1;

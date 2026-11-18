@@ -1400,6 +1400,8 @@ bool LVFreeTypeFontManager::RegisterFont(lString8 name) {
 
     FT_Face face = NULL;
 
+    _lastFaces.clear();
+
     // for all faces in file
     for (;; index++) {
         int error = FT_New_Face(_library, fname.c_str(), index, &face); /* create face object */
@@ -1468,6 +1470,11 @@ bool LVFreeTypeFontManager::RegisterFont(lString8 name) {
             CRLog::trace("font definition is duplicate");
             return false;
         }
+        // what RegisterFontFaces() needs to register this face again without the file
+        char faceLine[64];
+        snprintf(faceLine, sizeof(faceLine), "%d %d %d %d %d ", index, def.getWeight(), def.getItalic() ? 1 : 0,
+                 (int)fontFamily, scal ? 1 : 0);
+        _lastFaces << faceLine << familyName << "\n";
         _cache.update(&def, LVFontRef(NULL));
         if (scal && !def.getItalic()) {
             // If this font is not italic, create another definition
@@ -1487,6 +1494,48 @@ bool LVFreeTypeFontManager::RegisterFont(lString8 name) {
             break;
     }
 
+    return res;
+}
+
+/// The faces of a font file registered by the lines RegisterFont() left in GetLastRegisteredFaces()
+/// when it read the file: the same definitions, and the file is not opened. A start of the
+/// program registers every font file of the device, a few hundred of them.
+bool LVFreeTypeFontManager::RegisterFontFaces(lString8 name, lString8 faces) {
+    FONT_MAN_GUARD
+    bool res = false;
+    int start = 0;
+    while (start < (int)faces.length()) {
+        int end = start;
+        while (end < (int)faces.length() && faces[end] != '\n')
+            end++;
+        lString8 line = faces.substr(start, end - start);
+        start = end + 1;
+        int index = 0, weight = 0, italic = 0, family = 0, scal = 0, used = 0;
+        if (sscanf(line.c_str(), "%d %d %d %d %d %n", &index, &weight, &italic, &family, &scal, &used) < 5)
+            continue;
+        lString8 typeface = used < (int)line.length() ? line.substr(used) : lString8::empty_str;
+        LVFontDef def(
+                name,
+                -1, // height==-1 for scalable fonts
+                weight,
+                italic != 0,
+                -1, // OpenType features = -1 for not yet instantiated fonts
+                (css_font_family_t)family,
+                typeface,
+                index
+        );
+        // from here on, as RegisterFont() does
+        if (_cache.findDuplicate(&def))
+            return false;
+        _cache.update(&def, LVFontRef(NULL));
+        if (scal && !def.getItalic()) {
+            LVFontDef newDef( def );
+            newDef.setItalic(2); // can italicize
+            if ( !_cache.findDuplicate( &newDef ) )
+                _cache.update( &newDef, LVFontRef(NULL) );
+        }
+        res = true;
+    }
     return res;
 }
 

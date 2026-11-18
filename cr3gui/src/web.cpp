@@ -4,7 +4,88 @@
 //have to re-declare static members at file level
 char web::errorBuffer[CURL_ERROR_SIZE];
 string web::buffer;
- 
+
+// One libcurl handle serves every request of the program. A handle made and dropped for each
+// request opened a new connection every time: name lookup, TCP and the TLS handshake again, 0.3
+// to 0.65 s for every page of a catalog on an InkPad 4. A handle that stays keeps the connection
+// to the server, the names it has looked up and the TLS session; curl_easy_reset() clears the
+// options of the request before and nothing of that. libcurl opens a new connection by itself
+// when the kept one has been closed (the server, Wi-Fi turned off).
+static CURL *sharedHandle = NULL;
+static bool sharedHandleBusy = false;
+
+// The handle of one request. A request made while another one is on its way (from the progress
+// callback of a download) cannot share its handle and gets one of its own, dropped at the end.
+class WebHandle
+{
+    CURL *_curl;
+    bool _own;
+public:
+    WebHandle() : _curl(NULL), _own(sharedHandleBusy)
+    {
+        if (_own) {
+            _curl = curl_easy_init();
+            return;
+        }
+        if (sharedHandle == NULL)
+            sharedHandle = curl_easy_init();
+        else
+            curl_easy_reset(sharedHandle);
+        _curl = sharedHandle;
+        sharedHandleBusy = _curl != NULL;
+    }
+    ~WebHandle()
+    {
+        if (_own) {
+            if (_curl != NULL)
+                curl_easy_cleanup(_curl);
+        } else {
+            sharedHandleBusy = false;
+        }
+    }
+    CURL *get() { return _curl; }
+};
+
+void web::cleanup()
+{
+    if (sharedHandle != NULL && !sharedHandleBusy) {
+        // the cookies of the handle are written to their file here
+        curl_easy_cleanup(sharedHandle);
+        sharedHandle = NULL;
+    }
+}
+
+// Where the time of a request went, for the log: the moments from its start, in ms
+static void webLogTimes(CURL *curl, const char *what, const string &url)
+{
+    if (!CRLog::isInfoEnabled())
+        return;
+    double lookup = 0, connected = 0, secured = 0, firstByte = 0, total = 0, bytes = 0;
+    long connections = 0;
+    curl_easy_getinfo(curl, CURLINFO_NAMELOOKUP_TIME, &lookup);
+    curl_easy_getinfo(curl, CURLINFO_CONNECT_TIME, &connected);
+    curl_easy_getinfo(curl, CURLINFO_APPCONNECT_TIME, &secured);
+    curl_easy_getinfo(curl, CURLINFO_STARTTRANSFER_TIME, &firstByte);
+    curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &total);
+    curl_easy_getinfo(curl, CURLINFO_SIZE_DOWNLOAD, &bytes);
+    curl_easy_getinfo(curl, CURLINFO_NUM_CONNECTS, &connections);
+    CRLog::info("perf: network %s: total %.0f ms; name found at %.0f, connected at %.0f, TLS ready at %.0f, "
+                "first byte at %.0f; %.0f bytes over the network, %s; %s", what, total * 1000, lookup * 1000,
+                connected * 1000, secured * 1000, firstByte * 1000, bytes,
+                connections == 0 ? "the kept connection" : "a new connection", url.c_str());
+}
+
+// Asks for a compressed answer: a feed of a catalog is XML and comes 5 to 10 times smaller.
+// libcurl unpacks it. Not for files: their size on the way is what the progress is counted by.
+static void webAcceptCompressed(CURL *curl)
+{
+#if LIBCURL_VERSION_NUM >= 0x071506
+    curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+#else
+    curl_easy_setopt(curl, CURLOPT_ENCODING, "");
+#endif
+}
+
 //---------------------------------------------------------------------------
 string web::get(const string &url)
 {
@@ -63,7 +144,8 @@ string web::easycurl(const string &url, bool post, const string &postparamstring
  
     // Create curl handle
     CRLog::trace("web::easycurl(): Create curl handle");
-    curl = curl_easy_init();
+    WebHandle handle;
+    curl = handle.get();
  
     if (curl)
     {
@@ -88,15 +170,16 @@ string web::easycurl(const string &url, bool post, const string &postparamstring
       curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
       curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20L);
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 60L);
+      webAcceptCompressed(curl);
 
       // Attempt to retrieve the remote page
       CRLog::trace("web::easycurl(): Attempt to retrieve the remote page");
       result = curl_easy_perform(curl);
       long httpCode = 0;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-      // Always cleanup
-      curl_easy_cleanup(curl);
+      webLogTimes(curl, "page", url);
+      // the handle stays (see WebHandle): the cookies it got go to their file now
+      curl_easy_setopt(curl, CURLOPT_COOKIELIST, "FLUSH");
 
       // Did we succeed?
       if (result == CURLE_OK)
@@ -127,7 +210,8 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
  
     // Create curl handle
     CRLog::trace("web::easycurlBinary(): Create curl handle");
-    curl = curl_easy_init();
+    WebHandle handle;
+    curl = handle.get();
  
     if (curl)
     {
@@ -136,7 +220,6 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       fp = fopen(outfilename.c_str(),"wb");
       if (!fp) {
           CRLog::error("web::easycurlBinary(): cannot open %s for writing", outfilename.c_str());
-          curl_easy_cleanup(curl);
           return false;
       }
 
@@ -170,9 +253,9 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       long httpCode = 0;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
-      // Always cleanup
-      CRLog::trace("web::easycurlBinary(): Cleanup");
-      curl_easy_cleanup(curl);
+      webLogTimes(curl, "file", url);
+      // the handle stays (see WebHandle): the cookies it got go to their file now
+      curl_easy_setopt(curl, CURLOPT_COOKIELIST, "FLUSH");
 
       // Close file handle
       CRLog::trace("web::easycurlBinary(): Close file handle");
@@ -223,7 +306,8 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
     if (body)
         body->clear();
 
-    CURL *curl = curl_easy_init();
+    WebHandle handle;
+    CURL *curl = handle.get();
     if (!curl) {
         rq.error = "curl_easy_init failed";
         return false;
@@ -234,7 +318,6 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
         if (!fp) {
             rq.curlCode = CURLE_WRITE_ERROR;
             rq.error = string("cannot write ") + outFile;
-            curl_easy_cleanup(curl);
             return false;
         }
     }
@@ -278,9 +361,16 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
         curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, (void *)&rq);
     }
 
+    if (!fp)
+        webAcceptCompressed(curl);
+
     CURLcode result = curl_easy_perform(curl);
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &rq.httpCode);
-    curl_easy_cleanup(curl);
+    webLogTimes(curl, fp ? "file" : "page", url);
+    // The handle stays (see WebHandle). The list of headers and the text of the error belong
+    // to this call: the handle must not keep their addresses.
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, (struct curl_slist *)NULL);
+    curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, (char *)NULL);
     if (headers)
         curl_slist_free_all(headers);
     if (fp && fclose(fp) != 0 && result == CURLE_OK)

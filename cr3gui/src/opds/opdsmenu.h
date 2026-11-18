@@ -119,6 +119,7 @@ class OpdsMenu : public CRFullScreenMenu
     int _screen;   // screen of the list shown, from 0
     int _screens;  // screens of the list; 0: the menu counts its own pages
     bool _swipes;  // a horizontal swipe turns the screens
+    bool _plain;   // rows without lines between them, see setPlainRows()
     lvPoint _touchStart;
     bool _touchStarted;
 protected:
@@ -145,6 +146,11 @@ public:
     void setCloseCommand(int command) { _closeCommand = command; }
     // Rows without separator lines between them (text screens), when the skin has such a menu.
     void setPlainRows();
+    // The rows of a list are told apart by a line, as the items of the settings menu are. The
+    // menu of the touch contents has no separator in some skins (pb618fw5, pb631fw5, pb700fw5):
+    // there the rows draw the line themselves. Its height in pixels, 0 when the skin draws it
+    // or the rows are plain.
+    int ownSeparator();
     // A horizontal swipe turns the screens of the list (setPageCommands), as the arrows of the
     // title do: for the screens of text, which are read rather than chosen from.
     void setSwipeTurnsScreens(bool on) { _swipes = on; }
@@ -159,6 +165,9 @@ public:
 
     // Width available for the text of a row (see OpdsItem::Draw).
     int rowTextWidth();
+    // A row. A row with the close command of the list (setCloseCommand, set before the rows
+    // are added) and the mark of a way back is not added: the arrow at the caption and the
+    // Back key do the same, and the row under that arrow was reported as a duplicate.
     void add(int command, const lString32 & title, const lString32 & subtitle = lString32::empty_str);
 };
 

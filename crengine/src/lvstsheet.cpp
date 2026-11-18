@@ -3526,9 +3526,112 @@ lUInt32 LVCssSelectorRule::getWeight() {
     return 0;
 }
 
+// The ancestors of the node a style sheet is being applied to (LVStyleSheet::apply()), read from
+// the document once for the node. A style sheet has many selectors with a descendant combinator
+// ("cite p", "epigraph p", "body[name=notes] section p"...), and every one of them walked the
+// document from the node to the root, a few reads of the document storage for each step: most
+// of the time of the style pass. With the chain, a step is a compare of two numbers.
+// The rules that leave the chain (the sibling combinators) and the calls outside of
+// LVStyleSheet::apply() walk the document as before.
+#define CSS_CHAIN_MAX 64
+struct CssAncestorChain {
+    const ldomNode * self;   // the node the style sheet is applied to; NULL: no chain
+    bool filled;             // nodes[] and ids[] are read (done at the first rule that needs them)
+    bool endsAtRoot;         // the last node of the chain has no parent
+    int count;               // number of ancestors; -1: the node is too deep, the chain is not used
+    lUInt16 selfId;
+    const ldomNode * nodes[CSS_CHAIN_MAX]; // the parent first
+    lUInt16 ids[CSS_CHAIN_MAX];
+};
+static CssAncestorChain cssChain = { NULL, false, false, 0, 0 };
+
+// Place of the node in the chain: -1 the node itself, 0.. its ancestors, -2 not in the chain
+static int cssChainFind( const ldomNode * node )
+{
+    if ( !cssChain.self )
+        return -2;
+    if ( !cssChain.filled ) {
+        cssChain.filled = true;
+        cssChain.selfId = cssChain.self->getNodeId();
+        cssChain.endsAtRoot = false;
+        int n = 0;
+        const ldomNode * p = cssChain.self->getParentNode();
+        for ( ; p && !p->isNull(); p = p->getParentNode() ) {
+            if ( n == CSS_CHAIN_MAX ) {
+                n = -1;
+                break;
+            }
+            cssChain.nodes[n] = p;
+            cssChain.ids[n] = p->getNodeId();
+            n++;
+        }
+        cssChain.count = n;
+        cssChain.endsAtRoot = n >= 0 && !p;
+    }
+    if ( cssChain.count < 0 )
+        return -2;
+    if ( node == cssChain.self )
+        return -1;
+    for ( int i = 0; i < cssChain.count; i++ )
+        if ( cssChain.nodes[i] == node )
+            return i;
+    return -2;
+}
+
+// What node->getUnboxedParent(exceptBoxingNodeId) gives for the node at the place 'at' of the
+// chain: the place of that parent, or the number of the ancestors when there is none
+static inline int cssChainUnboxedParent( int at, lUInt16 exceptBoxingNodeId )
+{
+    for ( at++; at < cssChain.count; at++ ) {
+        lUInt16 id = cssChain.ids[at];
+        if ( !(id >= EL_BOXING_START && id <= EL_BOXING_END && id != exceptBoxingNodeId) )
+            break;
+    }
+    return at;
+}
+
 bool LVCssSelectorRule::check( const ldomNode * & node )
 {
-    if (!node || node->isNull() || node->isRoot())
+    if (!node || node->isNull())
+        return false;
+    // the place of the node among the ancestors of the styled node, when it is one of them
+    int chainAt = -2;
+    if ( _type == cssrt_parent || _type == cssrt_ancessor )
+        chainAt = cssChainFind(node);
+    if ( chainAt >= -1 ) {
+        // node->isRoot()
+        if ( cssChain.endsAtRoot && chainAt == cssChain.count - 1 )
+            return false;
+        lUInt16 exceptBoxingNodeId = 0;
+        if ( _id >= EL_BOXING_START && _id <= EL_BOXING_END ) {
+            exceptBoxingNodeId = _id;
+        }
+        else {
+            lUInt16 curNodeId = chainAt < 0 ? cssChain.selfId : cssChain.ids[chainAt];
+            if ( curNodeId >= EL_BOXING_START && curNodeId <= EL_BOXING_END )
+                exceptBoxingNodeId = curNodeId;
+        }
+        // the same as the cases cssrt_parent and cssrt_ancessor below
+        if ( _type == cssrt_parent ) {
+            chainAt = cssChainUnboxedParent(chainAt, exceptBoxingNodeId);
+            if ( chainAt >= cssChain.count )
+                return false;
+            node = cssChain.nodes[chainAt];
+            return !_id || cssChain.ids[chainAt] == _id;
+        }
+        for (;;) {
+            chainAt = cssChainUnboxedParent(chainAt, exceptBoxingNodeId);
+            if ( chainAt >= cssChain.count )
+                return false;
+            node = cssChain.nodes[chainAt];
+            if ( !_id || cssChain.ids[chainAt] == _id ) {
+                const ldomNode * n = node;
+                if (checkNextRules(n))
+                    return true;
+            }
+        }
+    }
+    if (node->isRoot())
         return false;
     // For most checks, while navigating nodes, we must ignore sibling text nodes.
     // We also ignore crengine internal boxing elements (inserted for rendering
@@ -4568,6 +4671,13 @@ void LVStyleSheet::apply( const ldomNode * node, css_style_rec_t * style )
     // checking and applying them in the order of specificity/parsed position.
     LVCssSelector * selector_0 = _selectors[0];
     LVCssSelector * selector_id = id>0 && id<_selectors.length() ? _selectors[id] : NULL;
+
+    // the ancestors of this node are read once for all the selectors, see cssChainFind()
+    struct ChainScope {
+        const ldomNode * prev;
+        ChainScope( const ldomNode * n ) : prev(cssChain.self) { cssChain.self = n; cssChain.filled = false; }
+        ~ChainScope() { cssChain.self = prev; cssChain.filled = false; }
+    } chainScope( node );
 
     for (;;)
     {

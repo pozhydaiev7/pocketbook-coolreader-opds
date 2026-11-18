@@ -46,6 +46,8 @@ public:
     bool load();
     void unload();
     bool isLoaded() const { return _loaded; }
+    /// StarDict has its index in a file of its own: nothing is kept besides it (see XdxfDict)
+    bool indexFromCache() const { return false; }
     int wordCount() const { return (int)_entries.size(); }
     /// index of the first entry equal to the word (StarDict order), or -1
     int findExact(const char * word) const;

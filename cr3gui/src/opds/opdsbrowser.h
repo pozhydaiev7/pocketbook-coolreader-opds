@@ -101,7 +101,7 @@ private:
     std::vector<opds::Feed> _history; // back stack, last element is the visible page
     std::vector<int> _screens;        // current screen of each history level
     int _bookIndex;                   // entry index shown in the book menu, -1 for the list
-    int _rows;                        // rows per screen of the list (back row + search row + entries + paging row)
+    int _rows;                        // rows per screen of the list (catalog menu row + search row + entries)
     std::vector<OpdsCatalog> _catalogs;
     int _catalog;                     // index of the open catalog, -1 when none
     int _editCatalog;                 // index of the catalog of the card

@@ -331,24 +331,22 @@
     </section>
     <section>
      <title>
-      <p>Default font face</p>
+      <p>Font settings</p>
      </title>
+     <p>A submenu where the font, its size and its weight are chosen, with the fine settings of the font.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Default font face</subtitle>
      <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: the first lines of the page you are reading.</p>
      <p>A tap on a font chooses it: the font gets a triangle mark and the sample is drawn with it. The font of the book has the note «in the book». The screens of the list are turned with the arrows of the title or by a swipe.</p>
-     <p>The font chosen is set when you leave the list (the row «Back to settings», the arrow at the title or the Back key), and the book is laid out again. To keep the font of the book, tap the font with the note «in the book» before leaving.</p>
+     <p>The font chosen is set when you leave the list (the back arrow at the title or the Back key), and the book is laid out again. To keep the font of the book, tap the font with the note «in the book» before leaving.</p>
      <p><emphasis>Value:</emphasis> list of fonts</p>
-    </section>
-    <section>
-     <title>
-      <p>Default font size</p>
-     </title>
+     <image l:href="#i_026.png"/>
+     <subtitle>Default font size</subtitle>
      <p>A list of the sizes of the reading font with the same sample under it. A tap on a size shows the sample in that size; the size chosen is set when you leave the list.</p>
      <p><emphasis>Value:</emphasis> 16 to 300</p>
-    </section>
-    <section>
-     <title>
-      <p>Font weight</p>
-     </title>
+     <image l:href="#i_026.png"/>
+     <subtitle>Font weight</subtitle>
      <p>The stroke thickness of the main font. «Normal» is the weight 400, «Bold» is 700; the values between them make the text a little denser or lighter. It works with any font: when the family has no file of the weight, the program thickens the letters itself.</p>
      <p>It is chosen in a list with a sample, as the font and its size are.</p>
      <p><emphasis>Value:</emphasis> 300 / Normal (400) / 425 / 450 / 475 / 500 / 525 / 550 / 600 / 650 / Bold (700) / 800 / 900</p>
@@ -356,13 +354,6 @@
       <p><strong>Note:</strong></p>
       <p>This item replaces the former «Normal / Bold» and «Font embolding»; the saved values are converted at the first start.</p>
      </cite>
-    </section>
-    <section>
-     <title>
-      <p>Font settings</p>
-     </title>
-     <p>A submenu with the fine settings of the font.</p>
-     <empty-line/>
      <image l:href="#i_026.png"/>
      <subtitle>Font antialiasing</subtitle>
      <p>Smooths the jagged edges of the characters.</p>
@@ -717,6 +708,12 @@
     <p><strong>Next</strong> – move the end of the block down;</p>
     <p><strong>Menu</strong> – confirm; <strong>Menu</strong> (<emphasis>long</emphasis>) – cancel.</p>
     <empty-line/>
+    <p>On a touch screen the text of the cite can be selected with a finger on the page itself:</p>
+    <p><strong>a drag from a word to a word</strong> – selects the text between them, both words included;</p>
+    <p><strong>a tap on a word</strong> – moves a bound of the block to it: a word before the block becomes its start, a word inside the block or after it becomes its end;</p>
+    <p><strong>a long tap on a word</strong> – selects that word alone.</p>
+    <p>The buttons of the panel act on the block selected either way.</p>
+    <empty-line/>
     <p>The cite panel closes only when the choice is confirmed or cancelled.</p>
    </section>
    <section>
@@ -740,6 +737,8 @@
     <p>Opens this manual. The program opens the manual in the language of the device; when there is none in that language, the English one.</p>
     <empty-line/>
     <p>Keys: <strong>Next/Prev</strong> – turn pages; <strong>Next/Prev</strong> (<emphasis>long</emphasis>) – font size; <strong>Menu</strong> – close the manual.</p>
+    <empty-line/>
+    <p>On a touch screen the pages of the manual are turned by the same tap zones and swipes as a book, and a tap in the zone that opens the menu in a book (the centre of the screen by default) opens the contents of the manual: a tap on a chapter goes to it.</p>
    </section>
    <section id="s_1">
     <title>

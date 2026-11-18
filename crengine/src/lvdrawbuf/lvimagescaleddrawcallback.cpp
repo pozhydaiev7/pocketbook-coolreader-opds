@@ -151,10 +151,30 @@ LVImageScaledDrawCallback::LVImageScaledDrawCallback(LVBaseDrawBuf *dstbuf, LVIm
         // Byte-sized buffer, we're 32bpp, so, 4 bytes per pixel.
         decoded = new lUInt8[src_dy * (src_dx * 4)];
     }
+    yfirst = NULL;
+    ylast = NULL;
+    if ( ymap && src_dy > 0 ) {
+        yfirst = new int[ src_dy ];
+        ylast = new int[ src_dy ];
+        for ( int i = 0; i < src_dy; i++ )
+            yfirst[i] = ylast[i] = -1;
+        for ( int i = 0; i < dst_dy; i++ ) {
+            int sy = ymap[i];
+            if ( sy >= 0 && sy < src_dy ) {
+                if ( yfirst[sy] < 0 )
+                    yfirst[sy] = i;
+                ylast[sy] = i + 1;
+            }
+        }
+    }
 }
 
 LVImageScaledDrawCallback::~LVImageScaledDrawCallback()
 {
+    if (yfirst)
+        delete [] yfirst;
+    if (ylast)
+        delete [] ylast;
     if (xmap)
         delete [] xmap;
     if (ymap)
@@ -185,11 +205,17 @@ bool LVImageScaledDrawCallback::OnLineDecoded(LVImageSource *, int y, lUInt32 *d
     const lUInt32 rgba_invert = invert ? 0x00FFFFFF : 0;
     const lUInt8 gray_invert = invert ? 0xFF : 0;
     if (ymap) {
-        for (int i = 0; i < dst_dy; i++) {
-            if (ymap[i] == y) {
-                if (yy == -1)
-                    yy = i;
-                yy2 = i + 1;
+        if ( yfirst && y >= 0 && y < src_dy ) {
+            // the rows of this line, found once for all the lines
+            yy = yfirst[y];
+            yy2 = ylast[y];
+        } else {
+            for (int i = 0; i < dst_dy; i++) {
+                if (ymap[i] == y) {
+                    if (yy == -1)
+                        yy = i;
+                    yy2 = i + 1;
+                }
             }
         }
         if (yy == -1)
@@ -213,6 +239,8 @@ bool LVImageScaledDrawCallback::OnLineDecoded(LVImageSource *, int y, lUInt32 *d
     //        }
     lvRect clip;
     dst->GetClipRect( &clip );
+    // a row of this line drawn of opaque pixels only (3, 4 and 8 bits per pixel, see below)
+    const lUInt8 * plainRow = NULL;
     for ( ;yy<yy2; yy++ )
     {
         if ( yy+dst_y<clip.top || yy+dst_y>=clip.bottom )
@@ -300,18 +328,35 @@ bool LVImageScaledDrawCallback::OnLineDecoded(LVImageSource *, int y, lUInt32 *d
         {
             lUInt8 * row = (lUInt8 *)dst->GetScanLine( yy + dst_y );
             row += dst_x;
-            for (int x=0; x<dst_dx; x++)
+            // The columns inside the clip rectangle, found once for the row instead of a test
+            // at every pixel; an opaque pixel of a picture that is not dithered takes its gray
+            // here (what rgbToGray( cl, bpp ) gives) without the calls and the tests below.
+            // A row of nothing but such pixels that repeats the line above it (a picture drawn
+            // larger than it is) is a copy of that row. The pixels are the same as before.
+            int x0 = clip.left - dst_x;
+            if ( x0 < 0 )
+                x0 = 0;
+            int x1 = clip.right - dst_x;
+            if ( x1 > dst_dx )
+                x1 = dst_dx;
+            const lUInt32 grayMask = ((1<<bpp)-1)<<(8-bpp);
+            if ( plainRow != NULL && x1 > x0 ) {
+                memcpy( row + x0, plainRow + x0, x1 - x0 );
+                continue;
+            }
+            bool plain = !dither;
+            for (int x=x0; x<x1; x++)
             {
                 int srcx = xmap ? xmap[x] : x;
                 lUInt32 cl = data[srcx];
-                int xx = x + dst_x;
                 lUInt32 alpha = (cl >> 24)&0xFF;
-                
-                if ( xx<clip.left || xx>=clip.right ) {
-                    // OOB, don't plot it!
+
+                if ( alpha == 0 && !dither ) {
+                    row[ x ] = (lUInt8)( ( ( ((cl >> 16) & 0xFF) + ((cl >> 7) & 0x1FE) + (cl & 0xFF) ) >> 2 ) & grayMask ) ^ gray_invert;
                     continue;
                 }
-                
+                plain = false;
+
                 if ( alpha == 0xFF ) {
                     // Transparent, don't plot it...
                     if ( invert ) {
@@ -352,6 +397,8 @@ bool LVImageScaledDrawCallback::OnLineDecoded(LVImageSource *, int y, lUInt32 *d
                 row[ x ] = dcl ^ gray_invert;
                 // ApplyAlphaGray( row[x], dcl, alpha, bpp );
             }
+            if ( plain && x1 > x0 )
+                plainRow = row;
         }
         else if ( bpp == 2 )
         {

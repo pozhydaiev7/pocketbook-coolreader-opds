@@ -472,8 +472,8 @@ void PbOta::showList(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, tr("Versions"), rc, false);
     int rows = menu->setupRows(true);
     int total = (int)_list.size();
-    // the first row goes back; a long list is turned with the arrows of the title
-    int perScreen = rows - 1;
+    // a long list is turned with the arrows of the title
+    int perScreen = rows;
     if (perScreen < 1)
         perScreen = 1;
     int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;
@@ -516,9 +516,9 @@ struct CardLine {
     CardLine() : indent(0), rule(false), newRow(false) {}
 };
 
-// The card of a version. The first screen: the row back, the button that installs the version,
-// a line about the version, then its release notes. The next screens: the row back and the
-// notes. The notes are in the language of the interface (ota::notesForLanguage); a heading is
+// The card of a version. The first screen: the button that installs the version, a line about
+// the version, then its release notes. The next screens: the notes. (No row back: the arrow at
+// the caption goes back, see OpdsMenu::add.) The notes are in the language of the interface (ota::notesForLanguage); a heading is
 // bold with a line above it, a list item has a bullet and its next lines start under its text.
 // A row of the list holds two lines.
 void PbOta::showCard(CRGUIWindowManager * wm)
@@ -578,11 +578,11 @@ void PbOta::showCard(CRGUIWindowManager * wm)
             packed.push_back(std::make_pair(i, -1));
     }
     int total = (int)packed.size();
-    // the first screen has three rows of its own, the other screens have the row back
-    int firstRows = rows - 3;
+    // the first screen has two rows of its own
+    int firstRows = rows - 2;
     if (firstRows < 1)
         firstRows = 1;
-    int otherRows = rows - 1;
+    int otherRows = rows;
     if (otherRows < 1)
         otherRows = 1;
     int screens = total <= firstRows ? 1 : 1 + (total - firstRows + otherRows - 1) / otherRows;

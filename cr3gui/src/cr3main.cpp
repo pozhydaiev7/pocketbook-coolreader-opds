@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 //#include <Ewl.h>
 #include <crengine.h>
 #include <crgui.h>
@@ -204,6 +206,130 @@ bool getDirectoryFonts( lString32Collection & pathList, lString32Collection & ex
 }
 #endif
 
+#if (USE_FREETYPE==1)
+// The list of the fonts kept between the runs. A start registered every font file of the device
+// (about 190 on a PocketBook) by opening it with FreeType: 80 to 180 ms. The faces the font
+// manager registered are written to a file with the size and the time of every font file; the
+// next start registers them from that file. Any difference in the set of the font files, in
+// their order, sizes or times, or in the tag (the version of the program) drops the file: the
+// fonts are read again and the file is written anew.
+static lString8 fontListCacheFile;
+static lString8 fontListCacheTag;
+static bool fontListFromCache = false;
+
+void SetFontListCacheFile( const char * file, const char * tag )
+{
+    fontListCacheFile = lString8(file);
+    fontListCacheTag = lString8(tag);
+}
+
+bool FontListWasCached()
+{
+    return fontListFromCache;
+}
+
+// "F <size> <time> <path>" of a font file; empty when the file cannot be examined
+static lString8 fontListStamp( const lString8 & path )
+{
+    struct stat st;
+    if ( stat(path.c_str(), &st) != 0 )
+        return lString8::empty_str;
+    char buf[80];
+    snprintf(buf, sizeof(buf), "F %lld %lld ", (long long)st.st_size, (long long)st.st_mtime);
+    return lString8(buf) + path;
+}
+
+static lString8 fontListHeader()
+{
+    return lString8("cr3fontlist 1 ") + fontListCacheTag;
+}
+
+// Registers the fonts by the kept list; false (and nothing registered) when the list does not
+// describe these very files
+static bool registerFontsFromList( lString32Collection & fonts )
+{
+    if ( fontListCacheFile.empty() )
+        return false;
+    FILE * f = fopen(fontListCacheFile.c_str(), "rb");
+    if ( !f )
+        return false;
+    lString8Collection lines;
+    static char buf[2048];
+    while ( fgets(buf, sizeof(buf), f) ) {
+        int n = (int)strlen(buf);
+        while ( n > 0 && (buf[n-1] == '\n' || buf[n-1] == '\r') )
+            buf[--n] = 0;
+        lines.add(lString8(buf));
+    }
+    fclose(f);
+    if ( lines.length() < 1 || lines[0] != fontListHeader() )
+        return false;
+    lString8Collection paths, faces;
+    int at = 1;
+    for ( int fi=0; fi<fonts.length(); fi++ ) {
+        lString8 fn = UnicodeToLocal(fonts[fi]);
+        lString8 stamp = fontListStamp(fn);
+        if ( stamp.empty() || at >= lines.length() || lines[at] != stamp )
+            return false;
+        at++;
+        lString8 fileFaces;
+        while ( at < lines.length() && lines[at].length() > 2 && lines[at][0] == 'D' && lines[at][1] == ' ' ) {
+            fileFaces << lines[at].substr(2) << "\n";
+            at++;
+        }
+        paths.add(fn);
+        faces.add(fileFaces);
+    }
+    if ( at != lines.length() )
+        return false; // the list knows more files than there are
+    for ( int i=0; i<paths.length(); i++ ) {
+        if ( !faces[i].empty() )
+            fontMan->RegisterFontFaces(paths[i], faces[i]);
+    }
+    return true;
+}
+
+// Registers the fonts by their files and writes the list for the next start
+static void registerFontsFromFiles( lString32Collection & fonts )
+{
+    lString8 list = fontListHeader() + "\n";
+    bool complete = !fontListCacheFile.empty();
+    for ( int fi=0; fi<fonts.length(); fi++ ) {
+        lString8 fn = UnicodeToLocal(fonts[fi]);
+        CRLog::trace("loading font: %s", fn.c_str());
+        lString8 fileFaces;
+        if ( !fontMan->RegisterFont(fn) ) {
+            CRLog::trace("    failed\n");
+        }
+        fileFaces = fontMan->GetLastRegisteredFaces();
+        lString8 stamp = fontListStamp(fn);
+        if ( stamp.empty() )
+            complete = false;
+        list << stamp << "\n";
+        int start = 0;
+        while ( start < (int)fileFaces.length() ) {
+            int end = start;
+            while ( end < (int)fileFaces.length() && fileFaces[end] != '\n' )
+                end++;
+            list << "D " << fileFaces.substr(start, end - start) << "\n";
+            start = end + 1;
+        }
+    }
+    if ( !complete )
+        return;
+    lString8 tmp = fontListCacheFile + ".tmp";
+    FILE * f = fopen(tmp.c_str(), "wb");
+    if ( !f )
+        return;
+    bool ok = fwrite(list.c_str(), 1, list.length(), f) == (size_t)list.length();
+    ok = fclose(f) == 0 && ok;
+    if ( ok )
+        rename(tmp.c_str(), fontListCacheFile.c_str());
+    else
+        unlink(tmp.c_str());
+}
+#endif
+
 bool InitCREngine( const char * exename, lString32Collection & fontDirs )
 {
     CRLog::trace("InitCREngine(%s)", exename);
@@ -273,15 +399,10 @@ bool InitCREngine( const char * exename, lString32Collection & fontDirs )
 
         // load fonts from file
         CRLog::debug("%d font files found", fonts.length());
-        //if (!fontMan->GetFontCount()) {
-            for ( int fi=0; fi<fonts.length(); fi++ ) {
-                lString8 fn = UnicodeToLocal(fonts[fi]);
-                CRLog::trace("loading font: %s", fn.c_str());
-                if ( !fontMan->RegisterFont(fn) ) {
-                    CRLog::trace("    failed\n");
-                }
-            }
-        //}
+        // the kept list of the fonts when it describes these files, the files themselves otherwise
+        fontListFromCache = registerFontsFromList( fonts );
+        if ( !fontListFromCache )
+            registerFontsFromFiles( fonts );
     #else
             #define MAX_FONT_FILE 128
             for (int i=0; i<MAX_FONT_FILE; i++)

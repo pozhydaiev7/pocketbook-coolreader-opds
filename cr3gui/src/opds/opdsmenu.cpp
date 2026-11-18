@@ -96,7 +96,7 @@ lString32 menuSkinName(CRGUIWindowManager * wm)
 OpdsMenu::OpdsMenu(CRGUIWindowManager * wm, const lString32 & caption, lvRect & rc, bool paged)
     : CRFullScreenMenu(wm, OPDS_CMD_CLOSE, caption, 8, rc), _rows(0), _paged(paged),
       _prevCommand(OPDS_CMD_PREV), _nextCommand(OPDS_CMD_NEXT), _closeCommand(OPDS_CMD_CLOSE),
-      _screen(0), _screens(0), _swipes(false), _touchStarted(false)
+      _screen(0), _screens(0), _swipes(false), _plain(false), _touchStarted(false)
 {
     if (!fontAntiAliasingActivated())
         forcePartialBwUpdates = true;
@@ -147,9 +147,24 @@ void OpdsMenu::drawTitleBar()
 void OpdsMenu::setPlainRows()
 {
     // the touch TOC with page numbers has the same rows without separator lines
+    _plain = true;
     CRSkinRef skin = _wm->getSkin();
     if (!skin.isNull() && !skin->pathById(U"touch-toc-dots").empty())
         setSkinName(lString32(U"#touch-toc-dots"));
+}
+
+int OpdsMenu::ownSeparator()
+{
+    if (_plain)
+        return 0;
+    CRMenuSkinRef skin = getSkin();
+    if (skin.isNull())
+        return 0;
+    CRRectSkinRef separator = skin->getSeparatorSkin();
+    if (!separator.isNull() && separator->getMinSize().y > 0)
+        return 0;
+    int t = subFont->getHeight() / 16;
+    return t < 1 ? 1 : t;
 }
 
 void OpdsMenu::fitCaption()
@@ -265,6 +280,8 @@ int OpdsMenu::rowTextWidth()
 
 void OpdsMenu::add(int command, const lString32 & title, const lString32 & subtitle)
 {
+    if (command == _closeCommand && (title.startsWith(lString32(MARK_PREV)) || title.startsWith(lString32(MARK_UP))))
+        return;
     addItem(new OpdsItem(this, command, title, subtitle));
 }
 
@@ -326,6 +343,11 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
     if (r.width() <= 0 || r.height() <= 0)
         return;
 
+    // the line under the row, where the skin draws none between the rows of this menu
+    int line = _owner->ownSeparator();
+    if (line > 0)
+        buf.FillRect(r.left, rc.bottom - line, r.right, rc.bottom, skin->getTextColor());
+
     lvRect oldClip;
     buf.GetClipRect(&oldClip);
     buf.SetClipRect(&r);
@@ -336,6 +358,16 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
         int h2 = second.font.isNull() ? 0 : second.font->getHeight();
         int total = h1 + (h2 > 0 ? gap + h2 : 0);
         int y = r.top + (r.height() - total) / 2;
+        int y2 = y + h1 + gap;
+        // Each line in the middle of its half of the row: the lines of a text that runs over
+        // several rows stand at even steps. With both lines in the middle of the row the text
+        // had a wider gap after every second line: reported as an empty line between the first
+        // and the second date of "Reading days", whose first date shares a row with the heading.
+        int half = r.height() / 2;
+        if (h1 <= half && h2 <= half) {
+            y = r.top + (half - h1) / 2;
+            y2 = r.top + half + (half - h2) / 2;
+        }
         if (first.rule) {
             // section line at the top of the row
             int t = sf->getHeight() / 16;
@@ -344,7 +376,7 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
             buf.FillRect(r.left, rc.top + t, r.right, rc.top + 2 * t, skin->getTextColor());
         }
         drawLine(buf, first, r, y, first.font.isNull() ? 0 : first.font->getBaseline());
-        drawLine(buf, second, r, y + h1 + gap, second.font.isNull() ? 0 : second.font->getBaseline());
+        drawLine(buf, second, r, y2, second.font.isNull() ? 0 : second.font->getBaseline());
     } else if (button) {
         // a dark bar with the corners cut, the title in its middle; drawn here and not by the
         // skin, so it is the same in every skin

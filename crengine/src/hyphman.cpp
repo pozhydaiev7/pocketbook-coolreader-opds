@@ -40,6 +40,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include "../include/lvxmlparsercallback.h"
 #include "../include/lvxmlparser.h"
 
@@ -54,6 +56,7 @@
 #include "../include/lvfnt.h"
 #include "../include/lvstring.h"
 #include "../include/lvstring32collection.h"
+#include "../include/lvstring8collection.h"
 
 #include "../include/crlog.h"
 #include "../include/textlang.h"
@@ -698,6 +701,74 @@ static int HyphDictionary_comparator(const HyphDictionary ** item1, const HyphDi
     return (int)((*item1)->getType() - (*item2)->getType());
 }
 
+// The titles and the language tags of the pattern files, kept between the runs of the program.
+// The list of the dictionaries is made at every start, and each of the 60 to 70 pattern files
+// was opened for the two lines of its header: 58 ms on an InkPad 4. A file whose name, size and
+// time are in the kept list is not opened; any other file is read as before, and the list is
+// written anew. Only for a folder of files (not for an archive), and only when the program has
+// named the file to keep the list in.
+static lString8 hyphListCacheFile;
+
+void HyphSetDictListCacheFile( const char * file )
+{
+    hyphListCacheFile = lString8( file ? file : "" );
+}
+
+// "size<TAB>time<TAB>name" of a pattern file; empty when the file cannot be examined
+static lString8 hyphFileStamp( const lString32 & filename, const lString32 & name )
+{
+    struct stat st;
+    if ( stat( UnicodeToUtf8(filename).c_str(), &st ) != 0 )
+        return lString8::empty_str;
+    char buf[64];
+    snprintf( buf, sizeof(buf), "%lld\t%lld\t", (long long)st.st_size, (long long)st.st_mtime );
+    return lString8(buf) + UnicodeToUtf8(name);
+}
+
+// the kept list: for each line, the stamp of the file and "tag<TAB>title"
+static void hyphListCacheRead( lString8Collection & stamps, lString8Collection & values )
+{
+    FILE * f = hyphListCacheFile.empty() ? NULL : fopen( hyphListCacheFile.c_str(), "rb" );
+    if ( !f )
+        return;
+    static char buf[2048];
+    while ( fgets( buf, sizeof(buf), f ) ) {
+        int n = (int)strlen(buf);
+        while ( n > 0 && (buf[n-1] == '\n' || buf[n-1] == '\r') )
+            buf[--n] = 0;
+        // size, time, name | tag, title
+        int tabs = 0;
+        int split = -1;
+        for ( int i = 0; i < n; i++ ) {
+            if ( buf[i] == '\t' && ++tabs == 3 ) {
+                split = i;
+                break;
+            }
+        }
+        if ( split < 0 )
+            continue;
+        stamps.add( lString8( buf, split ) );
+        values.add( lString8( buf + split + 1 ) );
+    }
+    fclose(f);
+}
+
+static void hyphListCacheWrite( lString8Collection & stamps, lString8Collection & values )
+{
+    lString8 tmp = hyphListCacheFile + ".tmp";
+    FILE * f = fopen( tmp.c_str(), "wb" );
+    if ( !f )
+        return;
+    bool ok = true;
+    for ( int i = 0; i < stamps.length() && ok; i++ )
+        ok = fprintf( f, "%s\t%s\n", stamps[i].c_str(), values[i].c_str() ) > 0;
+    ok = fclose(f) == 0 && ok;
+    if ( ok )
+        rename( tmp.c_str(), hyphListCacheFile.c_str() );
+    else
+        unlink( tmp.c_str() );
+}
+
 bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
 {
     CRLog::info("HyphDictionaryList::open(%s)", LCSTR(hyphDirectory) );
@@ -722,6 +793,12 @@ bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
         int len = container->GetObjectCount();
         int count = 0;
         CRLog::info("%d items found in hyph directory", len);
+        // the kept headers of the pattern files (a folder of files only)
+        bool keep = !hyphListCacheFile.empty() && stream.isNull();
+        lString8Collection keptStamps, keptValues, newStamps, newValues;
+        bool keptChanged = false;
+        if ( keep )
+            hyphListCacheRead( keptStamps, keptValues );
         for (int i = 0; i < len; i++) {
             const LVContainerItemInfo* item = container->GetObjectInfo(i);
             lString32 name = item->GetName();
@@ -750,6 +827,26 @@ bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
                 title.append(" (Alan)");
             } else if (name.endsWith(".pattern")) {
                 t = HDT_DICT_TEX;
+                lString8 stamp = keep ? hyphFileStamp( filename, name ) : lString8::empty_str;
+                int kept = -1;
+                for ( int k = 0; k < keptStamps.length() && !stamp.empty(); k++ ) {
+                    if ( keptStamps[k] == stamp ) {
+                        kept = k;
+                        break;
+                    }
+                }
+                if ( kept >= 0 ) {
+                    // the header of this very file was read at an earlier start
+                    lString8 value = keptValues[kept];
+                    int tab = value.pos( "\t" );
+                    if ( tab >= 0 ) {
+                        langTag = Utf8ToUnicode( value.substr( 0, tab ) );
+                        title = Utf8ToUnicode( value.substr( tab + 1 ) );
+                    }
+                    newStamps.add( stamp );
+                    newValues.add( value );
+                } else {
+                keptChanged = true;
                 LVStreamRef hyphStream = LVOpenFileStream(filename.c_str(), LVOM_READ);
                 if (hyphStream.isNull()) {
                     CRLog::error("Failed to open hyphenation dictionary: %s\n", LCSTR(filename));
@@ -773,12 +870,20 @@ bool HyphDictionaryList::open(lString32 hyphDirectory, bool clear)
                         }
                     }
                 }
+                if ( !stamp.empty() ) {
+                    newStamps.add( stamp );
+                    newValues.add( UnicodeToUtf8(langTag) + "\t" + UnicodeToUtf8(title) );
+                }
+                }
             } else
                 continue;
             if (!langTag.empty() && !title.empty())
                 _list.add(new HyphDictionary(t, title, id, langTag, filename));
             count++;
         }
+        // a file read anew, or a kept file that is no longer there: the list is written again
+        if ( keep && ( keptChanged || newStamps.length() != keptStamps.length() ) )
+            hyphListCacheWrite( newStamps, newValues );
         _list.sort(HyphDictionary_comparator);
         CRLog::info("%d dictionaries added to list", _list.length());
         return true;

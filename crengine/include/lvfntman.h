@@ -87,6 +87,13 @@ public:
     }
     /// registers font by name
     virtual bool RegisterFont( lString8 name ) = 0;
+    /// The faces RegisterFont() registered for the last file, one line per face:
+    /// "index weight italic family scalable typeface". Empty when the manager does not keep them.
+    virtual lString8 GetLastRegisteredFaces() { return lString8::empty_str; }
+    /// Registers the faces of a font file by the lines GetLastRegisteredFaces() gave for it,
+    /// without opening the file (the list of the fonts kept between the runs of a program).
+    /// The files must be registered in the same order as they were when the lines were taken.
+    virtual bool RegisterFontFaces( lString8 /*name*/, lString8 /*faces*/ ) { return false; }
     /// registers font by name and face
     virtual bool RegisterExternalFont(int /*documentId*/, lString32 /*name*/, lString8 /*face*/, bool /*bold*/, bool /*italic*/) { return false; }
     /// registers document font

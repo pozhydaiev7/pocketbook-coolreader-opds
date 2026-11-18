@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <sys/wait.h>
 
 #include "mainwnd.h"
@@ -100,7 +101,8 @@ lString32 hostName(const lString32 & url)
     return host;
 }
 
-// first row of a screen: "< Back: <the screen it returns to>"
+// The way back of a screen: "< Back: <the screen it returns to>". As a row with the close command
+// of its list it is not shown (OpdsMenu::add): the arrow at the caption goes there.
 lString32 backTo(const lString32 & where)
 {
     return lString32(MARK_PREV) + lString32(_("Back")) + U": " + where;
@@ -382,8 +384,8 @@ void OpdsBrowser::setDefaultCatalog(int index)
 
 int OpdsBrowser::maxCatalogs()
 {
-    // rows of the list: back, the catalogs, "Add catalog...", "Edit catalogs..."
-    int n = _catalogRows - 3;
+    // rows of the list: the catalogs, "Add catalog...", "Edit catalogs..."
+    int n = _catalogRows - 2;
     if (n > OPDS_MAX_CATALOGS + 1)
         n = OPDS_MAX_CATALOGS + 1;
     return n < 1 ? 1 : n;
@@ -534,7 +536,13 @@ bool OpdsBrowser::fetch(const std::string & url, opds::Feed & feed)
         return false;
     }
     std::string error;
-    if (!feed.parse(body, url, error)) {
+    struct timeval parseStart, parseEnd;
+    gettimeofday(&parseStart, NULL);
+    bool parsed = feed.parse(body, url, error);
+    gettimeofday(&parseEnd, NULL);
+    CRLog::info("perf: OPDS feed of %d bytes parsed in %.1f ms", (int)body.size(),
+                (parseEnd.tv_sec - parseStart.tv_sec) * 1000.0 + (parseEnd.tv_usec - parseStart.tv_usec) / 1000.0);
+    if (!parsed) {
         CRLog::error("OPDS: parse error for %s: %s", url.c_str(), error.c_str());
         lString8 text(_("The server did not return an OPDS catalog."));
         text << "\n" << error.c_str();
@@ -584,11 +592,10 @@ bool OpdsBrowser::hasSearchRow() const
     return _history.size() == 1 && !_history.back().searchTemplate.empty();
 }
 
-// Every screen starts with the back row and the catalog menu row; screen 0 also holds the
-// optional search row.
+// Every screen starts with the catalog menu row; screen 0 also holds the optional search row.
 int OpdsBrowser::entriesOnScreen(int screen) const
 {
-    int n = _rows - 2 - ((screen == 0 && hasSearchRow()) ? 1 : 0);
+    int n = _rows - 1 - ((screen == 0 && hasSearchRow()) ? 1 : 0);
     return n < 1 ? 1 : n;
 }
 
@@ -806,7 +813,7 @@ void OpdsBrowser::showInfo(CRGUIWindowManager * wm)
     while (!lines.empty() && lines.back().text.empty() && lines.back().label.empty())
         lines.pop_back();
 
-    size_t maxLines = (size_t)(rows - 1) * 2;
+    size_t maxLines = (size_t)rows * 2;
     if (lines.size() > maxLines) {
         lines.resize(maxLines);
         InfoLine & last = lines.back();

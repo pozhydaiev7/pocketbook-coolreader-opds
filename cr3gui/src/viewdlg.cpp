@@ -30,6 +30,12 @@
 #include "inkview.h"
 #define DICTD_CONF DIRPREFIX "/mnt/ext1/system/share/cr3/dict"
 #define DICTD_CONF_ALT "/mnt/ext2/system/share/cr3/dict"
+#ifdef POCKETBOOK_PRO
+#include <vector>
+#include "pb_toc.h"
+#include "pb_toclist.h"
+#endif
+extern V3DocViewWin * main_win;
 #elif _WIN32
 #define DICTD_CONF "C:\\dict\\"
 #define DICTD_CONF_ALT ".\\dict\\"
@@ -365,9 +371,66 @@ void CRViewDialog::showDictWithVKeyboard()
     _wm->activateWindow( dlg );
 }
 
+bool CRViewDialog::showContentsList()
+{
+#if defined(CR_POCKETBOOK) && defined(POCKETBOOK_PRO)
+    LVPtrVector<LVTocItem, false> items;
+    _docview->getFlatToc( items );
+    std::vector<lString8> names;
+    std::vector<int> levels;
+    std::vector<int> pages;
+    for ( int i = 0; i < items.length(); i++ ) {
+        LVTocItem * item = items[i];
+        if ( item->getName().empty() )
+            continue;
+        lString32 name = item->getName();
+        for ( int k = 0; k < name.length(); k++ ) {
+            if ( name[k] == U'\r' || name[k] == U'\n' )
+                name[k] = U' ';
+        }
+        names.push_back( UnicodeToUtf8( name ) );
+        levels.push_back( item->getLevel() );
+        pages.push_back( item->getPage() + 1 );
+    }
+    if ( names.size() < 2 )
+        return false;
+    // the list makes its own copy of the entries
+    std::vector<tocentry> toc( names.size() );
+    for ( size_t i = 0; i < names.size(); i++ ) {
+        toc[i].level = levels[i];
+        toc[i].page = pages[i];
+        toc[i].position = pages[i];
+        toc[i].text = const_cast<char *>( names[i].c_str() );
+    }
+    PbTocList::instance().open( _wm, &toc[0], (int)toc.size(), _docview->getCurPage() + 1 );
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool CRViewDialog::onCommand( int command, int params )
 {
     _lastNavigationDirection = 0;
+#if defined(CR_POCKETBOOK) && defined(POCKETBOOK_PRO)
+    // The contents list opened over a text window (showContentsList): a chapter chosen there
+    // is a page of this window, and the commands of the list are its own. Left alone they
+    // would go down to the book window and turn the book.
+    if ( (CRViewDialog *)main_win != this ) {
+        if ( command > PB_TOC_SAFE_CMD_RANGE ) {
+            int page = command - PB_TOC_SAFE_CMD_RANGE;
+            if ( page > _docview->getPageCount() )
+                page = _docview->getPageCount();
+            if ( page < 1 )
+                page = 1;
+            _docview->goToPage( page - 1 );
+            _dirty = true;
+            return true;
+        }
+        if ( PbTocList::isTocListCommand( command ) )
+            return PbTocList::instance().onCommand( _wm, command, params );
+    }
+#endif
     switch ( command ) {
 	#ifdef WITH_DICT
 		case MCMD_DICT:
@@ -484,6 +547,12 @@ bool CRViewDialog::onClientTouch( lvPoint &pt, CRGUITouchEventType evType )
     int tapCommand = 0;
     int tapParam = 0;
     getCommandForTapZone( zone, props, longTap, tapCommand, tapParam );
+    // A tap where the book opens its menu or its contents: the contents of this text, when it
+    // has one (the manual). Asked for by a tester: "a button or a tap zone that opens the
+    // contents of the help, as in a book".
+    if ( !longTap && ( tapCommand == PB_QUICK_MENU || tapCommand == PB_CMD_MAIN_MENU || tapCommand == MCMD_MAIN_MENU
+                       || tapCommand == PB_CMD_CONTENTS ) )
+        return showContentsList();
     if ( tapCommand != DCMD_PAGEDOWN && tapCommand != DCMD_PAGEUP && tapCommand != DCMD_BEGIN && tapCommand != DCMD_END )
         return false;
     _wm->postCommand( tapCommand, tapParam );

@@ -48,6 +48,47 @@
 #ifdef __cplusplus
 #include "../include/lvtinydom.h"
 #include "../include/lvrend.h"
+#include "../include/crperf.h"
+
+// A picture that is all its part of the book has: the cover of an EPUB, a page with an
+// illustration. Such a part is an HTML file of the book (a DocFragment) with one picture and no
+// text. The picture was laid out as any picture of the text: at its own size, enlarged as the
+// image scaling settings allow, at the left of the page. A cover of 480 x 640 took a third of a
+// screen of 1404 x 1872 in its upper left corner. It is made as large as the page lets it be and
+// centred (LVFormatter::measureText). A book without such parts (FB2) is not touched.
+static bool pictureAloneWalk( ldomNode * node, int & pictures, int & budget )
+{
+    // a part with many nodes is not a page of one picture
+    if ( --budget < 0 )
+        return false;
+    if ( node->isText() ) {
+        lString32 text = node->getText();
+        return IsEmptySpace( text.c_str(), text.length() );
+    }
+    // what is not shown does not count: the style sheet of the part, its title
+    if ( node->getRendMethod() == erm_invisible )
+        return true;
+    lUInt16 id = node->getNodeId();
+    if ( id == el_img || id == el_image )
+        return ++pictures <= 1;
+    int count = node->getChildCount();
+    for ( int i = 0; i < count; i++ )
+        if ( !pictureAloneWalk( node->getChildNode(i), pictures, budget ) )
+            return false;
+    return true;
+}
+
+static bool isPictureAlone( ldomNode * img )
+{
+    ldomNode * part = img->getParentNode();
+    while ( part && !part->isNull() && part->getNodeId() != el_DocFragment )
+        part = part->getParentNode();
+    if ( !part || part->isNull() )
+        return false;
+    int pictures = 0;
+    int budget = 200;
+    return pictureAloneWalk( part, pictures, budget ) && pictures == 1;
+}
 #include "../include/textlang.h"
 #endif
 
@@ -421,6 +462,7 @@ public:
     int  m_y;
     int  m_max_img_height;
     bool m_has_images;
+    bool m_pictureAlone; // the paragraph being laid out is a picture that is all its part of the book has
     bool m_has_float_to_position;
     bool m_has_ongoing_float;
     bool m_no_clear_own_floats;
@@ -2123,10 +2165,49 @@ public:
                         // We have yet no container height to provide for CSS heights in %,
                         // so they won't apply
                         getStyledImageSize( node, width, height, m_pbuffer->width, -1 );
+                        int ownWidth = width;
+                        int ownHeight = height;
                         // Ensure they are constrained to this paragraph width and page height
                         // Note: resizeImage() may do some additional scaling depending on image_scaling_options,
                         // use mode=0 scale=1 for these if this is not desirable.
                         resizeImage(width, height, m_pbuffer->width, m_max_img_height, m_length>1);
+                        // The only picture of a part of the book without text (the cover of an
+                        // EPUB): as large as the page lets it be, its proportions kept, in the
+                        // middle of the line. The paragraph may have a space next to the
+                        // picture (a cover inside <svg>), so its length is not asked.
+                        if ( ownWidth > 0 && ownHeight > 0 && m_pbuffer->width > 0
+                                && m_max_img_height > 0 && isPictureAlone( node ) ) {
+                            m_pictureAlone = true;
+                            // the lines of its title are drawn under the picture (above it for
+                            // "suptitle"): room is left for them, so that they stay on its page
+                            int titleLines = 0;
+                            static const lUInt16 titleAttrs[] = { attr_suptitle, attr_subtitle, attr_title };
+                            for ( int t = 0; t < 3; t++ ) {
+                                lString32 title = node->getAttributeValue( titleAttrs[t] );
+                                if ( title.empty() )
+                                    continue;
+                                titleLines++;
+                                for ( int p = title.pos("\\n"); p >= 0; p = title.pos("\\n", p + 2) )
+                                    titleLines++;
+                            }
+                            // One more line is left free: a cover inside <svg> stood some 25 px
+                            // lower than the top of its page, and a picture of the full height
+                            // lost its lower edge.
+                            int maxHeight = m_max_img_height - ( titleLines + 1 ) * m_pbuffer->strut_height;
+                            if ( maxHeight < m_max_img_height / 2 )
+                                maxHeight = m_max_img_height / 2;
+                            if ( (lInt64)ownWidth * maxHeight > (lInt64)ownHeight * m_pbuffer->width ) {
+                                width = m_pbuffer->width;
+                                height = (int)( (lInt64)ownHeight * m_pbuffer->width / ownWidth );
+                            } else {
+                                height = maxHeight;
+                                width = (int)( (lInt64)ownWidth * maxHeight / ownHeight );
+                            }
+                            if ( width < 1 )
+                                width = 1;
+                            if ( height < 1 )
+                                height = 1;
+                        }
                         if ( (m_srcs[start]->flags & LTEXT_STRUT_CONFINED) && m_allow_strut_confining ) {
                             // Text with "-cr-hint: strut-confined" might just be vertically shifted,
                             // but won't change widths. But images who will change height must also
@@ -3829,11 +3910,20 @@ public:
         // copy paragraph text to buffer
         copyText( start, end );
         // measure paragraph text
+        m_pictureAlone = false;
         measureText();
 
         // We keep as 'para' the first source text, as it carries
         // the text alignment to use with all added lines.
         src_text_fragment_t * para = &m_pbuffer->srctext[start];
+        // a picture that is all its part of the book has (see isPictureAlone) is centred
+        // and gets no first line indent: with it a picture of the width of the page went beyond
+        // the right edge
+        if ( m_pictureAlone ) {
+            para->flags = ( para->flags & ~LTEXT_FLAG_NEWLINE ) | LTEXT_ALIGN_CENTER;
+            para->indent = 0;
+            m_indent_current = 0;
+        }
 
         // detect case with inline preformatted text inside block with line feeds -- override align=left for this case
         bool preFormattedOnly = true;
@@ -4576,6 +4666,7 @@ lUInt32 LFormattedText::Format(lUInt16 width, lUInt16 page_height, int para_dire
                 int usable_left_overflow, int usable_right_overflow, bool hanging_punctuation,
                 BlockFloatFootprint * float_footprint)
 {
+    CRPerfScope perf( crPerf.formats, crPerf.formatMs, crPerf.formatDepth );
     // clear existing formatted data, if any
     freeFrmLines( m_pbuffer );
     // setup new page size

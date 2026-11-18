@@ -59,6 +59,7 @@
 class LVFreeTypeFontManager : public LVFontManager {
 private:
     lString8 _path;
+    lString8 _lastFaces; // the faces the last RegisterFont() registered, see GetLastRegisteredFaces()
     lString8Collection _fallbackFontFaces;
     LVFontCache _cache;
     FT_Library _library;
@@ -161,6 +162,11 @@ public:
     virtual bool RegisterExternalFont(int documentId, lString32 name, lString8 family_name, bool bold, bool italic);
 
     virtual bool RegisterFont(lString8 name);
+
+    /// faces registered by the last RegisterFont(), see LVFontManager
+    virtual lString8 GetLastRegisteredFaces() { return _lastFaces; }
+
+    virtual bool RegisterFontFaces(lString8 name, lString8 faces);
 
     virtual bool Init(lString8 path);
 

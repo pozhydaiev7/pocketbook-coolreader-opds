@@ -27,6 +27,8 @@
 #include "lvimagescaleddrawcallback.h"
 #include "lvdrawbuf_utils.h"
 #include "crlog.h"
+#include "crperf.h"
+#include "lvarray.h"
 #if !defined(__SYMBIAN32__) && defined(_WIN32) && !defined(QT_GL)
 #include "lvcolordrawbuf.h"
 #endif
@@ -397,6 +399,7 @@ void LVGrayDrawBuf::Draw( LVImageSourceRef img, int x, int y, int width, int hei
     //fprintf( stderr, "LVGrayDrawBuf::Draw( img(%d, %d), %d, %d, %d, %d\n", img->GetWidth(), img->GetHeight(), x, y, width, height );
     if ( width<=0 || height<=0 )
         return;
+    CRPerfScope perf( crPerf.images, crPerf.imageMs, crPerf.imageDepth );
     LVImageScaledDrawCallback drawcb( this, img, x, y, width, height, _ditherImages, _invertImages, _smoothImages );
     img->Decode( &drawcb );
 
@@ -1415,15 +1418,165 @@ void LVGrayDrawBuf::DrawOnTop( LVDrawBuf * buf, int x, int y )
 }
 
 /// draws rescaled buffer content to another buffer doing color conversion if necessary
+/// DrawRescaled() for its usual case, the cover of a book: a 32-bit source and a buffer of one
+/// byte per pixel. The general code below asks the source for every pixel through
+/// GetInterpolatedColor() or GetAvgColor(), which ask it again through GetPixel(): five virtual
+/// calls with their range checks for a pixel of the picture, 29 ms for a cover of the size of the
+/// screen on a PC and about a second on a reader. Here the rows of the source are read as they
+/// are and the columns are worked out once. The arithmetic is the one of those functions and of
+/// the code below, so the picture is the same pixel for pixel.
+void LVGrayDrawBuf::drawRescaledFrom32(LVDrawBuf * src, int x, int y, int dx, int dy, const lvRect & clip)
+{
+    int srcdx = src->GetWidth();
+    int srcdy = src->GetHeight();
+    bool linearInterpolation = (srcdx <= dx || srcdy <= dy);
+    // columns of the source for every column of the picture
+    LVArray<int> colsA(dx, 0), colsB(dx, 0), colsShift(dx, 0);
+    int * colA = colsA.get();
+    int * colB = colsB.get();
+    int * colShift = colsShift.get();
+    for (int xx = 0; xx < dx; xx++) {
+        if (linearInterpolation) {
+            int srcx16 = srcdx * xx * 16 / dx;
+            int sx = srcx16 >> 4;
+            int sx1 = sx + 1;
+            if (sx1 >= srcdx)
+                sx1 = sx;
+            colA[xx] = sx;
+            colB[xx] = sx1;
+            colShift[xx] = srcx16 & 0x0F;
+        } else {
+            // the bounds of the averaged area, in 1/16 of a pixel
+            int x0 = srcdx * xx * 16 / dx;
+            int x1 = srcdx * (xx + 1) * 16 / dx;
+            if (x0 < 0)
+                x0 = 0;
+            if (x1 > (srcdx << 4))
+                x1 = srcdx << 4;
+            colA[xx] = x0;
+            colB[xx] = x1;
+        }
+    }
+    int xFrom = clip.left - x;
+    if (xFrom < 0)
+        xFrom = 0;
+    int xTo = clip.right - x;
+    if (xTo > dx)
+        xTo = dx;
+    for (int yy = 0; yy < dy; yy++) {
+        if (y + yy < clip.top || y + yy >= clip.bottom)
+            continue;
+        lUInt8 * dst0 = (lUInt8 *)GetScanLine(y + yy) + x;
+        if (linearInterpolation) {
+            int srcy16 = srcdy * yy * 16 / dy;
+            int shy = srcy16 & 0x0F;
+            int nshy = 16 - shy;
+            int sy = srcy16 >> 4;
+            int sy1 = sy + 1;
+            if (sy1 >= srcdy)
+                sy1 = sy;
+            const lUInt32 * row0 = (const lUInt32 *)src->GetScanLine(sy);
+            const lUInt32 * row1 = (const lUInt32 *)src->GetScanLine(sy1);
+            for (int xx = xFrom; xx < xTo; xx++) {
+                int shx = colShift[xx];
+                int nshx = 16 - shx;
+                lUInt32 cl00 = row0[colA[xx]];
+                lUInt32 cl01 = row0[colB[xx]];
+                lUInt32 cl10 = row1[colA[xx]];
+                lUInt32 cl11 = row1[colB[xx]];
+                lUInt32 a = ((((cl00 >> 24) * nshx + (cl01 >> 24) * shx) * nshy +
+                              ((cl10 >> 24) * nshx + (cl11 >> 24) * shx) * shy) >> 8) & 0xFF;
+                lUInt32 r = (((((cl00 >> 16) & 0xFF) * nshx + ((cl01 >> 16) & 0xFF) * shx) * nshy +
+                              (((cl10 >> 16) & 0xFF) * nshx + ((cl11 >> 16) & 0xFF) * shx) * shy) >> 8) & 0xFF;
+                lUInt32 g = (((((cl00 >> 8) & 0xFF) * nshx + ((cl01 >> 8) & 0xFF) * shx) * nshy +
+                              (((cl10 >> 8) & 0xFF) * nshx + ((cl11 >> 8) & 0xFF) * shx) * shy) >> 8) & 0xFF;
+                lUInt32 b = ((((cl00 & 0xFF) * nshx + (cl01 & 0xFF) * shx) * nshy +
+                              ((cl10 & 0xFF) * nshx + (cl11 & 0xFF) * shx) * shy) >> 8) & 0xFF;
+                lUInt32 cl = (a << 24) | (r << 16) | (g << 8) | b;
+                lUInt8 * dst = dst0 + xx;
+                lUInt32 dithered = _bpp < 8 ? DitherNBitColor(cl, xx, yy, _bpp) : cl;
+                if (a < 16)
+                    *dst = (lUInt8)dithered;
+                else if (a < 240) {
+                    lUInt32 nalpha = a ^ 0xFF;
+                    lUInt32 pixel = *dst;
+                    if (_bpp == 4)
+                        pixel = ((pixel * a + dithered * nalpha) >> 8) & 0xF0;
+                    else
+                        pixel = ((pixel * a + dithered * nalpha) >> 8) & 0xFF;
+                    *dst = (lUInt8)pixel;
+                }
+            }
+        } else {
+            int y0 = srcdy * yy * 16 / dy;
+            int y1 = srcdy * (yy + 1) * 16 / dy;
+            if (y0 < 0)
+                y0 = 0;
+            if (y1 > (srcdy << 4))
+                y1 = srcdy << 4;
+            int maxy = (y1 - 1) >> 4;
+            for (int xx = xFrom; xx < xTo; xx++) {
+                int x0 = colA[xx];
+                int x1 = colB[xx];
+                lUInt32 cl = 0;
+                if (x0 <= x1 && y0 <= y1) {
+                    int rs = 0, gs = 0, bs = 0, s = 0;
+                    int maxx = (x1 - 1) >> 4;
+                    for (int sy = (y0 >> 4); sy <= maxy; sy++) {
+                        int yy0 = sy << 4;
+                        int yy1 = (sy + 1) << 4;
+                        if (yy0 < y0)
+                            yy0 = y0;
+                        if (yy1 > y1)
+                            yy1 = y1;
+                        int ys = yy1 - yy0;
+                        if (ys < 1)
+                            continue;
+                        const lUInt32 * row = (const lUInt32 *)src->GetScanLine(sy);
+                        for (int sx = (x0 >> 4); sx <= maxx; sx++) {
+                            int xx0 = sx << 4;
+                            int xx1 = (sx + 1) << 4;
+                            if (xx0 < x0)
+                                xx0 = x0;
+                            if (xx1 > x1)
+                                xx1 = x1;
+                            int xs = xx1 - xx0;
+                            if (xs < 1)
+                                continue;
+                            int mult = xs * ys;
+                            lUInt32 pixel = row[sx];
+                            rs += ((pixel >> 16) & 0xFF) * mult;
+                            gs += ((pixel >> 8) & 0xFF) * mult;
+                            bs += (pixel & 0xFF) * mult;
+                            s += mult;
+                        }
+                    }
+                    if (s != 0)
+                        cl = (((rs / s) & 0xFF) << 16) | (((gs / s) & 0xFF) << 8) | ((bs / s) & 0xFF);
+                }
+                lUInt32 dithered = _bpp < 8 ? DitherNBitColor(cl, xx, yy, _bpp) : cl;
+                dst0[xx] = (lUInt8)dithered;
+            }
+        }
+    }
+}
+
 void LVGrayDrawBuf::DrawRescaled(LVDrawBuf * src, int x, int y, int dx, int dy, int options)
 {
     CR_UNUSED(options);
     if (dx < 1 || dy < 1)
         return;
+    CRPerfScope perf( crPerf.rescales, crPerf.rescaleMs, crPerf.rescaleDepth );
     lvRect clip;
     GetClipRect(&clip);
     int srcdx = src->GetWidth();
     int srcdy = src->GetHeight();
+    if (src->GetBitsPerPixel() == 32 && _bpp >= 3 && srcdx > 0 && srcdy > 0 && src->GetScanLine(0) != NULL) {
+        CHECK_GUARD_BYTE;
+        drawRescaledFrom32(src, x, y, dx, dy, clip);
+        CHECK_GUARD_BYTE;
+        return;
+    }
     bool linearInterpolation = (srcdx <= dx || srcdy <= dy);
     //CRLog::trace("LVGrayDrawBuf::DrawRescaled bpp=%d %dx%d srcbpp=%d (%d,%d) (%d,%d)", _bpp, GetWidth(), GetHeight(), src->GetBitsPerPixel(), x, y, dx, dy);
 	CHECK_GUARD_BYTE;

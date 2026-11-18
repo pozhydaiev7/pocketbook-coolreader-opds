@@ -61,6 +61,22 @@
 #include "../include/fb3fmt.h"
 #include "../include/docxfmt.h"
 #include "../include/odtfmt.h"
+#include "../include/crperf.h"
+
+// counters of the time spent on parts of the work, see crperf.h
+CRPerfCounters crPerf = { false, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+#if !defined(_WIN32)
+#include <sys/time.h>
+double crPerfNowMs()
+{
+    struct timeval tv;
+    gettimeofday( &tv, NULL );
+    return tv.tv_sec * 1000.0 + tv.tv_usec / 1000.0;
+}
+#else
+double crPerfNowMs() { return 0; }
+#endif
 
 /// to show page bounds rectangles
 //#define SHOW_PAGE_RECT

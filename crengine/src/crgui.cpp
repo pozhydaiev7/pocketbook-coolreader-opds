@@ -11,6 +11,7 @@
 *******************************************************/
 
 #include <stdlib.h>
+#include <sys/time.h>
 //include <unistd.h>      /* pause() */
 #include "../include/crgui.h"
 #include "../include/crtrace.h"
@@ -266,6 +267,25 @@ void CRGUIWindowManager::reconfigure( int dx, int dy, cr_rotate_angle_t orientat
     }
 }
 
+/// Draws a window. With the log on (INFO level), a line tells how long the window took to draw
+/// itself: where the time of a menu or a dialog goes is not seen from outside.
+static void flushWindowTimed( CRGUIWindow * w )
+{
+    if ( !CRLog::isInfoEnabled() ) {
+        w->flush();
+        return;
+    }
+    struct timeval t0, t1;
+    gettimeofday( &t0, NULL );
+    w->flush();
+    gettimeofday( &t1, NULL );
+    double ms = ( t1.tv_sec - t0.tv_sec ) * 1000.0 + ( t1.tv_usec - t0.tv_usec ) / 1000.0;
+    if ( ms >= 2.0 ) {
+        lvRect rc = w->getRect();
+        CRLog::info("perf: window %s drawn in %.1f ms, %d x %d", LCSTR(w->getSkinName()), ms, rc.width(), rc.height());
+    }
+}
+
 /// redraw one window
 void CRGUIWindowManager::updateWindow( CRGUIWindow * window )
 {
@@ -291,7 +311,7 @@ void CRGUIWindowManager::updateWindow( CRGUIWindow * window )
         CRGUIWindow * w = drawList.pop();
         if ( w->isDirty() ) {
             if ( w->isVisible() )
-                w->flush();
+                flushWindowTimed( w );
             _screen->invalidateRect( w->getRect() );
         }
     }
@@ -320,7 +340,7 @@ void CRGUIWindowManager::update( bool fullScreenUpdate, bool forceFlushScreen )
         CRGUIWindow * w = drawList.pop();
         if ( w->isDirty() || fullScreenUpdate ) {
             if ( w->isVisible() )
-                w->flush();
+                flushWindowTimed( w );
             _screen->invalidateRect( w->getRect() );
         }
     }
@@ -1407,6 +1427,33 @@ void CRMenu::showItem( int id )
             return;
         }
     }
+}
+
+/// the menu that has the item with this id: this one, or a submenu of it; NULL when none
+CRMenu * CRMenu::findMenuOfItem( int id )
+{
+    // the items of this menu first: an item of a menu is found before a value of a submenu
+    for ( int i=0; i<_items.length(); i++ ) {
+        if ( _items[i]->getId()==id )
+            return this;
+    }
+    for ( int i=0; i<_items.length(); i++ ) {
+        if ( _items[i]->isSubmenu() ) {
+            CRMenu * found = ((CRMenu *)_items[i])->findMenuOfItem( id );
+            if ( found )
+                return found;
+        }
+    }
+    return NULL;
+}
+
+/// the top level menu this one is a submenu of
+CRMenu * CRMenu::getRootMenu()
+{
+    CRMenu * p = this;
+    while ( p->_menu )
+        p = p->_menu;
+    return p;
 }
 
 int CRMenu::getCurPage( )

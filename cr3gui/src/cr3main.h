@@ -27,6 +27,14 @@ bool getDirectoryFonts( lString32Collection & pathList, lString32 ext, lString32
 
 bool InitCREngine( const char * exename, lString32Collection & fontPathList );
 
+#if (USE_FREETYPE==1)
+/// File that keeps the list of the fonts between the runs (see cr3main.cpp); called before
+/// InitCREngine(). tag: the list made with another tag is not used (the version of the program).
+void SetFontListCacheFile( const char * file, const char * tag );
+/// true: the last InitCREngine() registered the fonts from the kept list, not from the font files
+bool FontListWasCached();
+#endif
+
 void InitCREngineLog( const char * cfgfile );
 
 bool loadKeymaps(CRGUIWindowManager & winman,  const char * keymapFile, const char * locations[] );

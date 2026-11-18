@@ -71,6 +71,10 @@ public:
 
     void showKeymapDialog();
 
+    /// The contents of the text of this window (the sections of the manual) as the touch list
+    /// of the book contents; a chapter chosen there is a page of this window. False when the
+    /// text has fewer than two entries or the device has no such list.
+    bool showContentsList();
 
     /// adds XML and FictionBook tags for utf8 fb2 document
     static lString8 makeFb2Xml( const lString8 & body );

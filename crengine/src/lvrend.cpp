@@ -4016,8 +4016,20 @@ void renderFinalBlock( ldomNode * enode, LFormattedText * txform, RenderRectAcce
     }
     else if ( enode->isText() ) {
         // text nodes
-        lString32 txt = enode->getText();
-        if ( !txt.empty() ) {
+        ldomNode * const parent = enode->getParentNode();
+        css_style_ref_t style = parent->getStyle();
+        // A text that goes to the formatter as it is stored (no text-transform, no legacy
+        // rendering) is decoded straight into the buffer the formatter keeps: no string object
+        // and no copy of it in between. Any other text takes the way through the string.
+        lString32 txt;
+        lChar32 * own = NULL;
+        int ownLen = 0;
+        bool direct = !legacy_rendering && style->text_transform != css_tt_uppercase
+                && style->text_transform != css_tt_lowercase && style->text_transform != css_tt_capitalize
+                && enode->getTextBuffer( own, ownLen );
+        if ( !direct )
+            txt = enode->getText();
+        if ( direct ? own != NULL : !txt.empty() ) {
             #ifdef DEBUG_DUMP_ENABLED
                 for (int i=0; i<enode->getNodeLevel(); i++)
                     logfile << " . ";
@@ -4025,19 +4037,17 @@ void renderFinalBlock( ldomNode * enode, LFormattedText * txform, RenderRectAcce
                     << baseflags << ")\n";
             #endif
 
-            ldomNode * const parent = enode->getParentNode();
             lUInt32 tflags = LTEXT_FLAG_OWNTEXT;
             // if ( parent->getNodeId() == el_a ) // "123" in <a href=><sup>123</sup></a> would not be flagged
             if (is_link_start && *is_link_start) { // was propagated from some outer <A>
                 tflags |= LTEXT_IS_LINK; // used to gather in-page footnotes
-                lString32 tmp = lString32(txt);
+                lString32 tmp = direct ? lString32(own, ownLen) : lString32(txt);
                 if (!tmp.trim().empty()) // non empty text, will make out a word
                     *is_link_start = false;
                     // reset to false, so next text nodes in that link are not
                     // flagged, and don't make out duplicate in-page footnotes
             }
             LVFontRef const font = parent->getFont();
-            css_style_ref_t style = parent->getStyle();
 
             lUInt32 cl = getForegroundColor(style);
             // If erm_final, the background will be drawn by DrawDocument, and should not
@@ -4101,7 +4111,12 @@ void renderFinalBlock( ldomNode * enode, LFormattedText * txform, RenderRectAcce
                 // legacy new line processing: set indentation for **each** new line
                 tflags |= LTEXT_LEGACY_RENDERING;
             }
-            if ( txt.length()>0 ) {
+            if ( direct ) {
+                txform->AddSourceLineTake( own, ownLen, cl, bgcl, font.get(), lang_cfg, baseflags | tflags,
+                    line_h, valign_dy, indent, enode, 0, letter_spacing );
+                baseflags &= ~LTEXT_FLAG_NEWLINE & ~LTEXT_SRC_IS_CLEAR_BOTH; // clear newline flag
+            }
+            else if ( txt.length()>0 ) {
                 txform->AddSourceLine( txt.c_str(), txt.length(), cl, bgcl, font.get(), lang_cfg, baseflags | tflags,
                     line_h, valign_dy, indent, enode, 0, letter_spacing );
                 baseflags &= ~LTEXT_FLAG_NEWLINE & ~LTEXT_SRC_IS_CLEAR_BOTH; // clear newline flag

@@ -60,6 +60,8 @@ public:        // User declarations
     static bool request(const string &url, WebRequest &rq, string *body, const char *outFile);
     // the libcurl error means the certificate of the server was not accepted
     static bool isCertificateError(int curlCode);
+    // closes the connections kept between the requests; called when the program ends
+    static void cleanup();
 
 };
 #endif

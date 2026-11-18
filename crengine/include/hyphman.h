@@ -140,6 +140,11 @@ public:
 };
 
 /// hyphenation manager
+/// File that keeps the titles and the language tags of the pattern files between the runs of a
+/// program (hyphman.cpp); called before HyphMan::initDictionaries(). Empty or never called: every
+/// pattern file is opened for its header at every start.
+void HyphSetDictListCacheFile( const char * file );
+
 class HyphMan
 {
     friend class HyphDictionary;

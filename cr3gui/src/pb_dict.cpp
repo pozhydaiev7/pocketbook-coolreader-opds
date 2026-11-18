@@ -211,8 +211,9 @@ public:
             return false;
         }
         gettimeofday(&end, NULL);
-        CRLog::info("dictionary %s: %d words loaded in %d ms", _dict.ifoPath().c_str(), _dict.wordCount(),
-                    (int)((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec) / 1000));
+        CRLog::info("dictionary %s: %d words loaded in %d ms%s", _dict.ifoPath().c_str(), _dict.wordCount(),
+                    (int)((end.tv_sec - start.tv_sec) * 1000 + (end.tv_usec - start.tv_usec) / 1000),
+                    _dict.indexFromCache() ? ", index from the kept file" : "");
         return true;
     }
     // the index stays loaded: the next lookup does not read it again

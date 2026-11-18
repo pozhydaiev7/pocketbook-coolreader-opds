@@ -301,6 +301,8 @@ public:
     lString8 getText( lUInt32 address );
     /// get text by address, decoded from the stored UTF-8 without a copy of it
     lString32 getText32( lUInt32 address );
+    /// get text by address as a buffer of malloc() the caller frees; NULL and len 0 for an empty text
+    lChar32 * getTextBuffer( lUInt32 address, int & len );
     /// get pointer to text data
     TextDataStorageItem * getTextItem( lUInt32 addr );
     /// get pointer to element data
@@ -377,6 +379,8 @@ public:
     lString8 getText( int offset );
     /// get text item from buffer by offset, decoded from the stored UTF-8 without a copy of it
     lString32 getText32( int offset );
+    /// get text item from buffer by offset as a buffer of malloc(); NULL and len 0 for an empty text
+    lChar32 * getTextBuffer( int offset, int & len );
     /// get node parent by offset
     lUInt32 getParent( int offset );
     /// set node parent by offset
@@ -991,6 +995,10 @@ public:
 
     /// returns text node text as wide string
     lString32 getText( lChar32 blockDelimiter = 0, int maxSize=0 ) const;
+    /// The text of a text node kept in the document storage, as a buffer of malloc() the caller
+    /// frees (NULL and len 0 for an empty text): the same characters as getText() gives.
+    /// Returns false for any other node: the caller takes getText().
+    bool getTextBuffer( lChar32 * & buf, int & len ) const;
     /// returns text node text as utf8 string
     lString8 getText8( lChar8 blockDelimiter = 0, int maxSize=0 ) const;
     /// sets text node text as wide string

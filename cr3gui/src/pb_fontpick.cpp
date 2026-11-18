@@ -162,14 +162,16 @@ void PbFontPick::show(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, caption, rc, true);
     int rows = menu->setupRows(false);
     _captionFont = menu->subFont;
-    // the rows of the screen: "Back", the values, the sample
+    // The rows of the screen: the values, the sample. No row "Back to settings": the arrow at
+    // the caption and the Back key leave the list, a row doing the same under that arrow was
+    // reported as a duplicate (InkPad 4).
     int panelRows = rows * 2 / 5;
     if (panelRows < 3)
         panelRows = 3;
-    int perScreen = rows - 1 - panelRows;
+    int perScreen = rows - panelRows;
     if (perScreen < 2) {
         perScreen = 2;
-        panelRows = rows - 1 - perScreen;
+        panelRows = rows - perScreen;
     }
     int count = (int)_values.size();
     int screens = (count + perScreen - 1) / perScreen;
@@ -182,7 +184,6 @@ void PbFontPick::show(CRGUIWindowManager * wm)
     menu->setScreens(_screen, screens);
     menu->setSwipeTurnsScreens(true);
 
-    menu->add(PB_FONTPICK_CMD_CLOSE, lString32(MARK_PREV) + (_fromSettings ? tr("Back to settings") : tr("Back to the book")));
     int size = menu->titleFont->getSize();
     for (int n = 0; n < perScreen; n++) {
         int i = _screen * perScreen + n;
@@ -287,7 +288,9 @@ bool PbFontPick::onCommand(CRGUIWindowManager * wm, int command, int params)
         if (_tried != _current) {
             const char * name = _kind == FACE ? PROP_FONT_FACE : _kind == SIZE ? PROP_FONT_SIZE : PROP_FONT_BASE_WEIGHT;
             CRLog::info("Font choice %d: \"%s\" applied", (int)_kind, UnicodeToUtf8(_values[_tried]).c_str());
-            main_win->applySetting(name, _values[_tried]);
+            // opened from the settings menu: that menu comes back now and saves the settings
+            // when it is closed; one write of the file instead of two (up to 0.2 s each)
+            main_win->applySetting(name, _values[_tried], !_fromSettings);
         }
         close(wm);
         return true;

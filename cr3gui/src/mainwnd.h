@@ -117,6 +117,14 @@ protected:
     lString32 _cssDir;
     bool _settingsSaveFailed;
     bool _historySaveFailed;
+    // What the last successful write put into the settings file and into the history file, and
+    // the names of those files: the same content is not written again. A write is a new file,
+    // a sync and a rename, up to 0.2 s on a PocketBook; the settings are saved at every close of
+    // the settings menu, changed or not.
+    lString8 _settingsSaved;
+    lString32 _settingsSavedFile;
+    lString8 _historySaved;
+    lString32 _historySavedFile;
     void reportSaveResult(bool saved, bool history);
     void convertFontWeight();
     void setDeviceDefaults();
@@ -195,8 +203,9 @@ public:
 
     void applySettings();
 
-    /// one setting changed outside the settings menu: applied to the book and saved
-    void applySetting( const char * name, const lString32 & value );
+    /// One setting changed outside the settings menu: applied to the book and saved.
+    /// save false: the settings menu is opened right after and saves the settings when it is closed.
+    void applySetting( const char * name, const lString32 & value, bool save = true );
 
     /// showItem: id of the menu item to open the menu at (0: the first page)
     void showSettingsMenu( int showItem = 0 );

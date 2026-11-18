@@ -43,6 +43,11 @@ private:
     bool smoothscale;
     lUInt8 * decoded;
     bool isNinePatch;
+    // For every line of the picture: the first row of the drawing it goes to and the row after
+    // the last one (-1: none), taken from ymap once. The rows were searched in the whole ymap
+    // at every line: the height of the drawing times the height of the picture.
+    int * yfirst;
+    int * ylast;
 public:
     static int * GenMap( int src_len, int dst_len );
     static int * GenNinePatchMap( int src_len, int dst_len, int frame1, int frame2);

@@ -281,6 +281,16 @@ class CiteWindow : public BackgroundFitWindow
             if (!_touchSelecting)
                 return false;
             _touchSelecting = false;
+            if (!_touchDragged) {
+                // A firmware that reports no movement of the finger: the place where it was
+                // lifted tells a drag from a tap. The text between the two places is selected
+                // when the finger is lifted, without following it on the way.
+                int limit = _wm->getScreen()->getWidth() / 40;
+                int dx = pt.x - _touchDownPt.x;
+                int dy = pt.y - _touchDownPt.y;
+                if (dx <= -limit || dx >= limit || dy <= -limit || dy >= limit)
+                    _touchDragged = true;
+            }
             if (_touchDragged)
                 return dragSelectionTo(pt);
             ldomXPointerEx wordStart, wordEnd;

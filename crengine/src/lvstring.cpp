@@ -4252,6 +4252,58 @@ lString32 Utf8ToUnicode( const char * s, int sz ) {
     return dst;
 }
 
+/// The same characters as Utf8ToUnicode( s, sz ) gives, decoded in one pass into a buffer of
+/// malloc() the caller frees. Returns NULL and len 0 for an empty text. The layout asks for
+/// the text of every text node of the book: the count of the characters before the decoding
+/// and the string object in between took as long as the decoding itself.
+lChar32 * Utf8ToUnicodeBuffer( const char * s, int sz, int & len )
+{
+    len = 0;
+    if (!s || !s[0] || sz <= 0)
+        return NULL;
+    // a character takes one byte or more: sz characters at most
+    lChar32 * buf = (lChar32 *)malloc( sz * sizeof(lChar32) );
+    if (!buf)
+        return NULL;
+    const lUInt8 * p = (const lUInt8 *)s;
+    const lUInt8 * endp = p + sz;
+    lChar32 * d = buf;
+    while (p < endp) {
+        lUInt32 ch = *p;
+        if ( (ch & 0x80) == 0 ) {
+            if (!ch)
+                break;
+            *d++ = ch;
+            p++;
+        } else if ( (ch & 0xE0) == 0xC0 ) {
+            if (p + 2 > endp)
+                break;
+            *d++ = ((ch & 0x1F) << 6) | (p[1] & 0x3F);
+            p += 2;
+        } else if ( (ch & 0xF0) == 0xE0 ) {
+            if (p + 3 > endp)
+                break;
+            *d++ = ((ch & 0x0F) << 12) | ((lChar32)(p[1] & 0x3F) << 6) | (p[2] & 0x3F);
+            p += 3;
+        } else if ( (ch & 0xF8) == 0xF0 ) {
+            if (p + 4 > endp)
+                break;
+            *d++ = ((ch & 0x07) << 18) | ((lChar32)(p[1] & 0x3F) << 12) | ((lChar32)(p[2] & 0x3F) << 6) | (p[3] & 0x3F);
+            p += 4;
+        } else {
+            // invalid first byte of a sequence: as DecodeUtf8() passes it
+            *d++ = ch & 0x7F;
+            p++;
+        }
+    }
+    len = (int)(d - buf);
+    if (!len) {
+        free(buf);
+        return NULL;
+    }
+    return buf;
+}
+
 lString32 Utf16ToUnicode( const lChar16 * s )
 {
     if (!s || !s[0])

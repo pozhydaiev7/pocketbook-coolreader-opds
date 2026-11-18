@@ -271,6 +271,9 @@ int CRControlsMenuItem::onSelect()
 // the user comes back from to the settings. The settings changed in the menu are applied first
 // (the command of the menu itself), then the command of the item goes with the parameter 1:
 // "opened from the settings", so that "Back" on that screen opens the settings again.
+// The item may stand in a submenu of the settings (the font items of "Font settings"): the
+// command that applies the settings is the one of the top level menu, and the settings are
+// opened again at the submenu of the item (V3DocViewWin::showSettingsMenu).
 class CRSettingsScreenItem : public CRMenuItem
 {
 public:
@@ -281,7 +284,7 @@ public:
     /// called on item selection
     virtual int onSelect()
     {
-        _menu->getWindowManager()->postCommand( _menu->getId(), 0 );
+        _menu->getWindowManager()->postCommand( _menu->getRootMenu()->getId(), 0 );
         _menu->closeAllMenu( getId(), 1 );
         return 1;
     }
@@ -743,6 +746,31 @@ void CRSettingsMenu::addMenuItems( CRMenu * menu, CRGUIAcceleratorTableRef menuA
     menu->setSkinName(lString32("#settings"));
     menu->reconfigure( 0 );
 }
+
+// A group of settings: a submenu of the settings menu with three items or fewer. A plain CRMenu
+// of that size is taken for a setting with two or three values and switched by a tap instead of
+// opened; this one is always opened. Its own items stay with CRMenu::onItemSelect(): an item
+// with two or three values is switched in place by a tap, as everywhere in the settings menu.
+// CRStyleMenu, used for such groups before, opens a list for every item (reported for
+// "Dictionary settings": "it goes into a submenu nearly always").
+class CRSettingsGroupMenu : public CRMenu
+{
+public:
+    CRSettingsGroupMenu( CRGUIWindowManager * wm, CRMenu * parentMenu, int id, const char * label, const char * imageId,
+                         LVFontRef valueFont, CRPropRef props )
+        : CRMenu(wm, parentMenu, id, label, imageId, LVFontRef(), valueFont, props, NULL)
+    {
+    }
+
+    int onSelect()
+    {
+        if (isSubmenu()) {
+            _wm->activateWindow( (CRMenu *)this );
+            return 1;
+        }
+        return 0;
+    }
+};
 
 //This is to avoid toggleSubmenuValue() when number of items <= 3 in CRMenu,
 //because it doesn't work well when style value is empty (inherited)
@@ -1611,17 +1639,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     CRMenu * mainMenu = this;
     mainMenu->setAccelerators( _menuAccelerators );
 
-#ifdef CR_POCKETBOOK
-    // The face, the size and the weight of the font are chosen by a sample on a screen of their
-    // own (pb_fontpick.h): three items in a row here. The font weight was an item of "Font
-    // settings"; an item of a submenu cannot open a screen and come back to its place.
-    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_FACE, _("Default font face"),
-                                               "cr3_option_font_face", props, PROP_FONT_FACE ) );
-    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_SIZE, _("Default font size"),
-                                               "cr3_option_font_size", props, PROP_FONT_SIZE ) );
-    mainMenu->addItem( new CRSettingsPickItem( mainMenu, PB_CMD_FONT_WEIGHT, _("Font weight"),
-                                               "cr3_option_font_weight", props, PROP_FONT_BASE_WEIGHT, true ) );
-#else
+#ifndef CR_POCKETBOOK
     createFontFaceMenuItem(mainMenu, valueFont, mm_FontFace, _("Default font face"),
                            "cr3_option_font_face", PROP_FONT_FACE);
     createFontSizeMenu( _wm, mainMenu, cr_font_sizes, sizeof(cr_font_sizes)/sizeof(int),
@@ -1633,7 +1651,19 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     fontSettingsMenu->setSkinName(lString32("#settings"));
     fontSettingsMenu->setAccelerators( _menuAccelerators );
 
-#ifndef CR_POCKETBOOK
+#ifdef CR_POCKETBOOK
+    // The face, the size and the weight of the font are chosen by a sample on a screen of their
+    // own (pb_fontpick.h). They are the first three items of "Font settings": they stood in the
+    // settings menu itself, three font items in a row beside the folder of the font settings,
+    // and the user asked to put them into it. The screen of an item comes back to this submenu
+    // (CRSettingsScreenItem, V3DocViewWin::showSettingsMenu).
+    fontSettingsMenu->addItem( new CRSettingsPickItem( fontSettingsMenu, PB_CMD_FONT_FACE, _("Default font face"),
+                                                       "cr3_option_font_face", props, PROP_FONT_FACE ) );
+    fontSettingsMenu->addItem( new CRSettingsPickItem( fontSettingsMenu, PB_CMD_FONT_SIZE, _("Default font size"),
+                                                       "cr3_option_font_size", props, PROP_FONT_SIZE ) );
+    fontSettingsMenu->addItem( new CRSettingsPickItem( fontSettingsMenu, PB_CMD_FONT_WEIGHT, _("Font weight"),
+                                                       "cr3_option_font_weight", props, PROP_FONT_BASE_WEIGHT, true ) );
+#else
     createSettingsMenuItem(fontSettingsMenu, mm_Embolden, _("Font weight"), "cr3_option_font_weight",
                            valueFont, PROP_FONT_BASE_WEIGHT, font_weights);
 #endif
@@ -1890,9 +1920,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
 #ifdef POCKETBOOK_PRO
     //====== Dictionary settings ========
-    // CRStyleMenu: a plain CRMenu with three items or fewer is toggled by a tap instead of opened
-    CRMenu * dictSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
-                                                "cr3_option_dict_settings", valueFont, CRPropRef());
+    CRMenu * dictSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
+                                                        "cr3_option_dict_settings", valueFont, CRPropRef());
     dictSettingsMenu->setSkinName(lString32("#settings"));
     dictSettingsMenu->setAccelerators( _menuAccelerators );
     createSettingsMenuItem(dictSettingsMenu, mm_dictPosition, _("Dictionary window"),
@@ -1910,9 +1939,9 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     mainMenu->addItem( dictSettingsMenu );
 #endif
 
-    CRMenu * controlSettingsMenu = new CRStyleMenu( _wm, mainMenu, _menuItemId++, _("Control settings"),
-                                                   "cr3_option_controls", valueFont, CRPropRef());
-    //style menu doesn't toggle when number of items <= 3, we don't need toggling
+    // a group: opened by a tap; its items with two or three values are switched in place
+    CRMenu * controlSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Control settings"),
+                                                           "cr3_option_controls", valueFont, CRPropRef());
     controlSettingsMenu->setSkinName(lString32("#settings"));
     controlSettingsMenu->setAccelerators( _menuAccelerators );
 #ifdef CR_POCKETBOOK

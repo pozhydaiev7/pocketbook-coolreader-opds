@@ -112,7 +112,8 @@ extern const int gDOMVersionCurrent = DOM_VERSION_CURRENT;
 #define CACHE_FILE_FORMAT_VERSION "3.12.80"
 
 /// increment following value to force re-formatting of old book after load
-#define FORMATTING_VERSION_ID 0x0027
+// 0x0028: a picture that is all its part of the book has fills the page (the cover of an EPUB)
+#define FORMATTING_VERSION_ID 0x0028
 
 #ifndef DOC_DATA_COMPRESSION_LEVEL
 /// data compression level (0=no compression, 1=fast compressions, 3=normal compression)
@@ -273,6 +274,23 @@ enum CacheFileBlockType {
 #define XXH_INLINE_ALL
 #include "xxhash.h"
 #include <lvtextfm.h>
+
+// Times of the stages of a layout, for the log (INFO level, written when the log is on): where
+// the seconds of a layout go. Blocks of the document read back from the cache file are counted
+// too: a book that does not fit the memory given to it pays for every pass over its text.
+#if !defined(_WIN32)
+#include <sys/time.h>
+static double perfNowMs()
+{
+    struct timeval tv;
+    gettimeofday( &tv, NULL );
+    return tv.tv_sec * 1000.0 + tv.tv_usec / 1000.0;
+}
+#else
+static double perfNowMs() { return 0; }
+#endif
+static int perfChunkRestores = 0;
+static double perfChunkRestoreMs = 0;
 
 #if (USE_ZLIB == 1)
 #define PACK_BUF_SIZE 0x10000
@@ -3533,6 +3551,12 @@ lString32 ldomDataStorageManager::getText32( lUInt32 address )
     return chunk->getText32(address&0xFFFF);
 }
 
+lChar32 * ldomDataStorageManager::getTextBuffer( lUInt32 address, int & len )
+{
+    ldomTextStorageChunk * chunk = getChunk(address);
+    return chunk->getTextBuffer(address&0xFFFF, len);
+}
+
 /// get pointer to element data
 ElementDataStorageItem * ldomDataStorageManager::getElem( lUInt32 addr )
 {
@@ -3881,6 +3905,19 @@ lString32 ldomTextStorageChunk::getText32( int offset )
     }
     return lString32::empty_str;
 }
+
+/// The text of a node for the formatter of a paragraph: decoded in one pass into the buffer the
+/// formatter keeps, with no string object in between.
+lChar32 * ldomTextStorageChunk::getTextBuffer( int offset, int & len )
+{
+    offset <<= 4;
+    if ( _buf && offset>=0 && offset<(int)_bufpos ) {
+        TextDataStorageItem * item = (TextDataStorageItem *)(_buf+offset);
+        return Utf8ToUnicodeBuffer( item->text, item->length, len );
+    }
+    len = 0;
+    return NULL;
+}
 #endif
 
 void ldomTextStorageChunk::setunpacked( const lUInt8 * buf, int bufsize )
@@ -3906,6 +3943,12 @@ void ldomTextStorageChunk::ensureUnpacked()
 #if BUILD_LITE!=1
     if ( !_buf ) {
         if ( _saved ) {
+            bool perfOn = CRLog::isInfoEnabled();
+            double perfT0 = perfOn ? perfNowMs() : 0;
+            struct PerfRestore {
+                bool on; double t0;
+                ~PerfRestore() { if ( on ) { perfChunkRestores++; perfChunkRestoreMs += perfNowMs() - t0; } }
+            } perfRestore = { perfOn, perfT0 };
             if ( !restoreFromCache() ) {
                 CRTimerUtil timer;
                 timer.infinite();
@@ -5245,7 +5288,13 @@ bool ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback,
 //    }
 
     bool was_just_rendered_from_cache = _just_rendered_from_cache; // cleared by checkRenderContext()
-    if ( !checkRenderContext() ) {
+    bool perfOn = CRLog::isInfoEnabled();
+    double perfStart = perfNowMs();
+    int perfRestores0 = perfChunkRestores;
+    double perfRestoreMs0 = perfChunkRestoreMs;
+    bool contextSame = checkRenderContext();
+    double perfChecked = perfNowMs();
+    if ( !contextSame ) {
         if ( _nodeDisplayStyleHashInitial == NODE_DISPLAY_STYLE_HASH_UNINITIALIZED ) { // happen when just loaded
             // For knowing/debugging cases when node styles set up during loading
             // is invalid (should happen now only when EPUB has embedded fonts
@@ -5283,6 +5332,7 @@ bool ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback,
         // Reset counters (quotes nesting levels...)
         TextLangMan::resetCounters();
 
+        double perfDropped = perfNowMs();
         CRLog::trace("Save stylesheet...");
         _stylesheet.push();
         CRLog::trace("Init node styles...");
@@ -5290,13 +5340,24 @@ bool ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback,
         getRootNode()->initNodeStyleRecursive( callback );
         CRLog::trace("Restoring stylesheet...");
         _stylesheet.pop();
+        double perfStyled = perfNowMs();
 
         CRLog::trace("init render method...");
         getRootNode()->initNodeRendMethodRecursive();
+        double perfMethods = perfNowMs();
 
 //        getRootNode()->setFont( _def_font );
 //        getRootNode()->setStyle( _def_style );
         updateRenderContext();
+        if ( perfOn )
+            CRLog::info("perf: layout, styles: check of the settings %.1f ms, old styles and fonts dropped %.1f, "
+                        "style sheet applied to the nodes %.1f, render methods %.1f, hash of the styles %.1f; "
+                        "%d elements; %d blocks read back from the cache file in %.1f ms",
+                        perfChecked - perfStart, perfDropped - perfChecked, perfStyled - perfDropped,
+                        perfMethods - perfStyled, perfNowMs() - perfMethods, _elemCount,
+                        perfChunkRestores - perfRestores0, perfChunkRestoreMs - perfRestoreMs0);
+        perfRestores0 = perfChunkRestores;
+        perfRestoreMs0 = perfChunkRestoreMs;
 
         // DEBUG dump of render methods
         //dumpRendMethods( getRootNode(), cs32(" - ") );
@@ -5326,7 +5387,9 @@ bool ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback,
         context.setCallback(callback, numFinalBlocks);
         //updateStyles();
         CRLog::trace("rendering...");
+        double perfBlocks0 = perfNowMs();
         renderBlockElement( context, getRootNode(), 0, y0, width, usable_left_overflow, usable_right_overflow );
+        double perfBlocks1 = perfNowMs();
         _rendered = true;
     #if 0 //def _DEBUG
         LVStreamRef ostream = LVOpenFileStream( "test_save_after_init_rend_method.xml", LVOM_WRITE );
@@ -5339,6 +5402,11 @@ bool ldomDocument::render( LVRendPageList * pages, LVDocViewCallback * callback,
         _pagesData.reset();
         pages->serialize( _pagesData );
         _renderedBlockCache.restoreSize(); // Restore original cache size
+        if ( perfOn )
+            CRLog::info("perf: layout, blocks: %d final blocks formatted in %.1f ms, pages made and render "
+                        "context saved %.1f; %d pages; %d blocks read back from the cache file in %.1f ms",
+                        numFinalBlocks, perfBlocks1 - perfBlocks0, perfNowMs() - perfBlocks1, pages->length(),
+                        perfChunkRestores - perfRestores0, perfChunkRestoreMs - perfRestoreMs0);
 
         if ( _nodeDisplayStyleHashInitial == NODE_DISPLAY_STYLE_HASH_UNINITIALIZED ) {
             // If _nodeDisplayStyleHashInitial has not been initialized from its
@@ -17415,6 +17483,19 @@ lString32 ldomNode::getText( lChar32 blockDelimiter, int maxSize ) const
         return _data._text_ptr->getText32();
     }
     return lString32::empty_str;
+}
+
+/// text of a text node of the document storage as a buffer of malloc(), see lvtinydom.h
+bool ldomNode::getTextBuffer( lChar32 * & buf, int & len ) const
+{
+    ASSERT_NODE_NOT_NULL;
+#if BUILD_LITE!=1
+    if ( TNTYPE == NT_PTEXT ) {
+        buf = getDocument()->_textStorage.getTextBuffer( _data._ptext_addr, len );
+        return true;
+    }
+#endif
+    return false;
 }
 
 /// returns text node text as utf8 string

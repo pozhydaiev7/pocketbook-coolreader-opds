@@ -257,8 +257,8 @@ void PbStatsView::showBooks(CRGUIWindowManager * wm)
     OpdsMenu * menu = new OpdsMenu(wm, tr("All books"), rc, false);
     int rows = menu->setupRows(true);
     int total = (int)_bookIndexes.size();
-    // the first row goes back; a long list is turned with the arrows of the title
-    int perScreen = rows - 1;
+    // a long list is turned with the arrows of the title
+    int perScreen = rows;
     if (perScreen < 1)
         perScreen = 1;
     int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;
@@ -301,7 +301,7 @@ void PbStatsView::showReport(CRGUIWindowManager * wm)
             packed.push_back(std::make_pair(i, -1));
     }
     int total = (int)packed.size();
-    int perScreen = rows - 1;
+    int perScreen = rows;
     if (perScreen < 1)
         perScreen = 1;
     int screens = total > 0 ? (total + perScreen - 1) / perScreen : 1;

@@ -457,6 +457,33 @@ public:
             flags, interval, valign_dy, indent, object, (lUInt16)offset, letter_spacing );
     }
 
+    /// AddSourceLine() with LTEXT_FLAG_OWNTEXT for a text that is already in a buffer of malloc():
+    /// the buffer itself becomes the text of the fragment (no copy) and is freed with it.
+    /// len is the number of characters, not 0.
+    void AddSourceLineTake(
+           lChar32 *       text,
+           lUInt32         len,
+           lUInt32         color,
+           lUInt32         bgcolor,
+           LVFont *        font,
+           TextLangCfg *   lang_cfg,
+           lUInt32         flags,
+           lInt16          interval,
+           lInt16          valign_dy=0,
+           lInt16          indent=0,
+           void *          object=NULL,
+           lUInt32         offset=0,
+           lInt16          letter_spacing=0
+        )
+    {
+        lvtextAddSourceLine(m_pbuffer,
+            font,
+            lang_cfg,
+            text, len, color, bgcolor,
+            flags & ~LTEXT_FLAG_OWNTEXT, interval, valign_dy, indent, object, (lUInt16)offset, letter_spacing );
+        m_pbuffer->srctext[ m_pbuffer->srctextlen - 1 ].flags |= LTEXT_FLAG_OWNTEXT;
+    }
+
     lUInt32 Format(lUInt16 width, lUInt16 page_height,
                         int para_direction=0, // = REND_DIRECTION_UNSET in lvrend.h
                         int usable_left_overflow=0, int usable_right_overflow=0,

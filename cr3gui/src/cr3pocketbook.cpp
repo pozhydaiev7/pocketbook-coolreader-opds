@@ -14,6 +14,7 @@
 #include "selnavig.h"
 #include <cr3version.h>
 #include <lvxmlutils.h>
+#include <crperf.h>
 #include "cr3pocketbook.h"
 #include <inkview.h>
 #include <regex.h>
@@ -28,6 +29,7 @@
 #endif
 #include "opdsbrowser.h"
 #include "pb_dict.h"
+#include "pb_xdxf.h"
 #include "pb_statsview.h"
 #include "pb_debug.h"
 #include "pb_fontpick.h"
@@ -37,6 +39,7 @@
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
 #include <sys/time.h>
+#include <sys/stat.h>
 #include <bookstate.h>
 #endif
 
@@ -261,6 +264,9 @@ struct PbPerf {
         imageWhy = "";
         mode = "";
         start = pbPerfNow();
+        // the engine counts its own parts of the work while the log is on
+        crPerf.on = CRLog::isInfoEnabled();
+        crPerf.reset();
     }
 };
 static PbPerf pbPerf;
@@ -268,6 +274,57 @@ static long long pbPerfProcessStart = 0;
 static long long pbPerfLoadStart = 0;
 static long long pbPerfFormatStart = 0;
 static inline bool pbPerfOn() { return CRLog::isInfoEnabled(); }
+// Frequency of the processor, for the log: a device that saves power may run our work at a part
+// of its speed. Read from the files of the kernel; 0 and empty strings where they are not there.
+static bool pbCpuRead(const char * name, char * buf, int size)
+{
+    char path[128];
+    snprintf(path, sizeof(path), "/sys/devices/system/cpu/%s", name);
+    buf[0] = 0;
+    FILE * f = fopen(path, "r");
+    if (f == NULL)
+        return false;
+    if (fgets(buf, size, f) == NULL)
+        buf[0] = 0;
+    fclose(f);
+    for (int i = 0; buf[i]; i++)
+        if (buf[i] == '\n' || buf[i] == '\r')
+            buf[i] = 0;
+    return buf[0] != 0;
+}
+
+static int pbCpuStartMhz = 0;
+
+// A file that is there while CoolReader runs: found at a start, it tells that the run before
+// was cut short (see the check of the book cache in InitDoc)
+#define PB_RUN_MARKER STATEPATH"/cr3/running.mark"
+
+// the frequency of the first core now, MHz
+static int pbCpuMhz()
+{
+    char buf[64];
+    if (!pbCpuRead("cpu0/cpufreq/scaling_cur_freq", buf, sizeof(buf)))
+        return 0;
+    return atoi(buf) / 1000;
+}
+
+static void pbCpuLog(const char * when)
+{
+    char governor[64], lo[64], hi[64], online[64];
+    pbCpuRead("cpu0/cpufreq/scaling_governor", governor, sizeof(governor));
+    pbCpuRead("cpu0/cpufreq/scaling_min_freq", lo, sizeof(lo));
+    pbCpuRead("cpu0/cpufreq/scaling_max_freq", hi, sizeof(hi));
+    pbCpuRead("online", online, sizeof(online));
+    CRLog::info("perf: processor %s: %d MHz now, governor \"%s\", range %d to %d MHz, cores online \"%s\"", when,
+                pbCpuMhz(), governor, atoi(lo) / 1000, atoi(hi) / 1000, online);
+}
+
+// cover of the book for the power-off logo and the standby screen, see pbCoverMake()
+static void pbCoverMake();
+static void pbCoverArm();
+static void pbCoverForStandBy();
+// The moment the program went to the background; 0 while it is on the screen
+static long long pbBackgroundAt = 0;
 // microseconds as milliseconds, for "%.1f"
 #define PB_PERF_MS(us) ((double)(us) / 1000.0)
 // Tells the firmware that another book is open now. The home screen shows the list of the last
@@ -384,19 +441,31 @@ public:
 
     bool saveState(char *fileName, int cpage, int npages)
     {
+        // each call of the firmware library is timed: one of them took 5 seconds on an InkPad 4
+        long long t0 = pbPerfNow();
         bsHandle bs = _bsLoadPtr(fileName);
+        long long tLoad = pbPerfNow();
         if (bs)
         {
             _bsSetCPagePtr(bs, cpage + 1);
             _bsSetNPagePtr(bs, npages);
             _bsSetOpenTimePtr(bs, time(0));
-            if (_bsSavePtr(bs))
+            long long tSet = pbPerfNow();
+            bool saved = _bsSavePtr(bs) != 0;
+            long long tSave = pbPerfNow();
+            if (saved)
                 CRLog::trace("Book(%s) state saved to db successfully", fileName);
             else
                 CRLog::error("Book(%s) state saving to db failed", fileName);
             _bsClosePtr(bs);
+            if (pbPerfOn())
+                CRLog::info("perf: book state of the firmware: bsLoad %.1f ms, page and time set %.1f, bsSave %.1f (%s), "
+                            "bsClose %.1f", PB_PERF_MS(tLoad - t0), PB_PERF_MS(tSet - tLoad), PB_PERF_MS(tSave - tSet),
+                            saved ? "saved" : "FAILED", PB_PERF_MS(pbPerfNow() - tSave));
             return true;
         }
+        if (pbPerfOn())
+            CRLog::info("perf: book state of the firmware: bsLoad gave nothing in %.1f ms", PB_PERF_MS(tLoad - t0));
         return false;
     }
 };
@@ -499,6 +568,7 @@ void CRPocketBookGlobals::saveState(int cpage, int npages)
     if (cpage != _saved_page) {
         _saved_page = cpage;
         lString8 cf = UnicodeToLocal(_fileName);
+        long long perfAssoc = pbPerfNow();
         char *af0 = GetAssociatedFile((char *)cf.c_str(), 0);
 
         if (createFile(af0)) {
@@ -507,6 +577,8 @@ void CRPocketBookGlobals::saveState(int cpage, int npages)
                 createFile(afz);
             }
         }
+        if (pbPerfOn())
+            CRLog::info("perf: book state of the firmware: associated file %.1f ms", PB_PERF_MS(pbPerfNow() - perfAssoc));
     #ifdef PB_DB_STATE_SUPPORTED
         if (proStateSaver.isSaveStateSupported())
             proStateSaver.saveState((char *)cf.c_str(), cpage, npages);
@@ -670,6 +742,7 @@ private:
     bool m_incommand;
 protected:
     LVHashTable<lString8, int> _pbTable;
+    bool _logoPending; // the start logo is not on the canvas yet, see restoreOrientation()
 
     void initPocketBookActionsTable() {
         for (unsigned i = 0; i < sizeof(pbActions)/sizeof(pbActions[0]); i++) {
@@ -727,7 +800,7 @@ public:
     }
 
     CRPocketBookWindowManager(int dx, int dy, int bpp)
-        : CRGUIWindowManager(NULL), m_incommand(false), _pbTable(32)
+        : CRGUIWindowManager(NULL), m_incommand(false), _pbTable(32), _logoPending(false)
     {
         CRPocketBookScreen * s = new CRPocketBookScreen(dx, dy, bpp);
         _orientation = pocketbook_orientations[GetOrientation()];
@@ -741,14 +814,30 @@ public:
     {
         if (_orientation != storedOrientation)
             reconfigure(ScreenWidth(), ScreenHeight(), (cr_rotate_angle_t)storedOrientation);
-        const lChar32 * imgname =
-                ( _orientation &1 ) ? U"cr3_logo_screen_landscape.png" : U"cr3_logo_screen.png";
-        LVImageSourceRef img = getSkin()->getImage(imgname);
-        if ( !img.isNull() ) {
-            _screen->getCanvas()->Draw(img, 0, 0, _screen->getWidth(), _screen->getHeight());
-        } else {
-            _screen->getCanvas()->Clear(0xFFFFFF);
+        // The logo is the background of the wait icon of a book that takes long to open. A book
+        // opened from its cache shows no icon, and the full-screen picture was decoded and
+        // scaled for nothing at every start: it is drawn when the first icon is.
+        _screen->getCanvas()->Clear(0xFFFFFF);
+        _logoPending = true;
+    }
+
+    /// the book is on its way to the screen: no logo under a wait icon from here on
+    void dropStartLogo() { _logoPending = false; }
+
+    virtual void showWaitIcon( lString32 filename, int progressPercent = -1 )
+    {
+        if ( _logoPending ) {
+            _logoPending = false;
+            long long perfT0 = pbPerfNow();
+            const lChar32 * imgname =
+                    ( _orientation &1 ) ? U"cr3_logo_screen_landscape.png" : U"cr3_logo_screen.png";
+            LVImageSourceRef img = getSkin()->getImage(imgname);
+            if ( !img.isNull() )
+                _screen->getCanvas()->Draw(img, 0, 0, _screen->getWidth(), _screen->getHeight());
+            if (pbPerfOn())
+                CRLog::info("perf: start logo drawn for the wait icon in %.1f ms", PB_PERF_MS(pbPerfNow() - perfT0));
         }
+        CRGUIWindowManager::showWaitIcon( filename, progressPercent );
     }
 
     // runs event loop
@@ -988,6 +1077,54 @@ void CRPocketBookScreen::drawStretch(int x, int y, int w, int h)
         Stretch(_front->GetScanLine(y), m_bpp, w, h, _front->GetRowSize(), x, y, w, h, 0);
 }
 
+// The checks of the direct copy and of the canvas shift compare our bytes with those of the
+// firmware calls: 130 to 190 ms each, at the first page, at the first page turn and at the first
+// touch menu of every start and after every rotation. What they find depends on the firmware and
+// on the canvas only, so a check that passed is kept in the settings under a key of both and is
+// not made again: firmware version, canvas size and scanline, depth of the page buffer,
+// orientation. A check that failed is not kept: it is made again in the next run.
+#define PROP_POCKETBOOK_DIRECT_CHECKED "cr3.pocketbook.direct.checked"
+#define PB_DIRECT_KEYS_MAX 16
+static lString8 pbDirectKey(icanvas * cv, int bpp, int orientation, const char * what)
+{
+    char buf[160];
+    snprintf(buf, sizeof(buf), "%s/%dx%d/%d/%d/%d/%s", GetSoftwareVersion(), cv->width, cv->height, cv->scanline,
+             bpp, orientation, what);
+    return lString8(buf);
+}
+
+static bool pbDirectKnown(const lString8 & key)
+{
+    if (main_win == NULL)
+        return false;
+    lString8 all = UnicodeToUtf8(main_win->getProps()->getStringDef(PROP_POCKETBOOK_DIRECT_CHECKED, ""));
+    lString8 list, item;
+    list << ";" << all << ";";
+    item << ";" << key << ";";
+    return list.pos(item) >= 0;
+}
+
+static void pbDirectRemember(const lString8 & key)
+{
+    if (main_win == NULL || pbDirectKnown(key))
+        return;
+    lString8 all = UnicodeToUtf8(main_win->getProps()->getStringDef(PROP_POCKETBOOK_DIRECT_CHECKED, ""));
+    // the oldest keys go when the list is long: other firmware versions of the past
+    int count = 1;
+    for (int i = 0; i < all.length(); i++)
+        if (all[i] == ';')
+            count++;
+    while (count >= PB_DIRECT_KEYS_MAX && !all.empty()) {
+        int p = all.pos(";");
+        all = p >= 0 ? all.substr(p + 1) : lString8::empty_str;
+        count--;
+    }
+    if (!all.empty())
+        all += ";";
+    all += key;
+    main_win->getProps()->setString(PROP_POCKETBOOK_DIRECT_CHECKED, Utf8ToUnicode(all));
+}
+
 // true when the canvas can take the rows of the front buffer as they are
 bool CRPocketBookScreen::directUsable(icanvas * & cv)
 {
@@ -1010,6 +1147,14 @@ bool CRPocketBookScreen::directUsable(icanvas * & cv)
         _directState = 0;
         _directChecks = 0;
         _shiftState = 0;
+        if (pbDirectKnown(pbDirectKey(cv, m_bpp, orientation, "blit"))) {
+            _directState = 1;
+            if (pbDirectKnown(pbDirectKey(cv, m_bpp, orientation, "shift")))
+                _shiftState = 1;
+            CRLog::info("direct blit on%s: checked on this firmware and canvas in an earlier run (buffer %d bpp, "
+                        "canvas %d x %d, scanline %d, orientation %d)", _shiftState == 1 ? ", canvas shift on" : "",
+                        m_bpp, cv->width, cv->height, cv->scanline, orientation);
+        }
     }
     return true;
 }
@@ -1101,6 +1246,7 @@ bool CRPocketBookScreen::shiftCanvasUp(int dy, int coveredFrom)
                     coveredRows, coveredFrom);
     } else if (detail >= PB_DIRECT_MIN_DETAIL) {
         _shiftState = 1;
+        pbDirectRemember(pbDirectKey(cv, m_bpp, _directOrientation, "shift"));
         CRLog::info("canvas shift on: checked on canvas %d x %d (%d bytes differ by the grey level of the screen "
                     "only; %d rows from row %d on differ, they are drawn over)", cv->width, cv->height, levelBytes,
                     coveredRows, coveredFrom);
@@ -1135,6 +1281,7 @@ void CRPocketBookScreen::checkDirect(icanvas * cv, int x, int y, int w, int h)
     }
     if (detail >= PB_DIRECT_MIN_DETAIL && ++_directChecks >= PB_DIRECT_CHECKS) {
         _directState = 1;
+        pbDirectRemember(pbDirectKey(cv, m_bpp, _directOrientation, "blit"));
         CRLog::info("direct blit on: %d checks passed (buffer %d bpp, canvas %d x %d, scanline %d, orientation %d)",
                     _directChecks, m_bpp, cv->width, cv->height, cv->scanline, _directOrientation);
     }
@@ -1774,6 +1921,23 @@ public:
     virtual void DrawTop(bool updateScreen) {
         CRLog::trace("CRPocketBookQuickMenuWindow::DrawTop(%d)", updateScreen?1:0);
 
+        // The strip of the icons is kept as it was drawn, one for each of its two looks (the
+        // page has a bookmark or not): unpacking the pictures of the icons and stretching them
+        // took 54-58 ms of the 85 ms the menu opens in (InkPad 4), at every opening. A strip is
+        // drawn anew when the screen, the size of the icons or the skin is another one.
+        struct TopStrip { ibitmap * bmp; int sw, sh, iw, ih; lString32 skin; };
+        static TopStrip strips[2];
+        bool bookmarked = main_win->getDocView()->currentPageIsBookmarked();
+        TopStrip & strip = strips[bookmarked ? 1 : 0];
+        lString32 skinName = main_win->getProps()->getStringDef(PROP_SKIN_FILE, "");
+        if( strip.bmp != NULL && strip.sw == ScreenWidth() && strip.sh == ScreenHeight() &&
+                strip.iw == icon_width && strip.ih == icon_height && strip.skin == skinName ) {
+            DrawBitmap(0, 0, strip.bmp);
+            if( updateScreen )
+                PartialUpdate(0, 0, ScreenWidth(), icon_height+1);
+            return;
+        }
+
         // Draw top background
         FillArea(0, 0, ScreenWidth(), icon_height+2, 0x00FFFFFF);
         FillArea(0, icon_height, ScreenWidth(), 1, 0x00000000);
@@ -1785,7 +1949,7 @@ public:
 
             // Image name
             lString32 path;
-            if( strcmp(touchMenuIcons[i], "bookmarks") == 0 && main_win->getDocView()->currentPageIsBookmarked() ) {
+            if( strcmp(touchMenuIcons[i], "bookmarks") == 0 && bookmarked ) {
                 path = lString32("icon_") + lString32(touchMenuIcons[i]) + lString32("_alt.png");
             }
             else {
@@ -1818,6 +1982,16 @@ public:
             // Increase position
             position += icon_width + icon_space;
         }
+
+        // the strip as it is on the canvas now, for the next time
+        if( strip.bmp != NULL )
+            free(strip.bmp);
+        strip.bmp = BitmapFromScreen(0, 0, ScreenWidth(), icon_height+2);
+        strip.sw = ScreenWidth();
+        strip.sh = ScreenHeight();
+        strip.iw = icon_width;
+        strip.ih = icon_height;
+        strip.skin = skinName;
 
         if( updateScreen ) {
             CRLog::trace("CRPocketBookQuickMenuWindow::DrawTop(): PartialUpdate(0, 0, %d, %d);", ScreenWidth(), icon_height+1);
@@ -3180,6 +3354,10 @@ public:
     virtual void closing()
     {
         CRLog::trace("V3DocViewWin::closing();");
+        long long perfClosing = pbPerfNow();
+        // a book closed before the pause that makes its power-off cover was over
+        pbCoverMake();
+        long long perfCover = pbPerfNow();
         PbStatsView::flush();
         stopGSensor();
         readingOff();
@@ -3187,8 +3365,23 @@ public:
             SetGlobalOrientation(-1);
             _restore_globOrientation = false;
         }
+        long long perfStats = pbPerfNow();
         V3DocViewWin::closing();
+        long long perfSaved = pbPerfNow();
+        // The page of the book for the library of the firmware (libbookstate). It takes 0.35 s;
+        // 5 to 14 s were logged three times on InkPad 4, each time when the book was left a
+        // second after its cache file had been written (a layout after a font change): the
+        // firmware waits for the storage. That wait is in the background, after the home
+        // screen is shown. Giving the page to the firmware while the book is read instead
+        // would cost its 0.35 s at every page, so it stays here.
         pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
+        if (pbPerfOn())
+            CRLog::info("perf: exit: power-off cover %.1f ms, statistics and sensor %.1f, settings, history and "
+                        "book cache %.1f, book state of the firmware %.1f", PB_PERF_MS(perfCover - perfClosing),
+                        PB_PERF_MS(perfStats - perfCover), PB_PERF_MS(perfSaved - perfStats),
+                        PB_PERF_MS(pbPerfNow() - perfSaved));
+        // the book and the settings are saved: this run ends the proper way
+        unlink( PB_RUN_MARKER );
         if (!exiting) {
             free(standByImage);
             CloseApp();
@@ -4131,8 +4324,8 @@ public:
         V3DocViewWin::OnFormatEnd();
         // the engine reports the start of the layout only when a book is loaded
         if (pbPerfOn() && pbPerfFormatStart != 0)
-            CRLog::info("perf: book layout %.1f ms, %d pages", PB_PERF_MS(pbPerfNow() - pbPerfFormatStart),
-                        _docview->getPageCount());
+            CRLog::info("perf: book layout %.1f ms, %d pages, processor at %d MHz at its end",
+                        PB_PERF_MS(pbPerfNow() - pbPerfFormatStart), _docview->getPageCount(), pbCpuMhz());
         pbPerfFormatStart = 0;
 #ifdef BACKGROUND_CACHE_FILE_CREATION
         CRPocketBookWindowManager::instance->scheduleCacheSwap();
@@ -6475,6 +6668,8 @@ int InitDoc(const char *exename, char *fileName)
     fontDirs.add(lString32(U""USERDATA2"/fonts"));
     CRLog::info("INIT...");
     perfT[1] = pbPerfNow();
+    // the list of the fonts is kept between the runs: the font files are not opened one by one
+    SetFontListCacheFile(STATEPATH"/cr3/fontlist.cache", CR_PB_VERSION " " CR_PB_BUILD_DATE);
     if (!InitCREngine(exename, fontDirs))
         return 0;
     perfT[2] = pbPerfNow();
@@ -6575,6 +6770,10 @@ int InitDoc(const char *exename, char *fileName)
             return 0;
         }
         loadPocketBookKeyMaps(*wm);
+        // the headers of the pattern files are kept between the runs: the files are not opened
+        HyphSetDictListCacheFile(STATEPATH"/cr3/hyphlist.cache");
+        // the index of a large XDXF dictionary is kept too: its file is not read whole again
+        XdxfDict::setIndexCacheDir(STATEPATH"/cr3");
         HyphMan::initDictionaries(lString32(USERDATA"/share/cr3/hyph/"));
 
         perfT[3] = pbPerfNow();
@@ -6634,6 +6833,46 @@ int InitDoc(const char *exename, char *fileName)
             ldomDocCache::init(lString32(USERDATA2"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
         if (!ldomDocCache::enabled())
             ldomDocCache::init(lString32(USERDATA"/share/cr3/.cache"), PB_CR3_CACHE_SIZE);
+        // Memory of the open book. The engine keeps the text and the layout of a book in blocks
+        // and holds unpacked only as many of them as a limit lets it; the others are read from
+        // the cache file and unpacked again when they are needed. The limit of the build is
+        // 10 MB, a quarter of it for the text: a book of 1160 pages had 2.8 MB of text and every
+        // layout read 113 blocks back, 125 to 180 ms (InkPad 4, 2026-11-17). The limit is taken
+        // from the memory of the device now: a quarter of it, 10 to 256 MB; reading is what the
+        // device is for. It is a ceiling, not an allocation: a book takes what its size needs,
+        // so a small book takes as little as before.
+        {
+            long totalKb = 0;
+            FILE * meminfo = fopen( "/proc/meminfo", "r" );
+            if ( meminfo != NULL ) {
+                char line[128];
+                while ( fgets( line, sizeof(line), meminfo ) ) {
+                    if ( sscanf( line, "MemTotal: %ld kB", &totalKb ) == 1 )
+                        break;
+                }
+                fclose( meminfo );
+            }
+            double limitMb = totalKb / 1024.0 / 4;
+            if ( limitMb < 10 )
+                limitMb = 10;
+            if ( limitMb > 256 )
+                limitMb = 256;
+            setStorageMaxUncompressedSizeFactor( (float)( limitMb / 10 ) );
+            CRLog::info("book memory: the device has %ld MB, up to %.0f MB of a book are held unpacked", totalKb / 1024, limitMb);
+        }
+        // The cache file of a book is read and checked whole when it is opened: 67 ms for a file
+        // of 3.8 MB, more for a larger book, at every start. Each block is checked again when
+        // it is read, and a file that was being written is marked as such in its header. So the
+        // whole file is checked only after a run that did not end the proper way.
+        {
+            bool cleanExit = access( PB_RUN_MARKER, F_OK ) == -1;
+            enableCacheFileContentsValidation( !cleanExit );
+            FILE * marker = fopen( PB_RUN_MARKER, "wb" );
+            if ( marker != NULL )
+                fclose( marker );
+            CRLog::info("book cache: the whole file is %s when a book is opened (the run before %s)",
+                        cleanExit ? "not checked" : "checked", cleanExit ? "ended properly" : "did not end properly");
+        }
 
         perfT[5] = pbPerfNow();
         CRLog::trace("creating main window...");
@@ -6681,23 +6920,33 @@ int InitDoc(const char *exename, char *fileName)
         _docview->setBatteryState(CR_BATTERY_STATE_DISCHARGING, CR_BATTERY_CHARGER_NO, GetBatteryPower());
         wm->activateWindow( main_win );
         wm->restoreOrientation(orient);
+        long long perfActivated = pbPerfNow();
         if ( !main_win->loadDocument( lString32(fileName) ) ) {
             printf("Cannot open book file %s\n", fileName);
             delete wm;
             return 0;
         }
         perfT[8] = pbPerfNow();
+        wm->dropStartLogo();
         if (pbPerfOn()) {
-            CRFileHistRecord * perfRec = _docview->getCurrentFileHistRecord();
+            pbCpuLog("after the start");
+            CRLog::info("perf: processor when the program started: %d MHz", pbCpuStartMhz);
+            // Only what is known already goes to the log. The number of bookmarks was here: the
+            // record of the reading history it was taken from is made by asking the book for its
+            // position, and that lays the book out. The log must not change what the program does.
+            CRLog::info("perf: fonts registered %s", FontListWasCached() ? "from the kept list"
+                                                                         : "from the font files, the list is written");
             CRLog::info("perf: start: before init %.1f ms, language %.1f, fonts %.1f (%d fonts), keymaps and "
                         "hyphenation %.1f, skin %.1f, cache %.1f, window and settings %.1f, history %.1f, "
-                        "book %.1f; screen %d x %d, depth %d (hardware %d), pages %d, bookmarks %d",
+                        "window activation and orientation %.1f, book %.1f; screen %d x %d, depth %d (hardware %d), "
+                        "pages %d",
                         PB_PERF_MS(perfT[0] - pbPerfProcessStart), PB_PERF_MS(perfT[1] - perfT[0]),
                         PB_PERF_MS(perfT[2] - perfT[1]), fontMan->GetFontCount(), PB_PERF_MS(perfT[3] - perfT[2]),
                         PB_PERF_MS(perfT[4] - perfT[3]), PB_PERF_MS(perfT[5] - perfT[4]),
                         PB_PERF_MS(perfT[6] - perfT[5]), PB_PERF_MS(perfT[7] - perfT[6]),
-                        PB_PERF_MS(perfT[8] - perfT[7]), ScreenWidth(), ScreenHeight(), bpp, GetHardwareDepth(),
-                        _docview->getPageCount(), perfRec != NULL ? perfRec->getBookmarks().length() : 0);
+                        PB_PERF_MS(perfActivated - perfT[7]), PB_PERF_MS(perfT[8] - perfActivated),
+                        ScreenWidth(), ScreenHeight(), bpp, GetHardwareDepth(),
+                        _docview->getPageCount());
         }
         CRPocketBookDocView::instance->startGSensorPolling();
 
@@ -6958,6 +7207,7 @@ void enterStandByMode() {
     #endif
 
     // Draw cover
+    pbCoverForStandBy();
     if( standByImage ) {
         // ClearScreen();
         DrawBitmap(0, 0, standByImage);
@@ -7028,18 +7278,276 @@ static void pbPerfLog(const char * what, long long start)
     long long total = pbPerfNow() - start;
     long long other = total - pbPerf.draw - pbPerf.stats - pbPerf.battery - pbPerf.compare - pbPerf.blit -
             pbPerf.eink;
+    // The page number is asked only of a book that is laid out. Asking it of a book whose
+    // settings have just been changed lays the book out at once: with the log on, a font size
+    // chosen in its list was applied under the settings menu, with the wait icon left on the menu
+    // (InkPad 4, 2026-11-17), while without the log the book is laid out when it is shown again.
+    int page = main_win != NULL && main_win->getDocView()->IsRendered() ? main_win->getDocView()->getCurPage() + 1 : 0;
     CRLog::info("perf: %s: total %.1f ms, to screen %.1f: page draw %.1f, stats %.1f, battery %.1f, compare %.1f, "
-                "blit %.1f, %s %.1f, other %.1f; updates %d, page %d%s%s%s", what, PB_PERF_MS(total),
+                "blit %.1f, %s %.1f, other %.1f; updates %d, page %d, processor %d MHz; engine: %d paragraphs "
+                "formatted in %.1f ms, %d pictures drawn in %.1f, %d scaled from a buffer in %.1f%s%s%s",
+                what, PB_PERF_MS(total),
                 PB_PERF_MS(pbPerf.toScreen), PB_PERF_MS(pbPerf.draw),
                 PB_PERF_MS(pbPerf.stats), PB_PERF_MS(pbPerf.battery), PB_PERF_MS(pbPerf.compare),
                 PB_PERF_MS(pbPerf.blit), pbPerf.mode, PB_PERF_MS(pbPerf.eink), PB_PERF_MS(other), pbPerf.updates,
-                main_win != NULL ? main_win->getDocView()->getCurPage() + 1 : 0,
+                page, pbCpuMhz(),
+                crPerf.formats, crPerf.formatMs, crPerf.images, crPerf.imageMs, crPerf.rescales, crPerf.rescaleMs,
                 pbPerf.imageReady == 1 ? ", image ready" : (pbPerf.imageReady == 0 ? ", image drawn now" : ""),
                 pbPerf.imageReady == 0 && *pbPerf.imageWhy ? ": page prepare " : "",
                 pbPerf.imageReady == 0 ? pbPerf.imageWhy : "");
 }
 
+// Cover of the book for the power-off logo of the firmware (USERLOGOPATH/bookcover) and for the
+// standby screen of CoolReader. The firmware call that makes it takes 0.5 to 1.8 s, and it was
+// made at the first show of every start, right after the first page: taps waited all that time.
+//  - The cover is kept with the key of its book (PB_COVER_KEY_FILE): file, size, time, screen.
+//    The same book at the next start: nothing is made, and the saved picture is read only when
+//    the standby screen needs it.
+//  - Another book: the cover is made after PB_COVER_PAUSE_MS without taps and key presses, or
+//    when the standby screen needs it, or when the book is closed, whatever comes first.
+#define PB_COVER_KEY_FILE STATEPATH"/cr3/bookcover.key"
+#define PB_COVER_PAUSE_MS 3000
+static bool pbCoverPending = false;    // the cover of the open book is not made yet
+static bool pbCoverLoadTried = false;  // the saved cover was asked for the standby screen
+
+static lString8 pbCoverKey()
+{
+    lString8 name = UnicodeToLocal(pbGlobals->getFileName());
+    struct stat st;
+    long long size = 0, mtime = 0;
+    if (stat(name.c_str(), &st) == 0) {
+        size = (long long)st.st_size;
+        mtime = (long long)st.st_mtime;
+    }
+    char tail[96];
+    snprintf(tail, sizeof(tail), "|%lld|%lld|%dx%d|%d", size, mtime, ScreenWidth(), ScreenHeight(), GetHardwareDepth());
+    name += tail;
+    return name;
+}
+
+static lString8 pbCoverKeyStored()
+{
+    lString8 key;
+    FILE * f = fopen(PB_COVER_KEY_FILE, "rb");
+    if (f == NULL)
+        return key;
+    char buf[2048];
+    size_t n = fread(buf, 1, sizeof(buf) - 1, f);
+    fclose(f);
+    buf[n] = 0;
+    key = buf;
+    return key;
+}
+
+static void pbCoverTimer();
+
+// starts the pause, or starts it anew
+static void pbCoverArm()
+{
+    if (pbCoverPending)
+        SetHardTimer(const_cast<char *>("PowerOffCover"), pbCoverTimer, PB_COVER_PAUSE_MS);
+}
+
+static void pbCoverMake()
+{
+    if (!pbCoverPending || pbGlobals == NULL || main_win == NULL)
+        return;
+    pbCoverPending = false;
+    ClearTimer(pbCoverTimer);
+    long long perfT0 = pbPerfNow();
+    bool save = true;
+    ibitmap *cover = NULL;
+
+    // Try getting cover with the system function
+    cover = GetBookCover(
+        UnicodeToLocal(pbGlobals->getFileName()).c_str(),
+        ScreenWidth(),
+        ScreenHeight()
+        );
+    CRLog::trace("GetBookCover(): GetBookCover(%s, %d, %d);",
+        UnicodeToLocal(pbGlobals->getFileName()).c_str(),
+        ScreenWidth(),
+        ScreenHeight()
+        );
+    CRLog::trace("GetBookCover(): ibitmap *cover = %p", cover);
+
+    #ifdef POCKETBOOK_PRO
+
+    // Try getting library cached cover
+    if( !cover ) {
+        lString8 libCachePath = lString8(USERDATA"/cover_chache/1");
+        libCachePath += lString8(UnicodeToLocal(pbGlobals->getFileName())).substr(strlen(FLASHDIR));
+        libCachePath += lString8(".png");
+
+        if( access( libCachePath.c_str(), F_OK ) != -1 ) {
+
+            // Load image
+            LVImageSourceRef cachedFile = LVCreateFileCopyImageSource( lString32(libCachePath.c_str()) );
+
+            // Stretch image
+            if( !cachedFile.isNull() ) {
+                cachedFile = LVCreateStretchFilledTransform(
+                    cachedFile,
+                    ScreenWidth(),
+                    ScreenHeight(),
+                    IMG_TRANSFORM_STRETCH,
+                    IMG_TRANSFORM_STRETCH
+                    );
+
+                // Convert to ibitmap
+                if( !cachedFile.isNull() ) {
+
+                    cover = NewBitmap(cachedFile->GetWidth(), cachedFile->GetHeight());
+                    LVGrayDrawBuf tmpBuf( cachedFile->GetWidth(), cachedFile->GetHeight(), cover->depth );
+
+                    tmpBuf.Draw(cachedFile, 0, 0, cachedFile->GetWidth(), cachedFile->GetHeight(), true);
+
+                    if(4 == cover->depth) {
+                        Draw4Bits(tmpBuf, cover->data, 0, 0, cachedFile->GetWidth(), cachedFile->GetHeight());
+                    } else {
+                        memcpy(cover->data, tmpBuf.GetScanLine(0), cover->height * cover->scanline);
+                    }
+                }
+            }
+        }
+    }
+
+    #endif
+
+    // If none worked - generate an ugly ass cover
+    if( !cover ) {
+
+        LVGrayDrawBuf tmpBufCover( ScreenWidth(), ScreenHeight(), GetHardwareDepth() );
+
+        lString32 authors = main_win->getDocView()->getAuthors();
+        lString32 title = main_win->getDocView()->getTitle();
+        lString32 series = main_win->getDocView()->getSeries();
+        if (title.empty())
+            title = _("Untitled");
+
+        LVDrawBookCover(
+            tmpBufCover,
+            main_win->getDocView()->getCoverPageImage(),
+            true,
+            lString8(DEFAULTFONT),
+            title,
+            authors,
+            series,
+            0
+            );
+
+        cover = NewBitmap(ScreenWidth(), ScreenHeight());
+        if(4 == cover->depth) {
+            Draw4Bits(tmpBufCover, cover->data, 0, 0, ScreenWidth(), ScreenHeight());
+        } else {
+            memcpy(cover->data, tmpBufCover.GetScanLine(0), cover->height * cover->scanline);
+        }
+    }
+
+    // If somehow there is a cover
+    if (cover) {
+
+        // Get previous cover
+        ibitmap *cover_prev = LoadBitmap( USERLOGOPATH"/bookcover");
+        if (cover_prev) {
+
+            // Compare covers
+            if( cover->scanline * cover->height == cover_prev->scanline * cover_prev->height &&
+                memcmp(cover->data,cover_prev->data,cover->scanline * cover->height) == 0 ) {
+                save = false;
+            }
+        }
+        // free(cover_prev);
+
+        // Save new cover if needed
+        if (save) {
+            CRLog::trace("Save bookcover for power off logo");
+            SaveBitmap( USERLOGOPATH"/bookcover", cover);
+            // WriteStartupLogo(cover); // Not used but added here... just in case it might be needed
+            standByImage = cover;
+            free(cover_prev);
+        }
+        else {
+            standByImage = cover_prev;
+            free(cover);
+        }
+    }
+
+    if (cover) {
+        FILE * f = fopen(PB_COVER_KEY_FILE, "wb");
+        if (f != NULL) {
+            lString8 key = pbCoverKey();
+            fwrite(key.c_str(), 1, key.length(), f);
+            fclose(f);
+        }
+    }
+    pbCoverLoadTried = true;
+    if (pbPerfOn())
+        CRLog::info("perf: power-off cover made in %.1f ms, %s", PB_PERF_MS(pbPerfNow() - perfT0),
+                    !cover ? "no cover" : (save ? "saved" : "the saved one is the same"));
+}
+
+static void pbCoverTimer()
+{
+    // in the standby mode the cover is made by enterStandByMode() itself
+    if (exiting || isStandByMode)
+        return;
+    pbCoverMake();
+}
+
+// The picture of the standby screen: the cover made in this run, or the one saved by an earlier one
+static void pbCoverForStandBy()
+{
+    pbCoverMake();
+    if (standByImage == NULL && !pbCoverLoadTried) {
+        pbCoverLoadTried = true;
+        long long perfT0 = pbPerfNow();
+        standByImage = LoadBitmap( USERLOGOPATH"/bookcover");
+        if (pbPerfOn())
+            CRLog::info("perf: saved power-off cover read for the standby screen in %.1f ms", PB_PERF_MS(pbPerfNow() - perfT0));
+    }
+}
+
 static bool need_save_cover = false;
+#ifdef POCKETBOOK_PRO
+// Back from the background: the reader comes back to the book. The firmware keeps the program
+// alive when the reader leaves to the home screen, and opening the same book later shows the
+// program as it was left, with the settings menu or the touch menu still open over the page
+// (reported from InkPad 4: "sometimes a menu is open when I enter the book"). The touch menu is
+// closed; the settings menu is closed the way the Back key closes it, level by level, so what
+// was changed in it is applied. A screen with a content of its own (a catalog, the statistics,
+// the dictionary, a list with a font sample) stays as it was left.
+// Returns the number of the windows closed. The caller draws the page: the firmware shows the
+// canvas as the program left it, and without a draw of ours the closed menu stayed on the screen
+// over a program that already was in the book (InkPad 4, 2026-11-17).
+static bool pbMenusClosedOnReturn = false;
+static int pbCloseMenusOverBook()
+{
+    CRPocketBookWindowManager * wm = CRPocketBookWindowManager::instance;
+    if (wm == NULL)
+        return 0;
+    int closed = 0;
+    if (isTouchMenuVisible && CRPocketBookQuickMenuWindow::instance != NULL) {
+        CRPocketBookQuickMenuWindow::instance->SelfCloseNoUpdate();
+        closed++;
+    }
+    for (int guard = 0; guard < 12 && wm->getWindowCount() > 1; guard++) {
+        CRGUIWindow * top = wm->getTopVisibleWindow();
+        if (top == NULL || top->getSkinName() != lString32("#settings"))
+            break;
+        int count = wm->getWindowCount();
+        top->onCommand(MCMD_CANCEL, 0);
+        wm->processPostedEvents();
+        if (wm->getWindowCount() >= count)
+            break;
+        closed++;
+    }
+    if (closed > 0)
+        CRLog::info("Back from the background: %d menu window(s) over the book closed", closed);
+    return closed;
+}
+#endif
+
 int main_handler(int type, int par1, int par2)
 {
 
@@ -7086,14 +7594,25 @@ int main_handler(int type, int par1, int par2)
     case EVT_KEYREPEAT:
     case EVT_KEYRELEASE:
         pbPagePrepareArm();
+        pbCoverArm();
         break;
     case EVT_HIDE:
     case EVT_EXIT:
 #ifdef POCKETBOOK_PRO
     case EVT_BACKGROUND:
+        if (type == EVT_BACKGROUND)
+            pbBackgroundAt = pbPerfNow();
 #endif
         pbPagePrepareCancel();
         break;
+#ifdef POCKETBOOK_PRO
+    case EVT_FOREGROUND:
+        // back after two seconds or more: to the book, not to a menu left open over it
+        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL)
+            pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
+        pbBackgroundAt = 0;
+        break;
+#endif
     default:
         break;
     }
@@ -7137,7 +7656,9 @@ int main_handler(int type, int par1, int par2)
         // CRLog::trace("COVER_OFF_SAVE");
         // CRLog::trace(USERLOGOPATH"/bookcover");
         if (need_save_cover) {
-            long long perfCover = pbPerfNow();
+            need_save_cover = false;
+            long long perfFirst = pbPerfNow();
+            const char * perfSecondUpdate = "no";
 
             // Check if it's a fresh cr3 update
             if( access( PB_FRESH_UPDATE_MARKER, F_OK ) != -1 ) {
@@ -7156,12 +7677,15 @@ int main_handler(int type, int par1, int par2)
 
             #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
 
-            // Else full screen update
-            else {
+            // Else a full screen update, unless the page has just gone to the screen with one:
+            // two in a row are two flashes of the screen for the same picture
+            else if( strcmp(pbPerf.mode, "FullUpdate") != 0 ) {
                 FullUpdate();
+                perfSecondUpdate = "yes";
             }
 
             #endif
+            long long perfUpdated = pbPerfNow();
 
             // Set/Remove custom system theme
             #ifdef POCKETBOOK_PRO_FW5
@@ -7171,187 +7695,13 @@ int main_handler(int type, int par1, int par2)
             else
                 setCustomSystemTheme();
             #endif
+            long long perfTheme = pbPerfNow();
 
-            // startStatusUpdateThread(5000);
-
-            ibitmap *cover = NULL;
-
-            // Get with crengine
-            // if( ScreenWidth() < ScreenHeight() ) {
-
-            //     LVImageSourceRef cvrTmp = main_win->getDocView()->getCoverPageImage();
-            //     if( !cvrTmp.isNull() ) {
-            //         FillArea(0, 0, ScreenWidth(), ScreenHeight(), 0x00FFFFFF);
-            //         if( cvrTmp->GetHeight() > cvrTmp->GetWidth() ) {
-            //             int newWidth = ScreenWidth() * cvrTmp->GetHeight() / ScreenHeight();
-            //             // if( ScreenWidth() - newWidth <= ScreenWidth() * 0.05 ) {
-            //             //     newWidth = ScreenWidth();
-            //             // }
-            //             cvrTmp = LVCreateStretchFilledTransform(
-            //                             cvrTmp,
-            //                             newWidth,
-            //                             ScreenHeight(),
-            //                             IMG_TRANSFORM_STRETCH,
-            //                             IMG_TRANSFORM_STRETCH
-            //                             );
-            //         }
-            //         else {
-            //             int newHeight = ScreenHeight() * cvrTmp->GetWidth() / ScreenWidth();
-            //             // if( ScreenHeight() - newHeight <= ScreenHeight() * 0.05 ) {
-            //             //     newHeight = ScreenHeight();
-            //             // }
-            //             cvrTmp = LVCreateStretchFilledTransform(
-            //                             cvrTmp,
-            //                             ScreenWidth(),
-            //                             newHeight,
-            //                             IMG_TRANSFORM_STRETCH,
-            //                             IMG_TRANSFORM_STRETCH
-            //                             );
-            //         }
-            //         cover = BitmapFromScreen(0, 0, ScreenWidth(), ScreenHeight());
-            //     }
-            //     cover = LVImageSourceRef_to_ibitmab( cvrTmp );
-            // }
-
-            // Try getting cover with the system function
-            cover = GetBookCover(
-                UnicodeToLocal(pbGlobals->getFileName()).c_str(),
-                ScreenWidth(),
-                ScreenHeight()
-                );
-            CRLog::trace("GetBookCover(): GetBookCover(%s, %d, %d);",
-                UnicodeToLocal(pbGlobals->getFileName()).c_str(),
-                ScreenWidth(),
-                ScreenHeight()
-                );
-            CRLog::trace("GetBookCover(): ibitmap *cover = %p", cover);
-
-            // Stretch cover if height/width is at most 6% less than the screen size
-            /*if( cover ) {
-                CRLog::trace("GetBookCover(): cover->height = %d", cover->height);
-                CRLog::trace("GetBookCover(): cover->width = %d", cover->width);
-
-                CRLog::trace("GetBookCover(): cover->width > ScreenWidth()-(ScreenWidth()*0.06) ==== %d > %d",
-                    cover->width, ScreenWidth()-(ScreenWidth()*0.06));
-                CRLog::trace("GetBookCover(): cover->height > ScreenHeight()-(ScreenHeight()*0.06) ==== %d > %d",
-                    cover->height, ScreenHeight()-(ScreenHeight()*0.06));
-
-                if( ( // Smaller width
-                    cover->height == ScreenHeight() &&
-                    cover->width < ScreenWidth() &&
-                    cover->width > ScreenWidth()-(ScreenWidth()*0.06)
-                    ) || ( // Or smaller height
-                    cover->width == ScreenWidth() &&
-                    cover->height < ScreenHeight() &&
-                    cover->height > ScreenHeight()-(ScreenHeight()*0.06)
-                    ) ) {
-                    CRLog::trace("GetBookCover(): Stretch");
-                    StretchBitmap(0, 0, ScreenWidth(), ScreenHeight(), cover, 0);
-                    CRLog::trace("GetBookCover(): after: cover->height = %d", cover->height);
-                    CRLog::trace("GetBookCover(): after: cover->width = %d", cover->width);
-                }
-            }*/
-
-            #ifdef POCKETBOOK_PRO
-
-            // Try getting library cached cover
-            if( !cover ) {
-                lString8 libCachePath = lString8(USERDATA"/cover_chache/1");
-                libCachePath += lString8(UnicodeToLocal(pbGlobals->getFileName())).substr(strlen(FLASHDIR));
-                libCachePath += lString8(".png");
-
-                if( access( libCachePath.c_str(), F_OK ) != -1 ) {
-
-                    // Load image
-                    LVImageSourceRef cachedFile = LVCreateFileCopyImageSource( lString32(libCachePath.c_str()) );
-
-                    // Stretch image
-                    if( !cachedFile.isNull() ) {
-                        cachedFile = LVCreateStretchFilledTransform(
-                            cachedFile,
-                            ScreenWidth(),
-                            ScreenHeight(),
-                            IMG_TRANSFORM_STRETCH,
-                            IMG_TRANSFORM_STRETCH
-                            );
-
-                        // Convert to ibitmap
-                        if( !cachedFile.isNull() ) {
-
-                            cover = NewBitmap(cachedFile->GetWidth(), cachedFile->GetHeight());
-                            LVGrayDrawBuf tmpBuf( cachedFile->GetWidth(), cachedFile->GetHeight(), cover->depth );
-
-                            tmpBuf.Draw(cachedFile, 0, 0, cachedFile->GetWidth(), cachedFile->GetHeight(), true);
-
-                            if(4 == cover->depth) {
-                                Draw4Bits(tmpBuf, cover->data, 0, 0, cachedFile->GetWidth(), cachedFile->GetHeight());
-                            } else {
-                                memcpy(cover->data, tmpBuf.GetScanLine(0), cover->height * cover->scanline);
-                            }
-                        }
-                    }
-                }
-            }
-
-            #endif
-
-            // If none worked - generate an ugly ass cover
-            if( !cover ) {
-
-                LVGrayDrawBuf tmpBufCover( ScreenWidth(), ScreenHeight(), GetHardwareDepth() );
-
-                lString32 authors = main_win->getDocView()->getAuthors();
-                lString32 title = main_win->getDocView()->getTitle();
-                lString32 series = main_win->getDocView()->getSeries();
-                if (title.empty())
-                    title = _("Untitled");
-
-                LVDrawBookCover(
-                    tmpBufCover,
-                    main_win->getDocView()->getCoverPageImage(),
-                    true,
-                    lString8(DEFAULTFONT),
-                    title,
-                    authors,
-                    series,
-                    0
-                    );
-
-                cover = NewBitmap(ScreenWidth(), ScreenHeight());
-                if(4 == cover->depth) {
-                    Draw4Bits(tmpBufCover, cover->data, 0, 0, ScreenWidth(), ScreenHeight());
-                } else {
-                    memcpy(cover->data, tmpBufCover.GetScanLine(0), cover->height * cover->scanline);
-                }
-            }
-
-            // If somehow there is a cover
-            if (cover) {
-
-                // Get previous cover
-                ibitmap *cover_prev = LoadBitmap( USERLOGOPATH"/bookcover");
-                if (cover_prev) {
-
-                    // Compare covers
-                    if( cover->scanline * cover->height == cover_prev->scanline * cover_prev->height &&
-                        memcmp(cover->data,cover_prev->data,cover->scanline * cover->height) == 0 ) {
-                        need_save_cover = 0;
-                    }
-                }
-                // free(cover_prev);
-
-                // Save new cover if needed
-                if (need_save_cover) {
-                    CRLog::trace("Save bookcover for power off logo");
-                    SaveBitmap( USERLOGOPATH"/bookcover", cover);
-                    // WriteStartupLogo(cover); // Not used but added here... just in case it might be needed
-                    standByImage = cover;
-                    free(cover_prev);
-                }
-                else {
-                    standByImage = cover_prev;
-                    free(cover);
-                }
+            // The cover for the power-off logo: not made here, see pbCoverMake()
+            bool coverKept = pbCoverKeyStored() == pbCoverKey() && access( USERLOGOPATH"/bookcover", F_OK ) != -1;
+            if( !coverKept ) {
+                pbCoverPending = true;
+                pbCoverArm();
             }
 
             // Load standby lock image
@@ -7359,15 +7709,18 @@ int main_handler(int type, int par1, int par2)
             if( !standByLockImageTmp.isNull() ) {
                 standByLockImage = LVImageSourceRef_to_ibitmab(standByLockImageTmp);
             }
+            long long perfLock = pbPerfNow();
 
-            need_save_cover = false;
             #ifdef POCKETBOOK_PRO
             // a failed update is reported, the automatic check for a newer version is planned
             PbOta::started();
             #endif
             if (pbPerfOn())
-                CRLog::info("perf: first show: cover for the power-off logo and the rest %.1f ms",
-                            PB_PERF_MS(pbPerfNow() - perfCover));
+                CRLog::info("perf: first show: message and second full update (%s) %.1f ms, system theme %.1f, "
+                            "power-off cover %s, standby lock image %.1f, update check planned %.1f",
+                            perfSecondUpdate, PB_PERF_MS(perfUpdated - perfFirst), PB_PERF_MS(perfTheme - perfUpdated),
+                            coverKept ? "kept: the same book" : "to be made after a pause without input",
+                            PB_PERF_MS(perfLock - perfTheme), PB_PERF_MS(pbPerfNow() - perfLock));
         }
         restartStandByTimer();
         break;
@@ -7376,6 +7729,14 @@ int main_handler(int type, int par1, int par2)
     	SetWeakTimer("SaveStateTimer", SetSaveStateTimer, 500);
         stopStandByTimer();
         break;
+    case EVT_FOREGROUND:
+        // the menus over the book were closed: the page goes to the canvas and to the screen
+        if (pbMenusClosedOnReturn) {
+            pbMenusClosedOnReturn = false;
+            CRPocketBookWindowManager::instance->update(true);
+            restartStandByTimer();
+        }
+        break;
 #endif
     case EVT_EXIT:
         exiting = true;
@@ -7383,8 +7744,20 @@ int main_handler(int type, int par1, int par2)
 #ifdef POCKETBOOK_PRO
         ClearTimer(SetSaveStateTimer);
 #endif
-        if (CRPocketBookWindowManager::instance->getWindowCount() != 0)
-            CRPocketBookWindowManager::instance->closeAllWindows();
+        {
+            long long perfExit = pbPerfNow();
+            if (CRPocketBookWindowManager::instance->getWindowCount() != 0)
+                CRPocketBookWindowManager::instance->closeAllWindows();
+            // the last line of the log: the engine is shut down with its logger
+            if (pbPerfOn())
+                CRLog::info("perf: exit: windows closed, the book and its cache file released in %.1f ms",
+                            PB_PERF_MS(pbPerfNow() - perfExit));
+            unlink( PB_RUN_MARKER );
+#ifdef POCKETBOOK_PRO
+            // the connection kept between the requests to a catalog
+            web::cleanup();
+#endif
+        }
         ShutdownCREngine();
         break;
     case EVT_PREVPAGE:
@@ -7827,6 +8200,7 @@ void getInkviewFeatures() {
 int main(int argc, char **argv)
 {
     pbPerfProcessStart = pbPerfNow();
+    pbCpuStartMhz = pbCpuMhz();
     forcePartialBwUpdates = false;
     forcePartialUpdates = false;
     forceFullUpdates = false;
