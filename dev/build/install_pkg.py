@@ -1,4 +1,6 @@
-"""Copies system/bin and system/share/cr3 of a package zip to the reader and compares every file.
+"""Copies a package zip to the reader as a user does, the folders system and applications whole, and
+compares every file: system/bin, system/share/cr3, the file associations
+system/config/extensions.cfg and the switch of the Applications screen.
 install.sh and package.version of the zip root are for the update over the network and are not copied.
 Usage: python -I install_pkg.py <zip> <drive root, e.g. D:/>"""
 import os, sys, zipfile
@@ -6,11 +8,14 @@ import os, sys, zipfile
 zip_path, root = sys.argv[1], sys.argv[2]
 z = zipfile.ZipFile(zip_path)
 names = [n for n in z.namelist() if not n.endswith('/')]
-assert not any(n.startswith('system/config') or n.startswith('system/state') for n in names), 'settings in the zip'
+# of the settings a package has the file associations only
+settings = [n for n in names if n.startswith('system/config') or n.startswith('system/state')]
+assert settings in ([], ['system/config/extensions.cfg']), settings
 root_files = [n for n in names if '/' not in n]
 assert sorted(root_files) == ['install.sh', 'package.version'], root_files
 names = [n for n in names if '/' in n]
-other = [n for n in names if not (n.startswith('system/bin/') or n.startswith('system/share/cr3/'))]
+other = [n for n in names if not (n.startswith('system/bin/') or n.startswith('system/share/cr3/')
+                                  or n.startswith('applications/') or n in settings)]
 assert not other, other
 listed = z.read('system/share/cr3/package.files').decode('utf-8').split('\n')
 listed = sorted(l for l in listed if l)
