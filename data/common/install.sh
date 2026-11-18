@@ -132,10 +132,15 @@ chmod 755 "$LAUNCHER" "$CR3_DIR/bin/cr3-pb.app" 2>/dev/null
 # The file associations and the switch of the Applications screen of the package replace those
 # of the reader, as they do when the package is copied by hand: a new version may open more
 # kinds of files. A package of an older version has neither.
-if [ -f "$TEMP_DIR/system/config/extensions.cfg" ]; then
-	mkdir -p "$WORK_DIR/system/config"
-	cp -f "$TEMP_DIR/system/config/extensions.cfg" "$WORK_DIR/system/config/extensions.cfg"
-fi
+# The package spells the folder "system/Config" (dev/build/build_package.sh tells why). On the
+# storage of a reader both spellings are one folder; in the tests on a PC they are two.
+for associations in "$TEMP_DIR/system/Config/extensions.cfg" "$TEMP_DIR/system/config/extensions.cfg"; do
+	if [ -f "$associations" ]; then
+		mkdir -p "$WORK_DIR/system/config"
+		cp -f "$associations" "$WORK_DIR/system/config/extensions.cfg"
+		break
+	fi
+done
 if [ -d "$TEMP_DIR/applications" ]; then
 	mkdir -p "$WORK_DIR/applications"
 	cp -f "$TEMP_DIR/applications/"*.app "$WORK_DIR/applications/" 2>/dev/null

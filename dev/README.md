@@ -125,9 +125,12 @@ for a book only by that file; the one of `data/firmware-specific/pro5`) and
 firmware; `data/common/applications`). Both replace those of the reader at every install, by hand
 and over the network (`install.sh`): the owner's decision, the archives of this program have
 always been copied whole. Nothing else of `system/config` and nothing of `system/state` may be in a
-package; the build script and the program check it (`ota::forbiddenInPackage`, `ota_core.h`). The
-versions `0.0.7-opds` to `0.0.7.1-opds-alpha10` refuse a package with the file associations inside,
-so a reader with one of them takes a later version by USB.
+package: the build script checks it, and `install.sh` copies nothing else of them. The program
+itself does not look at these names. The versions `0.0.7-opds` to `0.0.7.1-opds-alpha10` did: they
+refuse an update with a name that begins with `system/config`, in these letters exactly. So the
+package spells the folder `system/Config`: those versions take it over the network, and on the
+storage of a reader and on Windows, which name files without the case of the letters, it is the
+folder `system/config` all the same. `install.sh` looks for both spellings.
 
 `check` stops after the program is compiled and linked: no release archive and no package. It is
 for the times the owner says "do not build a package" and the code for the reader still has to be

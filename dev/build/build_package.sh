@@ -131,9 +131,17 @@ sort system/share/cr3/package.files > "$WORK/files.listed"
 cmp -s "$WORK/files.now" "$WORK/files.listed" \
     || { echo "package.files differs from the folder:"; diff "$WORK/files.now" "$WORK/files.listed" | head; exit 1; }
 rm -f "$WORK/files.now" "$WORK/files.listed"
+# The folder of the file associations is spelled "system/Config" in the package. The versions
+# 0.0.7-opds to 0.0.7.1-opds-alpha10 refuse an update that has a name beginning with
+# "system/config", in these letters exactly; to them "system/Config" is not of the settings, so they
+# take the package over the network. On the storage of a reader and on Windows (FAT and NTFS name
+# files without the case of the letters) it is the folder system/config all the same, whether the
+# package is copied by hand or unpacked by the launcher. install.sh looks for both spellings.
+mv system/config system/Config || exit 1
+[ -z "$(find . -path './system/config*')" ] || { echo "a name of the package begins with system/config"; exit 1; }
 PKG="$OUT/cr3-v$VER-pro5.zip"
 rm -f "$PKG"
 zip -q -r "$PKG" system applications install.sh package.version
-echo "package.files: $(wc -l < system/share/cr3/package.files) files; file associations: $(wc -l < system/config/extensions.cfg) kinds of files"
+echo "package.files: $(wc -l < system/share/cr3/package.files) files; file associations: $(wc -l < system/Config/extensions.cfg) kinds of files"
 ls -la "$PKG"
 sha256sum "$PKG"

@@ -177,7 +177,7 @@ The install is by USB:
 
 What the archive brings besides the program:
 
-- `system/config/extensions.cfg`, the file associations. CoolReader is not an item of the *Applications* screen: it is a reading program, and the firmware offers it for a book only when this file names it. CoolReader is first in every line. The file replaces the one of the reader at every install.
+- `system/config/extensions.cfg`, the file associations. CoolReader is not an item of the *Applications* screen: it is a reading program, and the firmware offers it for a book only when this file names it. CoolReader is first in every line. The file replaces the one of the reader at every install. In the archive its folder is spelled `system/Config`; on the reader it is the folder `system/config`.
 - `applications/Cool Reader Selector.app`, a switch on the *Applications* screen: a tap puts the file associations aside, so books open in the programs of the firmware; the next tap brings them back.
 
 The archive has nothing else of `system/config`: `cr3.ini` and the other settings are kept.
@@ -185,7 +185,7 @@ The archive has nothing else of `system/config`: `cr3.ini` and the other setting
 To roll back, restore the files saved in step 2.
 
 Every later version is installed from the program: *Settings → Program update → Check for updates*. It replaces the file associations too.
-Two kinds of versions are replaced by USB: those older than `0.0.6-17-67-opds-alpha18` have no working update, and `0.0.7-opds` with the test builds up to `0.0.7.1-opds-alpha10` refuse a package that has the file associations inside.
+Versions older than `0.0.6-17-67-opds-alpha18` have no working update and are replaced by USB.
 
 The package is the `pro5` build, for PocketBook devices on firmware 5.x and 6.x. Only this target is built and tested in this fork.
 
