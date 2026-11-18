@@ -46,7 +46,12 @@
 
 #ifdef CR_POCKETBOOK
 #include "cr3pocketbook.h"
+#include "pb_openwith.h"
 #include <inkview.h>
+#endif
+#ifdef CR3_PAGEDOC
+#include "pb_pageview.h"
+#include "pb_pdfbook.h"
 #endif
 
 
@@ -955,6 +960,12 @@ void V3DocViewWin::applySettings()
 #endif
     _docview->propsApply( delta );
     _props = _newProps; // | _props;
+#ifdef CR_POCKETBOOK
+    // "Open with CoolReader" is kept in the list of the firmware, not in cr3.ini
+    for (int g = 0; g < PB_OPEN_GROUP_COUNT; g++)
+        if (delta->hasProperty(pbOpenWithProp(g)))
+            pbOpenWithSet(g, _props->getIntDef(pbOpenWithProp(g), 0));
+#endif
     // A settings-only change must repaint the reader after the menu closes.
     setDirty();
     _wm->getScreen()->setFullUpdateInterval(_props->getIntDef(PROP_DISPLAY_FULL_UPDATE_INTERVAL, 1));
@@ -1129,6 +1140,15 @@ VIEWER_MENU_5ABOUT=About...
 VIEWER_MENU_4ABOUT=About...
 */
     menu_win->setSkinName(lString32("#main"));
+#if defined(CR_POCKETBOOK) && defined(CR3_PAGEDOC)
+    // A book made of a PDF or a DjVu: the way back to the pages of the file as they are is the
+    // first item of the menu of the book. (It was an item of the settings menu, on its second
+    // page, beside nothing it had to do with.) The other way is "View as a book" in the menu of
+    // the picture mode.
+    if ( pbPdfBookIsOpen() )
+        menu_win->addItem( new CRMenuItem( menu_win, PB_CMD_PDF_PAGES, _("View as the original"),
+                                           LVImageSourceRef(), LVFontRef() ) );
+#endif
 	CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString32("mainMenuItems"));
 	if ( !menuItems.isNull() && menuItems->length()>1 ) {
 		// get menu from file

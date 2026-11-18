@@ -2550,3 +2550,167 @@ msgstr "розмір"
 #: ../src/pb_fontpick.cpp
 msgid "weight"
 msgstr "насиченість"
+
+#: ../src/pb_pageview.cpp
+msgid "Whole page"
+msgstr "Уся сторінка"
+
+#: ../src/pb_pageview.cpp
+msgid "Page width"
+msgstr "За шириною сторінки"
+
+#: ../src/pb_pageview.cpp
+msgid "Whole content"
+msgstr "Вміст повністю"
+
+#: ../src/pb_pageview.cpp
+msgid "Content width"
+msgstr "За шириною вмісту"
+
+#: ../src/pb_pageview.cpp
+msgid "Own frame"
+msgstr "Власний кадр"
+
+#: ../src/pb_pageview.cpp
+msgid "Scale"
+msgstr "Масштаб"
+
+#: ../src/pb_pageview.cpp
+msgid "Leafing"
+msgstr "Гортання"
+
+#: ../src/pb_pageview.cpp
+msgid "By frames"
+msgstr "За кадрами"
+
+#: ../src/pb_pageview.cpp
+msgid "Next page at once"
+msgstr "Одразу наступна сторінка"
+
+#: ../src/pb_pageview.cpp
+msgid "The frames of a page one after another, then the next page"
+msgstr "Кадри сторінки один за одним, потім наступна сторінка"
+
+#: ../src/pb_pageview.cpp
+msgid "A page turn shows the same frame of the next page"
+msgstr "Гортання показує той самий кадр наступної сторінки"
+
+#: ../src/pb_pageview.cpp
+msgid "Set the frame"
+msgstr "Налаштувати кадр"
+
+#: ../src/pb_pageview.cpp
+msgid "Zoom, position and turn of the page; kept for the next pages"
+msgstr "Масштаб, положення та поворот сторінки; зберігається на наступних сторінках"
+
+#: ../src/pb_pageview.cpp
+msgid "Bookmark on this page"
+msgstr "Закладка на цій сторінці"
+
+#: ../src/pb_pageview.cpp
+msgid "Close the book"
+msgstr "Закрити книгу"
+
+#: ../src/pb_pageview.cpp
+msgid "The page with its margins, whole in the screen"
+msgstr "Сторінка з полями, повністю на екрані"
+
+#: ../src/pb_pageview.cpp
+msgid "The page as wide as the screen"
+msgstr "Сторінка на всю ширину екрана"
+
+#: ../src/pb_pageview.cpp
+msgid "The margins cut off, the content whole in the screen"
+msgstr "Поля обрізано, вміст повністю на екрані"
+
+#: ../src/pb_pageview.cpp
+msgid "The margins cut off, the content as wide as the screen"
+msgstr "Поля обрізано, вміст на всю ширину екрана"
+
+#: ../src/pb_pageview.cpp
+msgid "The frame you have set: zoom, position and turn"
+msgstr "Заданий вами кадр: масштаб, положення та поворот"
+
+#: ../src/pb_pageview.cpp
+msgid "Reset"
+msgstr "Скинути"
+
+#: ../src/pb_pageview.cpp
+msgid "Done"
+msgstr "Готово"
+
+#: ../src/settings.cpp
+msgid "PDF view settings"
+msgstr "Налаштування перегляду PDF"
+
+#: ../src/settings.cpp
+msgid "DjVu view settings"
+msgstr "Налаштування перегляду DjVu"
+
+#: ../src/settings.cpp
+msgid "Scale of a new file"
+msgstr "Масштаб нового файлу"
+
+#: ../src/settings.cpp
+msgid "Leafing of a new file"
+msgstr "Гортання нового файлу"
+
+#: ../src/settings.cpp
+msgid "Page number in the corner"
+msgstr "Номер сторінки в куті"
+
+#: ../src/settings.cpp
+msgid "Open with CoolReader"
+msgstr "Відкривати в CoolReader"
+
+#: ../src/settings.cpp
+msgid "In the Open with list"
+msgstr "У списку «Відкрити за допомогою»"
+
+#: ../src/settings.cpp
+msgid "By default"
+msgstr "Типово"
+
+#: ../src/pb_pageview.cpp
+msgid "Read as a book"
+msgstr "Читати як книгу"
+
+#: ../src/pb_pageview.cpp
+msgid "The text of the file in the fonts of the reader, from this page"
+msgstr "Текст файлу шрифтами читалки, з цієї сторінки"
+
+#: ../src/settings.cpp
+msgid "A file with text"
+msgstr "Файл із текстом"
+
+#: ../src/settings.cpp
+msgid "Pages as they are"
+msgstr "Сторінки як є"
+
+#: ../src/settings.cpp
+msgid "As a book"
+msgstr "Як книга"
+
+#: ../src/settings.cpp
+msgid "Pages of the PDF as they are"
+msgstr "Сторінки PDF як є"
+
+#: ../src/settings.cpp
+msgid "Pages of the DjVu as they are"
+msgstr "Сторінки DjVu як є"
+
+#: ../src/mainwnd.cpp
+msgid "View as the original"
+msgstr "Дивитися як оригінал"
+
+#: ../src/pb_pageview.cpp
+msgid "View as a book"
+msgstr "Дивитися як книгу"
+
+#: ../src/settings.cpp
+msgid "A new file with text"
+msgstr "Новий файл із текстом"
+
+#: ../src/settings.cpp
+msgid "As the original"
+msgstr "Як оригінал"

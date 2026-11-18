@@ -552,6 +552,50 @@
     </section>
     <section>
      <title>
+      <p>PDF and DjVu</p>
+     </title>
+     <p>PDF and DjVu files, also those inside a zip archive, are opened in the picture mode: a page is shown as it is in the file. This suits scanned and photographed books.</p>
+     <subtitle>A PDF or DjVu with text as a book</subtitle>
+     <p>A PDF that has text is opened as any book: the text of the file is shown in the font, the size and the styles of the reader, with hyphenation, the dictionary, citations, bookmarks and the search. The layout of the original is not kept: fonts, columns and the place on the page are dropped. Taken over: paragraphs, headings and the contents, bold and italic, monospace, superscript and subscript, tables (with and without rules), pictures, verse, footnotes (as text after the paragraph their page ends in). Drawings, schemes and formulas are put in as a picture of that part of the page. Running titles and page numbers are left out; a paragraph cut by the end of a page is put together.</p>
+     <p>The book is made when the file is opened for the first time and kept: the next time the file opens at once. A PDF of scans (pages that are pictures, with a recognised text under them or without) is opened in the picture mode.</p>
+     <p>Between the two views of one file. From the book: the first item of the main menu of the book, "View as the original", opens the page of the file the place of the book on the screen comes from. From the picture mode: the menu item "View as a book" opens the book at the place of that page. The choice is remembered for the file. For all files: "PDF view settings" &gt; "A new file with text".</p>
+     <p>In a book made of a PDF, a formula on a line of its own and a formula inside a line that has a root, a sum or an integral sign are shown as pictures. Drawings become pictures of the page too. Pictures are taken by their size on paper and by their place: small marks, rules and whatever lies whole in the top or the bottom margin of a page (the mark of a publisher, the ornament of a running title) do not get into the book.</p>
+     <p>A DjVu with a text layer (the text a program recognised when the file was made) is opened as a book in the same way. The book is as good as the recognition: paragraphs are taken from the file or put together by the indents and the gaps of the lines, divided words are joined, running titles and page numbers are left out, the contents of the file become the contents of the book, the first page becomes the cover. Pictures, drawings and formulas that have no text in the layer are cut out of the page as pictures. Only what stands inside the text block of a page and is at least 12 by 5 mm is taken; rules, frames and ornaments that are the same on three pages and more are not. From the book to the pages: the same item of the main menu of the book, "View as the original". For all files at once: "DjVu view settings" &gt; "A new file with text". A DjVu without a text layer is opened in the picture mode.</p>
+     <p><emphasis>Value:</emphasis> as the original / as a book</p>
+     <p>Pages are turned as in a book: taps in the zones of the screen, keys, a horizontal swipe. A tap in the zone that opens the menu in a book (the centre of the screen by default) opens the menu of the picture mode.</p>
+     <p>While a page is read, the next one is prepared ahead, so a page turn does not wait for the page to be decoded (the item "Prepare next page" of the display settings).</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Menu</subtitle>
+     <p>The contents (when the file has them), go to a page, the scale, the leafing, the frame, a bookmark on the current page, the list of bookmarks, the settings of the program, closing the book. The arrow of the title and the Back key return to the page.</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Scale</subtitle>
+     <p>What is shown on the screen. "Whole page": the page with its margins. "Page width": the page as wide as the screen. "Whole content": the margins are cut off automatically, and for a page photographed on a dark table the table is cut off too. "Content width": the same, as wide as the screen. "Own frame": the frame you have set in "Set the frame".</p>
+     <p><emphasis>Value:</emphasis> whole page / page width / whole content / content width / own frame</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Leafing</subtitle>
+     <p>"Next page at once": a page turn shows the same frame of the next page, even when a part of the page stays outside of the frame. "By frames": when a page does not fit in the frame, a page turn goes through the frames of this page (left to right and top to bottom, with a small overlap), then the next page is opened.</p>
+     <p><emphasis>Value:</emphasis> next page at once / by frames</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Set the frame</subtitle>
+     <p>The frame is the part of a page seen on the screen: its zoom, position and turn. The buttons at the bottom of the screen: "−" and "+" change the zoom, "−0.5°" and "+0.5°" turn the page by a small step to level the lines of a crooked scan, "90°" turns the page on its side. A drag moves the page. "Reset" brings back the whole content without a turn, "Cancel" leaves the frame as it was, "Done" keeps the frame and sets the scale "Own frame".</p>
+     <p>The frame and the angle are kept apart for odd and even pages: a photographed book has its margins mirrored. Until the frame of the pages of the other parity is set, they are shown with the same frame. The scale, the leafing, the frames, the page and the bookmarks are remembered for every file.</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>PDF view settings, DjVu view settings</subtitle>
+     <p>Two folders of the settings menu. "Scale of a new file" and "Leafing of a new file": what a file the program has not seen yet is opened with. "Page number in the corner": whether the page number and the number of pages are shown in the lower right corner.</p>
+     <p>"Open with CoolReader": how the reader opens such files. "No": CoolReader is not offered for them. "In the Open with list": CoolReader is in the "Open with" menu of a file, and a tap opens the file with the program that opened it before. "By default": a tap opens the file with CoolReader, the other program stays in "Open with". The program changes only the lines of these files in the list of the reader (system/config/extensions.cfg); if the library of the reader does not notice the change, restart the reader.</p>
+     <p><emphasis>Value:</emphasis> no / in the Open with list / by default</p>
+    </section>
+    <section>
+     <title>
+      <p>Open with CoolReader</p>
+     </title>
+     <p>A folder of the settings menu with a line for every kind of file the program opens: FB2, EPUB, MOBI (also PRC, AZW, PDB), DOC (also DOCX, ODT), RTF, TXT, HTML, CHM. A tap switches the value, which shows what the list of the reader says now. PDF and DjVu have the same item apart, in the folders "PDF view settings" and "DjVu view settings": until you change it, the program of the reader opens these files.</p>
+     <p>"No": CoolReader is not offered for such files. "In the Open with list": CoolReader is in the "Open with" menu of a file, and a tap opens the file with the program that opened it before. "By default": a tap opens the file with CoolReader, the other program stays in "Open with".</p>
+     <p>The reader does not remember a choice made in "Open with": a tap opens a file with the first program of the list, and this setting puts CoolReader first. The program changes only the lines of the chosen files in the list of the reader (system/config/extensions.cfg); the other lines and the other programs stay. If the library of the reader does not notice the change, restart the reader.</p>
+     <p><emphasis>Value:</emphasis> no / in the Open with list / by default</p>
+    </section>
+    <section>
+     <title>
       <p>Control settings</p>
      </title>
      <p>The touch controls that work while reading.</p>

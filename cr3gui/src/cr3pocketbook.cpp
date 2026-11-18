@@ -33,6 +33,11 @@
 #include "pb_statsview.h"
 #include "pb_debug.h"
 #include "pb_fontpick.h"
+#include "pb_openwith.h"
+#ifdef CR3_PAGEDOC
+#include "pb_pageview.h"
+#include "pb_pdfbook.h"
+#endif
 #include "pb_toclist.h"
 #include "pb_keyboard.h"
 
@@ -3374,6 +3379,13 @@ public:
         // firmware waits for the storage. That wait is in the background, after the home
         // screen is shown. Giving the page to the firmware while the book is read instead
         // would cost its 0.35 s at every page, so it stays here.
+#ifdef CR3_PAGEDOC
+        // the picture mode: the book window holds no book, the page is that of the PDF or DjVu file
+        if (PbPageWindow::instance != NULL) {
+            PbPageWindow::instance->keep();
+            pbGlobals->saveState(PbPageWindow::instance->page(), PbPageWindow::instance->pageCount());
+        } else
+#endif
         pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
         if (pbPerfOn())
             CRLog::info("perf: exit: power-off cover %.1f ms, statistics and sensor %.1f, settings, history and "
@@ -3431,6 +3443,13 @@ public:
             PbStatsView::instance().open(_wm, params == 1);
             return true;
         }
+#ifdef CR3_PAGEDOC
+        // a PDF read as a book: its pages as they are, at the place of the book
+        if (command == PB_CMD_PDF_PAGES) {
+            pbPdfBookToPages(_wm);
+            return true;
+        }
+#endif
         #ifdef POCKETBOOK_PRO
         // Program update over the network
         if (PbOta::isOtaCommand(command))
@@ -6899,6 +6918,26 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
+#ifdef CR3_PAGEDOC
+        // the picture mode: a new file starts with its whole content in the screen (the margins
+        // cut off) and a page turn that shows the next page at once
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_SCALE, PB_PAGE_SCALE_CONTENT);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_LEAFING, PB_PAGE_LEAF_PAGE);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_PAGE_NUMBER, 1);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_CONTENT);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_LEAFING, PB_PAGE_LEAF_PAGE);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_PAGE_NUMBER, 1);
+        // a PDF with text and a DjVu with a text layer are read as books
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_TEXT, 1);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_TEXT, 1);
+#endif
+        {
+            // "Open with": the settings show what the list of the reader says, whoever wrote it
+            int openWith[PB_OPEN_GROUP_COUNT];
+            pbOpenWithStates(openWith);
+            for (int g = 0; g < PB_OPEN_GROUP_COUNT; g++)
+                main_win->getProps()->setInt(pbOpenWithProp(g), openWith[g]);
+        }
         #ifdef POCKETBOOK_PRO
         PbOta::setDefaults(main_win->getProps());
         #endif
@@ -6921,6 +6960,22 @@ int InitDoc(const char *exename, char *fileName)
         wm->activateWindow( main_win );
         wm->restoreOrientation(orient);
         long long perfActivated = pbPerfNow();
+#ifdef CR3_PAGEDOC
+        // A PDF with text is read as a book made of it (pb_pdfbook.h): the book window loads
+        // that book. Any other PDF or DjVu file (or an archive with one) is shown by the picture
+        // mode: its window stands over the book window, which holds no book then.
+        lString32 pdfBook;
+        if ( PbPageWindow::isPageFile( lString32(fileName) ) && pbPdfBookFor( lString32(fileName), pdfBook )
+                && main_win->loadDocument( pdfBook ) ) {
+            // read as a book
+        } else if ( PbPageWindow::isPageFile( lString32(fileName) ) ) {
+            if ( !PbPageWindow::open( wm, lString32(fileName) ) ) {
+                printf("Cannot open file %s\n", fileName);
+                delete wm;
+                return 0;
+            }
+        } else
+#endif
         if ( !main_win->loadDocument( lString32(fileName) ) ) {
             printf("Cannot open book file %s\n", fileName);
             delete wm;

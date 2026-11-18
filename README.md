@@ -246,7 +246,15 @@ The upstream feature list, discussion and translation links are in the
 ## License
 
 All source code, except the `thirdparty` directory, is provided under the terms of the
-GNU GPL, version 2 (see [LICENSE](LICENSE)). The libraries in `thirdparty` keep their own licenses.
+GNU GPL, version 2 or (at your option) any later version (see [LICENSE](LICENSE) and the headers
+of the source files). The libraries in `thirdparty` keep their own licenses.
+
+The line of versions 0.0.8 (branch `pdf-djvu`) shows PDF files with [MuPDF](https://mupdf.com/)
+(GNU AGPL, version 3) and DjVu files with [DjVuLibre](https://djvu.sourceforge.net/) (GNU GPL,
+version 2 or later). Their sources are not in this repository: `dev/pdfdjvu/fetch_sources.sh`
+downloads the unchanged release archives by their checksums. A program built with them is
+distributed under the terms of the GNU GPL, version 3, together with the GNU AGPL, version 3,
+for the part that is MuPDF.
 
 The OPDS browser is a generic client. The default catalog address is only a preset. You are responsible
 for complying with the copyright law of your country when you download books.

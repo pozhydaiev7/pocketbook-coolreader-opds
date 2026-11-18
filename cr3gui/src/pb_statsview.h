@@ -46,6 +46,9 @@ public:
     static void init(const lString32 & stateDir);
     /// the book window shows a page: times it for the log
     static void pageShown(LVDocView * doc);
+    /// the picture mode shows a page of a PDF or DjVu file (pages from 0): timed the same way;
+    /// such a page has no count of words
+    static void pageOfFileShown(const lString32 & path, int page, int pages);
     /// the book is no longer read (exit, standby): writes the timed page
     static void flush();
 

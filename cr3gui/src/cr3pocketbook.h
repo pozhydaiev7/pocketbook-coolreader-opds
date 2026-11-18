@@ -64,6 +64,8 @@ enum CRPbCommands {
     PB_CMD_FONT_FACE,
     PB_CMD_FONT_SIZE,
     PB_CMD_FONT_WEIGHT,
+    // a PDF read as a book: back to its pages as they are (pb_pdfbook.h)
+    PB_CMD_PDF_PAGES,
 
     PB_CMD_NONE
 };
@@ -104,10 +106,28 @@ enum CRPbCommands {
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
 #define PROP_POCKETBOOK_ROTATE_ANGLE "cr3.pocketbook.rotate_angle"
 #define PROP_POCKETBOOK_GRAYBUFFER_BPP "cr3.pocketbook.buffer.bpp"
+// The picture mode of PDF and DjVu files (pb_pageview.h), menus "PDF view settings" and "DjVu view
+// settings": what a file opened for the first time starts with (the scale: PbPageScale without the
+// own frame; the leafing: PbPageLeafing), and whether the page number is shown in the corner.
+#define PROP_POCKETBOOK_PDF_SCALE "cr3.pocketbook.pdf.scale"
+#define PROP_POCKETBOOK_PDF_LEAFING "cr3.pocketbook.pdf.leafing"
+#define PROP_POCKETBOOK_PDF_PAGE_NUMBER "cr3.pocketbook.pdf.page.number"
+#define PROP_POCKETBOOK_DJVU_SCALE "cr3.pocketbook.djvu.scale"
+#define PROP_POCKETBOOK_DJVU_LEAFING "cr3.pocketbook.djvu.leafing"
+#define PROP_POCKETBOOK_DJVU_PAGE_NUMBER "cr3.pocketbook.djvu.page.number"
+// A PDF with text: 1 read as a book (the text in the fonts of the reader, pb_pdfbook.h), 0 shown
+// page by page as it is. What the reader chose for a file (the menu of the picture mode, the
+// settings menu of the book) goes before this.
+#define PROP_POCKETBOOK_PDF_TEXT "cr3.pocketbook.pdf.text"
+// The same for a DjVu with a text layer (the text a recognition program has read from the scans).
+#define PROP_POCKETBOOK_DJVU_TEXT "cr3.pocketbook.djvu.text"
+// PbOpenWith (pb_openwith.h): read from the list of the firmware at every start, written to it when changed
+#define PROP_POCKETBOOK_PDF_OPEN_WITH "cr3.pocketbook.pdf.openwith"
+#define PROP_POCKETBOOK_DJVU_OPEN_WITH "cr3.pocketbook.djvu.openwith"
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.8-opds-alpha1"
+#define CR_PB_VERSION "0.0.8-opds-alpha4"
 #define CR_PB_BUILD_DATE "2026-11-18"
 
 #define PB_ROTATE_MODE_360 0

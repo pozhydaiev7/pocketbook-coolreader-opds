@@ -187,6 +187,19 @@ void PbStatsView::pageShown(LVDocView * doc)
                        page + visible >= pages, (long long)time(NULL));
 }
 
+void PbStatsView::pageOfFileShown(const lString32 & path, int page, int pages)
+{
+    if (pages <= 0 || page < 0)
+        return;
+    // the book is known by its file name: a checksum of a scan of tens of megabytes is not
+    // taken at every opening
+    std::string name = utf8(LVExtractFilename(path));
+    PbStatsRecorder & recorder = PbStatsRecorder::instance();
+    if (!recorder.isNewPage(name, page, pages))
+        return;
+    recorder.pageShown(name, std::string(), name, page, pages, 0, page + 1 >= pages, (long long)time(NULL));
+}
+
 void PbStatsView::flush()
 {
     PbStatsRecorder::instance().flush((long long)time(NULL));

@@ -75,7 +75,19 @@ if (${GUI} STREQUAL CRGUI_PB)
     SET (CR3_STYLES
          data/epub.css  data/fb2.css  data/htm.css  data/rtf.css  data/txt.css data/chm.css data/doc.css data/dict.css
         )
-    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp src/pb_xdxf.cpp src/pb_stats.cpp src/pb_statsview.cpp src/pb_debug.cpp src/pb_fontpick.cpp)
+    SET (CR3_SOURCES ${CR3_SOURCES} src/cr3pocketbook.cpp src/pb_dict.cpp src/pb_stardict.cpp src/pb_xdxf.cpp src/pb_stats.cpp src/pb_statsview.cpp src/pb_debug.cpp src/pb_fontpick.cpp src/pb_openwith.cpp)
+    # PDF and DjVu (the picture mode, src/pb_pageview.cpp): -D PDFDJVU_DIR=<folder> names the folder
+    # with the sources of MuPDF and DjVuLibre and their static libraries built for the reader
+    # (dev/pdfdjvu/fetch_sources.sh, build_libs_arm.sh). Without it the program is built without them.
+    if (DEFINED PDFDJVU_DIR AND DEFINED POCKETBOOK_PRO)
+        message("PDF and DjVu: libraries of ${PDFDJVU_DIR}")
+        ADD_DEFINITIONS(-DCR3_PAGEDOC=1)
+        include_directories( ${PDFDJVU_DIR}/mupdf-1.28.6-source/include ${PDFDJVU_DIR}/djvulibre-3.5.29 )
+        SET (CR3_SOURCES ${CR3_SOURCES} src/pb_pageview.cpp src/pb_pdfbook.cpp)
+        SET (CR3_PAGEDOC_SOURCES src/pb_pagedoc.cpp src/pb_pdftext.cpp src/pb_djvutext.cpp)
+        SET (CR3_PAGEDOC_LIBS ${PDFDJVU_DIR}/arm/lib/libmupdf.a ${PDFDJVU_DIR}/arm/lib/libmupdf-third.a
+                              ${PDFDJVU_DIR}/arm/lib/libdjvulibre.a pthread)
+    endif (DEFINED PDFDJVU_DIR AND DEFINED POCKETBOOK_PRO)
     SET (CR3_BIN_DESTINATION system/bin)
 else ()
     SET (CR3_STYLES
@@ -342,8 +354,14 @@ elseif (${GUI} STREQUAL CRGUI_PB)
         SET (CR3_EXTRA_SOURCES ${CMAKE_SOURCE_DIR}/thirdparty/cjson/cJSON.c)
         include_directories( ${CMAKE_SOURCE_DIR}/thirdparty/cjson )
     endif (DEFINED POCKETBOOK_PRO)
-    ADD_EXECUTABLE(cr3-pb.app ${CR3_SOURCES} ${CR3_EXTRA_SOURCES})
-    TARGET_LINK_LIBRARIES(cr3-pb.app crengine tinydict ${EXTRA_LIBS} ${STD_LIBS})
+    ADD_EXECUTABLE(cr3-pb.app ${CR3_SOURCES} ${CR3_EXTRA_SOURCES} ${CR3_PAGEDOC_SOURCES})
+    # the libraries of PDF and DjVu stand before FreeType, zlib and libjpeg of STD_LIBS, which they use
+    TARGET_LINK_LIBRARIES(cr3-pb.app crengine tinydict ${EXTRA_LIBS} ${CR3_PAGEDOC_LIBS} ${STD_LIBS})
+    if (DEFINED CR3_PAGEDOC_LIBS)
+        # MuPDF and DjVuLibre are compiled with a section for every function: what the program
+        # does not call (writing and editing of PDF files, the other output formats) is left out
+        set_target_properties(cr3-pb.app PROPERTIES LINK_FLAGS "-Wl,--gc-sections")
+    endif (DEFINED CR3_PAGEDOC_LIBS)
     if (DEFINED CMAKE_STRIP)
        MESSAGE("Strip command:  ${CMAKE_STRIP} ${CMAKE_BINARY_DIR}/cr3gui/cr3-pb.app" )
        EXECUTE_PROCESS( COMMAND ${CMAKE_STRIP} ${CMAKE_BINARY_DIR}/cr3gui/cr3-pb.app )
