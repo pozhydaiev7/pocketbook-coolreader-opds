@@ -165,21 +165,27 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Install
 
-The first install is by USB:
+The install is by USB:
 
 1. Download `cr3-v<version>-pro5.zip` from the [latest release](https://github.com/pozhydaiev7/pocketbook-coolreader-opds/releases/latest).
-2. Connect the reader by USB. Back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
-3. Copy the `system` folder from the archive to the root of the reader's storage, replacing the existing files.
-
-   The archive has no `system/config` folder, so your `cr3.ini` and file associations are kept.
-4. Disconnect USB and open any book in CoolReader.
-5. If the menu still looks like the old 3×3 grid, choose the skin:
+2. Connect the reader by USB. The folder `system` of the reader is hidden: turn on the hidden files in the file manager of the PC. If the reader has CoolReader, back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
+3. Copy the folders `system` and `applications` from the archive to the root of the reader's storage, replacing the existing files.
+4. Disconnect USB and restart the reader.
+5. Tap a book: FB2, EPUB, TXT, RTF and HTML open in CoolReader. The reading program of the firmware stays in the menu of a long tap, *Open with*.
+6. If the menu still looks like the old 3×3 grid, choose the skin:
    *Settings → Display settings → Skin → pb740fw5.cr3skin*.
+
+What the archive brings besides the program:
+
+- `system/config/extensions.cfg`, the file associations. CoolReader is not an item of the *Applications* screen: it is a reading program, and the firmware offers it for a book only when this file names it. CoolReader is first in every line. The file replaces the one of the reader at every install.
+- `applications/Cool Reader Selector.app`, a switch on the *Applications* screen: a tap puts the file associations aside, so books open in the programs of the firmware; the next tap brings them back.
+
+The archive has nothing else of `system/config`: `cr3.ini` and the other settings are kept.
 
 To roll back, restore the files saved in step 2.
 
-Every later version is installed from the program: *Settings → Program update → Check for updates*.
-Versions older than `0.0.6-17-67-opds-alpha18` have no working update and are replaced by USB.
+Every later version is installed from the program: *Settings → Program update → Check for updates*. It replaces the file associations too.
+Two kinds of versions are replaced by USB: those older than `0.0.6-17-67-opds-alpha18` have no working update, and `0.0.7-opds` with the test builds up to `0.0.7.1-opds-alpha10` refuse a package that has the file associations inside.
 
 The package is the `pro5` build, for PocketBook devices on firmware 5.x and 6.x. Only this target is built and tested in this fork.
 
