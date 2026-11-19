@@ -2540,6 +2540,8 @@ class CRPbDictionaryMenu : public CRMenu
 {
 private:
     CRPbDictionaryView *_parent;
+    // font of the rows, percent of the size of the skin (Dictionary settings: Font size of the word list)
+    int _fontScale;
 protected:
     virtual void drawTitleBar() { _parent->drawTitleBar(); }
 public:
@@ -2558,8 +2560,11 @@ public:
     // How many whole list rows fit into the dictionary window. The min-item-count of the skin is not
     // a lower limit: a row that does not fit is drawn over the book page under the window.
     int fittingPageItems();
-    // Row height by the font of the skin, before the rows are stretched over the client area.
-    int baseItemHeight() { return CRMenu::getMaxItemSize().y * 3 / 4; }
+    // Row height by the font of the skin and the font size of the dictionary settings, before the
+    // rows are stretched over the client area.
+    int baseItemHeight() { return CRMenu::getMaxItemSize().y * 3 / 4 * _fontScale / 100; }
+    // The font of a part of a row: the one of its skin at the size of the dictionary settings.
+    LVFontRef rowFont(CRRectSkinRef skin);
     int getPageInItemCount()
     {
         CRMenuSkinRef skin = getSkin();
@@ -2605,7 +2610,7 @@ protected:
     void endWordSelection();
     bool isWordSelection() { return _wordSelector!=NULL; }
     void onWordSelection(bool translate=true);
-    void selectWordOnCurrentPage(bool translate);
+    void selectWordOnCurrentPage(bool translate, bool fromEnd = false);
     bool turnBookPage(int command, int params);
     bool _docDirty;
     int _curPage;
@@ -4432,6 +4437,15 @@ static int pbDictWindowPosition()
     return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
 }
 
+// font of the word list of the dictionary window, percent of the size the skin gives it
+static int pbDictListFontScale()
+{
+    if (CRPocketBookDocView::instance == NULL)
+        return 100;
+    int scale = CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_LIST_FONT, 100);
+    return scale < 50 ? 50 : scale > 200 ? 200 : scale;
+}
+
 // true when a word that is not in the dictionary gives "word not found" instead of the nearest words
 static bool pbDictExactSearch()
 {
@@ -4555,8 +4569,14 @@ CRPbDictionaryView::~CRPbDictionaryView()
 
 void CRPbDictionaryView::setRect( const lvRect & rc )
 {
+    lvRect old = getRect();
     CRViewDialog::setRect(rc);
     _dictMenu->setRect(getRect());
+    // The word list draws only the rows that have changed, unless it is told to draw its page:
+    // at another place nothing of it is on the screen, so all of it is drawn there. Without this
+    // a window moved with the list open left its caption alone, or nothing, at the new place.
+    if (old.left != rc.left || old.top != rc.top || old.right != rc.right || old.bottom != rc.bottom)
+        _dictMenu->invalidateMenu();
 }
 
 void CRPbDictionaryView::Update()
@@ -5762,13 +5782,21 @@ void CRPbDictionaryMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef s
     int imgWidth = DrawIcon( buf, rc, itemBorders );
     lvRect textRect = rc;
     textRect.left += imgWidth;
+    // the fonts of the skin at the size of the dictionary settings (an item of this class is
+    // made by the word list only)
+    CRPbDictionaryMenu * list = static_cast<CRPbDictionaryMenu *>(_menu);
+    LVFontRef wordFont = list->rowFont(skin);
+    LVFontRef valueFont = list->rowFont(valueSkin);
     lString32 word = _word16 + " ";
     lvPoint sz = skin->measureTextItem(word);
+    // the width by the font the word is drawn with; what the skin adds to a text is kept
+    sz.x += wordFont->getTextWidth(word.c_str(), word.length())
+            - skin->getFont()->getTextWidth(word.c_str(), word.length());
     textRect.right = textRect.left + sz.x;
-    skin->drawText( buf, textRect, word);
+    skin->drawText( buf, textRect, word, wordFont );
     textRect.left = textRect.right + 1;
     textRect.right = rc.right;
-    valueSkin->drawText( buf, textRect, _translation16 );
+    valueSkin->drawText( buf, textRect, _translation16, valueFont );
     if (selected) {
 #ifdef CR_INVERT_PRSERVE_GRAYS
         if (buf.GetBitsPerPixel() > 2){
@@ -5784,7 +5812,8 @@ void CRPbDictionaryMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef s
 
 
 CRPbDictionaryMenu::CRPbDictionaryMenu(CRGUIWindowManager * wm, CRPbDictionaryView *parent)
-    : CRMenu(wm, NULL, 0, lString32::empty_str, LVImageSourceRef(), LVFontRef(), LVFontRef() ), _parent(parent)
+    : CRMenu(wm, NULL, 0, lString32::empty_str, LVImageSourceRef(), LVFontRef(), LVFontRef() ), _parent(parent),
+    _fontScale(100)
 {
     _fullscreen = false;
     setSkinName(lString32("#dict-list"));
@@ -5809,6 +5838,17 @@ int CRPbDictionaryMenu::itemIndexAt(int y)
     if (index >= _pageItems || _topItem + index >= _items.length())
         return -1;
     return _topItem + index;
+}
+
+LVFontRef CRPbDictionaryMenu::rowFont(CRRectSkinRef skin)
+{
+    if (_fontScale == 100)
+        return skin->getFont();
+    int size = skin->getFontSize() * _fontScale / 100;
+    if (size < 8)
+        size = 8;
+    return fontMan->GetFont(size, skin->getFontBold() ? 700 : 400, skin->getFontItalic(), css_ff_sans_serif,
+                            UnicodeToUtf8(skin->getFontFace()));
 }
 
 // The rows of the page share the client area: nothing of one more row is left under them.
@@ -5970,6 +6010,8 @@ void CRPbDictionaryMenu::reconfigure( int flags )
 {
     int pageitems = _pageItems;
     CRMenu::reconfigure(flags);
+    // the window is set up anew at every opening, so a change of the setting is taken here
+    _fontScale = pbDictListFontScale();
     _pageItems = fittingPageItems();
     if (_items.length() == 0)
         return;
@@ -6033,8 +6075,9 @@ void CRPbDictionaryDialog::startWordSelection()
     selectWordOnCurrentPage(true);
 }
 
-// Selects the remembered word (or the first one after a page change) on the current page
-void CRPbDictionaryDialog::selectWordOnCurrentPage(bool translate)
+// Selects the remembered word on the current page; after a page change the first word of the
+// page, or a word of its end (fromEnd)
+void CRPbDictionaryDialog::selectWordOnCurrentPage(bool translate, bool fromEnd)
 {
     if (isWordSelection())
         endWordSelection();
@@ -6046,6 +6089,11 @@ void CRPbDictionaryDialog::selectWordOnCurrentPage(bool translate)
         _curPage = curPage;
         _lastWordY = _docview->GetPos();
         _lastWordX = 0;
+        if (fromEnd) {
+            // the word nearest to the bottom right corner of the page
+            _lastWordY += _docview->GetHeight();
+            _lastWordX = _docview->GetWidth();
+        }
         _selText.clear();
     }
     _wordSelector->selectWord(_lastWordX, _lastWordY);
@@ -6065,7 +6113,13 @@ bool CRPbDictionaryDialog::turnBookPage(int command, int params)
     int curPage = _docview->getCurPage();
     bool ret = _docview->doCommand((LVDocCmd)command, params);
     if (curPage != _docview->getCurPage()) {
-        selectWordOnCurrentPage(false);
+        // A page turned back is looked at from its end (a tester: "to see once more what text it
+        // ended with, the window has to be driven away by hand"). With the window kept away from
+        // the word a word of the end of the page is selected, so the window goes to the top;
+        // turned forward, the first word is selected and the window is at the bottom, as before.
+        // A window set to the top or to the bottom stays there.
+        bool back = command == DCMD_PAGEUP && pbDictWindowPosition() == PB_DICT_POSITION_AUTO;
+        selectWordOnCurrentPage(false, back);
         if (_dictViewActive)
             _docview->clearSelection();
         setDocDirty();
@@ -6963,6 +7017,7 @@ int InitDoc(const char *exename, char *fileName)
         // so that the settings menu shows which choice is in effect
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_EXACT, 0);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_LIST_FONT, 100);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);

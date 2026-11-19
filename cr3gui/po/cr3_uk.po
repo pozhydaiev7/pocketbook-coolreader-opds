@@ -2726,3 +2726,7 @@ msgstr "Новий файл із текстом"
 #: ../src/settings.cpp
 msgid "As the original"
 msgstr "Як оригінал"
+
+#: ../src/settings.cpp
+msgid "Font size of the word list"
+msgstr "Розмір шрифту списку слів"

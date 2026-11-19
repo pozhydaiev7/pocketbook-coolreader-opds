@@ -114,6 +114,7 @@ enum MainMenuItems_t {
     mm_dictPosition,
     mm_dictKeyboard,
     mm_dictExact,
+    mm_dictListFont,
 #endif
     mm_TouchTOC,
 #ifdef CR_POCKETBOOK

@@ -1499,6 +1499,17 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("Exact"), "1"},
         {NULL, NULL}
     };
+    // percent of the font size the skin gives to the word list of the dictionary window
+    item_def_t dict_list_font_options[] = {
+        {"70%", "70"},
+        {"80%", "80"},
+        {"90%", "90"},
+        {"100%", "100"},
+        {"110%", "110"},
+        {"125%", "125"},
+        {"150%", "150"},
+        {NULL, NULL}
+    };
 #ifdef CR3_PAGEDOC
     // the picture mode of PDF and DjVu: the values are PbPageScale and PbPageLeafing (pb_pageview.h)
     item_def_t page_scale_options[] = {
@@ -1686,6 +1697,11 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                        "cr3_option_font_size", props, PROP_FONT_SIZE);
 #endif
 
+    // The order of the settings menu (a tester found the list scattered: the fonts and the formatting
+    // at the top, the styles nearly at the end, the cache between the dictionary and the catalogs):
+    // the text of a book (font, formatting, styles, page), the screen and the view of PDF and DjVu,
+    // the control and the dictionary, the screens of the catalogs and of the statistics, then the
+    // program itself (what it opens, its update, its cache, debugging).
     CRMenu * fontSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Font settings"),
                                            "cr3_option_font_settings", LVFontRef(), valueFont, CRPropRef());
     fontSettingsMenu->setSkinName(lString32("#settings"));
@@ -1795,6 +1811,28 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     formatSettingsMenu->addItem( scalingMenu );
     formatSettingsMenu->reconfigure( 0 );
     mainMenu->addItem( formatSettingsMenu );
+
+    CRMenu * stylesMenu = new CRMenu(_wm, mainMenu, _menuItemId++,
+                                     _("Style settings"),
+                                     "cr3_option_styles", LVFontRef(), valueFont, CRPropRef() );
+    stylesMenu->setAccelerators( _menuAccelerators );
+    stylesMenu->setSkinName(lString32("#settings"));
+
+    createSettingsMenuItem(stylesMenu, mm_EmbeddedStyles, _("Document embedded styles"),
+                           "cr3_option_styles_embedded",
+                           valueFont, PROP_EMBEDDED_STYLES, on_off_option);
+    for ( int i=0; css_styles[i].translate_default; i++) {
+        CRMenu * styleMenu = new CRMenu(_wm, stylesMenu, _menuItemId++,
+                                        lString32(css_styles[i].translate_default),
+                                        css_style_icons[i], LVFontRef(), valueFont, CRPropRef() );
+        styleMenu->setAccelerators( _menuAccelerators );
+        styleMenu->setSkinName(lString32("#settings"));
+        createStyleMenuItems(styleMenu, valueFont, css_styles[i].value );
+        styleMenu->reconfigure( 0 );
+        stylesMenu->addItem( styleMenu );
+    }
+    stylesMenu->reconfigure( 0 );
+    mainMenu->addItem( stylesMenu );
 
     CRMenu * pageSettingsMenu = new CRMenu( _wm, mainMenu, _menuItemId++, _("Page settings"),
                                            "cr3_option_page", LVFontRef(), valueFont, CRPropRef());
@@ -1958,27 +1996,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     displaySettingsMenu->reconfigure( 0 );
     mainMenu->addItem( displaySettingsMenu );
 
-#ifdef POCKETBOOK_PRO
-    //====== Dictionary settings ========
-    CRMenu * dictSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
-                                                        "cr3_option_dict_settings", valueFont, CRPropRef());
-    dictSettingsMenu->setSkinName(lString32("#settings"));
-    dictSettingsMenu->setAccelerators( _menuAccelerators );
-    createSettingsMenuItem(dictSettingsMenu, mm_dictPosition, _("Dictionary window"),
-                           "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
-                           dict_position_options);
-    createSettingsMenuItem(dictSettingsMenu, mm_dictExact, _("Word search"),
-                           "cr3_option_dict_exact", valueFont, PROP_POCKETBOOK_DICT_EXACT,
-                           dict_exact_options);
-    // without a touch screen only the firmware keyboard can be used: no choice is offered
-    if (pbKeyboardUsable())
-        createSettingsMenuItem(dictSettingsMenu, mm_dictKeyboard, _("Search keyboard"),
-                               "cr3_option_dict_keyboard", valueFont, PROP_POCKETBOOK_DICT_KEYBOARD,
-                               dict_keyboard_options);
-    dictSettingsMenu->reconfigure( 0 );
-    mainMenu->addItem( dictSettingsMenu );
-#endif
-
     // a group: opened by a tap; its items with two or three values are switched in place
     CRMenu * controlSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Control settings"),
                                                            "cr3_option_controls", valueFont, CRPropRef());
@@ -2072,6 +2089,52 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         mainMenu->addItem( pageMenu );
     }
 #endif
+
+    if ( !controlSettingsMenu->getItems().empty()) {
+        controlSettingsMenu->reconfigure( 0 );
+        mainMenu->addItem( controlSettingsMenu );
+    } else {
+        delete controlSettingsMenu;
+        controlSettingsMenu = NULL;
+    }
+
+#ifdef POCKETBOOK_PRO
+    //====== Dictionary settings ========
+    CRMenu * dictSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
+                                                        "cr3_option_dict_settings", valueFont, CRPropRef());
+    dictSettingsMenu->setSkinName(lString32("#settings"));
+    dictSettingsMenu->setAccelerators( _menuAccelerators );
+    createSettingsMenuItem(dictSettingsMenu, mm_dictPosition, _("Dictionary window"),
+                           "cr3_option_dict_position", valueFont, PROP_POCKETBOOK_DICT_POSITION,
+                           dict_position_options);
+    createSettingsMenuItem(dictSettingsMenu, mm_dictExact, _("Word search"),
+                           "cr3_option_dict_exact", valueFont, PROP_POCKETBOOK_DICT_EXACT,
+                           dict_exact_options);
+    // asked by a tester: the font of the list, and with it the number of its rows
+    createSettingsMenuItem(dictSettingsMenu, mm_dictListFont, _("Font size of the word list"),
+                           "cr3_option_dict_list_font", valueFont, PROP_POCKETBOOK_DICT_LIST_FONT,
+                           dict_list_font_options);
+    // without a touch screen only the firmware keyboard can be used: no choice is offered
+    if (pbKeyboardUsable())
+        createSettingsMenuItem(dictSettingsMenu, mm_dictKeyboard, _("Search keyboard"),
+                               "cr3_option_dict_keyboard", valueFont, PROP_POCKETBOOK_DICT_KEYBOARD,
+                               dict_keyboard_options);
+    dictSettingsMenu->reconfigure( 0 );
+    mainMenu->addItem( dictSettingsMenu );
+#endif
+    /*
+        SetTimeMenuItem * setTime = new SetTimeMenuItem( mainMenu, mm_SetTime, _wm->translateString("VIEWER_MENU_SET_TIME", "Set time"),
+                LVImageSourceRef(), menuFont, U"bla" );
+        mainMenu->addItem( setTime );
+*/
+
+    // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
+
+
+    // READING STATISTICS
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_READING_STATS, _("Reading statistics") ) );
+
 #ifdef CR_POCKETBOOK
     {
         // "Open with CoolReader": a line for every kind of book the engine opens. The value is
@@ -2094,40 +2157,12 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
 #endif
 
-    if ( !controlSettingsMenu->getItems().empty()) {
-        controlSettingsMenu->reconfigure( 0 );
-        mainMenu->addItem( controlSettingsMenu );
-    } else {
-        delete controlSettingsMenu;
-        controlSettingsMenu = NULL;
+    // PROGRAM UPDATE: the screen that checks the releases of the repository (ota_update.h)
+    #ifdef POCKETBOOK_PRO
+    if( isNetworkSupported() ) {
+        mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OTA_UPDATE, _("Program update") ) );
     }
-    /*
-        SetTimeMenuItem * setTime = new SetTimeMenuItem( mainMenu, mm_SetTime, _wm->translateString("VIEWER_MENU_SET_TIME", "Set time"),
-                LVImageSourceRef(), menuFont, U"bla" );
-        mainMenu->addItem( setTime );
-*/
-
-    CRMenu * stylesMenu = new CRMenu(_wm, mainMenu, _menuItemId++,
-                                     _("Style settings"),
-                                     "cr3_option_styles", LVFontRef(), valueFont, CRPropRef() );
-    stylesMenu->setAccelerators( _menuAccelerators );
-    stylesMenu->setSkinName(lString32("#settings"));
-
-    createSettingsMenuItem(stylesMenu, mm_EmbeddedStyles, _("Document embedded styles"),
-                           "cr3_option_styles_embedded",
-                           valueFont, PROP_EMBEDDED_STYLES, on_off_option);
-    for ( int i=0; css_styles[i].translate_default; i++) {
-        CRMenu * styleMenu = new CRMenu(_wm, stylesMenu, _menuItemId++,
-                                        lString32(css_styles[i].translate_default),
-                                        css_style_icons[i], LVFontRef(), valueFont, CRPropRef() );
-        styleMenu->setAccelerators( _menuAccelerators );
-        styleMenu->setSkinName(lString32("#settings"));
-        createStyleMenuItems(styleMenu, valueFont, css_styles[i].value );
-        styleMenu->reconfigure( 0 );
-        stylesMenu->addItem( styleMenu );
-    }
-    stylesMenu->reconfigure( 0 );
-    mainMenu->addItem( stylesMenu );
+    #endif
 
     // CLEAR CACHE
     if( ldomDocCache::enabled() ) {
@@ -2136,20 +2171,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                 LVImageSourceRef(),
                 LVFontRef() ) );
     }
-
-    // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
-    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
-
-
-    // READING STATISTICS
-    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_READING_STATS, _("Reading statistics") ) );
-
-    // PROGRAM UPDATE: the screen that checks the releases of the repository (ota_update.h)
-    #ifdef POCKETBOOK_PRO
-    if( isNetworkSupported() ) {
-        mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OTA_UPDATE, _("Program update") ) );
-    }
-    #endif
 
     // DEBUGGING: the screen that turns the log of the program on and off (pb_debug.h)
     mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_DEBUG, _("Debugging") ) );
