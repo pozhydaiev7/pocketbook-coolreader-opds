@@ -328,6 +328,12 @@ PbPageWindow::PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lStri
     _fullscreen = true;
     setAccelerators(main_win->getAccelerators());
     readDefaults();
+    // The page part of the window is laid out here: a window gets the rectangle of the screen in
+    // its constructor, and nothing calls setRect for it when it is shown. Laid out only in setRect
+    // and reactivated, the part was empty at the first draw, which then drew nothing: a file opened
+    // straight into this view was white until a menu had been opened and closed (seen by the owner
+    // on InkPad 4 with alpha10). Before the state is read: the layout starts the frames anew.
+    setupHead();
     loadState();
 }
 
