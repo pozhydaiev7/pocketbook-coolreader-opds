@@ -2,7 +2,11 @@
 
 ## 0.0.7.2-opds (test versions)
 
-Test builds: `0.0.7.2-opds-alpha1` (the dictionary window after a page turned back, the font size of its word list, the order of the settings menu). The same changes are in the line of PDF and DjVu as `0.0.8-opds-alpha9`: the owner named them common to both lines.
+Test builds: `0.0.7.2-opds-alpha1` (the dictionary window after a page turned back, the font size of its word list, the order of the settings menu). `0.0.7.2-opds-alpha2` (the icon of the reading statistics in three skins). The same changes are in the line of PDF and DjVu as `0.0.8-opds-alpha9`: the owner named them common to both lines.
+
+### The icon of the reading statistics (alpha2)
+
+- **The icon *Reading statistics* of the touch menu on a gray disc** (`cr3gui/data/devices/pb360/skins/pb700fw5/icon_stats.png`, the same in `pb740fw5` and `pbXfw5`). Reported by a tester: "in its usual state the icon stands out of the row: the ground of the bars is white and not gray as everywhere". The three bars were filled with white; the other icons of these skins have the gray of the disc inside their outlines. What is lighter than the disc inside it has the gray of the disc now (1512 pixels of each file). The three other skins draw the icon on white and are as they were. Looked at on a sheet with the neighbouring icons of every skin; not seen on a reader.
 
 ### Remarks of a tester: the dictionary window and the order of the settings (alpha1)
 
