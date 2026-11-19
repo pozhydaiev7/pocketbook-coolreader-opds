@@ -16,7 +16,7 @@ package target is `pro5` (firmware 5 and 6, toolchain `SDK_481`).
 
 | Line | Branch | Versions | State |
 |---|---|---|---|
-| current | `master` | `0.0.7.x-opds`, test builds `-alphaN` | released: `0.0.7-opds` |
+| current | `master` | `0.0.7.x-opds`, test builds `-alphaN` | released: `0.0.7.1-opds` |
 | PDF and DjVu | `pdf-djvu` | `0.0.8-opds-alphaN` | in work; not merged into `master`; `master` is merged into it often |
 
 The version is `CR_PB_VERSION` and `CR_PB_BUILD_DATE` in `cr3gui/src/cr3pocketbook.h`. A test build
