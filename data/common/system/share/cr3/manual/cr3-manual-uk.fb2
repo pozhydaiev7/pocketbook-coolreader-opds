@@ -443,7 +443,7 @@
     <image l:href="#i_006.png"/>
     <subtitle>Гортання статті та книги</subtitle>
     <empty-line/>
-    <p>Довга стаття і список слів гортаються також вертикальним рухом пальця по вікну словника; номер сторінки статті видно в заголовку. Гортання книги клавішами і горизонтальним жестом вікно словника не закриває.</p>
+    <p>Довга стаття і список слів гортаються також вертикальним рухом пальця по вікну словника; номер сторінки статті видно в заголовку. Гортання книги клавішами і горизонтальним жестом вікно словника не закриває. Якщо вікно словника показується осторонь від обраного слова, то після гортання вперед обирається перше слово сторінки і вікно лишається внизу, а після гортання назад обирається слово в кінці сторінки і вікно переходить угору: кінець сторінки лишається на виду.</p>
     <image l:href="#i_006.png"/>
     <subtitle>Клавіатура пошуку</subtitle>
     <empty-line/>
@@ -671,6 +671,75 @@
     </section>
     <section>
      <title>
+      <p>Налаштування стилів тексту</p>
+     </title>
+     <p>Цей пункт меню дозволяє виконати індивідуальне налаштування вигляду окремих елементів оформлення книг, перекриваючи загальні стилі. Це дозволяє підлаштувати макет вигляду книги таким чином, який найбільш подобається саме вам.</p>
+     <empty-line/>
+     <image l:href="#i_038.png"/>
+     <empty-line/>
+     <image l:href="#i_006.png"/>
+     <subtitle>Використовувати вбудовані стилі</subtitle>
+     <p>Підтримка таблиць стилів, які містяться в самому файлі книги. Стосується форматів файлів, які можуть містити стилі документів (наприклад, ePub).</p>
+     <p><emphasis>Значення:</emphasis> увімкнено / вимкнено</p>
+     <image l:href="#i_006.png"/>
+     <subtitle>Доступні елементи</subtitle>
+     <p><strong><emphasis>Абзац</emphasis></strong></p>
+     <p><strong><emphasis>Заголовок</emphasis></strong></p>
+     <p><strong><emphasis>Підзаголовок</emphasis></strong></p>
+     <p><strong><emphasis>Код (наперед форматований текст)</emphasis></strong></p>
+     <p><strong><emphasis>Посилання</emphasis></strong></p>
+     <p><strong><emphasis>Цитата</emphasis></strong></p>
+     <p><strong><emphasis>Епіграф</emphasis></strong></p>
+     <p><strong><emphasis>Вірш</emphasis></strong></p>
+     <p><strong><emphasis>Автор тексту / цитати / епіграфу</emphasis></strong></p>
+     <p><strong><emphasis>Примітка</emphasis></strong></p>
+     <p><strong><emphasis>Посилання примітки</emphasis></strong></p>
+     <p><strong><emphasis>Заголовок примітки</emphasis></strong></p>
+     <p><strong><emphasis>Анотація</emphasis></strong></p>
+     <image l:href="#i_006.png"/>
+     <subtitle>Параметри кожного елемента</subtitle>
+     <p><strong><emphasis>Вирівнювання тексту</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> по ширині / по лівому краю / по центру / по правому краю</p>
+     <empty-line/>
+     <p><strong><emphasis>Відступ першого рядка</emphasis></strong></p>
+     <p>При відступі текст першого рядка починається глибше в текстовому блоку, а при виступі - виступає назовні текстового блоку.</p>
+     <p><emphasis>Значення:</emphasis> без відступу / малий відступ / великий відступ / малий виступ / великий виступ</p>
+     <empty-line/>
+     <p><strong><emphasis>Шрифт</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> список шрифтів</p>
+     <empty-line/>
+     <p><strong><emphasis>Розмір шрифту</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> зменшити від 95% до 60% / збільшити від 105% до 150%</p>
+     <empty-line/>
+     <p><strong><emphasis>Насиченість шрифту</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> звичайний / жирний / дуже жирний / тонкий</p>
+     <empty-line/>
+     <p><strong><emphasis>Стиль шрифту</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> звичайний / курсив</p>
+     <empty-line/>
+     <p><strong><emphasis>Міжрядковий інтервал</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> від 75% до 150%</p>
+     <empty-line/>
+     <p><strong><emphasis>Міжбуквений інтервал</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> від 0px до 5px</p>
+     <empty-line/>
+     <p><strong><emphasis>Оформлення тексту</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> немає / підкреслений / закреслений / надкреслений</p>
+     <empty-line/>
+     <p><strong><emphasis>Вертикальне вирівнювання</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> звичайний / нижній індекс / верхній індекс</p>
+     <empty-line/>
+     <p><strong><emphasis>Колір тексту / тла</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> чорний / сірий / білий</p>
+     <empty-line/>
+     <p><strong><emphasis>Поле перед / після</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> від 0 до 200% висоти рядка</p>
+     <empty-line/>
+     <p><strong><emphasis>Поле ліворуч / праворуч</emphasis></strong></p>
+     <p><emphasis>Значення:</emphasis> від 0 до 400% висоти рядка / від 5% до 30% ширини рядка</p>
+    </section>
+    <section>
+     <title>
       <p>Налаштування сторінки</p>
      </title>
      <p>Цей пункт відкриває вкладене підменю, в якому доступні додаткові налаштування вигляду сторінки тексту книги.</p>
@@ -812,25 +881,6 @@
     </section>
     <section>
      <title>
-      <p>Словник</p>
-     </title>
-     <p>Цей пункт відкриває вкладене підменю з налаштуваннями вікна словника.</p>
-     <empty-line/>
-     <image l:href="#i_006.png"/>
-     <subtitle>Вікно словника</subtitle>
-     <p>Де показувати вікно словника: осторонь від обраного слова (вікно саме переходить до протилежного краю екрану), завжди вгорі або завжди внизу.</p>
-     <p><emphasis>Значення:</emphasis> навпроти слова / вгорі / внизу</p>
-     <image l:href="#i_006.png"/>
-     <subtitle>Пошук слова</subtitle>
-     <p>Що показувати, якщо слова немає в словнику: список найближчих слів або повідомлення, що слово не знайдено.</p>
-     <p><emphasis>Значення:</emphasis> з найближчими словами / точний</p>
-     <image l:href="#i_006.png"/>
-     <subtitle>Клавіатура пошуку</subtitle>
-     <p>Клавіатура для введення слова вручну. Пункт є тільки на пристроях з сенсорним екраном.</p>
-     <p><emphasis>Значення:</emphasis> CoolReader, з нічним режимом / системна</p>
-    </section>
-    <section>
-     <title>
       <p>Налаштування керування</p>
      </title>
      <p>Цей пункт меню дозволяє налаштувати елементи сенсорного керування пристроєм, які використовуються під час читання.</p>
@@ -892,80 +942,38 @@
     </section>
     <section>
      <title>
-      <p>Налаштування стилів тексту</p>
+      <p>Словник</p>
      </title>
-     <p>Цей пункт меню дозволяє виконати індивідуальне налаштування вигляду окремих елементів оформлення книг, перекриваючи загальні стилі. Це дозволяє підлаштувати макет вигляду книги таким чином, який найбільш подобається саме вам.</p>
-     <empty-line/>
-     <image l:href="#i_038.png"/>
+     <p>Цей пункт відкриває вкладене підменю з налаштуваннями вікна словника.</p>
      <empty-line/>
      <image l:href="#i_006.png"/>
-     <subtitle>Використовувати вбудовані стилі</subtitle>
-     <p>Підтримка таблиць стилів, які містяться в самому файлі книги. Стосується форматів файлів, які можуть містити стилі документів (наприклад, ePub).</p>
-     <p><emphasis>Значення:</emphasis> увімкнено / вимкнено</p>
+     <subtitle>Вікно словника</subtitle>
+     <p>Де показувати вікно словника: осторонь від обраного слова (вікно саме переходить до протилежного краю екрану), завжди вгорі або завжди внизу.</p>
+     <p><emphasis>Значення:</emphasis> навпроти слова / вгорі / внизу</p>
      <image l:href="#i_006.png"/>
-     <subtitle>Доступні елементи</subtitle>
-     <p><strong><emphasis>Абзац</emphasis></strong></p>
-     <p><strong><emphasis>Заголовок</emphasis></strong></p>
-     <p><strong><emphasis>Підзаголовок</emphasis></strong></p>
-     <p><strong><emphasis>Код (наперед форматований текст)</emphasis></strong></p>
-     <p><strong><emphasis>Посилання</emphasis></strong></p>
-     <p><strong><emphasis>Цитата</emphasis></strong></p>
-     <p><strong><emphasis>Епіграф</emphasis></strong></p>
-     <p><strong><emphasis>Вірш</emphasis></strong></p>
-     <p><strong><emphasis>Автор тексту / цитати / епіграфу</emphasis></strong></p>
-     <p><strong><emphasis>Примітка</emphasis></strong></p>
-     <p><strong><emphasis>Посилання примітки</emphasis></strong></p>
-     <p><strong><emphasis>Заголовок примітки</emphasis></strong></p>
-     <p><strong><emphasis>Анотація</emphasis></strong></p>
+     <subtitle>Пошук слова</subtitle>
+     <p>Що показувати, якщо слова немає в словнику: список найближчих слів або повідомлення, що слово не знайдено.</p>
+     <p><emphasis>Значення:</emphasis> з найближчими словами / точний</p>
      <image l:href="#i_006.png"/>
-     <subtitle>Параметри кожного елемента</subtitle>
-     <p><strong><emphasis>Вирівнювання тексту</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> по ширині / по лівому краю / по центру / по правому краю</p>
-     <empty-line/>
-     <p><strong><emphasis>Відступ першого рядка</emphasis></strong></p>
-     <p>При відступі текст першого рядка починається глибше в текстовому блоку, а при виступі - виступає назовні текстового блоку.</p>
-     <p><emphasis>Значення:</emphasis> без відступу / малий відступ / великий відступ / малий виступ / великий виступ</p>
-     <empty-line/>
-     <p><strong><emphasis>Шрифт</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> список шрифтів</p>
-     <empty-line/>
-     <p><strong><emphasis>Розмір шрифту</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> зменшити від 95% до 60% / збільшити від 105% до 150%</p>
-     <empty-line/>
-     <p><strong><emphasis>Насиченість шрифту</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> звичайний / жирний / дуже жирний / тонкий</p>
-     <empty-line/>
-     <p><strong><emphasis>Стиль шрифту</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> звичайний / курсив</p>
-     <empty-line/>
-     <p><strong><emphasis>Міжрядковий інтервал</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> від 75% до 150%</p>
-     <empty-line/>
-     <p><strong><emphasis>Міжбуквений інтервал</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> від 0px до 5px</p>
-     <empty-line/>
-     <p><strong><emphasis>Оформлення тексту</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> немає / підкреслений / закреслений / надкреслений</p>
-     <empty-line/>
-     <p><strong><emphasis>Вертикальне вирівнювання</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> звичайний / нижній індекс / верхній індекс</p>
-     <empty-line/>
-     <p><strong><emphasis>Колір тексту / тла</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> чорний / сірий / білий</p>
-     <empty-line/>
-     <p><strong><emphasis>Поле перед / після</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> від 0 до 200% висоти рядка</p>
-     <empty-line/>
-     <p><strong><emphasis>Поле ліворуч / праворуч</emphasis></strong></p>
-     <p><emphasis>Значення:</emphasis> від 0 до 400% висоти рядка / від 5% до 30% ширини рядка</p>
+     <subtitle>Розмір шрифту списку слів</subtitle>
+     <p>Розмір шрифту списку слів у вікні словника, у відсотках від розміру, заданого стилем інтерфейсу. Рядки списку підлаштовуються під шрифт: що він дрібніший, то більше слів вміщується у вікні.</p>
+     <p><emphasis>Значення:</emphasis> від 70 % до 150 %</p>
+     <image l:href="#i_006.png"/>
+     <subtitle>Клавіатура пошуку</subtitle>
+     <p>Клавіатура для введення слова вручну. Пункт є тільки на пристроях з сенсорним екраном.</p>
+     <p><emphasis>Значення:</emphasis> CoolReader, з нічним режимом / системна</p>
     </section>
     <section>
      <title>
-      <p>Очистити кеш</p>
+      <p>OPDS-каталоги</p>
      </title>
-     <p>Цей пункт меню дозволяє виконати примусове очищення кешу усіх книг, включно з поточною.</p>
-     <empty-line/>
-     <image l:href="#i_039.png"/>
+     <p>Цей пункт меню відкриває список мережевих каталогів книг: відкрити каталог, додати новий, змінити назву й адресу, призначити типовий каталог (див. розділ «<emphasis>Каталог книг (OPDS)</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Статистика читання</p>
+     </title>
+     <p>Цей пункт меню відкриває звіти про час читання (див. розділ «<emphasis>Статистика читання</emphasis>»).</p>
     </section>
     <section>
      <title>
@@ -982,15 +990,11 @@
     </section>
     <section>
      <title>
-      <p>OPDS-каталоги</p>
+      <p>Очистити кеш</p>
      </title>
-     <p>Цей пункт меню відкриває список мережевих каталогів книг: відкрити каталог, додати новий, змінити назву й адресу, призначити типовий каталог (див. розділ «<emphasis>Каталог книг (OPDS)</emphasis>»).</p>
-    </section>
-    <section>
-     <title>
-      <p>Статистика читання</p>
-     </title>
-     <p>Цей пункт меню відкриває звіти про час читання (див. розділ «<emphasis>Статистика читання</emphasis>»).</p>
+     <p>Цей пункт меню дозволяє виконати примусове очищення кешу усіх книг, включно з поточною.</p>
+     <empty-line/>
+     <image l:href="#i_039.png"/>
     </section>
    </section>
   </section>
@@ -1511,6 +1515,9 @@
     <empty-line/>
     <p>Точний пошук слова в словнику (1 – так / 0 – з найближчими словами):</p>
     <p><strong>cr3.pocketbook.dict.exact=0</strong></p>
+    <empty-line/>
+    <p>Розмір шрифту списку слів словника, у відсотках від розміру стилю інтерфейсу:</p>
+    <p><strong>cr3.pocketbook.dict.list.font=100</strong></p>
     <empty-line/>
     <p>Клавіатура пошуку в словнику (0 – CoolReader / 1 – системна):</p>
     <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>

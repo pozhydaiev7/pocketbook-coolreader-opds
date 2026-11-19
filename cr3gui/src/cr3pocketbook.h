@@ -94,6 +94,9 @@ enum CRPbCommands {
 // word lookup: 0 the article of the word or the list of the nearest words, 1 exact: only the article
 // of the word (any letter case, word forms of StarDict), otherwise "word not found"
 #define PROP_POCKETBOOK_DICT_EXACT "cr3.pocketbook.dict.exact"
+// font of the word list of the dictionary window: percent of the size the skin gives it. The rows
+// of the list are as high as the font asks, so a smaller font shows more words in the window.
+#define PROP_POCKETBOOK_DICT_LIST_FONT "cr3.pocketbook.dict.list.font"
 // 0 turns off the direct copy of the page to the screen canvas (no menu item, cr3.ini only)
 #define PROP_POCKETBOOK_DIRECT_BLIT "cr3.pocketbook.direct.blit"
 // 0: the image of the next page is not drawn ahead while a page is read
@@ -107,7 +110,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.7.1-opds"
+#define CR_PB_VERSION "0.0.7.2-opds-alpha1"
 #define CR_PB_BUILD_DATE "2026-11-19"
 
 #define PB_ROTATE_MODE_360 0

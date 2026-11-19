@@ -310,7 +310,7 @@
     <p>Статьи разных словарей разделены линией, над каждой мелко написано название словаря. Если ни один словарь не отмечен, поиск не выполняется, и окно словаря об этом сообщает.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Листание статьи и книги</subtitle>
-    <p>Длинная статья и список слов листаются вертикальным движением пальца по окну словаря; номер страницы статьи виден в заголовке. Листание книги клавишами и горизонтальным жестом окно словаря не закрывает.</p>
+    <p>Длинная статья и список слов листаются вертикальным движением пальца по окну словаря; номер страницы статьи виден в заголовке. Листание книги клавишами и горизонтальным жестом окно словаря не закрывает. Если окно словаря показывается в стороне от выбранного слова, то после листания вперед выбирается первое слово страницы и окно остается внизу, а после листания назад выбирается слово в конце страницы и окно переходит вверх: конец страницы остается на виду.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Клавиатура поиска</subtitle>
     <p>Для ручного ввода слова используется собственная клавиатура программы: английская, русская и украинская раскладки, клавиши расположены как на системной клавиатуре; при инверсном отображении (ночной режим) она темная. Вместо нее можно выбрать системную клавиатуру (см. «<emphasis>Настройки</emphasis>» &gt; «<emphasis>Словарь</emphasis>»). На устройствах без сенсорного экрана всегда используется системная.</p>
@@ -505,6 +505,74 @@
     </section>
     <section>
      <title>
+      <p>Настройки стилей текста</p>
+     </title>
+     <p>Данный пункт меню позволяет выполнить индивидуальную настройку отдельных элементов оформления книг, перекрывая общие стили.</p>
+     <empty-line/>
+     <image l:href="#i_033.png"/>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Встроенные стили документа</subtitle>
+     <p>Поддержка таблиц стилей, содержащихся в самом документе.</p>
+     <p><emphasis>Значение:</emphasis> включены / выключены</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Доступные элементы</subtitle>
+     <p><strong><emphasis>Параграф (абзац) по умолчанию</emphasis></strong></p>
+     <p><strong><emphasis>Заголовок</emphasis></strong></p>
+     <p><strong><emphasis>Подзаголовок</emphasis></strong></p>
+     <p><strong><emphasis>Преформатированный текст / код</emphasis></strong></p>
+     <p><strong><emphasis>Ссылка</emphasis></strong></p>
+     <p><strong><emphasis>Цитата</emphasis></strong></p>
+     <p><strong><emphasis>Эпиграф</emphasis></strong></p>
+     <p><strong><emphasis>Стихи</emphasis></strong></p>
+     <p><strong><emphasis>Автор текста / цитаты / эпиграфа</emphasis></strong></p>
+     <p><strong><emphasis>Сноска</emphasis></strong></p>
+     <p><strong><emphasis>Ссылка на сноску</emphasis></strong></p>
+     <p><strong><emphasis>Заголовок сноски</emphasis></strong></p>
+     <p><strong><emphasis>Аннотация</emphasis></strong></p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Параметры каждого элемента</subtitle>
+     <p><strong><emphasis>Выравнивание текста</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> по ширине / влево / по центру / вправо</p>
+     <empty-line/>
+     <p><strong><emphasis>Отступ первой строки</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> без отступа / маленький отступ (выступ) / большой отступ (выступ)</p>
+     <empty-line/>
+     <p><strong><emphasis>Шрифт</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> список шрифтов</p>
+     <empty-line/>
+     <p><strong><emphasis>Размер шрифта</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> уменьшить от 95 % до 60 % / увеличить от 105 % до 150 %</p>
+     <empty-line/>
+     <p><strong><emphasis>Жирность шрифта</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> стандарт / жирный / жирнее / тоньше</p>
+     <empty-line/>
+     <p><strong><emphasis>Стиль шрифта</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> стандарт / наклонный</p>
+     <empty-line/>
+     <p><strong><emphasis>Межстрочный интервал</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> от 75 % до 150 %</p>
+     <empty-line/>
+     <p><strong><emphasis>Межбуквенный интервал</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> от 0px до 5px</p>
+     <empty-line/>
+     <p><strong><emphasis>Подчеркивание</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> нет / подчеркнутый / зачеркнутый / надчеркнутый</p>
+     <empty-line/>
+     <p><strong><emphasis>Надстрочник / подстрочник</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> норма / нижний / верхний</p>
+     <empty-line/>
+     <p><strong><emphasis>Цвет текста/фона</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> черный / серый / белый</p>
+     <empty-line/>
+     <p><strong><emphasis>Поле перед/после</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> от 0 до 2 высоты строки</p>
+     <empty-line/>
+     <p><strong><emphasis>Поле слева/справа</emphasis></strong></p>
+     <p><emphasis>Значение:</emphasis> от 0 до 4 высоты строки / от 5 % до 30 % ширины строки</p>
+    </section>
+    <section>
+     <title>
       <p>Настройки страницы</p>
      </title>
      <p>Данный пункт открывает вложенное подменю, в котором доступны дополнительные настройки внешнего вида страницы книги.</p>
@@ -640,25 +708,6 @@
     </section>
     <section>
      <title>
-      <p>Словарь</p>
-     </title>
-     <p>Данный пункт открывает вложенное подменю с настройками окна словаря.</p>
-     <empty-line/>
-     <image l:href="#i_026.png"/>
-     <subtitle>Окно словаря</subtitle>
-     <p>Где показывать окно словаря: в стороне от выбранного слова (окно само переходит к противоположному краю экрана), всегда вверху или всегда внизу.</p>
-     <p><emphasis>Значение:</emphasis> напротив слова / вверху / внизу</p>
-     <image l:href="#i_026.png"/>
-     <subtitle>Поиск слова</subtitle>
-     <p>Что показывать, если слова нет в словаре: список ближайших слов или сообщение о том, что слово не найдено.</p>
-     <p><emphasis>Значение:</emphasis> с ближайшими словами / точный</p>
-     <image l:href="#i_026.png"/>
-     <subtitle>Клавиатура поиска</subtitle>
-     <p>Клавиатура для ручного ввода слова. Пункт есть только на устройствах с сенсорным экраном.</p>
-     <p><emphasis>Значение:</emphasis> CoolReader, с ночным режимом / системная</p>
-    </section>
-    <section>
-     <title>
       <p>Настройки управления</p>
      </title>
      <p>Данный пункт меню позволяет настроить элементы сенсорного управления устройством, используемые только во время чтения.</p>
@@ -718,79 +767,26 @@
     </section>
     <section>
      <title>
-      <p>Настройки стилей текста</p>
+      <p>Словарь</p>
      </title>
-     <p>Данный пункт меню позволяет выполнить индивидуальную настройку отдельных элементов оформления книг, перекрывая общие стили.</p>
-     <empty-line/>
-     <image l:href="#i_033.png"/>
+     <p>Данный пункт открывает вложенное подменю с настройками окна словаря.</p>
      <empty-line/>
      <image l:href="#i_026.png"/>
-     <subtitle>Встроенные стили документа</subtitle>
-     <p>Поддержка таблиц стилей, содержащихся в самом документе.</p>
-     <p><emphasis>Значение:</emphasis> включены / выключены</p>
+     <subtitle>Окно словаря</subtitle>
+     <p>Где показывать окно словаря: в стороне от выбранного слова (окно само переходит к противоположному краю экрана), всегда вверху или всегда внизу.</p>
+     <p><emphasis>Значение:</emphasis> напротив слова / вверху / внизу</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Доступные элементы</subtitle>
-     <p><strong><emphasis>Параграф (абзац) по умолчанию</emphasis></strong></p>
-     <p><strong><emphasis>Заголовок</emphasis></strong></p>
-     <p><strong><emphasis>Подзаголовок</emphasis></strong></p>
-     <p><strong><emphasis>Преформатированный текст / код</emphasis></strong></p>
-     <p><strong><emphasis>Ссылка</emphasis></strong></p>
-     <p><strong><emphasis>Цитата</emphasis></strong></p>
-     <p><strong><emphasis>Эпиграф</emphasis></strong></p>
-     <p><strong><emphasis>Стихи</emphasis></strong></p>
-     <p><strong><emphasis>Автор текста / цитаты / эпиграфа</emphasis></strong></p>
-     <p><strong><emphasis>Сноска</emphasis></strong></p>
-     <p><strong><emphasis>Ссылка на сноску</emphasis></strong></p>
-     <p><strong><emphasis>Заголовок сноски</emphasis></strong></p>
-     <p><strong><emphasis>Аннотация</emphasis></strong></p>
+     <subtitle>Поиск слова</subtitle>
+     <p>Что показывать, если слова нет в словаре: список ближайших слов или сообщение о том, что слово не найдено.</p>
+     <p><emphasis>Значение:</emphasis> с ближайшими словами / точный</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Параметры каждого элемента</subtitle>
-     <p><strong><emphasis>Выравнивание текста</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> по ширине / влево / по центру / вправо</p>
-     <empty-line/>
-     <p><strong><emphasis>Отступ первой строки</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> без отступа / маленький отступ (выступ) / большой отступ (выступ)</p>
-     <empty-line/>
-     <p><strong><emphasis>Шрифт</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> список шрифтов</p>
-     <empty-line/>
-     <p><strong><emphasis>Размер шрифта</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> уменьшить от 95 % до 60 % / увеличить от 105 % до 150 %</p>
-     <empty-line/>
-     <p><strong><emphasis>Жирность шрифта</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> стандарт / жирный / жирнее / тоньше</p>
-     <empty-line/>
-     <p><strong><emphasis>Стиль шрифта</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> стандарт / наклонный</p>
-     <empty-line/>
-     <p><strong><emphasis>Межстрочный интервал</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> от 75 % до 150 %</p>
-     <empty-line/>
-     <p><strong><emphasis>Межбуквенный интервал</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> от 0px до 5px</p>
-     <empty-line/>
-     <p><strong><emphasis>Подчеркивание</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> нет / подчеркнутый / зачеркнутый / надчеркнутый</p>
-     <empty-line/>
-     <p><strong><emphasis>Надстрочник / подстрочник</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> норма / нижний / верхний</p>
-     <empty-line/>
-     <p><strong><emphasis>Цвет текста/фона</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> черный / серый / белый</p>
-     <empty-line/>
-     <p><strong><emphasis>Поле перед/после</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> от 0 до 2 высоты строки</p>
-     <empty-line/>
-     <p><strong><emphasis>Поле слева/справа</emphasis></strong></p>
-     <p><emphasis>Значение:</emphasis> от 0 до 4 высоты строки / от 5 % до 30 % ширины строки</p>
-    </section>
-    <section>
-     <title>
-      <p>Очистить кэш</p>
-     </title>
-     <p>Данный пункт меню позволяет выполнить принудительную очистку кэша документов, включая кэш открытой книги.</p>
-     <empty-line/>
-     <image l:href="#i_034.png"/>
+     <subtitle>Размер шрифта списка слов</subtitle>
+     <p>Размер шрифта списка слов в окне словаря, в процентах от размера, заданного стилем интерфейса. Строки списка подстраиваются под шрифт: чем он мельче, тем больше слов помещается в окне.</p>
+     <p><emphasis>Значение:</emphasis> от 70 % до 150 %</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Клавиатура поиска</subtitle>
+     <p>Клавиатура для ручного ввода слова. Пункт есть только на устройствах с сенсорным экраном.</p>
+     <p><emphasis>Значение:</emphasis> CoolReader, с ночным режимом / системная</p>
     </section>
     <section>
      <title>
@@ -803,6 +799,14 @@
       <p>Статистика чтения</p>
      </title>
      <p>Данный пункт меню открывает отчеты о времени чтения (см. главу «<emphasis>Статистика чтения</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Очистить кэш</p>
+     </title>
+     <p>Данный пункт меню позволяет выполнить принудительную очистку кэша документов, включая кэш открытой книги.</p>
+     <empty-line/>
+     <image l:href="#i_034.png"/>
     </section>
    </section>
   </section>
@@ -1295,6 +1299,9 @@
     <empty-line/>
     <p>Точный поиск слова в словаре (1 – да / 0 – с ближайшими словами):</p>
     <p><strong>cr3.pocketbook.dict.exact=0</strong></p>
+    <empty-line/>
+    <p>Размер шрифта списка слов словаря, в процентах от размера стиля интерфейса:</p>
+    <p><strong>cr3.pocketbook.dict.list.font=100</strong></p>
     <empty-line/>
     <p>Клавиатура поиска в словаре (0 – CoolReader / 1 – системная):</p>
     <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>

@@ -2554,3 +2554,7 @@ msgstr "розмір"
 #: ../src/pb_fontpick.cpp
 msgid "weight"
 msgstr "насиченість"
+
+#: ../src/settings.cpp
+msgid "Font size of the word list"
+msgstr "Розмір шрифту списку слів"

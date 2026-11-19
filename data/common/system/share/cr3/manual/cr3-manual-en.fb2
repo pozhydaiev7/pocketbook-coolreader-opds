@@ -258,7 +258,7 @@
     <p>The articles of different dictionaries are separated by a line, each with the name of its dictionary in small type. With no dictionary checked nothing is looked up, and the dictionary window says so.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Paging the article and the book</subtitle>
-    <p>A long article and the list of words are paged by a vertical swipe over the dictionary window; the caption shows the page number of the article. Turning the pages of the book with the keys or a horizontal swipe does not close the dictionary window.</p>
+    <p>A long article and the list of words are paged by a vertical swipe over the dictionary window; the caption shows the page number of the article. Turning the pages of the book with the keys or a horizontal swipe does not close the dictionary window. With the window kept away from the chosen word, a page turned forward gets its first word selected and the window stays at the bottom; a page turned back gets a word of its end selected and the window goes to the top, so the end of the page stays in view.</p>
     <image l:href="#i_026.png"/>
     <subtitle>Search keyboard</subtitle>
     <p>A word is typed on the keyboard of the program: English, Russian and Ukrainian layouts, the keys are placed as on the firmware keyboard; with the inverse display (night mode) it is dark. The firmware keyboard can be chosen instead (see «<emphasis>Settings</emphasis>» &gt; «<emphasis>Dictionary settings</emphasis>»). Devices without a touch screen always use the firmware keyboard.</p>
@@ -432,6 +432,35 @@
     </section>
     <section>
      <title>
+      <p>Style settings</p>
+     </title>
+     <p>The look of separate elements of a book, over the common styles.</p>
+     <empty-line/>
+     <image l:href="#i_026.png"/>
+     <subtitle>Document embedded styles</subtitle>
+     <p>Use the style sheets that come inside the document.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Elements</subtitle>
+     <p>Default paragraph formatting, Title, Subtitle, Preformatted text / code, Link, Cite, Epigraph, Poem, Text / Cite / Epigraph author, Footnote, Footnote link, Footnote title, Annotation.</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Parameters of each element</subtitle>
+     <p><strong><emphasis>Text alignment</emphasis></strong> – justify / left / center / right</p>
+     <p><strong><emphasis>First line indent</emphasis></strong> – no indent / small or big indent / small or big outdent</p>
+     <p><strong><emphasis>Font face</emphasis></strong> – list of fonts</p>
+     <p><strong><emphasis>Font size</emphasis></strong> – smaller, 95% to 60% / bigger, 105% to 150%</p>
+     <p><strong><emphasis>Font weight</emphasis></strong> – normal / bold / bolder / lighter</p>
+     <p><strong><emphasis>Font style</emphasis></strong> – normal / italic</p>
+     <p><strong><emphasis>Interline space</emphasis></strong> – 75% to 150%</p>
+     <p><strong><emphasis>Letter spacing</emphasis></strong> – 0px to 5px</p>
+     <p><strong><emphasis>Text decoration</emphasis></strong> – none / underline / line through / overline</p>
+     <p><strong><emphasis>Text vertical alignment</emphasis></strong> – baseline / subscript / superscript</p>
+     <p><strong><emphasis>Text color / Background color</emphasis></strong> – black / gray / white</p>
+     <p><strong><emphasis>Margin before / after</emphasis></strong> – 0 to 2 line heights</p>
+     <p><strong><emphasis>Margin left / right</emphasis></strong> – 0 to 4 line heights / 5% to 30% of the line width</p>
+    </section>
+    <section>
+     <title>
       <p>Page settings</p>
      </title>
      <p>A submenu with the look of a book page.</p>
@@ -533,25 +562,6 @@
     </section>
     <section>
      <title>
-      <p>Dictionary settings</p>
-     </title>
-     <p>A submenu with the settings of the dictionary window.</p>
-     <empty-line/>
-     <image l:href="#i_026.png"/>
-     <subtitle>Dictionary window</subtitle>
-     <p>Where the dictionary window is shown: away from the chosen word (the window moves to the opposite edge of the screen by itself), always at the top or always at the bottom.</p>
-     <p><emphasis>Value:</emphasis> away from the word / at the top / at the bottom</p>
-     <image l:href="#i_026.png"/>
-     <subtitle>Word search</subtitle>
-     <p>What is shown when the dictionary does not have the word: the list of the nearest words, or a message that the word is not found.</p>
-     <p><emphasis>Value:</emphasis> with nearest words / exact</p>
-     <image l:href="#i_026.png"/>
-     <subtitle>Search keyboard</subtitle>
-     <p>The keyboard for typing a word. Only devices with a touch screen have this item.</p>
-     <p><emphasis>Value:</emphasis> CoolReader, with night mode / firmware</p>
-    </section>
-    <section>
-     <title>
       <p>Control settings</p>
      </title>
      <p>The touch controls that work while reading.</p>
@@ -599,38 +609,26 @@
     </section>
     <section>
      <title>
-      <p>Style settings</p>
+      <p>Dictionary settings</p>
      </title>
-     <p>The look of separate elements of a book, over the common styles.</p>
+     <p>A submenu with the settings of the dictionary window.</p>
      <empty-line/>
      <image l:href="#i_026.png"/>
-     <subtitle>Document embedded styles</subtitle>
-     <p>Use the style sheets that come inside the document.</p>
-     <p><emphasis>Value:</emphasis> on / off</p>
+     <subtitle>Dictionary window</subtitle>
+     <p>Where the dictionary window is shown: away from the chosen word (the window moves to the opposite edge of the screen by itself), always at the top or always at the bottom.</p>
+     <p><emphasis>Value:</emphasis> away from the word / at the top / at the bottom</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Elements</subtitle>
-     <p>Default paragraph formatting, Title, Subtitle, Preformatted text / code, Link, Cite, Epigraph, Poem, Text / Cite / Epigraph author, Footnote, Footnote link, Footnote title, Annotation.</p>
+     <subtitle>Word search</subtitle>
+     <p>What is shown when the dictionary does not have the word: the list of the nearest words, or a message that the word is not found.</p>
+     <p><emphasis>Value:</emphasis> with nearest words / exact</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Parameters of each element</subtitle>
-     <p><strong><emphasis>Text alignment</emphasis></strong> – justify / left / center / right</p>
-     <p><strong><emphasis>First line indent</emphasis></strong> – no indent / small or big indent / small or big outdent</p>
-     <p><strong><emphasis>Font face</emphasis></strong> – list of fonts</p>
-     <p><strong><emphasis>Font size</emphasis></strong> – smaller, 95% to 60% / bigger, 105% to 150%</p>
-     <p><strong><emphasis>Font weight</emphasis></strong> – normal / bold / bolder / lighter</p>
-     <p><strong><emphasis>Font style</emphasis></strong> – normal / italic</p>
-     <p><strong><emphasis>Interline space</emphasis></strong> – 75% to 150%</p>
-     <p><strong><emphasis>Letter spacing</emphasis></strong> – 0px to 5px</p>
-     <p><strong><emphasis>Text decoration</emphasis></strong> – none / underline / line through / overline</p>
-     <p><strong><emphasis>Text vertical alignment</emphasis></strong> – baseline / subscript / superscript</p>
-     <p><strong><emphasis>Text color / Background color</emphasis></strong> – black / gray / white</p>
-     <p><strong><emphasis>Margin before / after</emphasis></strong> – 0 to 2 line heights</p>
-     <p><strong><emphasis>Margin left / right</emphasis></strong> – 0 to 4 line heights / 5% to 30% of the line width</p>
-    </section>
-    <section>
-     <title>
-      <p>Clear cache</p>
-     </title>
-     <p>Clears the cache of the documents, the cache of the open book included.</p>
+     <subtitle>Font size of the word list</subtitle>
+     <p>The font size of the word list of the dictionary window, in percent of the size the interface skin gives it. The rows of the list follow the font: the smaller it is, the more words the window holds.</p>
+     <p><emphasis>Value:</emphasis> from 70 % to 150 %</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Search keyboard</subtitle>
+     <p>The keyboard for typing a word. Only devices with a touch screen have this item.</p>
+     <p><emphasis>Value:</emphasis> CoolReader, with night mode / firmware</p>
     </section>
     <section>
      <title>
@@ -643,6 +641,12 @@
       <p>Reading statistics</p>
      </title>
      <p>Opens the reports of the reading time (see «<emphasis>Reading statistics</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Clear cache</p>
+     </title>
+     <p>Clears the cache of the documents, the cache of the open book included.</p>
     </section>
    </section>
   </section>
@@ -844,6 +848,9 @@
     <empty-line/>
     <p>Exact word search in the dictionary (1 – yes / 0 – with nearest words):</p>
     <p><strong>cr3.pocketbook.dict.exact=0</strong></p>
+    <empty-line/>
+    <p>Font size of the word list of the dictionary, in percent of the size of the interface skin:</p>
+    <p><strong>cr3.pocketbook.dict.list.font=100</strong></p>
     <empty-line/>
     <p>Search keyboard of the dictionary (0 – CoolReader / 1 – firmware):</p>
     <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>
