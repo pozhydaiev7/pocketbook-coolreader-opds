@@ -223,6 +223,42 @@ bool onlyNumber(const std::string & key)
     return key.size() <= 12;
 }
 
+/// A page number written with Roman numerals, as the pages of a preface are: "xvi", "XXIII",
+/// alone or with the marks a page number has around it. Up to 399 (no D and no M): a longer
+/// front matter is not met, and words made of these letters ("dim", "mix") are.
+bool romanNumber(const std::string & s)
+{
+    std::string letters;
+    for (size_t i = 0; i < s.size(); i++) {
+        char c = s[i];
+        if (c >= 'A' && c <= 'Z')
+            c += 32;
+        if (c == 'i' || c == 'v' || c == 'x' || c == 'l' || c == 'c')
+            letters += c;
+        else if (!(c == ' ' || c == '-' || c == '.' || c == '[' || c == ']' || c == '(' || c == ')' || c == '|'))
+            return false;
+    }
+    if (letters.empty() || letters.size() > 9)
+        return false;
+    // hundreds, tens, units, each written the one way a number is written
+    static const char * const parts[3][10] = {
+        { "", "c", "cc", "ccc", "", "", "", "", "", "" },
+        { "", "x", "xx", "xxx", "xl", "l", "lx", "lxx", "lxxx", "xc" },
+        { "", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" }
+    };
+    size_t at = 0;
+    for (int rank = 0; rank < 3; rank++) {
+        size_t best = 0;
+        for (int d = 1; d < 10; d++) {
+            const size_t n = strlen(parts[rank][d]);
+            if (n > best && letters.compare(at, n, parts[rank][d]) == 0)
+                best = n;
+        }
+        at += best;
+    }
+    return at == letters.size();
+}
+
 // ------------------------------------------------------------------------------------ items
 enum Kind { K_PARA, K_HEADING, K_IMAGE, K_TABLE, K_NOTE };
 
@@ -1992,11 +2028,18 @@ public:
                 seen[keys[i]]++;
             }
         }
+        // A number in Roman numerals is a page number when two pages or more have one: reported
+        // by a tester, the pages xvi, xx, xxiii of a preface came as headings of chapters, each
+        // with an empty page. One such line in a whole book may be the heading "II".
+        int romans = 0;
+        for (size_t i = 0; i < items.size(); i++)
+            if (!keys[i].empty() && romanNumber(keys[i].substr(2)))
+                romans++;
         for (size_t i = 0; i < items.size(); i++) {
             if (keys[i].empty())
                 continue;
             const std::string text = keys[i].substr(2);
-            if (seen[keys[i]] >= 3 || text.empty() || onlyNumber(text)) {
+            if (seen[keys[i]] >= 3 || text.empty() || onlyNumber(text) || (romans >= 2 && romanNumber(text))) {
                 items[i].drop = true;
                 stats.running++;
             }

@@ -57,7 +57,8 @@ enum PbPageScale {
 /// What a page turn does.
 enum PbPageLeafing {
     PB_PAGE_LEAF_PAGE = 0,        ///< shows the next page at once
-    PB_PAGE_LEAF_FRAMES           ///< goes through the frames of a page, then to the next page
+    PB_PAGE_LEAF_FRAMES,          ///< goes through the frames of a page, then to the next page
+    PB_PAGE_LEAF_RIBBON           ///< the pages one under another: moves on by a screen (stripOf)
 };
 
 /// The frame set by the reader: the point of the page in the middle of the screen and the zoom.
@@ -65,6 +66,18 @@ struct PbPageOwnFrame {
     float cx, cy, zoom;
     bool set;
     PbPageOwnFrame() : cx(0), cy(0), zoom(1), set(false) { }
+};
+
+/// A page as a piece of the ribbon (the leafing PB_PAGE_LEAF_RIBBON): the page, or its content by
+/// the scale, as wide as the window. Its rows are drawn in parts, so that a screen holds the end
+/// of a page and the beginning of the next one.
+struct PbPageStrip {
+    float angle;    ///< the turn of the picture, degrees
+    float zoom;     ///< pixels per page unit
+    float qcx;      ///< the middle of the strip across, on the turned page (page units)
+    float qy0;      ///< its top there
+    int height;     ///< rows of the strip
+    PbPageStrip() : angle(0), zoom(1), qcx(0), qy0(0), height(0) { }
 };
 
 enum PbPageDocKind {
@@ -95,6 +108,8 @@ public:
     virtual bool render(int page, const PbPageView & view, unsigned char * dst, int width, int height, int stride) = 0;
     /// The contents of the file, empty when it has none.
     virtual void contents(std::vector<PbPageTocEntry> & entries) = 0;
+    /// The title and the author the file names for itself (UTF-8); empty when it names none.
+    virtual void info(std::string & title, std::string & author) { title.clear(); author.clear(); }
     /// True when the page has text: a text PDF, a DjVu with a text layer.
     virtual bool hasText(int page) = 0;
     /// The page that will most likely be asked for after the ones in work. A document that can
@@ -140,8 +155,23 @@ public:
     /// PB_PAGE_SCALE_AUTO takes the angle of the page itself in place of angle.
     void framesOf(int page, int scale, int leafing, float angle, const PbPageOwnFrame & own,
                   int width, int height, std::vector<PbPageView> & frames);
+    /// The strip of a page for a window width pixels wide (height: the window, for the picture
+    /// the content is looked for on). The scale tells what is as wide as the window: the page
+    /// ("whole page", "page width"), its content ("whole content", "content width", "automatic":
+    /// levelled by itself), or what the own frame of the reader takes in at its zoom.
+    bool stripOf(int page, int scale, float angle, const PbPageOwnFrame & own, int width, int height,
+                 PbPageStrip & strip);
+    /// Draws the rows from..to of the strip (counted from its top) into dst: to - from rows of
+    /// width pixels. A row outside of the page is white.
+    bool renderStrip(int page, const PbPageStrip & strip, int from, int to, unsigned char * dst, int width,
+                     int stride);
 
 protected:
+    /// What the scale takes of a page, as it lies on the page turned by the angle: q = R(angle) * p.
+    /// PB_PAGE_SCALE_AUTO puts the angle of the page itself into angle. The part of framesOf and
+    /// of stripOf that is the same.
+    void turnedSpan(int page, const PbPageSize & size, int scale, const PbPageOwnFrame & own, int width, int height,
+                    float & angle, float & qx0, float & qx1, float & qy0, float & qy1);
     /// The zoom (pixels per page unit) the frames of the page being laid out will be drawn at, at
     /// least; 0: not known. A picture of a page decoded for a smaller frame (the small picture of
     /// the content box) is decoded at once for this zoom, so it is decoded one time.

@@ -2730,3 +2730,23 @@ msgstr "Як оригінал"
 #: ../src/settings.cpp
 msgid "Font size of the word list"
 msgstr "Розмір шрифту списку слів"
+
+#: ../src/settings.cpp
+msgid "PDF and DjVu"
+msgstr "PDF і DjVu"
+
+#: ../src/pb_pageview.cpp
+msgid "As a ribbon"
+msgstr "Стрічкою"
+
+#: ../src/pb_pageview.cpp
+msgid "The pages one under another; a page turn moves on by a screen"
+msgstr "Сторінки одна під одною; гортання зсуває на екран"
+
+#: ../src/pb_pageview.cpp
+msgid "Page size"
+msgstr "Розмір сторінки"
+
+#: ../src/pb_pageview.cpp
+msgid "Not in the view of the original. A file with text has it when viewed as a book."
+msgstr "У перегляді оригіналу недоступно. Файл із текстом має це у вигляді «Дивитися як книгу»."

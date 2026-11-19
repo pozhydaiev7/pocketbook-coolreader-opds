@@ -4,11 +4,20 @@
  * The window stands over the book window, which holds no book then; the events come to it through
  * the window manager as to any top window.
  *
+ * It is used as a book is (a tester: "what is relevant for PDF and DjVu should look and work as with
+ * the classic formats"): the tap zones do what they do in a book, the middle one opens the touch
+ * menu of the reader with its icons and its page bar, the status line of the settings is drawn
+ * over or under the page. What belongs to the view of a page alone (scale, leafing, the frame) is
+ * one list, opened by an icon of that menu.
+ *
  * What is on the screen is a frame of a page. Two settings choose it:
  *   scale     the whole page, the page width, the whole content (margins cut off), the content
  *             width, or the own frame of the reader (a point of the page, a zoom);
- *   leafing   "next page at once" (a page turn shows the same frame of the next page) or
- *             "by frames" (the frames of a page one after another, then the next page).
+ *   leafing   "next page at once" (a page turn shows the same frame of the next page),
+ *             "by frames" (the frames of a page one after another, then the next page), or
+ *             "as a ribbon" (the pages one under another as wide as the screen, a small gap
+ *             between them; a page turn moves on by a screen, so the end of a page and the
+ *             beginning of the next one are read from one screen).
  * A turn of the picture (a crooked scan, a page lying on its side) belongs to the frame. The own
  * frame and the angle are kept apart for odd and even pages: a photographed book has its margins
  * mirrored. Scale, leafing, frames, angles, the page and the bookmarks are remembered for the file.
@@ -36,6 +45,7 @@ enum PbPageWindowCommands {
     PB_PAGEVIEW_CMD_SETTINGS,
     PB_PAGEVIEW_CMD_EXIT,
     PB_PAGEVIEW_CMD_AS_BOOK,      // a PDF with text: read as a book (pb_pdfbook.h)
+    PB_PAGEVIEW_CMD_INFO,         // what the file tells of itself
     PB_PAGEVIEW_CMD_SCALE = 68100,  // + PbPageScale
     PB_PAGEVIEW_CMD_PAGE = 68200,   // + index in the list of bookmarks, up to 68999
     PB_PAGEVIEW_CMD_LAST = 68999
@@ -74,6 +84,16 @@ public:
     int pageCount() { return _doc->pageCount(); }
     /// Writes the page, the frames and the bookmarks of the file (the program goes to the background or ends).
     void keep() { saveState(); }
+    // What the touch menu of the reader and the status line show of the file, as of a book:
+    /// True when the page shown has a bookmark.
+    bool isMarked() const;
+    /// The heading of the contents the page lies under; "" when the file has no contents.
+    lString32 chapterName(int page);
+    /// Where the chapters start, in 1/10000 of the file, as LVDocView::getSectionBounds gives them.
+    void sectionBounds(LVArray<int> & bounds);
+    /// "12 / 161", or "12 / 3 / 161" with the pages left to the end of the chapter (as
+    /// LVDocView::getPageHeaderPages writes it for a book).
+    lString32 progressText(int page, bool tillChapterEnd);
 
     virtual ~PbPageWindow();
     virtual bool onCommand(int command, int params = 0);
@@ -117,6 +137,12 @@ private:
     float _adjAngle;
     lvPoint _touchStart;
     bool _touchStarted;
+    // The status line is drawn by a view of the engine that holds no book: the same code, fonts
+    // and settings as over a book, with the title, the chapters and the page of this file.
+    LVDocView * _head;
+    lvRect _pageRc;         // the part of the window the page is drawn in: without the status line
+    std::vector<PbPageTocEntry> _toc;   // the contents of the file, read once
+    bool _tocRead;
 
     PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lString32 & path, const lString8 & stateFile);
     void loadState();
@@ -126,6 +152,14 @@ private:
     /// The frames of a page in the order they are read; at least one.
     void framesOfPage(int page, std::vector<PbPageView> & frames);
     void drawShot(Shot & shot, int page, int frame);
+    // The ribbon: the place is the page at the top of the screen and the row of its strip there
+    // (kept in _frame, as the index of a frame is in the other leafings).
+    bool stripOfPage(int page, PbPageStrip & strip);
+    int ribbonGap() const;
+    /// Moves the place along the ribbon by delta rows; false when it does not move (the end of
+    /// the file is on the screen already, or the place is the beginning).
+    bool ribbonMove(int & page, int & row, int delta);
+    void drawRibbon(Shot & shot, int page, int row);
     void target(int direction, int & page, int & frame);
     void turn(int direction);
     void goToPage(int page);
@@ -134,6 +168,12 @@ private:
     void showScaleList();
     void showMarks();
     void showContents();
+    void showInfo();
+    void toggleMark();
+    const std::vector<PbPageTocEntry> & toc();
+    void setupHead();       // the settings of the status line are read; the page part is laid out
+    void layout();
+    void drawHead(LVDrawBuf * canvas);
     void adjustBegin();
     void adjustEnd(bool keep);
     bool adjustTouch(int x, int y, CRGUITouchEventType evType);

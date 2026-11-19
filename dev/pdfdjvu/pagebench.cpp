@@ -324,8 +324,119 @@ static int turnsMode(int argc, char ** argv)
     return 0;
 }
 
+// pagebench ribbon <file> <first page> <screens> <scale>
+// The leafing "as a ribbon" as the window makes it (PbPageWindow::drawRibbon): the strips of the
+// pages from the first one are drawn whole, then in parts of a screen, and the two are compared
+// pixel by pixel; then the time of the screens of a walk down the ribbon.
+static int ribbonMode(int argc, char ** argv)
+{
+    if (argc < 6) {
+        fprintf(stderr, "usage: pagebench ribbon <file> <first page> <screens> <scale 0..5>\n");
+        return 2;
+    }
+    const int W = 1404, H = 1872, gap = H / 60, step = H - H / 20;
+    int page = atoi(argv[3]);
+    const int screens = atoi(argv[4]), scale = atoi(argv[5]);
+    std::string error;
+    PbPageDoc * doc = PbPageDoc::open(argv[2], &error);
+    if (!doc) {
+        fprintf(stderr, "%s: %s\n", argv[2], error.c_str());
+        return 1;
+    }
+    PbPageOwnFrame own;
+    // 1. a strip drawn whole and in parts
+    for (int p = page; p < page + 2 && p < doc->pageCount(); p++) {
+        PbPageStrip strip;
+        doc->stripOf(p, scale, 0, own, W, H, strip);
+        std::vector<unsigned char> whole((size_t)W * strip.height), parts((size_t)W * strip.height);
+        doc->renderStrip(p, strip, 0, strip.height, &whole[0], W, W);
+        // parts of uneven sizes, as the screens cut a page
+        static const int sizes[] = { 701, 333, 1872, 517 };
+        int from = 0, n = 0, pieces = 0;
+        while (from < strip.height) {
+            int to = from + sizes[n++ % 4];
+            if (to > strip.height)
+                to = strip.height;
+            doc->renderStrip(p, strip, from, to, &parts[(size_t)from * W], W, W);
+            from = to;
+            pieces++;
+        }
+        size_t differ = 0;
+        int worst = 0;
+        for (size_t i = 0; i < whole.size(); i++) {
+            const int d = whole[i] > parts[i] ? whole[i] - parts[i] : parts[i] - whole[i];
+            if (d)
+                differ++;
+            if (d > worst)
+                worst = d;
+        }
+        printf("page %d: strip %d rows at zoom %.4f, angle %.2f; %d parts against the whole: %lu pixels of %lu "
+               "differ, the largest difference %d of 255\n", p + 1, strip.height, strip.zoom, strip.angle, pieces,
+               (unsigned long)differ, (unsigned long)whole.size(), worst);
+    }
+    // 2. a walk down the ribbon
+    delete doc;
+    doc = PbPageDoc::open(argv[2], &error);
+    std::vector<unsigned char> screen((size_t)W * H);
+    int row = 0;
+    double total = 0, worstMs = 0;
+    int done = 0, lastPage = page;
+    long shownRows = 0;
+    for (int n = 0; n < screens && page < doc->pageCount(); n++) {
+        const double t0 = now_ms();
+        memset(&screen[0], 0xFF, screen.size());
+        int y = 0;
+        for (int p = page; y < H && p < doc->pageCount(); p++) {
+            PbPageStrip strip;
+            doc->stripOf(p, scale, 0, own, W, H, strip);
+            const int from = p == page ? row : 0;
+            int rows = strip.height - from;
+            if (rows > H - y)
+                rows = H - y;
+            doc->renderStrip(p, strip, from, from + rows, &screen[(size_t)y * W], W, W);
+            y += rows + gap;
+            shownRows += rows;
+            lastPage = p;
+        }
+        const double ms = now_ms() - t0;
+        total += ms;
+        if (ms > worstMs)
+            worstMs = ms;
+        done++;
+        // the next screen, as PbPageWindow::ribbonMove goes
+        int delta = step;
+        bool end = false;
+        for (;;) {
+            PbPageStrip strip;
+            doc->stripOf(page, scale, 0, own, W, H, strip);
+            const int rest = strip.height - row;
+            if (delta < rest) {
+                row += delta;
+                break;
+            }
+            if (page + 1 >= doc->pageCount()) {
+                end = true;
+                break;
+            }
+            delta -= rest + gap;
+            page++;
+            row = 0;
+            if (delta <= 0)
+                break;
+        }
+        if (end)
+            break;
+    }
+    printf("ribbon, scale %d: %d screens down to page %d, %.1f ms a screen (the slowest %.1f), %ld rows of pages shown\n",
+           scale, done, lastPage + 1, done ? total / done : 0, worstMs, shownRows);
+    delete doc;
+    return 0;
+}
+
 int main(int argc, char ** argv)
 {
+    if (argc > 1 && strcmp(argv[1], "ribbon") == 0)
+        return ribbonMode(argc, argv);
     if (argc > 1 && strcmp(argv[1], "level") == 0)
         return levelMode(argc, argv);
     if (argc > 1 && strcmp(argv[1], "turns") == 0)

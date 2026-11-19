@@ -629,6 +629,28 @@ public:
         }
         return ok;
     }
+    virtual void info(std::string & title, std::string & author) {
+        // plain buffers: nothing with a destructor is touched inside a block that may be left by a jump
+        char t[512], a[512];
+        t[0] = a[0] = 0;
+        fz_try(_ctx) {
+            if (fz_lookup_metadata(_ctx, _doc, FZ_META_INFO_TITLE, t, sizeof(t)) <= 0)
+                t[0] = 0;
+        }
+        fz_catch(_ctx) {
+            t[0] = 0;
+        }
+        fz_try(_ctx) {
+            if (fz_lookup_metadata(_ctx, _doc, FZ_META_INFO_AUTHOR, a, sizeof(a)) <= 0)
+                a[0] = 0;
+        }
+        fz_catch(_ctx) {
+            a[0] = 0;
+        }
+        t[sizeof(t) - 1] = a[sizeof(a) - 1] = 0;
+        title = t;
+        author = a;
+    }
     virtual void contents(std::vector<PbPageTocEntry> & entries) {
         entries.clear();
         fz_outline * outline = NULL;
@@ -1091,16 +1113,10 @@ static void pbFramePositions(float lo, float hi, float span, bool many, bool fro
 // was reported with pages tilted by 10 to 15.
 static const float PB_LEVEL_DEGREES = 15.0f;
 
-void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const PbPageOwnFrame & own,
-                         int width, int height, std::vector<PbPageView> & frames)
+void PbPageDoc::turnedSpan(int page, const PbPageSize & size, int scale, const PbPageOwnFrame & own, int width,
+                           int height, float & angle, float & qx0, float & qx1, float & qy0, float & qy1)
 {
-    frames.clear();
     const float W = (float)width, H = (float)height;
-    PbPageSize size;
-    if (!pageSize(page, size) || W < 1 || H < 1) {
-        frames.push_back(PbPageView());
-        return;
-    }
     PbPageBox box(0, 0, size.width, size.height);
     // PB_PAGE_SCALE_AUTO: the page levelled, which gives the angle in place of the one of the caller
     const KeptLevel * level = NULL;
@@ -1139,7 +1155,7 @@ void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const Pb
     // the turned page: q = R(angle) * p; a frame is an upright rectangle there
     const float a = angle * PB_PI / 180.0f;
     const float c = cosf(a), s = sinf(a);
-    float qx0 = 0, qx1 = 0, qy0 = 0, qy1 = 0;
+    qx0 = qx1 = qy0 = qy1 = 0;
     if (level != NULL) {
         // the content of the levelled page is kept as it lies on the turned page
         const float qcx = level->cx * c - level->cy * s, qcy = level->cx * s + level->cy * c;
@@ -1158,9 +1174,69 @@ void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const Pb
             if (i == 0 || qy > qy1) qy1 = qy;
         }
     }
+}
+
+bool PbPageDoc::stripOf(int page, int scale, float angle, const PbPageOwnFrame & own, int width, int height,
+                        PbPageStrip & strip)
+{
+    strip = PbPageStrip();
+    PbPageSize size;
+    if (!pageSize(page, size) || width < 1 || height < 1)
+        return false;
+    float qx0 = 0, qx1 = 0, qy0 = 0, qy1 = 0;
+    turnedSpan(page, size, scale, own, width, height, angle, qx0, qx1, qy0, qy1);
+    const float bw = qx1 - qx0 > 1 ? qx1 - qx0 : 1, bh = qy1 - qy0 > 1 ? qy1 - qy0 : 1;
+    strip.angle = angle;
+    strip.zoom = width / bw;
+    strip.qcx = (qx0 + qx1) * 0.5f;
+    if (scale == PB_PAGE_SCALE_OWN && own.set && own.zoom > 0) {
+        // the own frame: its zoom, and across the page the place it stands at
+        const float a = angle * PB_PI / 180.0f;
+        strip.zoom = own.zoom;
+        strip.qcx = own.cx * cosf(a) - own.cy * sinf(a);
+    }
+    strip.qy0 = qy0;
+    strip.height = (int)(bh * strip.zoom + 0.5f);
+    if (strip.height < 1)
+        strip.height = 1;
+    return true;
+}
+
+bool PbPageDoc::renderStrip(int page, const PbPageStrip & strip, int from, int to, unsigned char * dst, int width,
+                            int stride)
+{
+    if (to <= from)
+        return true;
+    // the frame whose middle is the middle of these rows; the rows of two parts lie on one grid
+    const float a = strip.angle * PB_PI / 180.0f;
+    const float c = cosf(a), s = sinf(a);
+    const float qy = strip.qy0 + (from + to) * 0.5f / strip.zoom;
+    PbPageView view;
+    view.cx = strip.qcx * c + qy * s;
+    view.cy = -strip.qcx * s + qy * c;
+    view.zoom = strip.zoom;
+    view.angle = strip.angle;
+    return render(page, view, dst, width, to - from, stride);
+}
+
+void PbPageDoc::framesOf(int page, int scale, int leafing, float angle, const PbPageOwnFrame & own,
+                         int width, int height, std::vector<PbPageView> & frames)
+{
+    frames.clear();
+    const float W = (float)width, H = (float)height;
+    PbPageSize size;
+    if (!pageSize(page, size) || W < 1 || H < 1) {
+        frames.push_back(PbPageView());
+        return;
+    }
+    float qx0 = 0, qx1 = 0, qy0 = 0, qy1 = 0;
+    turnedSpan(page, size, scale, own, width, height, angle, qx0, qx1, qy0, qy1);
+    const float a = angle * PB_PI / 180.0f;
+    const float c = cosf(a), s = sinf(a);
     const float bw = qx1 - qx0 > 1 ? qx1 - qx0 : 1, bh = qy1 - qy0 > 1 ? qy1 - qy0 : 1;
     const bool fromOwn = scale == PB_PAGE_SCALE_OWN && own.set && own.zoom > 0;
-    const bool many = leafing == PB_PAGE_LEAF_FRAMES;
+    // (the ribbon is laid out by stripOf; asked for frames, it gives those of "by frames")
+    const bool many = leafing != PB_PAGE_LEAF_PAGE;
     float zoom;
     if (fromOwn)
         zoom = own.zoom;

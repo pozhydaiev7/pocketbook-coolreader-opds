@@ -215,7 +215,7 @@ bool pbPdfBookFor(const lString32 & path, lString32 & book)
     if (mode == PB_PAGE_MODE_PAGES)
         return false;
     if (mode != PB_PAGE_MODE_BOOK
-            && main_win->getProps()->getIntDef(djvu ? PROP_POCKETBOOK_DJVU_TEXT : PROP_POCKETBOOK_PDF_TEXT, 1) == 0)
+            && main_win->getProps()->getIntDef(PROP_POCKETBOOK_PAGES_TEXT, 1) == 0)
         return false;
     const lString8 file = PbPageWindow::documentFile(path);
     if (file.empty())

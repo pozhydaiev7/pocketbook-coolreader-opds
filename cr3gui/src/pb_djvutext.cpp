@@ -153,6 +153,42 @@ bool onlyNumber(const std::string & s)
     return digit;
 }
 
+/// A page number written with Roman numerals, as the pages of a preface are: "xvi", "XXIII",
+/// alone or with the marks a page number has around it. Up to 399 (no D and no M): a longer
+/// front matter is not met, and words made of these letters ("dim", "mix") are.
+bool romanNumber(const std::string & s)
+{
+    std::string letters;
+    for (size_t i = 0; i < s.size(); i++) {
+        char c = s[i];
+        if (c >= 'A' && c <= 'Z')
+            c += 32;
+        if (c == 'i' || c == 'v' || c == 'x' || c == 'l' || c == 'c')
+            letters += c;
+        else if (!(c == ' ' || c == '-' || c == '.' || c == '[' || c == ']' || c == '(' || c == ')' || c == '|'))
+            return false;
+    }
+    if (letters.empty() || letters.size() > 9)
+        return false;
+    // hundreds, tens, units, each written the one way a number is written
+    static const char * const parts[3][10] = {
+        { "", "c", "cc", "ccc", "", "", "", "", "", "" },
+        { "", "x", "xx", "xxx", "xl", "l", "lx", "lxx", "lxxx", "xc" },
+        { "", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" }
+    };
+    size_t at = 0;
+    for (int rank = 0; rank < 3; rank++) {
+        size_t best = 0;
+        for (int d = 1; d < 10; d++) {
+            const size_t n = strlen(parts[rank][d]);
+            if (n > best && letters.compare(at, n, parts[rank][d]) == 0)
+                best = n;
+        }
+        at += best;
+    }
+    return at == letters.size();
+}
+
 /// The text of a zone without the line ends and other control characters it carries, with single
 /// spaces.
 std::string clean(const char * raw, size_t length)
@@ -955,6 +991,17 @@ public:
                     seen[1][keyOf(lines[bottoms[n]].text)]++;
                 }
             }
+            // a number in Roman numerals is a page number when two pages or more have one at
+            // that side (the pages of a preface); one in a whole book may be the heading "II"
+            int romans[2] = { 0, 0 };
+            for (size_t n = 0; n < pages.size(); n++) {
+                if (tops[n] < 0 || tops[n] == bottoms[n])
+                    continue;
+                if (romanNumber(pages[n].lines[tops[n]].text))
+                    romans[0]++;
+                if (romanNumber(pages[n].lines[bottoms[n]].text))
+                    romans[1]++;
+            }
             for (size_t n = 0; n < pages.size(); n++) {
                 if (tops[n] < 0 || tops[n] == bottoms[n])
                     continue;
@@ -967,7 +1014,8 @@ public:
                     const bool repeats = line.text.size() <= 160
                                          && ((key.size() >= 3 && times >= 3 && line.height() <= body * 1.2f)
                                              || (key.size() >= 2 && times >= 4 && times * 2 >= stats.textPages));
-                    if (!line.out && (onlyNumber(line.text) || repeats)) {
+                    if (!line.out && (onlyNumber(line.text) || repeats
+                                      || (romans[side] >= 2 && romanNumber(line.text)))) {
                         line.out = true;
                         stats.running++;
                     }

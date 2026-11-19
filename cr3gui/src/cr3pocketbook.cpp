@@ -1698,6 +1698,86 @@ const char *touchMenuIcons[TM_NB_ICONS] = {
     "settings"
 };
 
+// The touch menu serves a book of the engine and the pages of a PDF or DjVu shown as they are
+// (PbPageWindow, while its window is open): what the menu shows of the thing being read is asked
+// for here. A tester of the PDF and DjVu line: "the tap in the middle should open the top and the
+// bottom panels, as in the usual mode"; the original view had a list of its own in their place.
+static bool tmPages()
+{
+#ifdef CR3_PAGEDOC
+    return PbPageWindow::instance != NULL;
+#else
+    return false;
+#endif
+}
+
+/// The icon of a place of the top row. Over the pages of a PDF or DjVu the search gives its place
+/// to the list of the view of a page (scale, leafing, the frame): there is no text to search in
+/// pictures, and a file with text is read as a book, which has the search.
+static const char * tmIcon(int i)
+{
+    if (tmPages() && strcmp(touchMenuIcons[i], "search") == 0)
+        return "pageview";
+    return touchMenuIcons[i];
+}
+
+static int tmPageCount()
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL)
+        return PbPageWindow::instance->pageCount();
+#endif
+    return main_win->getDocView()->getPageCount();
+}
+
+/// The page shown, from 0.
+static int tmCurPage()
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL)
+        return PbPageWindow::instance->page();
+#endif
+    return main_win->getDocView()->getCurPage();
+}
+
+static bool tmBookmarked()
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL)
+        return PbPageWindow::instance->isMarked();
+#endif
+    return main_win->getDocView()->currentPageIsBookmarked() != NULL;
+}
+
+static void tmSectionBounds(LVArray<int> & bounds)
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL) {
+        PbPageWindow::instance->sectionBounds(bounds);
+        return;
+    }
+#endif
+    bounds = main_win->getDocView()->getSectionBounds();
+}
+
+static lString32 tmProgress(int page, int count, bool tillChapterEnd)
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL)
+        return PbPageWindow::instance->progressText(page, tillChapterEnd);
+#endif
+    return main_win->getDocView()->getPageHeaderPages(page, count, tillChapterEnd);
+}
+
+static lString32 tmChapterName(int page)
+{
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL)
+        return PbPageWindow::instance->chapterName(page);
+#endif
+    return main_win->getDocView()->getCurrentChapterName(page);
+}
+
 class CRPocketBookQuickMenuWindow : public CRPocketBookInkViewWindow
 {
 private:
@@ -1845,7 +1925,7 @@ public:
 
                 draggingPage = false;
 
-                if( TM_lastDragPage != main_win->getDocView()->getCurPage() ) {
+                if( TM_lastDragPage != tmCurPage() ) {
                     CRLog::trace("CRPocketBookQuickMenuWindow::onTouch(): go to page %d", TM_lastDragPage);
                     SelfCloseNoUpdate();
                     pageSelector(TM_lastDragPage);
@@ -1883,11 +1963,11 @@ public:
 
         // Image name
         lString32 path;
-        if( strcmp(touchMenuIcons[iconKey], "bookmarks") == 0 && main_win->getDocView()->currentPageIsBookmarked() ) {
-            path = lString32("icon_") + lString32(touchMenuIcons[iconKey]) + lString32("_alt_tap.png");
+        if( strcmp(tmIcon(iconKey), "bookmarks") == 0 && tmBookmarked() ) {
+            path = lString32("icon_") + lString32(tmIcon(iconKey)) + lString32("_alt_tap.png");
         }
         else {
-            path = lString32("icon_") + lString32(touchMenuIcons[iconKey]) + lString32("_tap.png");
+            path = lString32("icon_") + lString32(tmIcon(iconKey)) + lString32("_tap.png");
         }
         CRLog::trace("CRPocketBookQuickMenuWindow::IconTapped(): [%d] %s", iconKey, UnicodeToUtf8(path).c_str());
 
@@ -1920,22 +2000,21 @@ public:
         SelfCloseNoUpdate();
 
         // Execute proper command
-        if( strcmp(touchMenuIcons[iconKey], "home") == 0 ) {
+        if( strcmp(tmIcon(iconKey), "home") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 1);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "toc") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "toc") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 7);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "cite") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "cite") == 0 ) {
             executeCommand(MCMD_CITES_LIST, 0);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "bookmarks") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "bookmarks") == 0 ) {
             if( evType == CRTOUCH_UP ) {
                 executeCommand(PB_QUICK_MENU_SELECT, 3);
             }
             else if( evType == CRTOUCH_DOWN_LONG ) {
-                CRBookmark * bm = main_win->getDocView()->currentPageIsBookmarked();
-                if( bm ) {
+                if( tmBookmarked() ) {
                     executeCommand(PB_CMD_UNSET_BOOKMARK, 0);
                 }
                 else {
@@ -1943,24 +2022,30 @@ public:
                 }
             }
         }
-        else if( strcmp(touchMenuIcons[iconKey], "dictionary") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "dictionary") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 6);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "search") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "search") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 2);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "opds") == 0 ) {
+#ifdef CR3_PAGEDOC
+        else if( strcmp(tmIcon(iconKey), "pageview") == 0 ) {
+            // the list of the view of a page (pb_pageview.h); posted, as it opens a window
+            CRPocketBookWindowManager::instance->postCommand(PB_PAGEVIEW_CMD_MENU, 0);
+        }
+#endif
+        else if( strcmp(tmIcon(iconKey), "opds") == 0 ) {
             // Posted, not executed: the catalog loads over the network and opens a window,
             // which must happen after this touch event has been fully processed.
             CRPocketBookWindowManager::instance->postCommand(PB_CMD_OPDS_BROWSER, 0);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "stats") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "stats") == 0 ) {
             CRPocketBookWindowManager::instance->postCommand(PB_CMD_READING_STATS, 0);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "rotate") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "rotate") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 5);
         }
-        else if( strcmp(touchMenuIcons[iconKey], "settings") == 0 ) {
+        else if( strcmp(tmIcon(iconKey), "settings") == 0 ) {
             executeCommand(PB_QUICK_MENU_SELECT, 8);
         }
     }
@@ -1973,9 +2058,10 @@ public:
         // took 54-58 ms of the 85 ms the menu opens in (InkPad 4), at every opening. A strip is
         // drawn anew when the screen, the size of the icons or the skin is another one.
         struct TopStrip { ibitmap * bmp; int sw, sh, iw, ih; lString32 skin; };
-        static TopStrip strips[2];
-        bool bookmarked = main_win->getDocView()->currentPageIsBookmarked();
-        TopStrip & strip = strips[bookmarked ? 1 : 0];
+        // two more for the original view of a PDF or DjVu, whose row has another icon
+        static TopStrip strips[4];
+        bool bookmarked = tmBookmarked();
+        TopStrip & strip = strips[(bookmarked ? 1 : 0) + (tmPages() ? 2 : 0)];
         lString32 skinName = main_win->getProps()->getStringDef(PROP_SKIN_FILE, "");
         if( strip.bmp != NULL && strip.sw == ScreenWidth() && strip.sh == ScreenHeight() &&
                 strip.iw == icon_width && strip.ih == icon_height && strip.skin == skinName ) {
@@ -1996,11 +2082,11 @@ public:
 
             // Image name
             lString32 path;
-            if( strcmp(touchMenuIcons[i], "bookmarks") == 0 && bookmarked ) {
-                path = lString32("icon_") + lString32(touchMenuIcons[i]) + lString32("_alt.png");
+            if( strcmp(tmIcon(i), "bookmarks") == 0 && bookmarked ) {
+                path = lString32("icon_") + lString32(tmIcon(i)) + lString32("_alt.png");
             }
             else {
-                path = lString32("icon_") + lString32(touchMenuIcons[i]) + lString32(".png");
+                path = lString32("icon_") + lString32(tmIcon(i)) + lString32(".png");
             }
             CRLog::trace("CRPocketBookQuickMenuWindow::DrawTop(): [%d] %s", i, UnicodeToUtf8(path).c_str());
 
@@ -2054,7 +2140,7 @@ public:
         int curPage;
         bool dragging = false;
 
-        pageCount = main_win->getDocView()->getPageCount();
+        pageCount = tmPageCount();
 
         // Draw bottom background
         FillArea(0, bottomY-1, ScreenWidth(), bottomH+1, 0x00FFFFFF);
@@ -2072,7 +2158,7 @@ public:
 
         // Draw by page
         else {
-            curPage = page > -1 ? page : main_win->getDocView()->getCurPage()+1;
+            curPage = page > -1 ? page : tmCurPage()+1;
             drawPosition = pageCount == 0 ? 0 : (curPage * barW / pageCount);
         }
 
@@ -2107,7 +2193,7 @@ public:
         if( showChapterMarks() ) {
             LVArray<int> dummy;
             LVArray<int> & sbounds = dummy;
-            sbounds = main_win->getDocView()->getSectionBounds();
+            tmSectionBounds(sbounds);
             if( sbounds.length()<barW/5 ) {
 
                 int sbound_index = 0;
@@ -2151,7 +2237,7 @@ public:
             SetFont(pbCrFontAA, 0x00000000);
         }
 
-        lString32 progress = main_win->getDocView()->getPageHeaderPages(
+        lString32 progress = tmProgress(
             curPage-1,
             pageCount,
             showPagesTilChapterEnd()
@@ -2163,7 +2249,7 @@ public:
         DrawString( textX, textY, UnicodeToUtf8(progress).c_str() );
 
         // Draw chapter name
-        lString32 chapterName = main_win->getDocView()->getCurrentChapterName(curPage-1);
+        lString32 chapterName = tmChapterName(curPage-1);
         textW = StringWidth( UnicodeToUtf8(chapterName).c_str() );
 
         // Make sure the string isn't going over the screen width
@@ -7025,15 +7111,19 @@ int InitDoc(const char *exename, char *fileName)
         // the picture mode: a new file starts with every page levelled by itself and its content
         // in the screen (the owner's word: a scan is crooked more often than not), and a page turn
         // that shows the next page at once
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_SCALE, PB_PAGE_SCALE_AUTO);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_LEAFING, PB_PAGE_LEAF_PAGE);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_PAGE_NUMBER, 1);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_SCALE, PB_PAGE_SCALE_AUTO);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_LEAFING, PB_PAGE_LEAF_PAGE);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_PAGE_NUMBER, 1);
-        // a PDF with text and a DjVu with a text layer are read as books
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_PDF_TEXT, 1);
-        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DJVU_TEXT, 1);
+        // A PDF with text and a DjVu with a text layer are read as books. The values are one set
+        // for both kinds of files; a reader that ran a build with a set for each kind keeps what
+        // it had chosen for PDF.
+        {
+            CRPropRef pages = main_win->getProps();
+            pages->setIntDef(PROP_POCKETBOOK_PAGES_SCALE,
+                             pages->getIntDef("cr3.pocketbook.pdf.scale", PB_PAGE_SCALE_AUTO));
+            pages->setIntDef(PROP_POCKETBOOK_PAGES_LEAFING,
+                             pages->getIntDef("cr3.pocketbook.pdf.leafing", PB_PAGE_LEAF_PAGE));
+            pages->setIntDef(PROP_POCKETBOOK_PAGES_PAGE_NUMBER,
+                             pages->getIntDef("cr3.pocketbook.pdf.page.number", 1));
+            pages->setIntDef(PROP_POCKETBOOK_PAGES_TEXT, pages->getIntDef("cr3.pocketbook.pdf.text", 1));
+        }
 #endif
         {
             // "Open with": the settings show what the list of the reader says, whoever wrote it

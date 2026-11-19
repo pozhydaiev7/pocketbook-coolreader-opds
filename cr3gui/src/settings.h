@@ -120,16 +120,10 @@ enum MainMenuItems_t {
 #ifdef CR_POCKETBOOK
     mm_pagePrepare,
     // "PDF view settings" and "DjVu view settings": the picture mode (pb_pageview.h)
-    mm_pdfScale,
-    mm_pdfLeafing,
-    mm_pdfPageNumber,
-    mm_djvuScale,
-    mm_djvuLeafing,
-    mm_djvuPageNumber,
-    mm_pdfOpenWith,
-    mm_djvuOpenWith,
-    mm_pdfText,
-    mm_djvuText,
+    mm_pagesScale,
+    mm_pagesLeafing,
+    mm_pagesPageNumber,
+    mm_pagesText,
     // "Open with CoolReader": + PbOpenWithGroup (pb_openwith.h), ten kinds of files
     mm_openWith,
     mm_openWithLast = mm_openWith + 15,

@@ -2754,3 +2754,23 @@ msgstr "Как оригинал"
 #: ../src/settings.cpp
 msgid "Font size of the word list"
 msgstr "Размер шрифта списка слов"
+
+#: ../src/settings.cpp
+msgid "PDF and DjVu"
+msgstr "PDF и DjVu"
+
+#: ../src/pb_pageview.cpp
+msgid "As a ribbon"
+msgstr "Лентой"
+
+#: ../src/pb_pageview.cpp
+msgid "The pages one under another; a page turn moves on by a screen"
+msgstr "Страницы одна под другой; листание сдвигает на экран"
+
+#: ../src/pb_pageview.cpp
+msgid "Page size"
+msgstr "Размер страницы"
+
+#: ../src/pb_pageview.cpp
+msgid "Not in the view of the original. A file with text has it when viewed as a book."
+msgstr "В просмотре оригинала недоступно. У файла с текстом это есть в виде «Смотреть как книгу»."

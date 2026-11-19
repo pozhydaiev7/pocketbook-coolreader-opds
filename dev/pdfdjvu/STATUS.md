@@ -360,3 +360,38 @@ on a reader yet: the item, the time of a page there (the log has it).
 
 Open: the shadow at the spine is still taken into the content (seen as a band at the side of the
 levelled frames); a page that is all a picture with a slanted line in it is left as it lies.
+
+## The original view as a book is used (alpha10, 2026-11-19)
+
+Remarks of a tester on the line; the owner's answers where there was a choice. `CHANGELOG.md`
+(alpha10) has each item.
+
+Decided by the owner, **taking back two earlier words of his**:
+
+- **One settings group *PDF and DjVu*, one set of values** (`cr3.pocketbook.pages.*`), not two
+  groups. *Open with CoolReader* of the two kinds stands with the other kinds of files.
+- **The original view has the menu of a book**: the touch menu with its icons and its page bar, the
+  tap zones of a book, the status line of a book. What belongs to the view of a page alone is one
+  list, opened by the icon that stands in the place of the search.
+- A file with a text layer is a book and has the dictionary, the search and the citations of a
+  book; nothing of that is done on the pictures of pages.
+- **Leafing *As a ribbon*** (the "continuous mode" of the tester): `PbPageDoc::stripOf` and
+  `renderStrip`, `PbPageWindow::drawRibbon`. Bench: `pagebench ribbon <file> <page> <screens>
+  <scale>` (parts against the whole strip, the time of a screen).
+
+**In the plans, not done** (the owner: "later"): the dictionary in the original view as a list of
+words with the search by the keyboard, no word chosen on the page (there is no recognition of
+text; a word cannot be picked from a picture). How it would go: `CRPbDictionaryDialog`
+(`cr3pocketbook.cpp`) takes its background from the page of the book view and its word from
+`LVPageWordSelector`; over the pages it needs a branch with no word selector, the background and
+the page turns asked of `PbPageWindow`, and the list of words with the keyboard opened at once.
+Until then the icons of the dictionary, the search and the citations show a message there.
+
+Not seen on a reader yet, all of alpha10: the touch menu over the pages, the icon of the view of a
+page in the six skins, the status line (a view of the engine with no book draws it:
+`PbPageWindow::setupHead`), *Book info*, the ribbon, the values of PDF taken over into the common
+ones. Lessons of the work: the engine takes the marks of the chapters from outside
+(`LVDocView::getSectionBounds(..., for_external_update)`), and `drawPageHeader` takes the page and
+the count as arguments, so a view with no book can draw the status line of any file; the median of
+the icons of a skin is no clean ground for a new icon (specks where glyphs cross), the ground is
+drawn anew from the shape read off one icon.

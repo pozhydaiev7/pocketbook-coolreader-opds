@@ -1523,6 +1523,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     item_def_t page_leafing_options[] = {
         {_("Next page at once"), "0"},
         {_("By frames"), "1"},
+        {_("As a ribbon"), "2"},
         {NULL, NULL}
     };
     item_def_t page_number_options[] = {
@@ -1530,7 +1531,7 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("On"), "1"},
         {NULL, NULL}
     };
-    // PROP_POCKETBOOK_PDF_TEXT
+    // PROP_POCKETBOOK_PAGES_TEXT
     item_def_t pdf_text_options[] = {
         {_("As the original"), "0"},
         {_("As a book"), "1"},
@@ -2053,38 +2054,30 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         #endif
     }
 #ifdef CR3_PAGEDOC
-    // Two groups for the picture mode of PDF and DjVu files. They hold what is special to these
-    // files, mostly to books of pictures; a text taken from such a file is shown with the common
-    // font and style settings, so there is no font here. An item with two or three values is
-    // switched by a tap in place, as in the other groups.
-    for ( int djvu = 0; djvu < 2; djvu++ ) {
-        CRMenu * pageMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++,
-                                                    djvu ? _("DjVu view settings") : _("PDF view settings"),
+    // One group for the picture mode of PDF and DjVu files, with one set of values (the owner,
+    // after a tester: "the settings are the same, as the way these files are read is"; they were
+    // two groups with the same items). It holds what is special to these files, mostly to books
+    // of pictures; a text taken from such a file is shown with the common font and style settings,
+    // so there is no font here. An item with two or three values is switched by a tap in place, as
+    // in the other groups. Whether the reader opens these files with this program stands in "Open
+    // with CoolReader", with the other kinds of files.
+    {
+        CRMenu * pageMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("PDF and DjVu"),
                                                     "cr3_option_pages", valueFont, CRPropRef());
         pageMenu->setSkinName(lString32("#settings"));
         pageMenu->setAccelerators( _menuAccelerators );
         // a PDF with text, a DjVu with a text layer: how a file not opened before is shown, as a
         // book or as its pages. The choice made for a file ("View as the original" in the main
         // menu of the book, "View as a book" in the menu of the picture mode) goes before it.
-        createSettingsMenuItem(pageMenu, djvu ? mm_djvuText : mm_pdfText, _("A new file with text"),
-                               "cr3_option_pages", valueFont,
-                               djvu ? PROP_POCKETBOOK_DJVU_TEXT : PROP_POCKETBOOK_PDF_TEXT, pdf_text_options);
-        createSettingsMenuItem(pageMenu, djvu ? mm_djvuScale : mm_pdfScale, _("Scale of a new file"),
-                               "cr3_option_pages", valueFont,
-                               djvu ? PROP_POCKETBOOK_DJVU_SCALE : PROP_POCKETBOOK_PDF_SCALE, page_scale_options);
-        createSettingsMenuItem(pageMenu, djvu ? mm_djvuLeafing : mm_pdfLeafing, _("Leafing of a new file"),
-                               "cr3_option_pages", valueFont,
-                               djvu ? PROP_POCKETBOOK_DJVU_LEAFING : PROP_POCKETBOOK_PDF_LEAFING, page_leafing_options);
-        createSettingsMenuItem(pageMenu, djvu ? mm_djvuPageNumber : mm_pdfPageNumber, _("Page number in the corner"),
-                               "cr3_option_pages", valueFont,
-                               djvu ? PROP_POCKETBOOK_DJVU_PAGE_NUMBER : PROP_POCKETBOOK_PDF_PAGE_NUMBER,
+        createSettingsMenuItem(pageMenu, mm_pagesText, _("A new file with text"),
+                               "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_TEXT, pdf_text_options);
+        createSettingsMenuItem(pageMenu, mm_pagesScale, _("Scale of a new file"),
+                               "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_SCALE, page_scale_options);
+        createSettingsMenuItem(pageMenu, mm_pagesLeafing, _("Leafing of a new file"),
+                               "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_LEAFING, page_leafing_options);
+        createSettingsMenuItem(pageMenu, mm_pagesPageNumber, _("Page number in the corner"),
+                               "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_PAGE_NUMBER,
                                page_number_options);
-        // whether the reader offers this program for these files, or opens them with it at once:
-        // the list of the firmware is changed when the settings are applied (V3DocViewWin::applySettings)
-        createSettingsMenuItem(pageMenu, djvu ? mm_djvuOpenWith : mm_pdfOpenWith, _("Open with CoolReader"),
-                               "cr3_option_pages", valueFont,
-                               djvu ? PROP_POCKETBOOK_DJVU_OPEN_WITH : PROP_POCKETBOOK_PDF_OPEN_WITH,
-                               open_with_options);
         pageMenu->reconfigure( 0 );
         mainMenu->addItem( pageMenu );
     }
@@ -2139,16 +2132,19 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     {
         // "Open with CoolReader": a line for every kind of book the engine opens. The value is
         // what the list of the reader says (pb_openwith.h); the list is changed when the settings
-        // are applied (V3DocViewWin::applySettings). PDF and DjVu are not here: the owner wants
-        // them apart, in their own folders only, as a reader may keep the program of the firmware
-        // for them while this one is new at it.
+        // are applied (V3DocViewWin::applySettings). PDF and DjVu are lines of it like the others
+        // (they stood in their own groups only; the owner, after a tester: "it would be logical
+        // to put the associations of PDF and DjVu into the common menu"), in a build that reads
+        // such files.
         CRMenu * openMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Open with CoolReader"),
                                                     "cr3_option_pages", valueFont, CRPropRef());
         openMenu->setSkinName(lString32("#settings"));
         openMenu->setAccelerators( _menuAccelerators );
         for ( int g = 0; g < PB_OPEN_GROUP_COUNT; g++ ) {
+#ifndef CR3_PAGEDOC
             if ( g == PB_OPEN_GROUP_PDF || g == PB_OPEN_GROUP_DJVU )
                 continue;
+#endif
             createSettingsMenuItem(openMenu, mm_openWith + g, pbOpenWithName(g), "cr3_option_pages", valueFont,
                                    pbOpenWithProp(g), open_with_options);
         }
