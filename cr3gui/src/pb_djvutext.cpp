@@ -153,10 +153,11 @@ bool onlyNumber(const std::string & s)
     return digit;
 }
 
-/// A page number written with Roman numerals, as the pages of a preface are: "xvi", "XXIII",
-/// alone or with the marks a page number has around it. Up to 399 (no D and no M): a longer
-/// front matter is not met, and words made of these letters ("dim", "mix") are.
-bool romanNumber(const std::string & s)
+/// The value of a page number written with Roman numerals, as the pages of a preface are: "xvi",
+/// "XXIII", alone or with the marks a page number has around it; 0 when the text is not one. Up
+/// to 399 (no D and no M): a longer front matter is not met, and words made of these letters
+/// ("dim", "mix") are.
+int romanValue(const std::string & s)
 {
     std::string letters;
     for (size_t i = 0; i < s.size(); i++) {
@@ -166,10 +167,10 @@ bool romanNumber(const std::string & s)
         if (c == 'i' || c == 'v' || c == 'x' || c == 'l' || c == 'c')
             letters += c;
         else if (!(c == ' ' || c == '-' || c == '.' || c == '[' || c == ']' || c == '(' || c == ')' || c == '|'))
-            return false;
+            return 0;
     }
     if (letters.empty() || letters.size() > 9)
-        return false;
+        return 0;
     // hundreds, tens, units, each written the one way a number is written
     static const char * const parts[3][10] = {
         { "", "c", "cc", "ccc", "", "", "", "", "", "" },
@@ -177,16 +178,41 @@ bool romanNumber(const std::string & s)
         { "", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" }
     };
     size_t at = 0;
-    for (int rank = 0; rank < 3; rank++) {
+    int value = 0;
+    for (int rank = 0, unit = 100; rank < 3; rank++, unit /= 10) {
         size_t best = 0;
+        int digit = 0;
         for (int d = 1; d < 10; d++) {
             const size_t n = strlen(parts[rank][d]);
-            if (n > best && letters.compare(at, n, parts[rank][d]) == 0)
+            if (n > best && letters.compare(at, n, parts[rank][d]) == 0) {
                 best = n;
+                digit = d;
+            }
         }
         at += best;
+        value += digit * unit;
     }
-    return at == letters.size();
+    return at == letters.size() ? value : 0;
+}
+
+/// The value of the Roman number a line begins or ends with, words beside it ("xiv Preface to the
+/// Fourth Edition", "Contents vii", and as well "the reign of Louis XIV"); 0 when it has none, or
+/// is the number alone.
+int romanAtEdge(const std::string & s)
+{
+    size_t from = 0, to = s.size();
+    while (from < to && s[from] == ' ')
+        from++;
+    while (to > from && s[to - 1] == ' ')
+        to--;
+    const size_t firstEnd = s.find(' ', from);
+    if (firstEnd == std::string::npos || firstEnd >= to)
+        return 0;
+    const int first = romanValue(s.substr(from, firstEnd - from));
+    if (first)
+        return first;
+    const size_t lastStart = s.rfind(' ', to - 1);
+    return romanValue(s.substr(lastStart + 1, to - lastStart - 1));
 }
 
 /// The text of a zone without the line ends and other control characters it carries, with single
@@ -970,6 +996,19 @@ public:
         }
     }
 
+    /// The Roman number of a line at the top or the bottom of a page: the line is the number, or
+    /// begins or ends with it (beside: a line of the size of the text or smaller, not a long one).
+    int romanOf(const Line & line, bool & beside) const
+    {
+        beside = false;
+        int number = romanValue(line.text);
+        if (number == 0 && line.text.size() <= 100 && line.height() <= body * 1.2f) {
+            number = romanAtEdge(line.text);
+            beside = true;
+        }
+        return number;
+    }
+
     /// What repeats at the top and at the bottom of the pages goes, and the page numbers there.
     void dropRunning()
     {
@@ -991,16 +1030,23 @@ public:
                     seen[1][keyOf(lines[bottoms[n]].text)]++;
                 }
             }
-            // a number in Roman numerals is a page number when two pages or more have one at
-            // that side (the pages of a preface); one in a whole book may be the heading "II"
-            int romans[2] = { 0, 0 };
+            // A number in Roman numerals is a page number when it goes with the pages (the pages
+            // of a preface): the next page has the next number, so the number less the page is
+            // the same on all of them. Two lines that are such a number alone make page numbers,
+            // and three that begin or end with one (the running title of a front matter, "xiv
+            // Preface": the title may stand on a page or two and does not repeat thrice). A count
+            // of such lines without the pages would take the headings "II", "III" of chapters and
+            // lines of the text that end with a name: "Louis XIV", "World War II".
+            std::map<int, int> inStep;      // the number less the page -> lines
             for (size_t n = 0; n < pages.size(); n++) {
                 if (tops[n] < 0 || tops[n] == bottoms[n])
                     continue;
-                if (romanNumber(pages[n].lines[tops[n]].text))
-                    romans[0]++;
-                if (romanNumber(pages[n].lines[bottoms[n]].text))
-                    romans[1]++;
+                for (int side = 0; side < 2; side++) {
+                    bool beside;
+                    const int number = romanOf(pages[n].lines[side == 0 ? tops[n] : bottoms[n]], beside);
+                    if (number)
+                        inStep[number - (int)n]++;
+                }
             }
             for (size_t n = 0; n < pages.size(); n++) {
                 if (tops[n] < 0 || tops[n] == bottoms[n])
@@ -1014,8 +1060,10 @@ public:
                     const bool repeats = line.text.size() <= 160
                                          && ((key.size() >= 3 && times >= 3 && line.height() <= body * 1.2f)
                                              || (key.size() >= 2 && times >= 4 && times * 2 >= stats.textPages));
-                    if (!line.out && (onlyNumber(line.text) || repeats
-                                      || (romans[side] >= 2 && romanNumber(line.text)))) {
+                    bool beside;
+                    const int number = romanOf(line, beside);
+                    const bool pageNumber = number && inStep[number - (int)n] >= (beside ? 3 : 2);
+                    if (!line.out && (onlyNumber(line.text) || repeats || pageNumber)) {
                         line.out = true;
                         stats.running++;
                     }

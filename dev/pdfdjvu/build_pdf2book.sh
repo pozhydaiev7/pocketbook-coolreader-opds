@@ -12,6 +12,11 @@ T=$HOME/PBDEV/pdfdjvu/pdf2book-src; rm -rf "$T"; mkdir -p "$T"
 for f in "$CLONE/cr3gui/src/pb_pdftext.cpp" "$CLONE/cr3gui/src/pb_pdftext.h" "$HERE/pdf2book.cpp"; do
     tr -d '\r' < "$f" > "$T/$(basename "$f")"
 done
+# The messages go to a file and the old tool is removed first. Piped into "head", the compiler
+# was killed when its warnings took more than the 40 lines shown, before it linked: the old tool
+# stayed, and the books that were compared after it were those of the old code (2026-11-21).
+rm -f "$OUT/pdf2book"
 g++ -std=gnu++98 -O2 -Wall -Wextra -I"$T" -I"$MU/include" "$T/pdf2book.cpp" "$T/pb_pdftext.cpp" \
-    -L"$MU/build/host" -lmupdf -lmupdf-third -lpthread -lm -o "$OUT/pdf2book" 2>&1 | head -40
+    -L"$MU/build/host" -lmupdf -lmupdf-third -lpthread -lm -o "$OUT/pdf2book" > "$T/build.log" 2>&1
+head -40 "$T/build.log"
 ls -la "$OUT/pdf2book"

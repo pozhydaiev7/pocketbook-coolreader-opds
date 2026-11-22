@@ -395,3 +395,54 @@ ones. Lessons of the work: the engine takes the marks of the chapters from outsi
 the count as arguments, so a view with no book can draw the status line of any file; the median of
 the icons of a skin is no clean ground for a new icon (specks where glyphs cross), the ground is
 drawn anew from the shape read off one icon.
+
+## The PDF of the tester: a textbook as a book (alpha12, 2026-11-21)
+
+His file, a preview of a textbook (front matter only), showed his remarks "no margin at the
+headings" and "text at the left edge" on the PC bench: `pdf2book`, then `cr3bench` with
+`BENCH_DUMP` for the screens. `CHANGELOG.md` (alpha12) has each cause. What to keep in mind:
+
+- **MuPDF guesses headings** (`FZ_STEXT_PARAGRAPH_BREAK`, `stext-para.c`: an underlined line
+  becomes `FZ_STRUCTURE_H`) and gives no tag name with them (`fz_stext_struct::raw` is empty). Only
+  a struct with a name is the structure of the file.
+- **A Roman number is a page number by its step with the pages** (the number less the page is the
+  same), never by a count of lines that have one: "World War II", "Louis XIV" end lines of the
+  text. A rule that leaves text out of a book needs a test file of text that looks like its target.
+- A contents page without dots (`markEntries`), a hanging list whose entries end with page numbers
+  (`findRows`, `mendParagraphs`): rules of `pb_pdftext.cpp`.
+- **The change was reviewed after it was written** (the owner asked, with another model). Found: the
+  Roman rule above; three pieces with no effect on any book (taken out, each tried by a build
+  without it); a second walk over the rows of a block (now `findRows` alone); 18 entries of the
+  table of cases still glued, reported as done. How it was checked: a variant of the source for
+  each piece, built aside, the books of all test files compared.
+- **A build that prints through `head` can be killed by it** and leave the old tool: after a build,
+  look at the time of the tool. The three `build_*.sh` of the PC tools write to a file now.
+- Asked by the owner whether a free library does this better (2026-11-21): none that runs on the
+  reader. PyMuPDF4LLM / PyMuPDF Layout (a trained model, Python), pdfreflow (GPLv3, C, over
+  Poppler's `pdftohtml`), k2pdfopt of KOReader (pictures of text, no text), Calibre (Python), marker
+  and Docling (neural networks). MuPDF is the strongest base and is used; ours is the layer that
+  makes a book of its blocks. pdfreflow is worth reading for its rules when a list or running titles
+  go wrong again.
+- Left: a few rows of the list of abbreviations with a narrow space between the columns stand as
+  paragraphs (the rows of a list should be found by the place of its second column, not by the
+  width of a space); two contents entries on one row ("Final Remarks 333 Further Reading 334") stay
+  one. The chapters of the book are not in the preview: the body of a textbook is not checked. No
+  test file is a tagged PDF or a DjVu with Roman page numbers but the ones made for this review
+  (scratchpad of the session, not in the repository).
+
+## Ten remarks of a tester (alpha13, 2026-11-21)
+
+The owner chose: the dictionary over the pages now, by a tap on a word of the text layer (the
+search and the citations over the pages stay for later), a login for OPDS. `CHANGELOG.md` (alpha13)
+has each item. To keep in mind:
+
+- **A word of the text layer goes to the screen by the frame of its part**: `PbPageDoc::toBuffer`
+  is the map render uses (the point of the page in the middle, zoomed, turned clockwise); the
+  ribbon is parts, each with the frame `renderStrip` makes. `pagebench words` shows the boxes.
+- The dictionary window keeps its book code; over the pages it asks `PbPageWindow` (`_pages`).
+  What has been seen on the reader of it: nothing yet.
+- The common items (contents of the headings, levels of the contents, "End", the main menu in the
+  settings, the OPDS login) were written in `master` and carried here by a script that puts every
+  hunk where its old lines stand (scratchpad of the session, `port_common.py`).
+- Not found: why the tester does not see the page number in the corner. Asked of the owner on his
+  reader, with the status line at the top and at the bottom.

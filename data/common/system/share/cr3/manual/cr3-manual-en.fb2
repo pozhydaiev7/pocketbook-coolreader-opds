@@ -196,6 +196,10 @@
     <empty-line/>
     <p>The current chapter has an angle mark. To go to another chapter, tap its row.</p>
     <empty-line/>
+    <p>A contents of several levels opens with its first level and the branch of the chapter you read open. A triangle before an entry tells that entries lie under it: a tap on the triangle opens or closes them, a tap on the title goes to the chapter. Every level at once: «<emphasis>Contents: levels closed</emphasis>» in the display settings, off.</p>
+    <p>The last entry, «<emphasis>End</emphasis>», goes to the last page and tells how many pages the book has (where the contents show the page numbers).</p>
+    <p>A book with no contents of its own (an EPUB whose list of contents is empty) gets the contents of its headings. Only a book without headings has the entries «Start», «Section 1», «Section 2»...</p>
+    <empty-line/>
     <subtitle>Classic contents</subtitle>
     <p>If «<emphasis>Use new TOC menu</emphasis>» is turned off in the display settings, the contents are a plain list of chapters with indents and page numbers. The list works with every interface skin and on every firmware.</p>
     <cite>
@@ -278,9 +282,10 @@
     <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalogs</emphasis>».</p>
     <image l:href="#i_026.png"/>
     <subtitle>List of catalogs</subtitle>
-    <p>Flibusta is always in the list: its address can be changed to a mirror, but it cannot be deleted or renamed. Other catalogs are added with «<emphasis>Add catalog...</emphasis>» (address and name).</p>
+    <p>Flibusta is always in the list: its address can be changed to a mirror, but it cannot be deleted or renamed. Other catalogs are added with «<emphasis>Add catalog...</emphasis>»: it opens the card of the new catalog, where its name, address, login and password are set; a catalog left without an address is not kept.</p>
     <p>«<emphasis>Edit catalogs...</emphasis>» changes the name and the address of a catalog, makes it the default catalog or deletes it.</p>
     <image l:href="#i_026.png"/>
+    <p>A catalog closed by a password (a library of Calibre, a catalog that gives its files to the users it knows): «<emphasis>Login...</emphasis>» and «<emphasis>Password...</emphasis>» in the card of the catalog. They are sent to the server of that catalog only; «<emphasis>Forget login and password</emphasis>» clears them. When the server does not let you in, the card of the catalog opens with a message.</p>
     <subtitle>Navigation</subtitle>
     <p>The arrow in the caption and the first row of every screen go one level up; from the start page of the catalog, back to the book.</p>
     <p>In a list of books each book takes two lines: the title and the author. A long list is turned with the arrows in the top right corner, the screen number is between them. The row «<emphasis>Catalog menu</emphasis>» opens the menu: back to the list, search, catalog start page, other catalog, catalog address.</p>
@@ -550,6 +555,9 @@
      <p>Show the page numbers of the chapters in the new table of contents.</p>
      <p><emphasis>Value:</emphasis> on / off</p>
      <image l:href="#i_026.png"/>
+     <subtitle>Contents: levels closed</subtitle>
+     <p>Both lists of the contents open with the first level and the branch of the current chapter; the other branches open by the triangle before their entry. Off: every level is shown.</p>
+     <p><emphasis>Value:</emphasis> on / off</p>
      <subtitle>Skin</subtitle>
      <p>One of the interface skins, which change the look of the program.</p>
      <p><emphasis>Value:</emphasis> list of skin files</p>
@@ -576,7 +584,11 @@
      <p>While a page is read, the next one is prepared ahead, so a page turn does not wait for the page to be decoded (the item "Prepare next page" of the display settings).</p>
      <image l:href="#i_026.png"/>
      <subtitle>Menu</subtitle>
-     <p>The menu is the one of a book: icons at the top and the page bar at the bottom. The icons: home, contents (those of the file, when it has them), bookmarks (a long tap sets and takes off the bookmark of the page), dictionary, view of the page, OPDS catalog, reading statistics, rotation, settings. The bar at the bottom goes to any page; the chapters of the file are marked on it and the current one is named. The icon "view of the page" stands in the place of the search and opens a list: scale, leafing, set the frame, "View as a book", go to a page, book info, close the book. The key of the main menu opens the same list. The dictionary, the search and the citations work on text: the view of the original has none of them, and a file with text has them when viewed as a book.</p>
+     <p>The menu is the one of a book: icons at the top and the page bar at the bottom. The icons: home, contents (those of the file, when it has them), bookmarks (a long tap sets and takes off the bookmark of the page), dictionary, view of the page, OPDS catalog, reading statistics, rotation, settings. The bar at the bottom goes to any page; the chapters of the file are marked on it and the current one is named. The icon "view of the page" stands in the place of the search and opens a list: scale, leafing, set the frame, "View as a book", go to a page, book info, close the book. The main menu (its key, a long press of «Menu», a tap zone) is the one of a book; its first item, «View as a book», opens the book of a file with text. The action «PDF and DjVu: book or original» goes from the book to the pages and back: it can be put on a tap zone or in the main menu (a device without the key «Menu»). The search and the citations work on the text of a book: the view of the original has none of them.</p>
+     <image l:href="#i_026.png"/>
+     <subtitle>Dictionary and bookmarks</subtitle>
+     <p>The dictionary works over the pages of a file with text (a PDF with text, a DjVu with a text layer): the zone of the dictionary looks up the word under the finger, the icon of the dictionary takes the first word of the screen. The word is marked on the page; the arrows go to the word beside it and to the line above or under, a page turn turns the pages under the window. On a page without text (a scan) the window opens with the search: the word is typed.</p>
+     <p>The list of the bookmarks is the one of a book: a place for each bookmark with the page, the place in percent and the chapter, empty places after them; a tap goes to a bookmark or sets one, a long press opens «Set bookmark, Go to bookmark, Delete bookmark».</p>
      <image l:href="#i_026.png"/>
      <subtitle>Scale</subtitle>
      <p>What is shown on the screen. "Whole page": the page with its margins. "Page width": the page as wide as the screen. "Whole content": the margins are cut off automatically, and for a page photographed on a dark table the table is cut off too. "Content width": the same, as wide as the screen. "Own frame": the frame you have set in "Set the frame". "Automatic, every page levelled": for a book scanned or photographed crookedly; this scale is the default. The program finds the tilt of the lines of every page by itself, turns the page level and cuts off its margins; with the leafing "By frames" the content is as wide as the screen. A page without lines of text (a picture, an empty page) is left as it is. If the automatic frame does not fit, open "Set the frame": it starts from what is on the screen, and "Done" sets "Own frame".</p>
@@ -595,6 +607,7 @@
      <image l:href="#i_026.png"/>
      <subtitle>Settings of PDF and DjVu</subtitle>
      <p>The folder "PDF and DjVu" of the settings menu, one for both kinds of files. "A new file with text": how a file with text the program has not seen yet is opened, as a book or as the original. "Scale of a new file" and "Leafing of a new file": what such a file is opened with in the view of the original. "Page number in the corner": whether the page number and the number of pages are shown in the lower right corner. Whether the reader opens such files with CoolReader is set in the folder "Open with CoolReader", with the other kinds of files.</p>
+     <p>«Orientation of the pages»: the screen is turned for the pages of these files only (as the books, 0°, 90°, 180°, 270°) and turned back when they are left. A turn chosen over the pages changes this value, not the orientation of the books.</p>
     </section>
     <section>
      <title>
@@ -635,6 +648,8 @@
      <p>Change the front light with a vertical swipe.</p>
      <p><emphasis>Value:</emphasis> off / fixed / dynamic</p>
      <image l:href="#i_026.png"/>
+     <subtitle>Main menu</subtitle>
+     <p>The items of the main menu: twelve rows, each set to an action of the list the tap zones are set from; «(No action)» leaves the row out. The rows start as the menu is.</p>
      <subtitle>Pinch zoom</subtitle>
      <p>Change the font size with a pinch: fingers together make the letters smaller, fingers apart make them bigger.</p>
      <p><emphasis>Value:</emphasis> on / off</p>
@@ -671,6 +686,21 @@
       <p>OPDS catalogs</p>
      </title>
      <p>Opens the list of the online book catalogs: open a catalog, add one, change a name and an address, set the default catalog (see «<emphasis>Book catalog (OPDS)</emphasis>»).</p>
+    </section>
+    <section>
+     <title>
+      <p>Reading position sync</p>
+     </title>
+     <p>The place of a book is kept on a sync server of KOReader and taken by the other devices of the same user: KOReader on a computer, a phone or another reader, Readest, CoolReader on another PocketBook. A book is known by its file (the contents of the file, not its name), so every device must have the same file.</p>
+     <p>«<emphasis>Server and login...</emphasis>» opens the screen of the sync: the address of the server (the server of KOReader by default; a server of your own works the same way: Calibre-Web-Automated, Kavita, korrosync), the login and the password (only its MD5 is kept, as the protocol sends it). «<emphasis>Register on the server</emphasis>» makes a new user with them, «<emphasis>Check the login</emphasis>» asks the server whether it knows you.</p>
+     <p>The switch «<emphasis>Reading position sync</emphasis>» turns the sync on; while it is off nothing goes to the network. While it is on, the program does what KOReader does:</p>
+     <p>• a book opened, and the program back on the screen: the places not sent yet are sent, then the place of the book is asked for. Wi-Fi is turned on for it when the firmware can do it without a dialog; otherwise only while Wi-Fi is on;</p>
+     <p>• a book closed, another book opened, the program closed or sent to the home screen: its place is sent while Wi-Fi is on; otherwise it is kept and sent at the next chance (the row «<emphasis>Places not sent yet</emphasis>» on the screen of the sync sends them at once);</p>
+     <p>• a place of another device read after the last page turned here is asked about: «<emphasis>Go to the newer place...?</emphasis>»; an older place is left. Both are set on the screen of the sync: «<emphasis>Ask</emphasis>», «<emphasis>Go there</emphasis>», «<emphasis>Ignore</emphasis>».</p>
+     <p>The actions «<emphasis>Send the place of the book</emphasis>» and «<emphasis>Get the place of the book</emphasis>» are on the screen of the sync and in the list of actions of the tap zones and of the main menu. They turn on Wi-Fi through the firmware; «<emphasis>Get</emphasis>» goes to the place on the server whatever it is.</p>
+     <p>A server that is down does not hold the book: a request waits 2 seconds for the connection and 5 seconds for the answer, and a place not sent is kept.</p>
+     <p>A book closed with no page turned since it was opened sends nothing. A place kept is not sent over a newer place of another device: the server is asked first. An https server works with a certificate the firmware does not know as well; the login and the password go to the server set here only (a redirect to another address is not followed: «<emphasis>The server sends the requests to another address</emphasis>»).</p>
+     <p>In a PDF or a DjVu read as pages the place is the page, as KOReader sends it; a book made of a PDF sends the page of the original too, so the place is the same on a device that reads the PDF as pages.</p>
     </section>
     <section>
      <title>

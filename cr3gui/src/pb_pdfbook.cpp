@@ -22,6 +22,7 @@
 #include "pb_pageview.h"
 #include "pb_pdftext.h"
 #include "pb_djvutext.h"
+#include "pb_kosync.h"
 
 namespace {
 
@@ -246,6 +247,15 @@ bool pbPdfBookFromPages(CRGUIWindowManager * wm, const lString32 & path, int pag
         return false;
     PbPageWindow::setMode(path, PB_PAGE_MODE_BOOK);
     setOpen(made, path);
+    pbPdfBookGoPage(page);
+    wm->update(true);
+    return true;
+}
+
+bool pbPdfBookGoPage(int page)
+{
+    if (!pbPdfBookIsOpen())
+        return false;
     // the first element of the page carries the id "pgN"; a page with nothing on it has none,
     // and the next one that has is taken
     LVDocView * view = main_win->getDocView();
@@ -254,11 +264,40 @@ bool pbPdfBookFromPages(CRGUIWindowManager * wm, const lString32 & path, int pag
         const lString32 id = lString32("pg") + lString32::itoa(n);
         if (doc->getElementById(id.c_str()) != NULL) {
             view->goLink(lString32("#") + id, false);
-            break;
+            return true;
         }
     }
-    wm->update(true);
-    return true;
+    return false;
+}
+
+bool pbPdfBookPlace(lString32 & source, int & page, int & pages)
+{
+    if (!pbPdfBookIsOpen())
+        return false;
+    LVDocView * view = main_win->getDocView();
+    ldomDocument * doc = view->getDocument();
+    // the last page of the file whose first element stands at or above the top of the screen
+    const int top = view->GetPos();
+    page = 0;
+    for (int n = 1; doc != NULL && n <= openPages; n++) {
+        ldomNode * node = doc->getElementById((lString32("pg") + lString32::itoa(n)).c_str());
+        if (node == NULL)
+            continue;
+        lvRect rc;
+        node->getAbsRect(rc);
+        if (rc.top > top + 2)
+            break;
+        page = n - 1;
+    }
+    source = openSource;
+    pages = openPages;
+    return pages > 0;
+}
+
+bool pbPdfBookIsMade(const lString32 & file)
+{
+    const lString32 dir = lString32(BOOKS_DIR) + "/";
+    return file.startsWith(dir);
 }
 
 bool pbPdfBookIsOpen()
@@ -274,24 +313,16 @@ bool pbPdfBookToPages(CRGUIWindowManager * wm)
 {
     if (!pbPdfBookIsOpen())
         return false;
-    LVDocView * view = main_win->getDocView();
-    ldomDocument * doc = view->getDocument();
-    // the last page of the file whose first element stands at or above the top of the screen
-    const int top = view->GetPos();
-    int page = 0;
-    for (int n = 1; doc != NULL && n <= openPages; n++) {
-        ldomNode * node = doc->getElementById((lString32("pg") + lString32::itoa(n)).c_str());
-        if (node == NULL)
-            continue;
-        lvRect rc;
-        node->getAbsRect(rc);
-        if (rc.top > top + 2)
-            break;
-        page = n - 1;
-    }
-    view->savePosition();
+    lString32 source;
+    int page = 0, pages = 0;
+    pbPdfBookPlace(source, page, pages);
+    main_win->getDocView()->savePosition();
     PbPageWindow::setMode(openSource, PB_PAGE_MODE_PAGES);
-    if (!PbPageWindow::open(wm, openSource))
+    // the same file in another view: no place sent or asked for the change
+    PbKosync::instance().hold(true);
+    const bool opened = PbPageWindow::open(wm, openSource);
+    PbKosync::instance().hold(false);
+    if (!opened)
         return false;
     PbPageWindow::instance->showPage(page);
     wm->update(true);

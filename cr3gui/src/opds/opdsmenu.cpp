@@ -243,6 +243,19 @@ bool OpdsMenu::onCommand(int command, int params)
 // not inside the handling of the touch. Anything else is a tap on a row or on the title.
 bool OpdsMenu::onTouchEvent(int x, int y, CRGUITouchEventType evType)
 {
+    // a tap on the mark of a branch opens or closes it; a tap on the rest of the row goes to it
+    if (evType == CRTOUCH_UP) {
+        lvPoint pt(x, y);
+        const int top = getTopItem();
+        for (int i = top; i < top + _pageItems && i < _items.length(); i++)
+            for (size_t k = 0; k < _rowItems.size(); k++) {
+                OpdsItem * item = _rowItems[k];
+                if ((CRMenuItem *)item == _items[i] && item->toggleCommand != 0 && item->toggleRect.isPointInside(pt)) {
+                    closeMenu(item->toggleCommand, item->toggleParam);
+                    return true;
+                }
+            }
+    }
     if (_swipes && _paged) {
         if (evType == CRTOUCH_DOWN) {
             _touchStart = lvPoint(x, y);
@@ -289,9 +302,50 @@ void OpdsMenu::add(int command, const lString32 & title, const lString32 & subti
 
 OpdsItem::OpdsItem(OpdsMenu * menu, int id, const lString32 & title, const lString32 & subtitle, Kind kind)
     : CRMenuItem(menu, id, title, LVImageSourceRef(), LVFontRef()),
-      indent(0), mark(false), button(false), panel(NULL), panelRows(0),
-      _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
+      indent(0), mark(false), branch(-1), toggleCommand(0), toggleParam(0), button(false), panel(NULL),
+      panelRows(0), _owner(menu), _title(title), _subtitle(subtitle), _kind(kind)
 {
+    menu->_rowItems.push_back(this);
+}
+
+int drawBranchMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color, int open)
+{
+    int half = size * 5 / 24;
+    if (half < 3)
+        half = 3;
+    const int side = half * 2;          // the triangle stands in a square of this side
+    if (open >= 0) {
+        int t = size / 16;              // the width of its lines
+        if (t < 1)
+            t = 1;
+        const int cy = top + height / 2 + size / 16;
+        if (open == 0) {
+            // pointing right: the left side, and the two slanted sides
+            const int width = half * 3 / 2;
+            const int x0 = x + (side - width) / 2;
+            for (int dy = -half; dy <= half; dy++) {
+                int len = width * (half + 1 - (dy < 0 ? -dy : dy)) / (half + 1);
+                if (len <= 0)
+                    continue;
+                buf.FillRect(x0, cy + dy, x0 + t, cy + dy + 1, color);
+                buf.FillRect(x0 + len - t, cy + dy, x0 + len, cy + dy + 1, color);
+            }
+        } else {
+            // pointing down: the top side, and the two slanted sides
+            const int depth = half * 3 / 2;
+            const int y0 = cy - depth / 2;
+            for (int dy = 0; dy <= depth; dy++) {
+                int w = half * (depth + 1 - dy) / (depth + 1);
+                if (w <= 0)
+                    continue;
+                if (dy < t)
+                    buf.FillRect(x + half - w, y0 + dy, x + half + w, y0 + dy + 1, color);
+                buf.FillRect(x + half - w, y0 + dy, x + half - w + t, y0 + dy + 1, color);
+                buf.FillRect(x + half + w - t, y0 + dy, x + half + w, y0 + dy + 1, color);
+            }
+        }
+    }
+    return side + size / 4;
 }
 
 int drawRowMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color)
@@ -408,6 +462,13 @@ void OpdsItem::Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkin
             sf->DrawTextString(&buf, r.right - aw, base - sf->getBaseline(),
                                aside.c_str(), aside.length(), U'?', NULL, false, 0);
             tr.right -= aw + sf->getHeight();
+        }
+        if (branch >= 0) {
+            const int x = tr.left;
+            tr.left += drawBranchMark(buf, x, r.top, r.height(), tf->getHeight(), skin->getTextColor(),
+                                      branch == 0 ? -1 : branch - 1);
+            // the place for the finger: the indent before the mark and the mark, the whole height
+            toggleRect = branch > 0 ? lvRect(rc.left, rc.top, tr.left, rc.bottom) : lvRect();
         }
         if (mark)
             tr.left += drawRowMark(buf, tr.left, r.top, r.height(), tf->getHeight(), skin->getTextColor());

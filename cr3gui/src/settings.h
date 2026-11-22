@@ -119,14 +119,20 @@ enum MainMenuItems_t {
     mm_TouchTOC,
 #ifdef CR_POCKETBOOK
     mm_pagePrepare,
+    mm_tocCollapsed,
+    mm_mainMenuItems,
     // "PDF view settings" and "DjVu view settings": the picture mode (pb_pageview.h)
     mm_pagesScale,
     mm_pagesLeafing,
     mm_pagesPageNumber,
     mm_pagesText,
+    mm_pagesOrientation,
     // "Open with CoolReader": + PbOpenWithGroup (pb_openwith.h), ten kinds of files
     mm_openWith,
     mm_openWithLast = mm_openWith + 15,
+#endif
+#ifdef POCKETBOOK_PRO
+    mm_kosyncEnabled,
 #endif
     mm_Last
 };
@@ -196,5 +202,24 @@ class CRSettingsMenu : public CRFullScreenMenu
 
 void initTapDefaultActions(CRPropRef props);
 void getCommandForTapZone(int tapZone, CRPropRef props, bool longTap, int &command, int &param);
+/// The command of an action of the list of the tap zones ("PAGE_DOWN", "DICT"...); false and 0 when
+/// there is no such action.
+bool commandOfAction(const lString32 & actionId, int & command, int & param);
+/// The action of a command, NULL when no action of the list gives it.
+const char * actionOfCommand(int command, int param);
+
+// The items of the main menu chosen in the settings: the action of item N (from 1) in
+// PROP_MAIN_MENU_ITEM "N", "NONE" for an empty row. While no item is set the menu is the
+// [mainMenuItems] of the keymaps, as before; the settings start from it.
+#define PROP_MAIN_MENU_ITEM "cr3.pocketbook.mainmenu.item."
+#define MAIN_MENU_ITEM_COUNT 12
+/// True when the items of the main menu are set in the settings.
+bool mainMenuItemsSet(CRPropRef props);
+/// The settings to apply: props themselves when their items of the main menu differ from those of
+/// the keymaps or there are none, else a copy without the items. The settings menu fills its rows
+/// with the items of the keymaps; kept as they are, they would end the reading of [mainMenuItems]
+/// (an item added there by hand that is no action of the list would be gone) after any visit to
+/// the settings.
+CRPropRef mainMenuItemsChanged(CRGUIWindowManager * wm, CRPropRef props);
 
 #endif //CR3_SETTINGS_H_INCLUDED

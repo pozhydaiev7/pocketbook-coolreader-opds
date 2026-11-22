@@ -46,10 +46,18 @@ enum PbPageWindowCommands {
     PB_PAGEVIEW_CMD_EXIT,
     PB_PAGEVIEW_CMD_AS_BOOK,      // a PDF with text: read as a book (pb_pdfbook.h)
     PB_PAGEVIEW_CMD_INFO,         // what the file tells of itself
+    // the list of the bookmarks (pb_pageview.cpp, PbPageMarksMenu): param is the place in the list
+    PB_PAGEVIEW_CMD_MARK_GO,      // to the page of the bookmark
+    PB_PAGEVIEW_CMD_MARK_SAVE,    // the page shown into the place (an empty place: a new bookmark)
+    PB_PAGEVIEW_CMD_MARK_DELETE,
     PB_PAGEVIEW_CMD_SCALE = 68100,  // + PbPageScale
     PB_PAGEVIEW_CMD_PAGE = 68200,   // + index in the list of bookmarks, up to 68999
     PB_PAGEVIEW_CMD_LAST = 68999
 };
+
+/// The dictionary of the reader over the pages (cr3pocketbook.cpp): the word at the point of the
+/// screen (atPoint), or the first word of the screen; on a page without text the word is typed.
+void pbShowDictOverPages(bool atPoint, int x, int y);
 
 /// What the reader chose for a file that can be read both ways (a PDF with text).
 enum PbPageMode {
@@ -82,6 +90,9 @@ public:
     /// The page shown, from 0, and the number of pages: for the book state of the firmware.
     int page() const { return _page; }
     int pageCount() { return _doc->pageCount(); }
+    /// The file of the reader (the archive, when the document lies in one): the file the position
+    /// sync knows it by.
+    const lString32 & path() const { return _path; }
     /// Writes the page, the frames and the bookmarks of the file (the program goes to the background or ends).
     void keep() { saveState(); }
     // What the touch menu of the reader and the status line show of the file, as of a book:
@@ -94,6 +105,29 @@ public:
     /// "12 / 161", or "12 / 3 / 161" with the pages left to the end of the chapter (as
     /// LVDocView::getPageHeaderPages writes it for a book).
     lString32 progressText(int page, bool tillChapterEnd);
+    // For the main menu of the reader, which is the same over the pages as over a book:
+    /// True when the page shown has text: the file can be read as a book from it.
+    bool canBeBook() { return _doc->hasText(_page); }
+    /// True for a command this window leaves out: it belongs to a book and its text, and has
+    /// nothing to act on here (the main menu does not offer it over the pages).
+    static bool leavesOut(int command);
+
+    // The dictionary over the pages (cr3pocketbook.cpp, CRPbDictionaryDialog): the words of the
+    // text of the pages on the screen (a PDF with text, a DjVu with a text layer), each with the
+    // rectangle it takes on the screen. A word is picked by its place: there is no recognition.
+    /// Chooses the word under the point of the screen (nearest: the word nearest to it); false when
+    /// the screen has no words, or (nearest false) none is under the point.
+    bool dictWordAt(int x, int y, bool nearest = true);
+    /// Chooses the first word of the screen, or the last one; false when it has none.
+    bool dictWordEdge(bool last);
+    /// Moves the choice: dx -1 / 1 the word before / after, dy -1 / 1 the line above / below.
+    bool dictWordMove(int dx, int dy);
+    /// The word chosen: its text and its rectangle on the screen.
+    bool dictWord(lString32 & text, lvRect & rc);
+    /// The screen of the pages, the word chosen shown inverted, into the canvas (clipped by the caller).
+    void dictDrawPage(LVDrawBuf * canvas);
+    /// A page turn under the dictionary: the next or the previous screen.
+    void dictTurn(int direction) { turn(direction); }
 
     virtual ~PbPageWindow();
     virtual bool onCommand(int command, int params = 0);
@@ -143,6 +177,18 @@ private:
     lvRect _pageRc;         // the part of the window the page is drawn in: without the status line
     std::vector<PbPageTocEntry> _toc;   // the contents of the file, read once
     bool _tocRead;
+    int _bookAngle;         // the orientation to turn back to when the window goes; -1: none
+    // the words of the screen for the dictionary, made for the place and the stamp below
+    struct ScreenWord {
+        lString32 text;
+        lvRect rc;
+    };
+    std::vector<ScreenWord> _words;
+    int _wordsPage, _wordsFrame;
+    unsigned _wordsStamp;
+    int _word;              // the word chosen, -1 for none
+    /// The words of the screen as it is now (made again when the place has changed).
+    void collectWords();
 
     PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lString32 & path, const lString8 & stateFile);
     void loadState();
@@ -166,11 +212,17 @@ private:
     void armPause();
     void showMenu();
     void showScaleList();
-    void showMarks();
+    /// the list of the bookmarks, as that of a book (goMode: a tap goes to the page, else sets)
+    void showMarks(bool goMode);
+    /// PB_PAGEVIEW_CMD_MARK_GO, _SAVE, _DELETE with the place in the list
+    void markCommand(int command, int index);
     void showContents();
     void showInfo();
     void toggleMark();
     const std::vector<PbPageTocEntry> & toc();
+    /// The screen is turned to the orientation of the pages (PROP_POCKETBOOK_PAGES_ORIENTATION),
+    /// or back to that of the books when the pages have none of their own.
+    void followOrientation();
     void setupHead();       // the settings of the status line are read; the page part is laid out
     void layout();
     void drawHead(LVDrawBuf * canvas);

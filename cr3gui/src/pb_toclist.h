@@ -9,6 +9,7 @@
 #include <crgui.h>
 #include <inkview.h>
 #include <vector>
+#include "pb_toctree.h"
 
 // Command ids of the list screens: below the OPDS commands (70000), above the PocketBook ones.
 // A chapter row posts PB_TOC_SAFE_CMD_RANGE + page, as the new touch contents does.
@@ -18,6 +19,7 @@ enum PbTocListCommands {
     PB_TOC_LIST_CMD_PREV,
     PB_TOC_LIST_CMD_NEXT,
     PB_TOC_LIST_CMD_FILLER, // empty row: the same screen again
+    PB_TOC_LIST_CMD_TOGGLE, // the mark of a branch: opens or closes the entry given as the parameter
     PB_TOC_LIST_CMD_LAST = 65009
 };
 
@@ -40,6 +42,8 @@ private:
         lString32 text;
     };
     std::vector<Entry> _entries;
+    PbTocTree _tree;
+    std::vector<int> _rows;  // the entries seen
     int _current;  // entry of the current page
     int _screen;
     int _perScreen;

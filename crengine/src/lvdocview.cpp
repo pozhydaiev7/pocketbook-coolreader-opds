@@ -5701,6 +5701,12 @@ bool LVDocView::getBookmarkPosText(ldomXPointer bm, lString32 & titleText,
 		return false;
 	ldomNode * el = bm.getNode();
 	CRLog::trace("getBookmarkPosText() : getting position text");
+	// A place in the description of a FB2 (the page of its cover or title) has no text of the
+	// book: the genre, the authors and the title came here run together ("nonfictionJan
+	// KlabbersInternational Law", the bookmark list of a book made of a PDF).
+	for (ldomNode * p = el; p != NULL; p = p->getParentNode())
+		if (p->getNodeId() == el_description)
+			return true;
 	if (el->isText()) {
         lString32 txt = bm.getNode()->getText();
 		int startPos = bm.getOffset();

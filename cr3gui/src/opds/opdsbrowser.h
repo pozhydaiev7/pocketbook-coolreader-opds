@@ -13,7 +13,8 @@
 #define PROP_OPDS_URL          "cr3.pocketbook.opds.url"
 #define PROP_OPDS_DOWNLOAD_DIR "cr3.pocketbook.opds.dir"
 // Catalogs are kept by their number in the list, not by the address:
-// cr3.pocketbook.opds.catalog.<N>.name / .url. N = 0 is Flibusta, always the first catalog: it
+// cr3.pocketbook.opds.catalog.<N>.name / .url, and .user / .password of a catalog that asks for a
+// login (kept as they are typed, as every setting of cr3.ini). N = 0 is Flibusta, always the first catalog: it
 // cannot be renamed or deleted, its address can be changed (a mirror). N = 1, 2, ... are the
 // catalogs added by the user; an empty address ends the list.
 #define PROP_OPDS_CATALOG      "cr3.pocketbook.opds.catalog."
@@ -44,9 +45,7 @@ enum OpdsCommands {
     OPDS_CMD_CATALOGS,      // list of the catalogs: a tap opens one
     OPDS_CMD_CATALOGS_EDIT, // list of the catalogs: a tap opens the catalog card
     OPDS_CMD_CATALOGS_SHOW, // the list again, in the mode it was shown last
-    OPDS_CMD_CATALOG_ADD,   // asks for the address of a new catalog
-    OPDS_CMD_CATALOG_ADD_URL_APPLY,
-    OPDS_CMD_CATALOG_ADD_NAME_APPLY,
+    OPDS_CMD_CATALOG_ADD,   // a new catalog: its card
     OPDS_CMD_CATALOG_CARD,  // card of the catalog being edited
     OPDS_CMD_CATALOG_NAME,
     OPDS_CMD_CATALOG_NAME_APPLY,
@@ -55,6 +54,11 @@ enum OpdsCommands {
     OPDS_CMD_CATALOG_DEFAULT, // makes the catalog the default one, or no longer the default
     OPDS_CMD_CATALOG_DELETE,  // asks to confirm
     OPDS_CMD_CATALOG_DELETE_APPLY,
+    OPDS_CMD_CATALOG_USER,    // the login of the catalog
+    OPDS_CMD_CATALOG_USER_APPLY,
+    OPDS_CMD_CATALOG_PASSWORD,
+    OPDS_CMD_CATALOG_PASSWORD_APPLY,
+    OPDS_CMD_CATALOG_FORGET,  // the login and the password are cleared
     OPDS_CMD_ENTRY   = 71000, // + entry index
     OPDS_CMD_FORMAT  = 76000, // + format index of the current book
     OPDS_CMD_RELATED = 77000, // + related link index of the current book
@@ -67,6 +71,8 @@ enum OpdsCommands {
 struct OpdsCatalog {
     lString32 name;
     lString32 url;
+    lString32 user;      // empty: the catalog is open to all
+    lString32 password;
 };
 
 class OpdsBrowser
@@ -93,7 +99,7 @@ public:
 
 private:
     OpdsBrowser() : _bookIndex(-1), _rows(0), _catalog(-1), _editCatalog(-1), _catalogsEdit(false), _catalogRows(0),
-        _fromSettings(false)
+        _fromSettings(false), _refused(false)
     {
         keyBuffer[0] = 0;
     }
@@ -106,16 +112,23 @@ private:
     int _catalog;                     // index of the open catalog, -1 when none
     int _editCatalog;                 // index of the catalog of the card
     bool _catalogsEdit;               // the list of catalogs was shown to edit them
-    lString32 _newUrl;                // address of the catalog being added
     int _catalogRows;                 // rows of the screen of the catalog list
     bool _fromSettings;               // the list of catalogs was opened from the settings menu
+    bool _refused;                    // the last request was refused for the login (loginRefused)
 
     std::string rootUrl();
+    // the login of the open catalog goes to the network layer (web::setCredentials)
+    void useCredentials();
+    // the server said 401 or 403 to the last request: a message that tells where the login of
+    // the open catalog is set; true when it did
+    bool loginRefused();
     // reads the catalogs from the settings: Flibusta, then the catalogs of the user; the first
     // time, a catalog address of the earlier versions (cr3.pocketbook.opds.url) that is not a
     // Flibusta address becomes the second catalog and the default one
     void loadCatalogs();
     void saveCatalogs();
+    // the catalogs added and left with no address are dropped (before a list of the catalogs is shown)
+    void dropCatalogsWithoutAddress();
     int defaultCatalog();             // index, -1 when none
     void setDefaultCatalog(int index);
     // fromList: when the catalog does not load, the list of catalogs is shown again

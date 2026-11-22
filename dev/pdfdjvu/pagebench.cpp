@@ -433,8 +433,73 @@ static int ribbonMode(int argc, char ** argv)
     return 0;
 }
 
+// pagebench words <file> <page> <width> <height> <angle> <out prefix>: the words of the text of a
+// page (PbPageDoc::words) printed, and their boxes drawn over the frame of the whole page turned by
+// the angle (PbPageDoc::toBuffer): a box that does not lie on its word shows a wrong place.
+static int wordsMode(int argc, char ** argv)
+{
+    if (argc < 8) {
+        fprintf(stderr, "usage: pagebench words <file> <page> <width> <height> <angle> <out prefix>\n");
+        return 2;
+    }
+    std::string error;
+    PbPageDoc * doc = PbPageDoc::open(argv[2], &error);
+    if (doc == NULL) {
+        fprintf(stderr, "%s: %s\n", argv[2], error.c_str());
+        return 1;
+    }
+    const int page = atoi(argv[3]), w = atoi(argv[4]), h = atoi(argv[5]);
+    const float angle = (float)atof(argv[6]);
+    std::vector<PbPageWord> words;
+    double t0 = now_ms();
+    doc->words(page, words);
+    printf("page %d: %d words in %.1f ms\n", page + 1, (int)words.size(), now_ms() - t0);
+    for (size_t i = 0; i < words.size() && i < 12; i++)
+        printf("  %.0f,%.0f - %.0f,%.0f  %s\n", words[i].box.x0, words[i].box.y0, words[i].box.x1, words[i].box.y1,
+               words[i].text.c_str());
+    std::vector<PbPageView> frames;
+    doc->framesOf(page, PB_PAGE_SCALE_PAGE, PB_PAGE_LEAF_PAGE, angle, PbPageOwnFrame(), w, h, frames);
+    std::vector<unsigned char> buf((size_t)w * h);
+    doc->render(page, frames[0], &buf[0], w, h, w);
+    for (size_t i = 0; i < words.size(); i++) {
+        // the four corners of the box, the box of them on the buffer
+        const PbPageBox & b = words[i].box;
+        float xs[4], ys[4];
+        PbPageDoc::toBuffer(frames[0], w, h, b.x0, b.y0, xs[0], ys[0]);
+        PbPageDoc::toBuffer(frames[0], w, h, b.x1, b.y0, xs[1], ys[1]);
+        PbPageDoc::toBuffer(frames[0], w, h, b.x0, b.y1, xs[2], ys[2]);
+        PbPageDoc::toBuffer(frames[0], w, h, b.x1, b.y1, xs[3], ys[3]);
+        float x0 = xs[0], x1 = xs[0], y0 = ys[0], y1 = ys[0];
+        for (int k = 1; k < 4; k++) {
+            x0 = xs[k] < x0 ? xs[k] : x0; x1 = xs[k] > x1 ? xs[k] : x1;
+            y0 = ys[k] < y0 ? ys[k] : y0; y1 = ys[k] > y1 ? ys[k] : y1;
+        }
+        for (int x = (int)x0; x <= (int)x1; x++)
+            for (int y = (int)y0; y <= (int)y1; y += (y + 1 < (int)y1 && y > (int)y0 ? (int)(y1 - y0) : 1))
+                if (x >= 0 && x < w && y >= 0 && y < h)
+                    buf[(size_t)y * w + x] = 0x80;
+        for (int y = (int)y0; y <= (int)y1; y++) {
+            if (y < 0 || y >= h)
+                continue;
+            if ((int)x0 >= 0 && (int)x0 < w) buf[(size_t)y * w + (int)x0] = 0x80;
+            if ((int)x1 >= 0 && (int)x1 < w) buf[(size_t)y * w + (int)x1] = 0x80;
+        }
+        // the middle back to the page: the inverse map
+        float px, py;
+        PbPageDoc::fromBuffer(frames[0], w, h, (x0 + x1) * 0.5f, (y0 + y1) * 0.5f, px, py);
+        if (i < 3)
+            printf("  middle of word %d back on the page: %.1f,%.1f (box middle %.1f,%.1f)\n", (int)i + 1, px, py,
+                   (b.x0 + b.x1) * 0.5f, (b.y0 + b.y1) * 0.5f);
+    }
+    save(argv[7], "words", buf, w, h);
+    delete doc;
+    return 0;
+}
+
 int main(int argc, char ** argv)
 {
+    if (argc > 1 && strcmp(argv[1], "words") == 0)
+        return wordsMode(argc, argv);
     if (argc > 1 && strcmp(argv[1], "ribbon") == 0)
         return ribbonMode(argc, argv);
     if (argc > 1 && strcmp(argv[1], "level") == 0)

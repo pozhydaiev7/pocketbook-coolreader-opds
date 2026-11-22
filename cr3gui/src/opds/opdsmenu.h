@@ -27,6 +27,12 @@ extern const lChar32 ELLIPSIS;
 // Returns the width taken together with the gap before the text.
 int drawRowMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color);
 
+// Mark of a branch of a tree (the contents): a hollow triangle pointing right when the branch is
+// closed and down when it is open, drawn in the middle of the row at x. size is the height of the
+// font of the row. Returns the width taken together with the gap before the text, the same for a
+// row with no branch (open < 0: nothing drawn), so the titles of a level stand in one line.
+int drawBranchMark(LVDrawBuf & buf, int x, int top, int height, int size, lUInt32 color, int open);
+
 lString32 u16(const std::string & s);
 
 // Cuts text to fit maxWidth, ending with an ellipsis.
@@ -88,6 +94,14 @@ public:
     lString32 aside;
     // Regular row: the triangle mark of the current row before the title
     bool mark;
+    // Regular row of a tree: -1 none, 0 a row with no branch under it (room kept), 1 a closed
+    // branch, 2 an open one. A tap on the mark and on the indent before it closes the list and
+    // posts toggleCommand with toggleParam instead of the id of the row.
+    int branch;
+    int toggleCommand;
+    int toggleParam;
+    // where the mark was drawn, in the coordinates of the screen (set by Draw)
+    lvRect toggleRect;
     // Regular row drawn as a button: a dark bar with the title in the middle, light on dark.
     // The main action of a screen, so that it does not look like a line of its text.
     bool button;
@@ -122,6 +136,9 @@ class OpdsMenu : public CRFullScreenMenu
     bool _plain;   // rows without lines between them, see setPlainRows()
     lvPoint _touchStart;
     bool _touchStarted;
+    // the rows of this class among the items (a tap on the mark of a branch is looked for in them)
+    std::vector<OpdsItem *> _rowItems;
+    friend class OpdsItem;
 protected:
     // the page counter of the title shows the screens of the list
     virtual void drawTitleBar();

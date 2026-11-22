@@ -11,6 +11,7 @@
 //
 
 #include "settings.h"
+#include <vector>
 #include <crgui.h>
 #include "viewdlg.h"
 #include "mainwnd.h"
@@ -27,6 +28,7 @@
 #include <inkplatform.h>
 #include "ota_update.h"
 #include "pb_keyboard.h"
+#include "pb_kosync.h"
 #endif
 
 #include <cri18n.h>
@@ -70,11 +72,23 @@
 #define CR3_ACTION_PB_OTA_UPDATE "PB_OTA_UPDATE"
 #define CR3_ACTION_PB_OTA_UPDATE_DEV "PB_OTA_UPDATE_DEV"
 #define CR3_ACTION_PB_CLEAR_CACHE "PB_CLEAR_CACHE"
+// the position sync of KOReader: the place of the open book sent, taken (pb_kosync.h)
+#define CR3_ACTION_PB_KOSYNC_PUSH "PB_KOSYNC_PUSH"
+#define CR3_ACTION_PB_KOSYNC_PULL "PB_KOSYNC_PULL"
 #ifdef POCKETBOOK_PRO_FW5
 #define CR3_ACTION_PB_OPEN_SYSTEM_PANEL "PB_OPEN_SYSTEM_PANEL"
 #define CR3_ACTION_PB_FRONT_LIGHT_TOGGLE "PB_FRONT_LIGHT_TOGGLE"
 #endif
 #endif
+// the items of the main menu of the keymaps that were no action of the list: with them every
+// item of the main menu can be chosen in its settings (and put on a tap zone)
+#define CR3_ACTION_RECENT_BOOKS "RECENT_BOOKS"
+#define CR3_ACTION_CITES_LIST "CITES_LIST"
+#define CR3_ACTION_HELP "HELP"
+#define CR3_ACTION_HELP_KEYS "HELP_KEYS"
+#define CR3_ACTION_SAVE_HISTORY "SAVE_HISTORY"
+#define CR3_ACTION_SAVE_TO_CACHE "SAVE_TO_CACHE"
+#define CR3_ACTION_PB_PDF_PAGES "PB_PDF_PAGES"
 
 extern lString32 pbSkinFileName;
 extern bool useDeveloperFeatures;
@@ -106,7 +120,18 @@ static const action_def_t availableActions[] = {
     { CR3_ACTION_GO_LAST, DCMD_END, 0 },
     { CR3_ACTION_CITES, MCMD_CITE, 0 },
     { CR3_ACTION_FONT_SIZE, MCMD_SETTINGS_FONTSIZE, 0 },
+    { CR3_ACTION_RECENT_BOOKS, MCMD_RECENT_BOOK_LIST, 0 },
+    { CR3_ACTION_HELP, MCMD_HELP, 0 },
+    { CR3_ACTION_HELP_KEYS, MCMD_HELP_KEYS, 0 },
+    { CR3_ACTION_SAVE_HISTORY, DCMD_SAVE_HISTORY, 0 },
+    { CR3_ACTION_SAVE_TO_CACHE, DCMD_SAVE_TO_CACHE, 0 },
 #ifdef CR_POCKETBOOK
+    { CR3_ACTION_CITES_LIST, MCMD_CITES_LIST, 0 },
+#ifdef CR3_PAGEDOC
+    // a PDF or a DjVu: from the book to its pages and back (a tester: the long press of "Menu"
+    // was the only way, and the PB700 Era has no such key)
+    { CR3_ACTION_PB_PDF_PAGES, PB_CMD_PDF_PAGES, 0 },
+#endif
     { CR3_ACTION_QUICK_MENU, PB_QUICK_MENU, 0 },
     { CR3_ACTION_PB_MAIN_MENU, PB_CMD_MAIN_MENU, 0 },
     { CR3_ACTION_PB_CONTENTS, PB_CMD_CONTENTS, 0 },
@@ -124,6 +149,8 @@ static const action_def_t availableActions[] = {
     #endif
     { CR3_ACTION_PB_LOCK_DEVICE, PB_CMD_LOCK_DEVICE, 0 },
     { CR3_ACTION_PB_OTA_UPDATE, PB_CMD_OTA_UPDATE, 0 },
+    { CR3_ACTION_PB_KOSYNC_PUSH, PB_CMD_KOSYNC_PUSH, 0 },
+    { CR3_ACTION_PB_KOSYNC_PULL, PB_CMD_KOSYNC_PULL, 0 },
     // { CR3_ACTION_PB_OTA_UPDATE_DEV, PB_CMD_OTA_UPDATE_DEV, 0 },
     #ifdef POCKETBOOK_PRO_FW5
     { CR3_ACTION_PB_OPEN_SYSTEM_PANEL, PB_CMD_OPEN_SYSTEM_PANEL, 0 },
@@ -562,6 +589,69 @@ void initTapDefaultActions(CRPropRef props)
         property.appendDecimal(i + 1);
         props->setStringDef(property.c_str(), default_actions_long[i]);
     }
+}
+
+bool commandOfAction(const lString32 & actionId, int & command, int & param)
+{
+    command = param = 0;
+    for ( int i=0; availableActions[i].action_id; i++ ) {
+        if ( actionId == availableActions[i].action_id ) {
+            command = availableActions[i].commandId;
+            param = availableActions[i].commandParam;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool mainMenuItemsSet(CRPropRef props)
+{
+    for ( int n = 1; n <= MAIN_MENU_ITEM_COUNT; n++ )
+        if ( props->hasProperty( lString8(PROP_MAIN_MENU_ITEM).appendDecimal(n).c_str() ) )
+            return true;
+    return false;
+}
+
+const char * actionOfCommand(int command, int param)
+{
+    for ( int i=1; availableActions[i].action_id; i++ )
+        if ( availableActions[i].commandId == command && availableActions[i].commandParam == param )
+            return availableActions[i].action_id;
+    return NULL;
+}
+
+// The items of the main menu as the keymaps give them ([mainMenuItems]), by the names of their
+// actions: MAIN_MENU_ITEM_COUNT of them, "NONE" after the last one. An item of the keymaps that is
+// no action of the list has no name and is not among them.
+static void mainMenuItemsOfKeymap(CRGUIWindowManager * wm, std::vector<lString32> & items)
+{
+    items.clear();
+    CRGUIAcceleratorTableRef keymap = wm->getAccTables().get(lString32("mainMenuItems"));
+    for ( int i=0; !keymap.isNull() && i < keymap->length() && (int)items.size() < MAIN_MENU_ITEM_COUNT; i++ ) {
+        const char * action = actionOfCommand( keymap->get(i)->commandId, keymap->get(i)->commandParam );
+        if ( action )
+            items.push_back( lString32(action) );
+    }
+    while ( (int)items.size() < MAIN_MENU_ITEM_COUNT )
+        items.push_back( lString32(CR3_ACTION_NONE) );
+}
+
+CRPropRef mainMenuItemsChanged(CRGUIWindowManager * wm, CRPropRef props)
+{
+    if ( !mainMenuItemsSet(props) )
+        return props;
+    std::vector<lString32> items;
+    mainMenuItemsOfKeymap( wm, items );
+    for ( int n = 1; n <= MAIN_MENU_ITEM_COUNT; n++ )
+        if ( props->getStringDef( lString8(PROP_MAIN_MENU_ITEM).appendDecimal(n).c_str(), "" ) != items[n - 1] )
+            return props;
+    // as the keymaps have them: the settings keep no item, and the menu is that of the keymaps
+    const size_t prefix = strlen(PROP_MAIN_MENU_ITEM);
+    CRPropRef kept = LVCreatePropsContainer();
+    for ( int i = 0; i < props->getCount(); i++ )
+        if ( strncmp( props->getName(i), PROP_MAIN_MENU_ITEM, prefix ) != 0 )
+            kept->setString( props->getName(i), props->getValue(i) );
+    return kept;
 }
 
 void getCommandForTapZone(int tapZone, CRPropRef props, bool longTap, int &command, int &param)
@@ -1531,6 +1621,15 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("On"), "1"},
         {NULL, NULL}
     };
+    // PROP_POCKETBOOK_PAGES_ORIENTATION: the angles named as in "Page orientation"
+    item_def_t page_orientation_options[] = {
+        {_("As the books"), "-1"},
+        {_("0` (Portrait)"), "0"},
+        {_("90 `"), "1"},
+        {_("180 `"), "2"},
+        {_("270 `"), "3"},
+        {NULL, NULL}
+    };
     // PROP_POCKETBOOK_PAGES_TEXT
     item_def_t pdf_text_options[] = {
         {_("As the original"), "0"},
@@ -1978,6 +2077,13 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                on_off_option);
     }
 #endif
+#ifdef CR_POCKETBOOK
+    // both lists of the contents, the touch one and the plain one: the first level and the
+    // branch of the page read, or every level (pb_toctree.h)
+    createSettingsMenuItem(displaySettingsMenu, mm_tocCollapsed, _("Contents: levels closed"),
+                           "cr3_option_toc_page_numbers", valueFont, PROP_POCKETBOOK_TOC_COLLAPSED,
+                           on_off_option);
+#endif
     CRSkinList &skins = wm->getSkinList();
     if (skins.length() > 1) {
         CRSkinSelectMenu * skinsMenu = new CRSkinSelectMenu(_wm, displaySettingsMenu, mm_Skin,
@@ -2053,6 +2159,48 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
                                "cr3_option_ctrl_pinch_zoom", valueFont, PROP_CTRL_PINCH_ZOOM, on_off_option);
         #endif
     }
+#ifdef CR_POCKETBOOK
+    // The items of the main menu, each chosen from the actions the tap zones are chosen from (a
+    // tester: they could be changed only in keymaps.ini, by hand). The rows start as the menu is:
+    // from [mainMenuItems] of the keymaps; "(No action)" leaves a row out. Rows left as they
+    // started are not kept when the settings are applied (mainMenuItemsChanged): the menu stays
+    // that of the keymaps until an item is changed here.
+    if ( !mainMenuItemsSet(props) ) {
+        std::vector<lString32> items;
+        mainMenuItemsOfKeymap( _wm, items );
+        for ( int n = 1; n <= MAIN_MENU_ITEM_COUNT; n++ )
+            props->setString( lString8(PROP_MAIN_MENU_ITEM).appendDecimal(n).c_str(), items[n - 1] );
+    }
+    std::vector<item_def_t> actionChoices;
+    for ( int i=0; availableActions[i].action_id; i++ ) {
+        if( strcmp(availableActions[i].action_id, CR3_ACTION_PB_FRONT_LIGHT) == 0 && !isFrontLightSupported() )
+            continue;
+        #ifdef POCKETBOOK_PRO
+        if( strcmp(availableActions[i].action_id, CR3_ACTION_PB_TASK_MANAGER) == 0 && !isTaskManagerSupported() )
+            continue;
+        #endif
+        item_def_t choice;
+        choice.translate_default = i == 0 ? _("(No action)")
+                                          : getCommandName( availableActions[i].commandId, availableActions[i].commandParam );
+        choice.value = availableActions[i].action_id;
+        actionChoices.push_back( choice );
+    }
+    item_def_t end = { NULL, NULL };
+    actionChoices.push_back( end );
+    CRMenu * mainMenuSettings = new CRSettingsGroupMenu( _wm, controlSettingsMenu, mm_mainMenuItems, _("Main menu"),
+                                                        "cr3_option_controls", valueFont, CRPropRef() );
+    mainMenuSettings->setSkinName( lString32("#settings") );
+    mainMenuSettings->setAccelerators( _menuAccelerators );
+    for ( int n = 1; n <= MAIN_MENU_ITEM_COUNT; n++ ) {
+        lString8 label( _("Item") );
+        label << " ";
+        label.appendDecimal(n);
+        createSettingsMenuItem( mainMenuSettings, mm_mainMenuItems, label.c_str(), "cr3_option_controls", valueFont,
+                                lString8(PROP_MAIN_MENU_ITEM).appendDecimal(n).c_str(), &actionChoices[0] );
+    }
+    mainMenuSettings->reconfigure( 0 );
+    controlSettingsMenu->addItem( mainMenuSettings );
+#endif
 #ifdef CR3_PAGEDOC
     // One group for the picture mode of PDF and DjVu files, with one set of values (the owner,
     // after a tester: "the settings are the same, as the way these files are read is"; they were
@@ -2078,6 +2226,11 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         createSettingsMenuItem(pageMenu, mm_pagesPageNumber, _("Page number in the corner"),
                                "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_PAGE_NUMBER,
                                page_number_options);
+        // the screen turned for the pages of these files only (a tester reads them in landscape,
+        // the books upright)
+        createSettingsMenuItem(pageMenu, mm_pagesOrientation, _("Orientation of the pages"),
+                               "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_ORIENTATION,
+                               page_orientation_options);
         pageMenu->reconfigure( 0 );
         mainMenu->addItem( pageMenu );
     }
@@ -2123,6 +2276,21 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
     // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
     mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
+
+    // POSITION SYNC of KOReader: the switch, and the screen of the server and of the login (pb_kosync.h)
+    #ifdef POCKETBOOK_PRO
+    if( isNetworkSupported() ) {
+        CRMenu * syncMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Reading position sync"),
+                                                     "cr3_option_controls", valueFont, CRPropRef() );
+        syncMenu->setAccelerators( _menuAccelerators );
+        syncMenu->setSkinName(lString32("#settings"));
+        createSettingsMenuItem( syncMenu, mm_kosyncEnabled, _("Reading position sync"), "cr3_option_controls", valueFont,
+                                PROP_KOSYNC_ENABLED, on_off_option );
+        syncMenu->addItem( new CRSettingsScreenItem( syncMenu, PB_CMD_KOSYNC, _("Server and login...") ) );
+        syncMenu->reconfigure( 0 );
+        mainMenu->addItem( syncMenu );
+    }
+    #endif
 
 
     // READING STATISTICS

@@ -223,10 +223,11 @@ bool onlyNumber(const std::string & key)
     return key.size() <= 12;
 }
 
-/// A page number written with Roman numerals, as the pages of a preface are: "xvi", "XXIII",
-/// alone or with the marks a page number has around it. Up to 399 (no D and no M): a longer
-/// front matter is not met, and words made of these letters ("dim", "mix") are.
-bool romanNumber(const std::string & s)
+/// The value of a page number written with Roman numerals, as the pages of a preface are: "xvi",
+/// "XXIII", alone or with the marks a page number has around it; 0 when the text is not one. Up
+/// to 399 (no D and no M): a longer front matter is not met, and words made of these letters
+/// ("dim", "mix") are.
+int romanValue(const std::string & s)
 {
     std::string letters;
     for (size_t i = 0; i < s.size(); i++) {
@@ -239,7 +240,7 @@ bool romanNumber(const std::string & s)
             return false;
     }
     if (letters.empty() || letters.size() > 9)
-        return false;
+        return 0;
     // hundreds, tens, units, each written the one way a number is written
     static const char * const parts[3][10] = {
         { "", "c", "cc", "ccc", "", "", "", "", "", "" },
@@ -247,16 +248,41 @@ bool romanNumber(const std::string & s)
         { "", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix" }
     };
     size_t at = 0;
-    for (int rank = 0; rank < 3; rank++) {
+    int value = 0;
+    for (int rank = 0, unit = 100; rank < 3; rank++, unit /= 10) {
         size_t best = 0;
+        int digit = 0;
         for (int d = 1; d < 10; d++) {
             const size_t n = strlen(parts[rank][d]);
-            if (n > best && letters.compare(at, n, parts[rank][d]) == 0)
+            if (n > best && letters.compare(at, n, parts[rank][d]) == 0) {
                 best = n;
+                digit = d;
+            }
         }
         at += best;
+        value += digit * unit;
     }
-    return at == letters.size();
+    return at == letters.size() ? value : 0;
+}
+
+/// The value of the Roman number a line begins or ends with, words beside it ("xiv Preface to the
+/// Fourth Edition", "Contents vii", and as well "the reign of Louis XIV"); 0 when it has none, or
+/// is the number alone.
+int romanAtEdge(const std::string & s)
+{
+    size_t from = 0, to = s.size();
+    while (from < to && (s[from] == ' ' || s[from] == '\t'))
+        from++;
+    while (to > from && (s[to - 1] == ' ' || s[to - 1] == '\t'))
+        to--;
+    const size_t firstEnd = s.find_first_of(" \t", from);
+    if (firstEnd == std::string::npos || firstEnd >= to)
+        return 0;
+    const int first = romanValue(s.substr(from, firstEnd - from));
+    if (first)
+        return first;
+    const size_t lastStart = s.find_last_of(" \t", to - 1);
+    return romanValue(s.substr(lastStart + 1, to - lastStart - 1));
 }
 
 // ------------------------------------------------------------------------------------ items
@@ -282,6 +308,7 @@ struct Item {
     float lastX1;       // the right end of its last line
     float rowX1;        // ... and of its first one
     bool verse;         // a line of verse: the lines of its block are kept
+    bool entry;         // an entry of a contents page, ending with its page number: joined to nothing
     // of a paragraph of one line: the pieces of the line that stand apart (the cells of a row
     // of a table without rules); a tab parts them in the text
     std::vector<float> cellX0, cellX1;
@@ -293,7 +320,7 @@ struct Item {
     std::vector<std::vector<Cell> > rows;
     Item() : kind(K_PARA), page(0), level(0), size(0), x0(0), y0(0), x1(0), y1(0), chars(0), boldChars(0),
              monoChars(0), mathChars(0), weakMath(0), lines(0), firstX(0), restX(1e9f), lastX1(0), rowX1(0),
-             verse(false), tagged(false),
+             verse(false), entry(false), tagged(false),
              quote(false), drop(false), image(-1) { }
 };
 
@@ -815,7 +842,8 @@ public:
     /// set close to its text), or a line each when it is code.
     /// A row of a text block: a line with the pieces that stand to its right on it.
     struct TextRow {
-        fz_stext_line * first;
+        fz_stext_line * first, * lastLine;
+        bool numbered;              // ends as an entry of a contents page does, with a page number
         float x0, size;
         std::vector<float> starts;  // where its pieces begin: the first one, and each one set apart
         bool bold, endBold;         // of its first and of its last character
@@ -854,6 +882,7 @@ public:
     {
         fz_rect prev = fz_empty_rect;
         float lastRight = -1e9f;
+        std::vector<std::string> texts;
         for (fz_stext_line * line = block->u.t.first_line; line; line = line->next) {
             int count;
             const float size = lineSize(line, count);
@@ -863,8 +892,10 @@ public:
                 && fabsf((line->bbox.y0 + line->bbox.y1) - (prev.y0 + prev.y1)) < size * 0.6f;
             prev = line->bbox;
             if (!same) {
+                texts.push_back(std::string());
                 TextRow row;
-                row.first = line;
+                row.first = row.lastLine = line;
+                row.numbered = false;
                 row.x0 = line->bbox.x0;
                 row.size = size;
                 row.bold = row.endBold = row.spaced = false;
@@ -876,7 +907,10 @@ public:
                 lastRight = -1e9f;
             }
             TextRow & row = rows.back();
+            row.lastLine = line;
+            texts.back() += ' ';
             for (fz_stext_char * ch = line->first_char; ch; ch = ch->next) {
+                appendUtf8(texts.back(), ch->c);
                 if (ch->c <= 32) {
                     row.spaced = row.spaced || row.last != 0;
                     continue;
@@ -898,6 +932,8 @@ public:
                 lastRight = right;
             }
         }
+        for (size_t r = 0; r < rows.size(); r++)
+            rows[r].numbered = endsWithPageNumber(texts[r]);
         begins.assign(rows.size(), false);
         if (rows.size() < 2)
             return;
@@ -908,14 +944,21 @@ public:
         for (size_t r = 0; r < rows.size(); r++)
             (rows[r].x0 > least + rows[r].size * 0.8f ? setIn : setOut)++;
         const bool hanging = rows[0].x0 <= least + rows[0].size * 0.8f && setOut >= 2 && setIn >= setOut;
-        // a block with a usual line of several words is a text, all of it: the pieces set apart
-        // in it are the words of a line spread wide (a narrow justified column)
-        bool text = false;
+        // a block with usual lines of several words is a text, all of it: the pieces set apart
+        // in it are the words of a line spread wide (a narrow justified column). One such line
+        // among the rows of a list of two columns is not enough: in the list of abbreviations of
+        // a textbook "UNCTAD United Nations Conference..." stood with a space too narrow, and the
+        // other 22 rows of its block came glued in one paragraph.
+        int usual = 0, pieced = 0;
         float edge = -1e9f;         // the right edge of the block
         for (size_t r = 0; r < rows.size(); r++) {
-            text = text || (rows[r].starts.size() == 1 && rows[r].spaced);
+            if (rows[r].starts.size() == 1 && rows[r].spaced)
+                usual++;
+            else if (rows[r].starts.size() >= 2)
+                pieced++;
             edge = std::max(edge, rows[r].x1);
         }
+        const bool text = usual > 0 && usual * 3 >= pieced;
         for (size_t r = 0; r < rows.size(); r++) {
             const bool cells = !text && ((r > 0 && sameColumns(rows[r - 1], rows[r]))
                                          || (r + 1 < rows.size() && sameColumns(rows[r], rows[r + 1])));
@@ -930,8 +973,16 @@ public:
                 begins[r] = true;
             if (rows[0].bold && rows[r].bold && !rows[r - 1].endBold && endsSentence(rows[r - 1].last))
                 begins[r] = true;
-            if (pageHanging && rows[r].x0 <= pageOut + rows[r].size * 0.8f && endsSentence(rows[r - 1].last)
-                    && !isLower(rows[r].firstC))
+            // On a page of such a list a row at the margin begins an entry when the row before
+            // ends a sentence, is short, or ends with a number: an entry of a table of cases or of
+            // an index ends with its page numbers, not with the end of a sentence (asked for that
+            // alone, the entries of a textbook of Cambridge came glued, a page of them in one
+            // paragraph). The library cuts its blocks at the rows set in, taking them for the
+            // first lines of paragraphs; mendParagraphs puts such a row back to the entry above.
+            if (pageHanging && rows[r].x0 <= pageOut + rows[r].size * 0.8f && !isLower(rows[r].firstC)
+                    && (endsSentence(rows[r - 1].last)
+                        || rows[r - 1].x1 + rows[r].firstWord + rows[r].size * 0.6f < edge
+                        || (rows[r - 1].last >= '0' && rows[r - 1].last <= '9')))
                 begins[r] = true;
             // the row before ends a sentence, and the first word of this one would have fitted
             // after it: the paragraph ended there (an entry of one line before the next entry)
@@ -1150,6 +1201,33 @@ public:
         return dots >= 4;
     }
 
+    /// True when the text of a row ends as a line of a contents page without dots does: words,
+    /// a space, then a page number in digits (up to four) or in Roman numerals.
+    static bool endsWithPageNumber(const std::string & text)
+    {
+        size_t to = text.size();
+        while (to > 0 && (text[to - 1] == ' ' || text[to - 1] == '\t'))
+            to--;
+        size_t from = to;
+        while (from > 0 && text[from - 1] != ' ' && text[from - 1] != '\t')
+            from--;
+        if (from == to || from == 0)
+            return false;
+        const std::string last = text.substr(from, to - from);
+        bool digits = last.size() <= 4;
+        for (size_t i = 0; i < last.size() && digits; i++)
+            digits = last[i] >= '0' && last[i] <= '9';
+        if (!digits && romanValue(last) == 0)
+            return false;
+        // a word before it
+        for (size_t i = 0; i < from; ) {
+            const int c = nextChar(text, i);
+            if (isLetter(c))
+                return true;
+        }
+        return false;
+    }
+
     void takeText(fz_stext_block * block, const Tag & tag)
     {
         // for the PC tool: the lines of the block as the library gives them
@@ -1202,13 +1280,29 @@ public:
         }
         // (the entries of a list that have a line each are not verse)
         verse = verse && verseLines >= 3 && !pageHanging;
-        // The rows of the block that begin a paragraph of their own though the library gives the
-        // block as one: the rows of a table without rules, the entries of a glossary.
+        // The rows of the block, and those that begin a paragraph of their own though the library
+        // gives the block as one: the rows of a table without rules, the entries of a glossary.
         std::vector<TextRow> rows;
         std::vector<bool> begins;
-        // (PB_PDFTEXT_NOROWS, for the PC tool: without it, to see what it changes in a book)
-        if (!code && !verse && tag.heading == 0 && !getenv("PB_PDFTEXT_NOROWS"))
+        if (!code && tag.heading == 0)
             findRows(block, rows, begins);
+        // (PB_PDFTEXT_NOROWS, for the PC tool: without that rule, to see what it changes in a book)
+        if (getenv("PB_PDFTEXT_NOROWS"))
+            begins.assign(rows.size(), false);
+        // Lines of a contents page without a row of dots: a title, then its page number after a
+        // space ("Introduction 3", "Preface to the Fourth Edition xiii"). Most rows of the block
+        // end so: each entry is a paragraph, ending at its number (a long title takes two lines).
+        // Taken for verse they were written as lines of a poem, which the style of the reader
+        // puts to the right edge when a line is the last one of its paragraph.
+        // (a page of a list with hanging lines, a table of cases or an index, ends its entries
+        // with page numbers too, but an entry there may take lines that end with a number: its
+        // entries go by the margin, findRows)
+        size_t numbered = 0;
+        for (size_t r = 0; r < rows.size(); r++)
+            numbered += rows[r].numbered ? 1 : 0;
+        const bool entries = !pageHanging && rows.size() >= 3 && numbered * 10 >= rows.size() * 6;
+        if (entries)
+            verse = false;
         size_t rowAt = 0;
         Item item;
         bool open = false, glue = false;
@@ -1229,7 +1323,7 @@ public:
             // (a line of a contents page, a title with a row of dots and a number, is a paragraph)
             if (open && !sameRow
                     && (code || verse || (tag.heading == 0 && fabsf(size - item.size) > item.size * 0.12f)
-                        || endsAsEntry(item.runs) || ownRow)) {
+                        || endsAsEntry(item.runs) || ownRow || item.entry)) {
                 finish(item);
                 open = false;
             }
@@ -1245,6 +1339,8 @@ public:
                     addChar(item.runs, item.runs.back().style & ~(unsigned)S_IMAGE, ' ');
             }
             glue = takeLine(line, item, sameRow);
+            if (entries && rows[rowAt].lastLine == line && rows[rowAt].numbered)
+                item.entry = true;
             if (line->bbox.x0 < item.x0) item.x0 = line->bbox.x0;
             if (line->bbox.y0 < item.y0) item.y0 = line->bbox.y0;
             if (line->bbox.x1 > item.x1) item.x1 = line->bbox.x1;
@@ -1545,13 +1641,22 @@ public:
                 if (s->standard == FZ_STRUCTURE_TABLE && takeTable(s->first_block, block->bbox))
                     continue;
                 Tag inner = tag;
-                if (s->standard >= FZ_STRUCTURE_H1 && s->standard <= FZ_STRUCTURE_H6) {
+                // The library guesses headings too: with FZ_STEXT_PARAGRAPH_BREAK it marks a line
+                // that is underlined, or set apart, as FZ_STRUCTURE_H, and such a mark has no tag
+                // name (raw is empty; a tag of the file has its name there). A guess is not the
+                // structure of the file, and was taken as one: in a textbook of Cambridge (reported
+                // by a tester) the page numbers xiii, xv, xix and the names of courts in its table of
+                // cases came as chapters, each from a page of its own, and a heading is out of reach
+                // of the rule of running titles. The block is read as one without a tag, and
+                // classify tells a heading by its size and weight, as in a file without structure.
+                const bool ofFile = s->raw[0] != 0;
+                if (s->standard >= FZ_STRUCTURE_H1 && s->standard <= FZ_STRUCTURE_H6 && ofFile) {
                     inner.heading = s->standard - FZ_STRUCTURE_H1 + 1;
                     inner.tagged = true;
-                } else if (s->standard == FZ_STRUCTURE_H || s->standard == FZ_STRUCTURE_TITLE) {
+                } else if ((s->standard == FZ_STRUCTURE_H || s->standard == FZ_STRUCTURE_TITLE) && ofFile) {
                     inner.heading = 1;
                     inner.tagged = true;
-                } else if (s->standard == FZ_STRUCTURE_NOTE) {
+                } else if (s->standard == FZ_STRUCTURE_NOTE && ofFile) {
                     inner.note = true;
                     inner.tagged = true;
                 } else if (s->standard == FZ_STRUCTURE_CODE) {
@@ -2028,21 +2133,71 @@ public:
                 seen[keys[i]]++;
             }
         }
-        // A number in Roman numerals is a page number when two pages or more have one: reported
-        // by a tester, the pages xvi, xx, xxiii of a preface came as headings of chapters, each
-        // with an empty page. One such line in a whole book may be the heading "II".
-        int romans = 0;
-        for (size_t i = 0; i < items.size(); i++)
-            if (!keys[i].empty() && romanNumber(keys[i].substr(2)))
-                romans++;
+        // A number in Roman numerals is a page number when it goes with the pages: the next page
+        // has the next number, so the number less the page is the same on all of them. Reported
+        // by a tester: the pages xvi, xx, xxiii of a preface came as headings of chapters, and
+        // the running titles of a front matter ("xiv Preface to the Fourth Edition") stayed in the
+        // text; such a title may stand on a page or two only and does not repeat thrice, and its
+        // number changes its letters, not its digits. Two lines that are such a number alone
+        // make page numbers, and three that begin or end with one. A count of such lines without
+        // the pages would take the headings "II" and "III" of chapters, and lines of the text
+        // that end with a name: "the reign of Louis XIV", "after World War II".
+        std::vector<int> roman(items.size(), 0);
+        std::vector<bool> beside(items.size(), false);     // the number has words beside it
+        std::map<int, int> inStep;                         // the number less the page -> lines
         for (size_t i = 0; i < items.size(); i++) {
             if (keys[i].empty())
                 continue;
             const std::string text = keys[i].substr(2);
-            if (seen[keys[i]] >= 3 || text.empty() || onlyNumber(text) || (romans >= 2 && romanNumber(text))) {
+            roman[i] = romanValue(text);
+            if (roman[i] == 0 && items[i].lines == 1) {
+                roman[i] = romanAtEdge(text);
+                beside[i] = true;
+            }
+            if (roman[i])
+                inStep[roman[i] - items[i].page]++;
+        }
+        for (size_t i = 0; i < items.size(); i++) {
+            if (keys[i].empty())
+                continue;
+            const std::string text = keys[i].substr(2);
+            const bool pageNumber = roman[i] && inStep[roman[i] - items[i].page] >= (beside[i] ? 3 : 2);
+            if (seen[keys[i]] >= 3 || text.empty() || onlyNumber(text) || pageNumber) {
                 items[i].drop = true;
                 stats.running++;
             }
+        }
+    }
+
+    /// A line that may be an entry of a contents page: short, ending with a page number.
+    bool mayBeEntry(const Item & item) const
+    {
+        return !item.drop && item.kind == K_PARA && !item.tagged && !item.verse && item.lines <= 2
+            && item.chars <= 160 && endsWithPageNumber(textOf(item.runs));
+    }
+
+    /// On a contents page a line set apart that ends with a page number is an entry too: the
+    /// line of a chapter, in bold and with room around it, is a block of its own, and came as a
+    /// heading in the middle of the contents. A contents page: five entries or more found in
+    /// blocks of them; or five such lines or more, most of its paragraphs (each line a block of
+    /// its own).
+    void markEntries()
+    {
+        for (size_t p = 0; p < pages.size(); p++) {
+            int found = 0, lines = 0, paras = 0;
+            for (size_t i = pages[p].firstItem; i < pages[p].endItem; i++) {
+                const Item & item = items[i];
+                if (item.drop || item.kind != K_PARA)
+                    continue;
+                paras++;
+                found += item.entry ? 1 : 0;
+                lines += mayBeEntry(item) ? 1 : 0;
+            }
+            if (pages[p].hanging || !(found >= 5 || (lines >= 5 && lines * 10 >= paras * 6)))
+                continue;
+            for (size_t i = pages[p].firstItem; i < pages[p].endItem; i++)
+                if (mayBeEntry(items[i]))
+                    items[i].entry = true;
         }
     }
 
@@ -2249,6 +2404,7 @@ public:
                     // on such a page a paragraph all set in goes on the entry above it, whatever
                     // the entry ends with (the library ends a paragraph at a full stop)
                     if (hanging && a.kind == K_PARA && b.kind == K_PARA && !a.tagged && !b.tagged && !a.verse && !b.verse
+                            && !a.entry
                             && a.cellX0.size() < 2 && b.cellX0.size() < 2 && gap < a.size * 0.7f && gap > -a.size * 0.5f
                             && fabsf(a.size - b.size) < a.size * 0.06f && b.firstX > a.firstX + a.size * 0.8f
                             && (b.restX > 1e8f || b.restX > a.firstX + a.size * 0.8f)) {
@@ -2277,10 +2433,14 @@ public:
                         b.drop = true;
                         continue;
                     }
-                    const bool full = right > left && a.chars > 20
+                    // (not on a page of hanging entries: what goes on an entry there is set in and
+                    // was joined above, and the paragraph at the margin after a full line is the
+                    // next entry; taken for the rest of it, 18 of the 250 entries of a table of
+                    // cases came two or three in a paragraph)
+                    const bool full = !hanging && right > left && a.chars > 20
                         && a.lastX1 + a.size * (0.25f + 0.48f * firstWord(b.runs)) > right - a.size * 0.5f;
                     if (a.kind == b.kind && (a.kind == K_PARA || a.kind == K_NOTE) && !a.tagged && !b.tagged
-                            && !a.verse && !b.verse && a.cellX0.size() < 2 && b.cellX0.size() < 2
+                            && !a.verse && !b.verse && !a.entry && a.cellX0.size() < 2 && b.cellX0.size() < 2
                             && gap < a.size * 0.7f && gap > -a.size * 0.5f && fabsf(b.x0 - a.x0) < a.size * 4
                             && fabsf(a.size - b.size) < a.size * 0.06f && a.monoChars * 2 <= a.chars
                             && ((isLower(firstChar(b.runs)) && !startsEntry(b.runs) && !endsFully(lastChar(a.runs)))
@@ -2324,7 +2484,7 @@ public:
                 const bool firstOfPage = before == info.firstItem;
                 const int last = lastChar(item.runs), start = firstChar(item.runs);
                 bool heading = false;
-                if (item.kind == K_PARA && !item.tagged && !item.verse && item.chars >= 3 && item.chars <= 100
+                if (item.kind == K_PARA && !item.tagged && !item.verse && !item.entry && item.chars >= 3 && item.chars <= 100
                         && item.lines <= 2 && fabsf(item.size - bodySize) < bodySize * 0.1f && item.monoChars == 0
                         && item.cellX0.size() <= 2 && !endsSentence(last) && last != ',' && !isLower(start)
                         && (isLetter(start) || start == 0xA7 || (start >= '0' && start <= '9'))
@@ -2341,7 +2501,8 @@ public:
         }
         for (size_t i = 0; i < items.size(); i++) {
             Item & item = items[i];
-            if (item.drop || item.kind != K_PARA || item.tagged)
+            // (an entry of a contents page in bold, the line of a chapter, stays an entry)
+            if (item.drop || item.kind != K_PARA || item.tagged || item.entry)
                 continue;
             const int last = lastChar(item.runs);
             if (item.size >= bodySize * 1.18f && item.chars <= 160) {
@@ -2362,7 +2523,7 @@ public:
                 Item & item = items[i - 1];
                 if (item.drop)
                     continue;
-                if (item.kind != K_PARA || item.tagged || item.size > bodySize * 0.92f || item.y0 < info.height * 0.5f)
+                if (item.kind != K_PARA || item.tagged || item.entry || item.size > bodySize * 0.92f || item.y0 < info.height * 0.5f)
                     break;
                 first = i - 1;
                 const int c = firstChar(item.runs);
@@ -2602,7 +2763,7 @@ public:
     /// a small letter.
     bool goesOn(const Item & a, const Item & b)
     {
-        if (a.kind != K_PARA || b.kind != K_PARA || b.page <= a.page || a.quote != b.quote || a.verse || b.verse
+        if (a.kind != K_PARA || b.kind != K_PARA || b.page <= a.page || a.quote != b.quote || a.verse || b.verse || a.entry
                 || a.cellX0.size() > 1 || b.cellX0.size() > 1)
             return false;
         if (a.monoChars * 2 > a.chars || b.monoChars * 2 > b.chars)
@@ -2652,6 +2813,7 @@ public:
         a.chars += b.chars;
         a.boldChars += b.boldChars;
         a.monoChars += b.monoChars;
+        a.entry = b.entry;
     }
 
     static bool sameTitle(const std::string & a, const std::string & b)
@@ -3014,6 +3176,7 @@ bool pbPdfToBook(const char * pdfPath, const char * bookPath, PbPdfTextProgress 
         t.dump("as read");
         t.dropRunning();
         t.dropDecoration();
+        t.markEntries();
         t.plainTables();
         t.mendParagraphs();
         t.classify();

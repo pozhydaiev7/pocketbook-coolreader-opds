@@ -142,6 +142,8 @@ protected:
     void layoutWorkStarted();
     void layoutProgress();
 public:
+    /// the file of the open book as it was given to loadDocument (an archive as it is)
+    lString32 getBookFileName() { return _fileName; }
     lString32 getBookmarkDir() { return _bookmarkDir; }
     lString32 getBookLanguage();
     void setBookmarkDir( lString32 dir ) { _bookmarkDir = dir; }
@@ -202,6 +204,13 @@ public:
     V3DocViewWin( CRGUIWindowManager * wm, lString32 dataDir );
 
     void applySettings();
+
+    /// The settings with what the view changed by itself (the font size of a gesture). The view
+    /// keeps a copy of every setting it was given, and its values win over the settings; the
+    /// settings of the program (cr3.pocketbook.*) are changed outside the view, which never changes
+    /// them, so its copy of them is the one of the last settings menu or of the start: they are
+    /// taken from the settings only, present or not.
+    CRPropRef propsWithView();
 
     /// One setting changed outside the settings menu: applied to the book and saved.
     /// save false: the settings menu is opened right after and saves the settings when it is closed.

@@ -741,6 +741,7 @@ static const char * getCommandName( int command )
     case PB_CMD_SET_BOOKMARK: return _("Set bookmark");
     case PB_CMD_UNSET_BOOKMARK: return _("Delete bookmark");
     case PB_CMD_ENTER_STANDBY: return _("Enter standby mode");
+    case PB_CMD_PDF_PAGES: return _("PDF and DjVu: book or original");
     #ifdef POCKETBOOK_PRO
     case PB_CMD_TASK_MANAGER: return _("Tasks list");
     #ifndef POCKETBOOK_PRO_PRO2
@@ -749,6 +750,8 @@ static const char * getCommandName( int command )
     case PB_CMD_LOCK_DEVICE: return _("Lock device");
     case PB_CMD_OTA_UPDATE: return _("Program update");
     case PB_CMD_OTA_UPDATE_DEV: return _("Program update");
+    case PB_CMD_KOSYNC_PUSH: return _("Send the place of the book");
+    case PB_CMD_KOSYNC_PULL: return _("Get the place of the book");
     case PB_CMD_CLEAR_CACHE: return _("Clear cache");
     #ifdef POCKETBOOK_PRO_FW5
     case PB_CMD_OPEN_SYSTEM_PANEL: return _("Open system panel");

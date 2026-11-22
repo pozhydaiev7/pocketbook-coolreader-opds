@@ -55,17 +55,6 @@ void searchKeyboardHandler(char * s)
     executeCommand((s && *s) ? OPDS_CMD_SEARCH_APPLY : OPDS_CMD_SHOW_LIST, 0);
 }
 
-void addUrlKeyboardHandler(char * s)
-{
-    executeCommand((s && *s) ? OPDS_CMD_CATALOG_ADD_URL_APPLY : OPDS_CMD_CATALOGS_SHOW, 0);
-}
-
-void addNameKeyboardHandler(char * s)
-{
-    (void)s; // an empty name: the host of the address
-    executeCommand(OPDS_CMD_CATALOG_ADD_NAME_APPLY, 0);
-}
-
 void cardNameKeyboardHandler(char * s)
 {
     executeCommand((s && *s) ? OPDS_CMD_CATALOG_NAME_APPLY : OPDS_CMD_CATALOG_CARD, 0);
@@ -74,6 +63,17 @@ void cardNameKeyboardHandler(char * s)
 void cardUrlKeyboardHandler(char * s)
 {
     executeCommand((s && *s) ? OPDS_CMD_CATALOG_URL_APPLY : OPDS_CMD_CATALOG_CARD, 0);
+}
+
+// (an empty login or password leaves the one there: "Forget login and password" clears both)
+void cardUserKeyboardHandler(char * s)
+{
+    executeCommand((s && *s) ? OPDS_CMD_CATALOG_USER_APPLY : OPDS_CMD_CATALOG_CARD, 0);
+}
+
+void cardPasswordKeyboardHandler(char * s)
+{
+    executeCommand((s && *s) ? OPDS_CMD_CATALOG_PASSWORD_APPLY : OPDS_CMD_CATALOG_CARD, 0);
 }
 
 // "flibusta.is/opds" -> "https://flibusta.is/opds"
@@ -115,7 +115,7 @@ bool ensureNetwork()
     CRLog::info("OPDS: QueryNetwork() = 0x%x", state);
     if (state & NET_CONNECTED)
         return true;
-    int rc = NetConnect(NULL);
+    int rc = pbNetConnect();
     CRLog::info("OPDS: NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
     return rc == NET_OK;
 }
@@ -304,6 +304,37 @@ std::string OpdsBrowser::rootUrl()
     return std::string(UnicodeToUtf8(url).c_str());
 }
 
+void OpdsBrowser::useCredentials()
+{
+    if (_catalog < 0 || _catalog >= (int)_catalogs.size()) {
+        web::setCredentials("", "", "");
+        return;
+    }
+    const OpdsCatalog & c = _catalogs[_catalog];
+    web::setCredentials(rootUrl(), UnicodeToUtf8(c.user).c_str(), UnicodeToUtf8(c.password).c_str());
+}
+
+bool OpdsBrowser::loginRefused()
+{
+    if (web::lastHttpCode != 401 && web::lastHttpCode != 403)
+        return false;
+    // A tester: Librusec gives its files to known users only, and a library of Calibre may be
+    // closed by a password; the answer 401 was told as "Cannot load the catalog. Check Wi-Fi".
+    const bool hasLogin = _catalog >= 0 && _catalog < (int)_catalogs.size() && !_catalogs[_catalog].user.empty();
+    // 401 asks for a login. 403 is also what a provider or a guard against robots answers: with
+    // no login set the catalog is not said to ask for one, and its card is not opened for it.
+    const bool asks = web::lastHttpCode == 401 || hasLogin;
+    _refused = asks;
+    pbMessageLater(ICON_WARNING, "OPDS",
+            hasLogin ? _("The catalog did not accept the login and the password. Check them in its card: Login..., "
+                         "Password...")
+            : asks ? _("The catalog asks for a login and a password. Set them in its card: Login..., Password...")
+                   : _("The catalog refused the request. If it asks for a login, set it in its card: Login..., "
+                       "Password..."),
+            6000);
+    return true;
+}
+
 void OpdsBrowser::loadCatalogs()
 {
     CRPropRef props = main_win->getProps();
@@ -315,6 +346,10 @@ void OpdsBrowser::loadCatalogs()
     flibusta.url = normalizeUrl(props->getStringDef(key, ""));
     if (flibusta.url.empty())
         flibusta.url = lString32(OPDS_DEFAULT_URL);
+    snprintf(key, sizeof(key), "%s0.user", PROP_OPDS_CATALOG);
+    flibusta.user = props->getStringDef(key, "");
+    snprintf(key, sizeof(key), "%s0.password", PROP_OPDS_CATALOG);
+    flibusta.password = props->getStringDef(key, "");
     _catalogs.push_back(flibusta);
     for (int n = 1; n <= OPDS_MAX_CATALOGS; n++) {
         snprintf(key, sizeof(key), "%s%d.url", PROP_OPDS_CATALOG, n);
@@ -328,6 +363,10 @@ void OpdsBrowser::loadCatalogs()
         c.name.trim();
         if (c.name.empty())
             c.name = hostName(c.url);
+        snprintf(key, sizeof(key), "%s%d.user", PROP_OPDS_CATALOG, n);
+        c.user = props->getStringDef(key, "");
+        snprintf(key, sizeof(key), "%s%d.password", PROP_OPDS_CATALOG, n);
+        c.password = props->getStringDef(key, "");
         _catalogs.push_back(c);
     }
     if (!props->hasProperty(PROP_OPDS_DEFAULT)) {
@@ -350,6 +389,34 @@ void OpdsBrowser::loadCatalogs()
     }
 }
 
+void OpdsBrowser::dropCatalogsWithoutAddress()
+{
+    // A catalog added and left with no address (index 0 is Flibusta, always with one). Its card
+    // may be left by "Back", or closed with the program gone to the background: every list of
+    // the catalogs is shown without such a catalog (a tap on it opened Flibusta, the address
+    // taken when there is none).
+    bool dropped = false;
+    for (int n = (int)_catalogs.size() - 1; n > 0; n--) {
+        if (!_catalogs[n].url.empty())
+            continue;
+        const int def = defaultCatalog();
+        _catalogs.erase(_catalogs.begin() + n);
+        if (def == n)
+            setDefaultCatalog(-1);
+        else if (def > n)
+            setDefaultCatalog(def - 1);
+        if (_catalog == n)
+            _catalog = -1;
+        else if (_catalog > n)
+            _catalog--;
+        dropped = true;
+    }
+    if (dropped) {
+        _editCatalog = -1;
+        saveCatalogs();
+    }
+}
+
 void OpdsBrowser::saveCatalogs()
 {
     CRPropRef props = main_win->getProps();
@@ -357,6 +424,12 @@ void OpdsBrowser::saveCatalogs()
     if (!_catalogs.empty()) {
         snprintf(key, sizeof(key), "%s0.url", PROP_OPDS_CATALOG);
         props->setString(key, _catalogs[0].url);
+        snprintf(key, sizeof(key), "%s0.user", PROP_OPDS_CATALOG);
+        if (!_catalogs[0].user.empty() || props->hasProperty(key)) {
+            props->setString(key, _catalogs[0].user);
+            snprintf(key, sizeof(key), "%s0.password", PROP_OPDS_CATALOG);
+            props->setString(key, _catalogs[0].password);
+        }
     }
     for (int n = 1; n <= OPDS_MAX_CATALOGS; n++) {
         bool used = n < (int)_catalogs.size();
@@ -366,6 +439,15 @@ void OpdsBrowser::saveCatalogs()
         props->setString(key, used ? _catalogs[n].url : lString32::empty_str);
         snprintf(key, sizeof(key), "%s%d.name", PROP_OPDS_CATALOG, n);
         props->setString(key, used ? _catalogs[n].name : lString32::empty_str);
+        // the login is written only where there is one, or was: the catalogs of the user that
+        // never had one keep their lines in cr3.ini as they were
+        snprintf(key, sizeof(key), "%s%d.user", PROP_OPDS_CATALOG, n);
+        const bool login = used && !_catalogs[n].user.empty();
+        if (login || props->hasProperty(key)) {
+            props->setString(key, login ? _catalogs[n].user : lString32::empty_str);
+            snprintf(key, sizeof(key), "%s%d.password", PROP_OPDS_CATALOG, n);
+            props->setString(key, login ? _catalogs[n].password : lString32::empty_str);
+        }
     }
     main_win->saveSettings(lString32::empty_str);
 }
@@ -422,12 +504,21 @@ void OpdsBrowser::openCatalog(CRGUIWindowManager * wm, int index, bool fromList)
         return;
     }
     _catalog = index;
+    useCredentials();
     if (_history.empty() || _history[0].baseUrl != rootUrl()) {
         _history.clear();
         _screens.clear();
+        _refused = false;
         if (!load(rootUrl(), true)) {
-            if (fromList)
+            if (_refused) {
+                // a catalog that wants a login: its card, where the login and the password are set
+                // (the owner: the message was gone at once and nothing showed what to do)
+                _editCatalog = index;
+                _catalogsEdit = true;
+                showCard(wm);
+            } else if (fromList) {
                 showCatalogs(wm, _catalogsEdit);
+            }
             return;
         }
     }
@@ -439,6 +530,7 @@ void OpdsBrowser::openCatalog(CRGUIWindowManager * wm, int index, bool fromList)
 
 void OpdsBrowser::showCatalogs(CRGUIWindowManager * wm, bool edit)
 {
+    dropCatalogsWithoutAddress();
     _catalogsEdit = edit;
     lvRect rc = wm->getScreen()->getRect();
     OpdsMenu * menu = new OpdsMenu(wm, lString32(edit ? _("Edit catalogs") : _("OPDS catalogs")), rc, false);
@@ -480,12 +572,23 @@ void OpdsBrowser::showCard(CRGUIWindowManager * wm)
     menu->setupRows(true);
     menu->setCloseCommand(OPDS_CMD_CATALOGS_EDIT);
     menu->add(OPDS_CMD_CATALOGS_EDIT, backTo(lString32(_("Edit catalogs"))));
-    menu->add(OPDS_CMD_CATALOG_OPEN + _editCatalog, lString32(MARK_OPEN) + lString32(_("Open catalog")));
+    if (!c.url.empty())
+        menu->add(OPDS_CMD_CATALOG_OPEN + _editCatalog, lString32(MARK_OPEN) + lString32(_("Open catalog")));
     if (builtIn)
         menu->add(OPDS_CMD_CATALOG_CARD, c.name, lString32(_("Built-in catalog: it cannot be renamed or deleted")));
     else
         menu->add(OPDS_CMD_CATALOG_NAME, lString32(_("Name...")), c.name);
-    menu->add(OPDS_CMD_CATALOG_URL, lString32(_("Address...")), c.url);
+    menu->add(OPDS_CMD_CATALOG_URL, lString32(_("Address...")), c.url.empty() ? lString32(_("Not set")) : c.url);
+    // a catalog closed by a password (a library of Calibre, the known users of Librusec)
+    menu->add(OPDS_CMD_CATALOG_USER, lString32(_("Login...")),
+              c.user.empty() ? lString32(_("None: the catalog is open to all")) : c.user);
+    lString32 stars;
+    for (int i = 0; i < (int)c.password.length(); i++)
+        stars << U"*";
+    menu->add(OPDS_CMD_CATALOG_PASSWORD, lString32(_("Password...")),
+              c.password.empty() ? lString32(_("None")) : stars);
+    if (!c.user.empty() || !c.password.empty())
+        menu->add(OPDS_CMD_CATALOG_FORGET, lString32(_("Forget login and password")));
     bool isDefault = defaultCatalog() == _editCatalog;
     menu->add(OPDS_CMD_CATALOG_DEFAULT,
               lString32(isDefault ? "[x]  " : "[  ]  ") + lString32(_("Default catalog")),
@@ -523,16 +626,18 @@ bool OpdsBrowser::fetch(const std::string & url, opds::Feed & feed)
 {
     CRLog::info("OPDS: load %s", url.c_str());
     if (!ensureNetwork()) {
-        Message(ICON_WARNING, "OPDS", _("No network connection. Turn on Wi-Fi and try again."), 4000);
+        pbMessageLater(ICON_WARNING, "OPDS", _("No network connection. Turn on Wi-Fi and try again."), 4000);
         return false;
     }
     // No HideHourglass(): like the rest of CR3, the next screen update removes the hourglass.
     ShowHourglassForce();
     std::string body = web::get(url);
-    CRLog::info("OPDS: got %d bytes", (int)body.size());
+    CRLog::info("OPDS: got %d bytes, HTTP %ld", (int)body.size(), web::lastHttpCode);
 
+    if (loginRefused())
+        return false;
     if (body.empty()) {
-        Message(ICON_WARNING, "OPDS", _("Cannot load the catalog. Check Wi-Fi and the catalog address."), 4000);
+        pbMessageLater(ICON_WARNING, "OPDS", _("Cannot load the catalog. Check Wi-Fi and the catalog address."), 4000);
         return false;
     }
     std::string error;
@@ -546,7 +651,7 @@ bool OpdsBrowser::fetch(const std::string & url, opds::Feed & feed)
         CRLog::error("OPDS: parse error for %s: %s", url.c_str(), error.c_str());
         lString8 text(_("The server did not return an OPDS catalog."));
         text << "\n" << error.c_str();
-        Message(ICON_WARNING, "OPDS", text.c_str(), 5000);
+        pbMessageLater(ICON_WARNING, "OPDS", text.c_str(), 5000);
         return false;
     }
     if (feed.entries.size() > OPDS_MAX_ENTRIES)
@@ -851,24 +956,31 @@ void OpdsBrowser::download(CRGUIWindowManager * wm, int formatIndex)
         std::string part = path + ".part";
         CRLog::info("OPDS: download %s -> %s", a.href.c_str(), path.c_str());
         if (!ensureNetwork()) {
-            Message(ICON_WARNING, "OPDS", _("No network connection. Turn on Wi-Fi and try again."), 4000);
+            pbMessageLater(ICON_WARNING, "OPDS", _("No network connection. Turn on Wi-Fi and try again."), 4000);
             showBook(wm, _bookIndex);
             return;
         }
         ShowHourglassForce();
         bool ok = web::getBinary(a.href, part);
         std::string reason;
+        if (ok && (web::lastHttpCode == 401 || web::lastHttpCode == 403)) {
+            // the catalog gives its files to the users it knows (Librusec)
+            remove(part.c_str());
+            loginRefused();
+            showBook(wm, _bookIndex);
+            return;
+        }
         if (!ok || !looksLikeBook(part, a.extension, reason)) {
             remove(part.c_str());
             lString8 text(_("Download failed."));
             if (!reason.empty()) text << "\n" << reason.c_str();
-            Message(ICON_WARNING, "OPDS", text.c_str(), 5000);
+            pbMessageLater(ICON_WARNING, "OPDS", text.c_str(), 5000);
             showBook(wm, _bookIndex);
             return;
         }
         if (rename(part.c_str(), path.c_str()) != 0) {
             remove(part.c_str());
-            Message(ICON_WARNING, "OPDS", _("Cannot save the book file."), 4000);
+            pbMessageLater(ICON_WARNING, "OPDS", _("Cannot save the book file."), 4000);
             showBook(wm, _bookIndex);
             return;
         }
@@ -979,33 +1091,20 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_CATALOG_ADD:
         if ((int)_catalogs.size() >= maxCatalogs()) {
-            Message(ICON_INFORMATION, "OPDS", _("The list is full. Delete a catalog first."), 3000);
+            pbMessageLater(ICON_INFORMATION, "OPDS", _("The list is full. Delete a catalog first."), 3000);
             showCatalogs(wm, _catalogsEdit);
             return true;
         }
-        editText(_("OPDS catalog address"), lString32("https://"), addUrlKeyboardHandler);
-        return true;
-    case OPDS_CMD_CATALOG_ADD_URL_APPLY:
-        _newUrl = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
-        if (_newUrl.empty() || _newUrl == lString32("https://")) {
-            showCatalogs(wm, _catalogsEdit);
-            return true;
-        }
-        editText(_("Catalog name"), hostName(_newUrl), addNameKeyboardHandler);
-        return true;
-    case OPDS_CMD_CATALOG_ADD_NAME_APPLY:
         {
+            // The card of the new catalog at once: its name, address, login and password in one
+            // place (the owner: two keyboards, address and name, and the login only after the
+            // card was found by Edit catalogs). A catalog left with no address is dropped.
             OpdsCatalog c;
-            c.url = _newUrl;
-            c.name = Utf8ToUnicode(lString8(keyBuffer));
-            c.name.trim();
-            if (c.name.empty())
-                c.name = hostName(c.url);
-            if (!c.url.empty())
-                _catalogs.push_back(c);
-            _newUrl.clear();
-            saveCatalogs();
-            showCatalogs(wm, _catalogsEdit);
+            c.name = lString32(_("New catalog"));
+            _catalogs.push_back(c);
+            _editCatalog = (int)_catalogs.size() - 1;
+            _catalogsEdit = true;
+            showCard(wm);
         }
         return true;
     case OPDS_CMD_CATALOG_CARD:
@@ -1028,18 +1127,55 @@ bool OpdsBrowser::onCommand(CRGUIWindowManager * wm, int command, int params)
         return true;
     case OPDS_CMD_CATALOG_URL:
         if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size())
-            editText(_("OPDS catalog address"), _catalogs[_editCatalog].url, cardUrlKeyboardHandler);
+            editText(_("OPDS catalog address"), _catalogs[_editCatalog].url.empty() ? lString32("https://")
+                     : _catalogs[_editCatalog].url, cardUrlKeyboardHandler);
         return true;
     case OPDS_CMD_CATALOG_URL_APPLY:
         if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size()) {
             lString32 url = normalizeUrl(Utf8ToUnicode(lString8(keyBuffer)));
-            if (!url.empty()) {
+            if (!url.empty() && url != lString32("https://")) {
+                if (_catalogs[_editCatalog].url.empty() && _catalogs[_editCatalog].name == lString32(_("New catalog")))
+                    _catalogs[_editCatalog].name = hostName(url);
                 _catalogs[_editCatalog].url = url;
                 saveCatalogs();
                 if (_editCatalog == _catalog) {
                     _history.clear();
                     _screens.clear();
                 }
+            }
+        }
+        showCard(wm);
+        return true;
+    case OPDS_CMD_CATALOG_USER:
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size())
+            editText(_("Login of the catalog"), _catalogs[_editCatalog].user, cardUserKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_PASSWORD:
+        // (typed anew: the password is not shown in the field)
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size())
+            editText(_("Password of the catalog"), lString32::empty_str, cardPasswordKeyboardHandler);
+        return true;
+    case OPDS_CMD_CATALOG_USER_APPLY:
+    case OPDS_CMD_CATALOG_PASSWORD_APPLY:
+    case OPDS_CMD_CATALOG_FORGET:
+        if (_editCatalog >= 0 && _editCatalog < (int)_catalogs.size()) {
+            OpdsCatalog & c = _catalogs[_editCatalog];
+            lString32 value = Utf8ToUnicode(lString8(keyBuffer));
+            if (command == OPDS_CMD_CATALOG_USER_APPLY) {
+                value.trim();
+                c.user = value;
+            } else if (command == OPDS_CMD_CATALOG_PASSWORD_APPLY) {
+                c.password = value;
+            } else {
+                c.user.clear();
+                c.password.clear();
+            }
+            saveCatalogs();
+            if (_editCatalog == _catalog) {
+                // the pages of the catalog are loaded again with the new login
+                useCredentials();
+                _history.clear();
+                _screens.clear();
             }
         }
         showCard(wm);

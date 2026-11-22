@@ -36,6 +36,14 @@ struct PbPageBox {
     bool empty() const { return x1 <= x0 || y1 <= y0; }
 };
 
+/// A word of the text of a page (a PDF with text, a DjVu with a text layer): UTF-8 and the
+/// rectangle it takes on the page, page units. For the dictionary over the pages: a word is picked
+/// on the picture of the page by its place, there is no recognition of text.
+struct PbPageWord {
+    PbPageBox box;
+    std::string text;
+};
+
 /// An entry of the contents of the file.
 struct PbPageTocEntry {
     int level;          ///< 0 for the top level
@@ -112,6 +120,8 @@ public:
     virtual void info(std::string & title, std::string & author) { title.clear(); author.clear(); }
     /// True when the page has text: a text PDF, a DjVu with a text layer.
     virtual bool hasText(int page) = 0;
+    /// The words of the page in the order of its text; none for a page of pictures only.
+    virtual void words(int page, std::vector<PbPageWord> & out) { (void)page; out.clear(); }
     /// The page that will most likely be asked for after the ones in work. A document that can
     /// read a page beside the drawing (DjVu: in a thread of its library) starts reading it.
     virtual void hintNext(int page) { (void)page; }
@@ -123,6 +133,10 @@ public:
 
     /// The frame that shows the box, turned by angle, whole in a buffer of width x height.
     static PbPageView viewOfBox(const PbPageBox & box, float angle, int width, int height);
+    /// Where a point of the page (page units) is drawn in the buffer of width x height a frame is
+    /// drawn into (render), and the point of the page a pixel of that buffer shows.
+    static void toBuffer(const PbPageView & view, int width, int height, float px, float py, float & bx, float & by);
+    static void fromBuffer(const PbPageView & view, int width, int height, float bx, float by, float & px, float & py);
 
     // Levelling a page by itself: every page of a book photographed or scanned by hand is crooked
     // in its own way. The scale PB_PAGE_SCALE_AUTO of framesOf; measured on the PC bench

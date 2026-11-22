@@ -39,4 +39,14 @@ bool pbPdfBookToPages(CRGUIWindowManager * wm);
 /// book then begins with "View as the original").
 bool pbPdfBookIsOpen();
 
+// For the position sync of KOReader (pb_kosync.h), which knows a PDF or a DjVu by the file and by
+// its page whatever view it is read in: KOReader reads them as pages.
+/// The file the open book is made of, the page of that file (from 0) at the top of the screen and
+/// the number of its pages; false when the book window holds no book made of a file.
+bool pbPdfBookPlace(lString32 & source, int & page, int & pages);
+/// The open book made of a file goes to the page of that file (from 0); false when it cannot.
+bool pbPdfBookGoPage(int page);
+/// True for a book made of a file (kept with the made books), whichever is open.
+bool pbPdfBookIsMade(const lString32 & file);
+
 #endif // PB_PDFBOOK_H_INCLUDED

@@ -42,6 +42,8 @@ if (DEFINED POCKETBOOK_PRO)
     src/viewdlg.cpp
     src/web.cpp
     src/ota_update.cpp
+    src/pb_kosync.cpp
+    src/pb_kosync_api.cpp
     src/pb_toc.cpp
     src/pb_toclist.cpp
     src/pb_keyboard.cpp

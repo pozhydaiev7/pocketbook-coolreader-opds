@@ -28,6 +28,7 @@
 #include "pb_statsview.h"
 #include "opdsmenu.h"
 #include "pb_pdfbook.h"
+#include "pb_kosync.h"
 #include "viewdlg.h"
 
 extern V3DocViewWin * main_win;
@@ -312,9 +313,14 @@ bool PbPageWindow::open(CRGUIWindowManager * wm, const lString32 & path)
     PbPageWindow * window = new PbPageWindow(wm, doc, path, stateFileOf(path));
     instance = window;
     wm->activateWindow(window);
+    // the orientation of the pages, when they have one of their own: the screen is turned now and
+    // turned back to that of the books when the window goes (closing)
+    window->followOrientation();
     CRLog::info("perf: picture mode: %s, %d pages; archive %.1f ms, opened in %.1f ms; page %d, scale %d, leafing %d",
                 doc->kind() == PB_PAGEDOC_PDF ? "PDF" : "DjVu", doc->pageCount(), t1 - t0, nowMs() - t1,
                 window->_page + 1, window->_scale, window->_leafing);
+    // the position sync: the places kept sent and the place asked for a moment later
+    PbKosync::instance().pagesOpened(window->_page);
     return true;
 }
 
@@ -322,7 +328,8 @@ PbPageWindow::PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lStri
     : CRGUIWindowBase(wm), _doc(doc), _path(path), _stateFile(stateFile), _page(0), _frame(0),
       _scale(PB_PAGE_SCALE_PAGE), _leafing(PB_PAGE_LEAF_PAGE), _showNumber(true), _mode(PB_PAGE_MODE_AUTO),
       _direction(1), _stamp(1),
-      _adjust(false), _adjAngle(0), _touchStarted(false), _head(NULL), _tocRead(false)
+      _adjust(false), _adjAngle(0), _touchStarted(false), _head(NULL), _tocRead(false), _bookAngle(-1),
+      _wordsPage(-1), _wordsFrame(-1), _wordsStamp(0), _word(-1)
 {
     _angle[0] = _angle[1] = 0;
     _fullscreen = true;
@@ -346,9 +353,34 @@ PbPageWindow::~PbPageWindow()
     delete _doc;
 }
 
+void PbPageWindow::followOrientation()
+{
+    const int angle = main_win->getProps()->getIntDef(PROP_POCKETBOOK_PAGES_ORIENTATION, -1);
+    const int now = (int)_wm->getScreenOrientation();
+    if (angle >= 0 && angle <= 3) {
+        // the angle of the books is the one the screen had before the pages turned it
+        if (_bookAngle < 0)
+            _bookAngle = now;
+        if (angle != now)
+            _wm->postCommand(PB_CMD_ROTATE_FOR_PAGES, angle);
+    } else if (_bookAngle >= 0) {
+        // the pages have no orientation of their own any more: that of the books
+        if (_bookAngle != now)
+            _wm->postCommand(PB_CMD_ROTATE_FOR_PAGES, _bookAngle);
+        _bookAngle = -1;
+    }
+}
+
 void PbPageWindow::closing()
 {
     saveState();
+    // the position sync: the page sent while Wi-Fi is on, otherwise kept
+    PbKosync::instance().pagesClosing();
+    // back to the orientation of the books (the angle the screen had when the pages were shown;
+    // a turn chosen over the pages went to their own orientation)
+    if (_bookAngle >= 0 && _bookAngle != (int)_wm->getScreenOrientation())
+        _wm->postCommand(PB_CMD_ROTATE_FOR_PAGES, _bookAngle);
+    _bookAngle = -1;
 }
 
 /// The settings of the group "PDF and DjVu": what a file opened for the first time starts with,
@@ -446,6 +478,8 @@ void PbPageWindow::reactivated()
     _showNumber = props->getIntDef(PROP_POCKETBOOK_PAGES_PAGE_NUMBER, 1) != 0;
     // and the status line may be another one
     setupHead();
+    // and the orientation of the pages (the settings menu)
+    followOrientation();
     setDirty();
 }
 
@@ -640,6 +674,8 @@ void PbPageWindow::turn(int direction)
     _frame = frame;
     _direction = direction;
     setDirty();
+    // the position sync: the time of the last page turned
+    PbKosync::instance().pageShown(_page);
 }
 
 void PbPageWindow::goToPage(int page)
@@ -650,6 +686,7 @@ void PbPageWindow::goToPage(int page)
     _page = page;
     _frame = 0;
     setDirty();
+    PbKosync::instance().pageShown(_page);
 }
 
 void PbPageWindow::armPause()
@@ -1001,6 +1038,11 @@ bool PbPageWindow::onTouch(int x, int y, CRGUITouchEventType evType)
         return true;
     int command = 0, param = 0;
     getCommandForTapZone(zone, props, longTap, command, param);
+    // the zone of the dictionary looks up the word under the finger, as in a book
+    if (command == MCMD_DICT) {
+        pbShowDictOverPages(true, x, y);
+        return true;
+    }
     // The zones do what they do in a book (a tester: "the tap zones could work as in the usual
     // mode"; every zone but the page turns opened the list of this window). The command comes
     // back to onCommand, which does it, hands it to the book window or leaves it out.
@@ -1058,10 +1100,17 @@ bool PbPageWindow::onCommand(int command, int params)
         // command of the action.
         return main_win->onCommand(command, params);
     case PB_PAGEVIEW_CMD_MENU:
-    case PB_CMD_MAIN_MENU:
-    case MCMD_MAIN_MENU:
         showMenu();
         return true;
+    case MCMD_MAIN_MENU:
+        // the main menu of the reader, as over a book, its first item "View as a book" (a
+        // tester: the list of the view of a page came in its place, the same as the icon of the
+        // touch menu opens, and the keys did one thing in a book and another here)
+        main_win->showMainMenu();
+        return true;
+    case PB_CMD_MAIN_MENU:
+        // the menu of the firmware, as in a book
+        return main_win->onCommand(command, params);
     case PB_PAGEVIEW_CMD_CLOSE:
         setDirty();
         return true;
@@ -1093,7 +1142,7 @@ bool PbPageWindow::onCommand(int command, int params)
         return true;
     case PB_PAGEVIEW_CMD_MARK:
         toggleMark();
-        showMarks();
+        setDirty();
         return true;
     case PB_CMD_SET_BOOKMARK:
     case PB_CMD_UNSET_BOOKMARK:
@@ -1102,9 +1151,17 @@ bool PbPageWindow::onCommand(int command, int params)
         setDirty();
         return true;
     case PB_PAGEVIEW_CMD_MARKS:
-    case MCMD_BOOKMARK_LIST:
     case MCMD_BOOKMARK_LIST_GO_MODE:
-        showMarks();
+        showMarks(true);
+        return true;
+    case MCMD_BOOKMARK_LIST:
+        // as in a book: the list to set a bookmark
+        showMarks(false);
+        return true;
+    case PB_PAGEVIEW_CMD_MARK_GO:
+    case PB_PAGEVIEW_CMD_MARK_SAVE:
+    case PB_PAGEVIEW_CMD_MARK_DELETE:
+        markCommand(command, params);
         return true;
     case PB_PAGEVIEW_CMD_INFO:
     case MCMD_ABOUT:
@@ -1115,16 +1172,31 @@ bool PbPageWindow::onCommand(int command, int params)
         goToPage(params < 1 ? 0 : params > _doc->pageCount() ? _doc->pageCount() - 1 : params - 1);
         return true;
     case MCMD_DICT:
+        // the icon of the touch menu, a key: the first word of the screen (a page without text:
+        // the word is typed)
+        pbShowDictOverPages(false, 0, 0);
+        return true;
     case MCMD_SEARCH:
     case MCMD_CITE:
         notInOriginal(command);
         return true;
+    case PB_CMD_PDF_PAGES:
+        // "View as a book" of the main menu, and the action "Book or original" of a tap zone
+        // or a key (in a book it shows the original): on a page without text nothing to do
+        if (!canBeBook()) {
+            lString8 text = UnicodeToUtf8(lString32(_("The page has no text: the file is read as its pages only.")));
+            Message(ICON_INFORMATION, const_cast<char *>("CoolReader"), const_cast<char *>(text.c_str()), 3000);
+            return true;
+        }
+        // fall through
     case PB_PAGEVIEW_CMD_AS_BOOK: {
         // the window goes; the book window takes the book made of the file
         saveState();
         CRGUIWindowManager * wm = _wm;
         const lString32 path = _path;
         const int page = _page;
+        // the same file in another view: no place sent or asked for the change
+        PbKosync::instance().hold(true);
         wm->closeWindow(this);
         if (!pbPdfBookFromPages(wm, path, page)) {
             // no book could be made: the pages again
@@ -1132,6 +1204,7 @@ bool PbPageWindow::onCommand(int command, int params)
             if (open(wm, path))
                 wm->update(true);
         }
+        PbKosync::instance().hold(false);
         return true;
     }
     case PB_PAGEVIEW_CMD_SETTINGS:
@@ -1148,9 +1221,6 @@ bool PbPageWindow::onCommand(int command, int params)
     // What belongs to a book and its text has nothing to act on here. The rest (the settings
     // menu and what it posts, the front light, the rotation of the screen, the full update, the
     // standby...) is the business of the book window, as in the book mode.
-    // the commands of the book view (lvdocview.h) end where those of the main menu start
-    if (command >= 100 && command < MAIN_MENU_COMMANDS_START)
-        return true;
     switch (command) {
     case MCMD_LONG_FORWARD:
         goToPage(_page + 10 < _doc->pageCount() ? _page + 10 : _doc->pageCount() - 1);
@@ -1158,6 +1228,20 @@ bool PbPageWindow::onCommand(int command, int params)
     case MCMD_LONG_BACK:
         goToPage(_page > 10 ? _page - 10 : 0);
         return true;
+    default:
+        break;
+    }
+    if (leavesOut(command))
+        return true;
+    return main_win->onCommand(command, params);
+}
+
+bool PbPageWindow::leavesOut(int command)
+{
+    // the commands of the book view (lvdocview.h) end where those of the main menu start
+    if (command >= 100 && command < MAIN_MENU_COMMANDS_START)
+        return true;
+    switch (command) {
     case MCMD_GO_LINK:
     case MCMD_GO_LINK_APPLY:
     case MCMD_OPEN_RECENT_BOOK:
@@ -1177,9 +1261,13 @@ bool PbPageWindow::onCommand(int command, int params)
     case PB_CMD_BOOKMARK_REMOVE:
     case PB_CMD_STATUS_LINE:
     case PB_CMD_CLEAR_CACHE:
+    // the search and the citations of a book: there is no text on the screen to act on
+    case MCMD_SEARCH:
+    case MCMD_CITE:
+    case MCMD_CITES_LIST:
         return true;
     default:
-        return main_win->onCommand(command, params);
+        return false;
     }
 }
 
@@ -1464,21 +1552,420 @@ void PbPageWindow::showScaleList()
     activate(_wm, menu);
 }
 
-void PbPageWindow::showMarks()
+// ------------------------------------------------------------------------------------ dictionary
+// The words of the screen: the parts of pages on it (one frame; in the ribbon the end of a page and
+// the beginning of the next), each drawn as a frame is (PbPageDoc::render), so a word of the text
+// of a page goes to the screen by the frame of its part (PbPageDoc::toBuffer). A tester: "the
+// dictionaries with the text layer in the view of the original"; the layer of a PDF or a DjVu has
+// the place of every word on the page.
+void PbPageWindow::collectWords()
+{
+    if (_wordsPage == _page && _wordsFrame == _frame && _wordsStamp == _stamp)
+        return;
+    _words.clear();
+    _word = -1;
+    _wordsPage = _page;
+    _wordsFrame = _frame;
+    _wordsStamp = _stamp;
+    struct Part {
+        int page;
+        lvRect rc;          // on the screen
+        PbPageView view;    // the frame the part is drawn by, in a buffer of the size of rc
+    };
+    std::vector<Part> parts;
+    const int H = _pageRc.height();
+    if (_leafing == PB_PAGE_LEAF_RIBBON) {
+        // as drawRibbon lays the strips out
+        const int count = _doc->pageCount(), gap = ribbonGap();
+        int y = 0;
+        for (int p = _page; y < H && p < count; p++) {
+            PbPageStrip strip;
+            stripOfPage(p, strip);
+            int from = p == _page ? _frame : 0;
+            if (from >= strip.height)
+                from = strip.height - 1;
+            if (from < 0)
+                from = 0;
+            int rows = strip.height - from;
+            if (rows > H - y)
+                rows = H - y;
+            if (rows > 0) {
+                // as renderStrip makes the frame of the rows
+                const float a = strip.angle * 3.14159265f / 180.0f;
+                const float c = cosf(a), s = sinf(a);
+                const float qy = strip.qy0 + (from + from + rows) * 0.5f / strip.zoom;
+                Part part;
+                part.page = p;
+                part.rc = lvRect(_pageRc.left, _pageRc.top + y, _pageRc.right, _pageRc.top + y + rows);
+                part.view.cx = strip.qcx * c + qy * s;
+                part.view.cy = -strip.qcx * s + qy * c;
+                part.view.zoom = strip.zoom;
+                part.view.angle = strip.angle;
+                parts.push_back(part);
+            }
+            y += rows + gap;
+        }
+    } else {
+        std::vector<PbPageView> frames;
+        framesOfPage(_page, frames);
+        Part part;
+        part.page = _page;
+        part.rc = _pageRc;
+        part.view = frames[_frame >= 0 && _frame < (int)frames.size() ? _frame : 0];
+        parts.push_back(part);
+    }
+    for (size_t k = 0; k < parts.size(); k++) {
+        const Part & part = parts[k];
+        std::vector<PbPageWord> words;
+        _doc->words(part.page, words);
+        const int w = part.rc.width(), h = part.rc.height();
+        for (size_t i = 0; i < words.size(); i++) {
+            const PbPageBox & b = words[i].box;
+            // the box of the four corners of the word on the screen
+            float xs[4], ys[4];
+            PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y0, xs[0], ys[0]);
+            PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y0, xs[1], ys[1]);
+            PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y1, xs[2], ys[2]);
+            PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y1, xs[3], ys[3]);
+            float x0 = xs[0], x1 = xs[0], y0 = ys[0], y1 = ys[0];
+            for (int n = 1; n < 4; n++) {
+                x0 = xs[n] < x0 ? xs[n] : x0;
+                x1 = xs[n] > x1 ? xs[n] : x1;
+                y0 = ys[n] < y0 ? ys[n] : y0;
+                y1 = ys[n] > y1 ? ys[n] : y1;
+            }
+            lvRect rc((int)x0 + part.rc.left, (int)y0 + part.rc.top, (int)x1 + 1 + part.rc.left, (int)y1 + 1 + part.rc.top);
+            // a word out of the part (the rest of the page off the screen) is not on the screen
+            if (!rc.intersect(part.rc) || rc.width() < 2 || rc.height() < 2)
+                continue;
+            ScreenWord word;
+            word.text = Utf8ToUnicode(words[i].text.c_str());
+            // the marks around a word are not looked up: "(word)," is "word"
+            while (!word.text.empty() && lStr_isWordSeparator(word.text[0]))
+                word.text.erase(0, 1);
+            while (!word.text.empty() && lStr_isWordSeparator(word.text[word.text.length() - 1]))
+                word.text.erase(word.text.length() - 1, 1);
+            if (word.text.empty())
+                continue;
+            word.rc = rc;
+            _words.push_back(word);
+        }
+    }
+}
+
+bool PbPageWindow::dictWordAt(int x, int y, bool nearest)
+{
+    collectWords();
+    int best = -1;
+    long bestDistance = 0;
+    for (size_t i = 0; i < _words.size(); i++) {
+        const lvRect & rc = _words[i].rc;
+        const int dx = x < rc.left ? rc.left - x : x >= rc.right ? x - rc.right + 1 : 0;
+        const int dy = y < rc.top ? rc.top - y : y >= rc.bottom ? y - rc.bottom + 1 : 0;
+        // a line away weighs more than a word away on the line
+        const long distance = (long)dx * dx + 4L * dy * dy;
+        if (best < 0 || distance < bestDistance) {
+            best = (int)i;
+            bestDistance = distance;
+        }
+    }
+    if (best < 0 || (!nearest && bestDistance > 0))
+        return false;
+    _word = best;
+    return true;
+}
+
+bool PbPageWindow::dictWordEdge(bool last)
+{
+    collectWords();
+    if (_words.empty())
+        return false;
+    _word = last ? (int)_words.size() - 1 : 0;
+    return true;
+}
+
+bool PbPageWindow::dictWordMove(int dx, int dy)
+{
+    collectWords();
+    if (_word < 0 || _word >= (int)_words.size())
+        return dictWordEdge(false);
+    if (dx != 0) {
+        const int next = _word + (dx > 0 ? 1 : -1);
+        if (next < 0 || next >= (int)_words.size())
+            return false;
+        _word = next;
+        return true;
+    }
+    // the line above or under: the nearest word whose middle lies past half the height of this one
+    const lvRect cur = _words[_word].rc;
+    const int cx = (cur.left + cur.right) / 2, cy = (cur.top + cur.bottom) / 2;
+    int best = -1;
+    long bestDistance = 0;
+    for (size_t i = 0; i < _words.size(); i++) {
+        const lvRect & rc = _words[i].rc;
+        const int my = (rc.top + rc.bottom) / 2, mx = (rc.left + rc.right) / 2;
+        const int ahead = dy > 0 ? my - cy : cy - my;
+        if (ahead <= cur.height() / 2)
+            continue;
+        const long distance = 16L * ahead * ahead + (long)(mx - cx) * (mx - cx);
+        if (best < 0 || distance < bestDistance) {
+            best = (int)i;
+            bestDistance = distance;
+        }
+    }
+    if (best < 0)
+        return false;
+    _word = best;
+    return true;
+}
+
+bool PbPageWindow::dictWord(lString32 & text, lvRect & rc)
+{
+    collectWords();
+    if (_word < 0 || _word >= (int)_words.size())
+        return false;
+    text = _words[_word].text;
+    rc = _words[_word].rc;
+    return true;
+}
+
+void PbPageWindow::dictDrawPage(LVDrawBuf * canvas)
+{
+    draw();
+    collectWords();
+    if (_word >= 0 && _word < (int)_words.size()) {
+        // (not under the dictionary window: the clip of the caller is the part beside it)
+        lvRect rc = _words[_word].rc, clip;
+        canvas->GetClipRect(&clip);
+        if (rc.intersect(clip))
+            canvas->InvertRect(rc.left, rc.top, rc.right, rc.bottom);
+    }
+}
+
+// ------------------------------------------------------------------------------------ bookmarks
+// The list of the bookmarks of the pages has the look and the ways of that of a book (bmkdlg.cpp,
+// CRBookmarkMenu): the skin "#bookmarks", a place for each bookmark with "Page 12 (7.45%)" and the
+// chapter, empty places after them, a tap that sets or goes as the mode of the list tells, a long
+// press with the menu "Set, Go to, Delete". A tester: the list of the original "looks strange and
+// stands out of the interface"; it was a touch list of the OPDS kind. The bookmarks of a file are
+// kept as before: the pages, in their order.
+
+class PbPageMarkItem : public CRMenuItem
+{
+    int _page;          // from 0; -1 for an empty place
+    lString32 _text;    // "Page 12 (7.45%)  Chapter"
+public:
+    PbPageMarkItem(CRMenu * menu, int id, int page, const lString32 & text)
+        : CRMenuItem(menu, id, lString32(_("Empty slot")), LVImageSourceRef(), LVFontRef()), _page(page), _text(text)
+    {
+    }
+    bool empty() const { return _page < 0; }
+    virtual void Draw(LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected)
+    {
+        if (_page < 0) {
+            CRMenuItem::Draw(buf, rc, skin, valueSkin, selected);
+            return;
+        }
+        _itemDirty = false;
+        lvRect borders = skin->getBorderWidths();
+        skin->draw(buf, rc);
+        buf.SetTextColor(0x000000);
+        buf.SetBackgroundColor(0xFFFFFF);
+        lvRect textRect = rc;
+        textRect.left += DrawIcon(buf, rc, borders);
+        skin->drawText(buf, textRect, _text);
+    }
+};
+
+class PbPageMarksMenu;
+static PbPageMarksMenu * marksMenu = NULL;
+static void marksContextChosen(int index);
+
+class PbPageMarksMenu : public CRFullScreenMenu
+{
+    bool _goMode;
+public:
+    PbPageMarksMenu(CRGUIWindowManager * wm, lvRect & rc, bool goMode)
+        : CRFullScreenMenu(wm, MCMD_BOOKMARK_LIST, lString32(_("Bookmarks")), 8, rc), _goMode(goMode)
+    {
+        CRGUIAcceleratorTableRef acc = _wm->getAccTables().get("bookmarks");
+        if (acc.isNull())
+            acc = _wm->getAccTables().get("menu");
+        setAccelerators(acc);
+        setSkinName(lString32("#bookmarks"));
+        int least = getSkin()->getMinItemCount();
+        if (_pageItems < least)
+            _pageItems = least;
+        marksMenu = this;
+    }
+    virtual ~PbPageMarksMenu()
+    {
+        if (marksMenu == this)
+            marksMenu = NULL;
+    }
+    int pageItems() const { return _pageItems; }
+    /// the texts of the mode, as the list of a book has them
+    void setMode()
+    {
+        lString32 key = getCommandKeyName(MCMD_SELECT);
+        _caption = lString32(_goMode ? _("Go to bookmark") : _("Set bookmark"));
+        _label = _caption;
+        _statusText = lString32(_goMode ? _("Short press $1 - go to bookmark,\nlong press - set bookmark")
+                                        : _("Short press $1 - set bookmark,\nlong press - go to bookmark"));
+        _statusText.replaceParam(1, key);
+        setDirty();
+    }
+    void choose(int command)
+    {
+        if (_selectedItem < 0 || _selectedItem >= _items.length())
+            return;
+        PbPageMarkItem * item = static_cast<PbPageMarkItem *>(_items[_selectedItem]);
+        if (item->empty() && command != PB_PAGEVIEW_CMD_MARK_SAVE)
+            return;
+        closeMenu(command, _selectedItem);
+    }
+    void showContextMenu()
+    {
+        if (_selectedItem < 0 || _selectedItem >= _items.length())
+            return;
+        // (the index of an item of the menu of the firmware is a short: 1 to 3, the command is
+        // found by marksContextChosen)
+        static imenu context[] = {
+            { ITEM_ACTIVE, 1, NULL, NULL },
+            { ITEM_ACTIVE, 2, NULL, NULL },
+            { ITEM_ACTIVE, 3, NULL, NULL },
+            { 0, 0, NULL, NULL }
+        };
+        context[0].text = (char *)_("Set bookmark");
+        context[1].text = (char *)_("Go to bookmark");
+        context[2].text = (char *)_("Delete bookmark");
+        const bool empty = static_cast<PbPageMarkItem *>(_items[_selectedItem])->empty();
+        context[1].type = empty ? ITEM_INACTIVE : ITEM_ACTIVE;
+        context[2].type = empty ? ITEM_INACTIVE : ITEM_ACTIVE;
+        lvRect client;
+        getClientRect(client);
+        lvPoint size = getMaxItemSize();
+        int y = client.top + size.y * (_selectedItem - _topItem) + size.y / 4;
+        OpenMenu(context, _goMode ? 2 : 1, ScreenWidth() / 4, y, marksContextChosen);
+    }
+    virtual bool onCommand(int command, int params)
+    {
+        switch (command) {
+        case MCMD_SELECT:
+            choose(_goMode ? PB_PAGEVIEW_CMD_MARK_GO : PB_PAGEVIEW_CMD_MARK_SAVE);
+            return true;
+        case MCMD_SELECT_LONG:
+            showContextMenu();
+            return true;
+        case MCMD_NEXT_MODE:
+        case MCMD_PREV_MODE:
+            _goMode = !_goMode;
+            setMode();
+            return true;
+        case PB_PAGEVIEW_CMD_MARK_GO:
+        case PB_PAGEVIEW_CMD_MARK_SAVE:
+        case PB_PAGEVIEW_CMD_MARK_DELETE:
+            // from the menu of the long press
+            choose(command);
+            return true;
+        default:
+            break;
+        }
+        // the number keys choose a place of the screen, as in the list of a book
+        if (command >= MCMD_SELECT_1 && command <= MCMD_SELECT_9) {
+            const int at = _topItem + command - MCMD_SELECT_1;
+            if (at < _items.length()) {
+                _selectedItem = at;
+                choose(_goMode ? PB_PAGEVIEW_CMD_MARK_GO : PB_PAGEVIEW_CMD_MARK_SAVE);
+            }
+            return true;
+        }
+        if ((command == DCMD_BUTTON_PRESSED || command == DCMD_BUTTON_PRESSED_LONG) && params == BTN_CLOSE) {
+            closeMenu(PB_PAGEVIEW_CMD_CLOSE);
+            return true;
+        }
+        if (command == MCMD_CANCEL) {
+            closeMenu(PB_PAGEVIEW_CMD_CLOSE);
+            return true;
+        }
+        return CRFullScreenMenu::onCommand(command, params);
+    }
+};
+
+// the command chosen in the menu of the long press goes to the list, as the list of a book does it
+static void marksContextChosen(int index)
+{
+    static const int commands[4] = { 0, PB_PAGEVIEW_CMD_MARK_SAVE, PB_PAGEVIEW_CMD_MARK_GO, PB_PAGEVIEW_CMD_MARK_DELETE };
+    if (marksMenu == NULL || index < 1 || index > 3)
+        return;
+    CRGUIWindowManager * wm = marksMenu->getWindowManager();
+    wm->postCommand(commands[index], 0);
+    wm->processPostedEvents();
+    wm->resetTillUp();
+}
+
+void PbPageWindow::showMarks(bool goMode)
 {
     lvRect rc = _wm->getScreen()->getRect();
-    OpdsMenu * menu = new OpdsMenu(_wm, tr("Bookmarks"), rc, true);
-    menu->setupRows(false);
-    menu->setCloseCommand(PB_PAGEVIEW_CMD_CLOSE);
-    // the first row sets and takes off the bookmark of the page shown (it was a row of the menu)
-    menu->add(PB_PAGEVIEW_CMD_MARK, tr("Bookmark on this page") + U": " + tr(isMarked() ? "On" : "Off"));
-    for (size_t i = 0; i < _marks.size() && i < (size_t)(PB_PAGEVIEW_CMD_LAST - PB_PAGEVIEW_CMD_PAGE); i++) {
-        OpdsItem * item = new OpdsItem(menu, PB_PAGEVIEW_CMD_PAGE + (int)i,
-                                       tr("Page") + U" " + lString32::itoa(_marks[i] + 1), lString32::empty_str);
-        item->mark = _marks[i] == _page;
-        menu->addItem(item);
+    PbPageMarksMenu * menu = new PbPageMarksMenu(_wm, rc, goMode);
+    // the rows of a screen are known once the skin is laid out
+    menu->reconfigure(0);
+    const int count = _doc->pageCount();
+    int current = -1;
+    for (size_t i = 0; i < _marks.size(); i++) {
+        const int page = _marks[i];
+        lString32 text(_("Page $1 ($2%)"));
+        text.replaceIntParam(1, page + 1);
+        const int percent = count > 1 ? (int)((long long)page * 10000 / (count - 1)) : 0;
+        text.replaceParam(2, lString32::itoa(percent / 100) << "." << lString32::itoa(percent % 100 / 10)
+                                 << lString32::itoa(percent % 10));
+        lString32 chapter = chapterName(page);
+        if (!chapter.empty())
+            text << "  " << chapter;
+        menu->addItem(new PbPageMarkItem(menu, (int)i + 1, page, text));
+        if (page == _page)
+            current = (int)i;
     }
-    activate(_wm, menu);
+    // empty places after the bookmarks, as many as fill the screens of the list, 32 at least
+    const int per = menu->pageItems() > 0 ? menu->pageItems() : 8;
+    int total = (int)_marks.size() + 1;
+    total = (total + per - 1) / per * per;
+    if (total < 32)
+        total = (32 + per - 1) / per * per;
+    for (int i = (int)_marks.size(); i < total; i++)
+        menu->addItem(new PbPageMarkItem(menu, i + 1, -1, lString32::empty_str));
+    menu->setMode();
+    menu->reconfigure(0);
+    // the bookmark of the page shown, or the first empty place to set one
+    const int at = current >= 0 ? current : (int)_marks.size();
+    menu->setCurPage(at / per);
+    menu->setCurItem(at);
+    _wm->activateWindow(menu);
+}
+
+void PbPageWindow::markCommand(int command, int index)
+{
+    if (command == PB_PAGEVIEW_CMD_MARK_GO) {
+        if (index >= 0 && index < (int)_marks.size())
+            goToPage(_marks[index]);
+        return;
+    }
+    if (command == PB_PAGEVIEW_CMD_MARK_DELETE) {
+        if (index >= 0 && index < (int)_marks.size())
+            _marks.erase(_marks.begin() + index);
+    } else {
+        // the page shown into the place: in place of the bookmark there, or a new one
+        if (index >= 0 && index < (int)_marks.size())
+            _marks.erase(_marks.begin() + index);
+        if (!isMarked()) {
+            size_t at = 0;
+            while (at < _marks.size() && _marks[at] < _page)
+                at++;
+            _marks.insert(_marks.begin() + at, _page);
+        }
+    }
+    saveState();
+    setDirty();
 }
 
 void PbPageWindow::showContents()
@@ -1489,15 +1976,18 @@ void PbPageWindow::showContents()
         Message(ICON_INFORMATION, const_cast<char *>("CoolReader"), const_cast<char *>("@No_contents"), 2000);
         return;
     }
-    // the list of the book contents takes the entries of the firmware type; pages from 1
-    std::vector<tocentry> entries(toc.size());
-    std::vector<lString8> titles(toc.size());
-    for (size_t i = 0; i < toc.size(); i++) {
-        titles[i] = lString8(toc[i].title.c_str());
+    // the list of the book contents takes the entries of the firmware type; pages from 1. The last
+    // entry is "End" with the number of the last page, as in the contents of a book (the list
+    // shows the pages).
+    std::vector<tocentry> entries(toc.size() + 1);
+    std::vector<lString8> titles(toc.size() + 1);
+    for (size_t i = 0; i <= toc.size(); i++) {
+        const bool end = i == toc.size();
+        titles[i] = end ? UnicodeToUtf8(lString32(_("End"))) : lString8(toc[i].title.c_str());
         memset(&entries[i], 0, sizeof(tocentry));
-        entries[i].level = toc[i].level + 1;
-        entries[i].page = toc[i].page + 1;
-        entries[i].position = toc[i].page + 1;
+        entries[i].level = end ? 1 : toc[i].level + 1;
+        entries[i].page = end ? _doc->pageCount() : toc[i].page + 1;
+        entries[i].position = entries[i].page;
         entries[i].text = const_cast<char *>(titles[i].c_str());
     }
     PbTocList::instance().open(_wm, &entries[0], (int)entries.size(), _page + 1);

@@ -25,6 +25,7 @@
     #endif
     #include "web.h"
     #include "ota_update.h"
+    #include "pb_kosync.h"
     #include "pb_toc.h"
 #endif
 #include "opdsbrowser.h"
@@ -1419,6 +1420,10 @@ static void pbPageShown()
 {
     if (main_win == NULL || isStandByMode)
         return;
+#ifdef POCKETBOOK_PRO
+    // the position sync: the time of the last page turned
+    PbKosync::instance().pageShown(main_win->getDocView()->getCurPage());
+#endif
     bool on = main_win->getProps()->getIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1) != 0;
     // once, and when the setting is changed: what the log lines below are about
     static int logged = -1;
@@ -2482,8 +2487,14 @@ public:
     }
     virtual bool onCommand( int command, int params = 0 )
     {
-        if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)) {
-            // The keyboard handler executes this command: hand it to the reader window.
+        // The keyboard handler executes this command: hand it to the reader window. Every screen
+        // that asks for text here is named (the commands of another one were lost: the login and
+        // the password of the position sync were not kept, and the next tap went to the book).
+        if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)
+#ifdef POCKETBOOK_PRO
+                || PbKosync::isKosyncCommand(command)
+#endif
+                ) {
             _pending = NULL;
             _wm->postCommand(command, params);
             _wm->closeWindow( this );
@@ -2510,6 +2521,36 @@ public:
 };
 
 CRPocketBookKeyboardWindow * CRPocketBookKeyboardWindow::_pending = NULL;
+
+// pbMessageLater: the message waits for the window of the command to be drawn (the owner: "a
+// window appears for a moment and is gone", the message that a catalog wants a login)
+static lString8 pbLaterTitle, pbLaterText;
+static int pbLaterIcon = 0, pbLaterTimeout = 0;
+
+static void pbMessageLaterTimer()
+{
+    Message(pbLaterIcon, const_cast<char *>(pbLaterTitle.c_str()), const_cast<char *>(pbLaterText.c_str()),
+            pbLaterTimeout);
+}
+
+void pbMessageLater(int icon, const char * title, const char * text, int timeout)
+{
+    pbLaterIcon = icon;
+    pbLaterTitle = title;
+    pbLaterText = text;
+    pbLaterTimeout = timeout;
+    SetWeakTimer("PbMessageLater", pbMessageLaterTimer, 150);
+}
+
+bool pbNetConnecting = false;
+
+int pbNetConnect()
+{
+    pbNetConnecting = true;
+    const int rc = NetConnect(NULL);
+    pbNetConnecting = false;
+    return rc;
+}
 
 void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handler)(char *))
 {
@@ -2603,6 +2644,8 @@ public:
     virtual bool isDirty();
     virtual void clearSelection() { _word.clear(); }
     void noTranslation();
+    /// the search of a word typed on the keyboard (a page of the original without text)
+    void openSearch() { searchDictionary(); }
 };
 
 class CRPbDictionaryMenuItem : public CRMenuItem
@@ -2708,10 +2751,31 @@ protected:
     // the finger went down in the dictionary window: the window gets the touch until it is lifted,
     // also where the finger leaves the window
     bool _touchInDictView;
+#ifdef CR3_PAGEDOC
+    // The window over the pages of a PDF or a DjVu (its words: PbPageWindow::dictWord*), NULL over a
+    // book. Set every time the window is shown (showDictDialog).
+    PbPageWindow * _pages;
+#endif
+    bool overPages() const
+    {
+#ifdef CR3_PAGEDOC
+        return _pages != NULL;
+#else
+        return false;
+#endif
+    }
+    /// over the pages: the word chosen there is the word of the window
+    void onPageWord(bool translate);
 public:
+#ifdef CR3_PAGEDOC
+    void setPages(PbPageWindow * pages) { _pages = pages; }
+#endif
     CRPbDictionaryDialog(CRGUIWindowManager * wm) : CRGUIWindowBase(wm), _dictView(NULL),
         _touchDownX(-1), _touchDownY(-1), _touchInDictView(false)
     {
+#ifdef CR3_PAGEDOC
+        _pages = NULL;
+#endif
         _wordSelector = NULL;
         _fullscreen = true;
         CRGUIAcceleratorTableRef acc = _wm->getAccTables().get("dict");
@@ -2736,7 +2800,7 @@ public:
     {
         if (_dictViewActive != active) {
             _dictViewActive = active;
-            if (!active && isWordSelection())
+            if (!active && isWordSelection() && !overPages())
                 _wordSelector->moveBy(DIR_ANY, 0);
             setDocDirty();
             Update();
@@ -2824,6 +2888,17 @@ public:
                 _touchDownX = _touchDownY = -1;
         }
 
+#ifdef CR3_PAGEDOC
+        if (_pages != NULL) {
+            // the word of the text layer under the finger, or the nearest one
+            if (!_pages->dictWordAt(x, y))
+                return true;
+            onPageWord(false);
+            if (CRTOUCH_UP == evType)
+                _wm->onCommand(PB_CMD_TRANSLATE, 0);
+            return true;
+        }
+#endif
         ldomXPointer p = _docview->getNodeByPoint( pt );
         if ( !p.isNull() )
         {
@@ -2980,12 +3055,13 @@ private:
     lString32 m_link;
     void freeContents()
     {
-        for (int i = 0; i < _tocLength; i++) {
+        for (int i = 0; _toc != NULL && i < _tocLength; i++) {
             if (_toc[i].text)
                 free(_toc[i].text);
         }
         free(_toc);
         _toc = NULL;
+        _tocLength = 0;
     }
     void switchToRecentBook(int index)
     {
@@ -3103,21 +3179,45 @@ protected:
             _wm->update(true);
     }
 
-    bool rotateApply(int params,  bool saveOrient = true)
+    /// ofPages: the turn for the pages of a PDF or a DjVu with an orientation of their own
+    /// (PB_CMD_ROTATE_FOR_PAGES), and back from it.
+    bool rotateApply(int params,  bool saveOrient = true, bool ofPages = false)
     {
         int orient = GetOrientation();
         CRLog::info("rotation chosen by hand: %d, screen orientation %d, global orientation %d, keeporient %d",
                     params, orient, GetGlobalOrientation(), pbGlobals->getKeepOrientation());
         if (orient == params)
             return true;
-        if (params == -1 || pbGlobals->getKeepOrientation() == 0 || pbGlobals->getKeepOrientation() == 2) {
+        // The orientation of the pages of a PDF or a DjVu is that of the program only. With
+        // "keeporient" 0 or 2 a turn is the orientation of the whole reader (SetGlobalOrientation):
+        // for the pages it stayed after the program was left from them, where the turn back is
+        // only posted and never done, and the library and the next book came turned.
+        bool ownOfPages = ofPages;
+#ifdef CR3_PAGEDOC
+        ownOfPages = ownOfPages || (PbPageWindow::instance != NULL
+                                    && getProps()->getIntDef(PROP_POCKETBOOK_PAGES_ORIENTATION, -1) >= 0);
+#endif
+        if (params == -1 || (!ownOfPages && (pbGlobals->getKeepOrientation() == 0 || pbGlobals->getKeepOrientation() == 2))) {
             SetGlobalOrientation(params);
         } else {
             SetOrientation(params);
         }
         cr_rotate_angle_t oldOrientation = pocketbook_orientations[orient];
         cr_rotate_angle_t newOrientation = pocketbook_orientations[GetOrientation()];
-        if (saveOrient) {
+        bool pagesOwn = false;
+#ifdef CR3_PAGEDOC
+        // over the pages of a file with an orientation of their own, a turn chosen by hand is the
+        // new orientation of the pages; that of the books stays
+        if (saveOrient && PbPageWindow::instance != NULL
+                && getProps()->getIntDef(PROP_POCKETBOOK_PAGES_ORIENTATION, -1) >= 0) {
+            CRPropRef newProps = getNewProps();
+            newProps->setInt(PROP_POCKETBOOK_PAGES_ORIENTATION, newOrientation);
+            applySettings();
+            saveSettings(lString32::empty_str);
+            pagesOwn = true;
+        }
+#endif
+        if (saveOrient && !pagesOwn) {
             CRPropRef newProps = getNewProps();
             newProps->setInt(PROP_POCKETBOOK_ORIENTATION, newOrientation);
             applySettings();
@@ -3588,6 +3688,21 @@ public:
         // Program update over the network
         if (PbOta::isOtaCommand(command))
             return PbOta::instance().onCommand(_wm, command, params);
+        // The position sync of KOReader: its screen and the actions
+        if (PbKosync::isKosyncCommand(command))
+            return PbKosync::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_KOSYNC) {
+            PbKosync::instance().open(_wm, params == 1);
+            return true;
+        }
+        if (command == PB_CMD_KOSYNC_PUSH) {
+            PbKosync::instance().sendNow();
+            return true;
+        }
+        if (command == PB_CMD_KOSYNC_PULL) {
+            PbKosync::instance().getNow();
+            return true;
+        }
         #endif
         // Debugging: the log of the program
         if (PbDebug::isDebugCommand(command))
@@ -3648,6 +3763,14 @@ public:
             }
         case PB_CMD_ROTATE_ANGLE_SET:
             return rotateApply(params);
+#ifdef CR3_PAGEDOC
+        case PB_CMD_ROTATE_FOR_PAGES:
+            // the angle of the pages of a PDF or a DjVu, or back to that of the books: not saved
+            // as the orientation of the books
+            if (params >= 0 && params <= 3)
+                rotateApply(cr_oriantations[params], false, true);
+            return true;
+#endif
         case MCMD_SEARCH:
             {
                 _searchPattern.clear();
@@ -3851,6 +3974,9 @@ public:
 
     void showDictDialog(lvPoint &pt)
     {
+#ifdef CR3_PAGEDOC
+        getDictDialog()->setPages(NULL);
+#endif
         CRPbDictionaryProxyWindow *dlg = new CRPbDictionaryProxyWindow(getDictDialog());
         _wm->activateWindow( dlg );
         dlg->startWordSelection(pt);
@@ -3858,44 +3984,82 @@ public:
 
     void showDictDialog()
     {
+#ifdef CR3_PAGEDOC
+        getDictDialog()->setPages(NULL);
+#endif
         CRPbDictionaryProxyWindow *dlg = new CRPbDictionaryProxyWindow(getDictDialog());
         _wm->activateWindow( dlg );
         dlg->startWordSelection();
     }
 
+#ifdef CR3_PAGEDOC
+    /// The dictionary over the pages of a PDF or a DjVu: the word at the point of the screen
+    /// (atPoint), or the first word of the screen; a page without text: the word is typed.
+    void showDictOverPages(PbPageWindow * pages, bool atPoint, int x, int y)
+    {
+        getDictDialog()->setPages(pages);
+        CRPbDictionaryProxyWindow *dlg = new CRPbDictionaryProxyWindow(getDictDialog());
+        _wm->activateWindow( dlg );
+        if (atPoint) {
+            lvPoint pt(x, y);
+            dlg->startWordSelection(pt);
+        } else {
+            dlg->startWordSelection();
+        }
+    }
+#endif
+
+    /// The entries of the contents of the engine that have a title, into _toc, with room for the
+    /// entry "End" after them.
+    void readContents() {
+        LVPtrVector<LVTocItem, false> tocItems;
+        _docview->getFlatToc(tocItems);
+        _tocLength = 0;
+        if (tocItems.length() == 0)
+            return;
+        _toc = (tocentry *) malloc((tocItems.length() + 1) * sizeof(tocentry));
+        int j = 0;
+        for (int i = 0; i < tocItems.length(); i++) {
+            LVTocItem * item = tocItems[i];
+            if (item->getName().empty())
+                continue;
+            _toc[j].level = item->getLevel();
+            _toc[j].position = item->getPage() + 1;
+            _toc[j].page = _toc[j].position;
+            _toc[j].text = strdup(UnicodeToUtf8(item->getName()).c_str());
+            char *p = _toc[j++].text;
+            while (*p) {
+                if (*p == '\r' || *p == '\n') *p = ' ';
+                p++;
+            }
+        }
+        _tocLength = j;
+        if (j == 0) {
+            free(_toc);
+            _toc = NULL;
+        }
+    }
+
     void showContents() {
         if (_toc != NULL)
             freeContents();
-        LVPtrVector<LVTocItem, false> tocItems;
-        _docview->getFlatToc(tocItems);
-        _tocLength = tocItems.length();
+        readContents();
+
+        // A book with no contents of its own: the contents of its headings (h1 to h6, and the
+        // headings a style marks so), which the engine makes. A tester sent an EPUB whose toc.ncx
+        // lists nothing (written so by Calibre): its contents were "Start, Section 1, Section 2...,
+        // End", made of the files of the book, with numbers that were not those of its chapters.
+        // Made once: the engine keeps such contents in the cache of the book with their mark.
+        ldomDocument * doc = _docview->getDocument();
+        if( _tocLength < 2 && doc != NULL && !doc->isTocAlternativeToc() ) {
+            freeContents();
+            doc->buildAlternativeToc();
+            _docview->updatePageNumbers(doc->getToc());
+            readContents();
+            CRLog::info("contents: the book has none, %d entries made of its headings", _tocLength);
+        }
 
         int tocSize;
-
-        if (_tocLength) {
-            tocSize = (_tocLength + 1) * sizeof(tocentry);
-            _toc = (tocentry *) malloc(tocSize);
-            int j = 0;
-            for (int i = 0; i < tocItems.length(); i++) {
-                LVTocItem * item = tocItems[i];
-                if (item->getName().empty())
-                    continue;
-                _toc[j].level = item->getLevel();
-                _toc[j].position = item->getPage() + 1;
-                _toc[j].page = _toc[j].position;
-                _toc[j].text = strdup(UnicodeToUtf8(item->getName()).c_str());
-                char *p = _toc[j++].text;
-                while (*p) {
-                    if (*p == '\r' || *p == '\n') *p = ' ';
-                    p++;
-                }
-            }
-            _tocLength = j;
-            if (j == 0) {
-                free(_toc);
-                _toc = NULL;
-            }
-        }
 
         // If there are no TOC entries try setting the section bounds as TOC
         if( _tocLength < 2 ) {
@@ -3908,6 +4072,7 @@ public:
 
             if( sbounds.length() > 1 ) {
 
+                // Start, the sections, and room for the entry "End"
                 _tocLength = sbounds.length()+2;
                 tocSize = _tocLength * sizeof(tocentry);
                 _toc = (tocentry *) malloc(tocSize);
@@ -3939,14 +4104,6 @@ public:
                     prevPage = page;
                 }
 
-                // End
-                index++;
-                page = main_win->getDocView()->getPageCount();
-                _toc[index].level = 1;
-                _toc[index].position = page;
-                _toc[index].page = page;
-                _toc[index].text = strdup(UnicodeToUtf8(lString32(_("End"))).c_str());
-
                 // Set real TOC real length
                 _tocLength = index+1;
             }
@@ -3958,14 +4115,29 @@ public:
             return;
         }
 
+        bool touchToc = false;
         #ifdef POCKETBOOK_PRO
-
         // If device supports touch, resolution is greater than 800x600 and a FW5 skin is used
-        if( canUseNewTouchToc() && main_win->getProps()->getIntDef(PROP_USE_NEW_TOUCH_TOC, 1) == 1 ) {
+        touchToc = canUseNewTouchToc() && main_win->getProps()->getIntDef(PROP_USE_NEW_TOUCH_TOC, 1) == 1;
+        #endif
+
+        // The last entry is "End" with the number of the last page, wherever the list shows the
+        // pages (the plain list always does): a tester asked for it, as the contents made of the
+        // sections had it and the contents of a book did not. Room for it is kept above.
+        if (!touchToc || main_win->getProps()->getIntDef(PROP_TOC_PAGE_NUMBERS, 1) == 1) {
+            const int page = _docview->getPageCount();
+            _toc[_tocLength].level = 1;
+            _toc[_tocLength].position = page;
+            _toc[_tocLength].page = page;
+            _toc[_tocLength].text = strdup(UnicodeToUtf8(lString32(_("End"))).c_str());
+            _tocLength++;
+        }
+
+        #ifdef POCKETBOOK_PRO
+        if (touchToc) {
             showTocTouchMenu(_toc, _tocLength, _docview->getCurPage() + 1);
             return;
         }
-
         #endif
 
         // The firmware contents window (OpenContents) crashes on firmware 6.11: a plain list instead.
@@ -4045,7 +4217,7 @@ public:
     }
 
     CRPropRef getNewProps() {
-        _props = _docview->propsGetCurrent() | _props;
+        _props = propsWithView();
         _newProps = LVClonePropsContainer( _props );
         return _newProps;
     }
@@ -4516,11 +4688,26 @@ public:
 
 CRPocketBookDocView * CRPocketBookDocView::instance = NULL;
 
+#ifdef CR3_PAGEDOC
+void pbShowDictOverPages(bool atPoint, int x, int y)
+{
+    if (CRPocketBookDocView::instance != NULL && PbPageWindow::instance != NULL)
+        CRPocketBookDocView::instance->showDictOverPages(PbPageWindow::instance, atPoint, x, y);
+}
+#endif
+
 static int pbDictWindowPosition()
 {
     if (CRPocketBookDocView::instance == NULL)
         return PB_DICT_POSITION_AUTO;
     return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
+}
+
+bool pbTocCollapsed()
+{
+    if (CRPocketBookDocView::instance == NULL)
+        return true;
+    return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_TOC_COLLAPSED, 1) != 0;
 }
 
 // font of the word list of the dictionary window, percent of the size the skin gives it
@@ -6129,6 +6316,9 @@ CRPbDictionaryDialog::CRPbDictionaryDialog( CRGUIWindowManager * wm, CRViewDialo
     CRPropRef props = CRPocketBookDocView::instance->getProps();
     _autoTranslate = props->getBoolDef(PROP_POCKETBOOK_DICT_AUTO_TRANSLATE, true);
     _wordTranslated = _dictViewActive = false;
+#ifdef CR3_PAGEDOC
+    _pages = NULL;
+#endif
     CRGUIAcceleratorTableRef mainAcc = CRPocketBookDocView::instance->getAccelerators();
     if (!mainAcc.isNull()) {
         int upKey = 0, upFlags = 0;
@@ -6165,6 +6355,28 @@ void CRPbDictionaryDialog::startWordSelection()
 // page, or a word of its end (fromEnd)
 void CRPbDictionaryDialog::selectWordOnCurrentPage(bool translate, bool fromEnd)
 {
+#ifdef CR3_PAGEDOC
+    if (_pages != NULL) {
+        // the first word of the screen of the pages, or one of its end
+        if (_pages->dictWordEdge(fromEnd)) {
+            onPageWord(translate);
+            return;
+        }
+        // a page without text (a scan): the word is typed (the list of the words of the
+        // dictionary and its search with the keyboard)
+        _selText.clear();
+        _dictView->noTranslation();
+        _wordTranslated = false;
+        setDocDirty();
+        if (translate) {
+            activateDictView(true);
+            _dictView->doActivate();
+            _dictView->openSearch();
+        }
+        Update();
+        return;
+    }
+#endif
     if (isWordSelection())
         endWordSelection();
     _wordSelector = new LVPageWordSelector(_docview);
@@ -6196,6 +6408,17 @@ bool CRPbDictionaryDialog::turnBookPage(int command, int params)
 {
     if (params == 0)
         params = 1;
+#ifdef CR3_PAGEDOC
+    if (_pages != NULL) {
+        // the next screen of the pages under the window; its first word, or one of its end
+        const bool back = command == DCMD_PAGEUP;
+        _pages->dictTurn(back ? -1 : 1);
+        selectWordOnCurrentPage(false, back && pbDictWindowPosition() == PB_DICT_POSITION_AUTO);
+        setDocDirty();
+        Update();
+        return true;
+    }
+#endif
     int curPage = _docview->getCurPage();
     bool ret = _docview->doCommand((LVDocCmd)command, params);
     if (curPage != _docview->getCurPage()) {
@@ -6216,6 +6439,16 @@ bool CRPbDictionaryDialog::turnBookPage(int command, int params)
 
 void CRPbDictionaryDialog::startWordSelection(lvPoint &pt)
 {
+#ifdef CR3_PAGEDOC
+    if (_pages != NULL) {
+        _selText.clear();
+        if (_pages->dictWordAt(pt.x, pt.y))
+            onPageWord(true);
+        else
+            selectWordOnCurrentPage(true);
+        return;
+    }
+#endif
     if (isWordSelection())
         endWordSelection();
     _wordSelector = new LVPageWordSelector(_docview);
@@ -6306,6 +6539,52 @@ void CRPbDictionaryDialog::onWordSelection(bool translate)
     }
 }
 
+// The word chosen over the pages of a PDF or a DjVu: as onWordSelection for a word of a book, with
+// its text and its place taken from the window of the pages.
+void CRPbDictionaryDialog::onPageWord(bool translate)
+{
+#ifdef CR3_PAGEDOC
+    lString32 text;
+    lvRect wRc;
+    if (_pages == NULL || !_pages->dictWord(text, wRc)) {
+        _dictView->noTranslation();
+        _wordTranslated = false;
+        return;
+    }
+    // the window stays where the display settings put it, or goes to the half away from the word
+    lvRect rc(_dictView->getRect());
+    const int middle = _wm->getScreen()->getHeight() / 2;
+    const int position = pbDictWindowPosition();
+    const bool top = position == PB_DICT_POSITION_TOP || (position == PB_DICT_POSITION_AUTO && wRc.bottom > middle);
+    const bool bottom = position == PB_DICT_POSITION_BOTTOM || (position == PB_DICT_POSITION_AUTO && wRc.bottom <= middle);
+    if (top) {
+        rc.top = 0;
+        rc.bottom = _dictView->getDesiredHeight();
+        _dictView->setRect(rc);
+    } else if (bottom) {
+        rc.bottom = _wm->getScreen()->getHeight();
+        rc.top = rc.bottom - _dictView->getDesiredHeight();
+        _dictView->setRect(rc);
+    }
+    const bool firstTime = _selText.empty();
+    _selText = text;
+    setDocDirty();
+    if (!translate) {
+        Update();
+    } else if (_autoTranslate) {
+        if (!firstTime) {
+            Update();
+            pbGlobals->startTranslateTimer();
+        } else
+            _wm->onCommand(PB_CMD_TRANSLATE, 0);
+    } else {
+        Update();
+    }
+#else
+    (void)translate;
+#endif
+}
+
 bool CRPbDictionaryDialog::onCommand( int command, int params )
 {
     MoveDirection dir = DIR_ANY;
@@ -6358,6 +6637,15 @@ bool CRPbDictionaryDialog::onCommand( int command, int params )
     default:
         return false;
     }
+#ifdef CR3_PAGEDOC
+    if (_pages != NULL) {
+        // the word to the side, or on the line above or under, of the screen of the pages
+        _pages->dictWordMove(dir == DIR_LEFT ? -1 : dir == DIR_RIGHT ? 1 : 0,
+                             dir == DIR_UP ? -1 : dir == DIR_DOWN ? 1 : 0);
+        onPageWord(true);
+        return true;
+    }
+#endif
     CRLog::trace("Before move");
     _wordSelector->moveBy(dir, 1);
     onWordSelection();
@@ -6367,6 +6655,24 @@ bool CRPbDictionaryDialog::onCommand( int command, int params )
 
 void CRPbDictionaryDialog::draw()
 {
+#ifdef CR3_PAGEDOC
+    if (_docDirty && _pages != NULL) {
+        // the screen of the pages with the word chosen, beside the window
+        LVDrawBuf & canvas = *_wm->getScreen()->getCanvas();
+        lvRect saveClip;
+        canvas.GetClipRect(&saveClip);
+        lvRect docRc = getRect();
+        lvRect dictRc = _dictView->getRect();
+        if (dictRc.top > 0)
+            docRc.bottom = dictRc.top - 1;
+        else
+            docRc.top = dictRc.bottom + 1;
+        canvas.SetClipRect(&docRc);
+        _pages->dictDrawPage(&canvas);
+        canvas.SetClipRect(&saveClip);
+        _docDirty = false;
+    }
+#endif
     if (_docDirty) {
         LVDocImageRef page = _docview->getPageImage(0);
         LVDrawBuf & canvas = *_wm->getScreen()->getCanvas();
@@ -7107,6 +7413,7 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_TOC_COLLAPSED, 1);
 #ifdef CR3_PAGEDOC
         // the picture mode: a new file starts with every page levelled by itself and its content
         // in the screen (the owner's word: a scan is crooked more often than not), and a page turn
@@ -7123,6 +7430,7 @@ int InitDoc(const char *exename, char *fileName)
             pages->setIntDef(PROP_POCKETBOOK_PAGES_PAGE_NUMBER,
                              pages->getIntDef("cr3.pocketbook.pdf.page.number", 1));
             pages->setIntDef(PROP_POCKETBOOK_PAGES_TEXT, pages->getIntDef("cr3.pocketbook.pdf.text", 1));
+            pages->setIntDef(PROP_POCKETBOOK_PAGES_ORIENTATION, -1);
         }
 #endif
         {
@@ -7134,6 +7442,7 @@ int InitDoc(const char *exename, char *fileName)
         }
         #ifdef POCKETBOOK_PRO
         PbOta::setDefaults(main_win->getProps());
+        PbKosync::setDefaults(main_win->getProps());
         #endif
 
         int orient;
@@ -7763,9 +8072,10 @@ static bool need_save_cover = false;
 // alive when the reader leaves to the home screen, and opening the same book later shows the
 // program as it was left, with the settings menu or the touch menu still open over the page
 // (reported from InkPad 4: "sometimes a menu is open when I enter the book"). The touch menu is
-// closed; the settings menu is closed the way the Back key closes it, level by level, so what
-// was changed in it is applied. A screen with a content of its own (a catalog, the statistics,
-// the dictionary, a list with a font sample) stays as it was left.
+// closed, and every window over the book (or over the pages of a PDF or a DjVu): the settings
+// menu the way the Back key closes it, level by level, so what was changed in it is applied; the
+// main menu, the lists, a catalog, the dictionary and the others too (the owner, 2026-11-22: the
+// program must not remember a menu left open; a catalog and the dictionary had been kept).
 // Returns the number of the windows closed. The caller draws the page: the firmware shows the
 // canvas as the program left it, and without a draw of ours the closed menu stayed on the screen
 // over a program that already was in the book (InkPad 4, 2026-11-17).
@@ -7780,19 +8090,35 @@ static int pbCloseMenusOverBook()
         CRPocketBookQuickMenuWindow::instance->SelfCloseNoUpdate();
         closed++;
     }
-    for (int guard = 0; guard < 12 && wm->getWindowCount() > 1; guard++) {
+    for (int guard = 0; guard < 16 && wm->getWindowCount() > 1; guard++) {
         CRGUIWindow * top = wm->getTopVisibleWindow();
-        if (top == NULL || top->getSkinName() != lString32("#settings"))
+        if (top == NULL || top == main_win
+#ifdef CR3_PAGEDOC
+                || top == PbPageWindow::instance
+#endif
+                )
             break;
-        int count = wm->getWindowCount();
-        top->onCommand(MCMD_CANCEL, 0);
-        wm->processPostedEvents();
+        const int count = wm->getWindowCount();
+        if (top->getSkinName() == lString32("#settings")) {
+            // the way the Back key closes it: what was changed in the settings is applied
+            top->onCommand(MCMD_CANCEL, 0);
+            wm->processPostedEvents();
+        } else {
+            // closed as it is: its Back key would open the screen it came from (a list of
+            // catalogs, the settings) over the book again
+            wm->closeWindow(top);
+        }
         if (wm->getWindowCount() >= count)
             break;
         closed++;
     }
-    if (closed > 0)
+    if (closed > 0) {
+        // A window closed here has not tidied up as its Back key does: the word chosen for the
+        // dictionary, the text found, the link picked would stay marked on the page.
+        if (main_win != NULL && main_win->getDocView() != NULL)
+            main_win->getDocView()->clearSelection();
         CRLog::info("Back from the background: %d menu window(s) over the book closed", closed);
+    }
     return closed;
 }
 #endif
@@ -7857,7 +8183,9 @@ int main_handler(int type, int par1, int par2)
 #ifdef POCKETBOOK_PRO
     case EVT_FOREGROUND:
         // back after two seconds or more: to the book, not to a menu left open over it
-        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL)
+        // (not from the dialog of the networks of the firmware, which a window of ours asked for
+        // and waits for: pbNetConnecting)
+        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL && !pbNetConnecting)
             pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
         pbBackgroundAt = 0;
         break;
@@ -7977,6 +8305,8 @@ int main_handler(int type, int par1, int par2)
     case EVT_BACKGROUND:
     	SetWeakTimer("SaveStateTimer", SetSaveStateTimer, 500);
         stopStandByTimer();
+        // the position sync: the place sent while Wi-Fi is on, otherwise kept
+        PbKosync::instance().bookClosing();
         break;
     case EVT_FOREGROUND:
         // the menus over the book were closed: the page goes to the canvas and to the screen
@@ -7985,6 +8315,12 @@ int main_handler(int type, int par1, int par2)
             CRPocketBookWindowManager::instance->update(true);
             restartStandByTimer();
         }
+        // the position sync: the places kept sent, the place asked for
+        PbKosync::instance().foregrounded();
+        break;
+    case PB_EVT_NET_CONNECTED:
+        // Wi-Fi turned on (firmware 6): the places kept sent, the place asked for
+        PbKosync::instance().networkConnected();
         break;
 #endif
     case EVT_EXIT:

@@ -13,7 +13,10 @@ T=/tmp/pagebench-src; rm -rf "$T"; mkdir -p "$T"
 for f in "$CLONE/cr3gui/src/pb_pagedoc.cpp" "$CLONE/cr3gui/src/pb_pagedoc.h" "$HERE/pagebench.cpp"; do
     tr -d '\r' < "$f" > "$T/$(basename "$f")"
 done
+# (the messages to a file, the old tool removed first: see build_pdf2book.sh)
+rm -f "$OUT/pagebench"
 g++ -std=gnu++11 -O2 -Wall -I"$T" -I"$MU/include" -I"$DJ" "$T/pagebench.cpp" "$T/pb_pagedoc.cpp" \
     -L"$MU/build/host" -lmupdf -lmupdf-third "$DJ/build-host/libdjvu/.libs/libdjvulibre.a" \
-    -lpthread -lm -o "$OUT/pagebench" 2>&1 | head -40
+    -lpthread -lm -o "$OUT/pagebench" > "$T/build.log" 2>&1
+head -40 "$T/build.log"
 ls -la "$OUT/pagebench"

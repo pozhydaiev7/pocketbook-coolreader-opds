@@ -688,6 +688,50 @@ public:
         }
         return found;
     }
+    virtual void words(int page, std::vector<PbPageWord> & out) {
+        out.clear();
+        if (!loadList(page))
+            return;
+        fz_stext_page * text = NULL;
+        fz_var(text);
+        fz_try(_ctx) {
+            fz_stext_options options;
+            memset(&options, 0, sizeof(options));
+            text = fz_new_stext_page_from_display_list(_ctx, _cur->list, &options);
+            const float ox = _origins[page].x, oy = _origins[page].y;
+            for (fz_stext_block * b = text->first_block; b; b = b->next) {
+                if (b->type != FZ_STEXT_BLOCK_TEXT)
+                    continue;
+                for (fz_stext_line * line = b->u.t.first_line; line; line = line->next) {
+                    PbPageWord word;
+                    fz_rect box = fz_empty_rect;
+                    // a word ends at a space and at the end of its line
+                    for (fz_stext_char * ch = line->first_char;; ch = ch->next) {
+                        const bool space = ch == NULL || ch->c <= 32 || ch->c == 0xA0;
+                        if (space && !word.text.empty()) {
+                            word.box = PbPageBox(box.x0 - ox, box.y0 - oy, box.x1 - ox, box.y1 - oy);
+                            out.push_back(word);
+                            word.text.clear();
+                            box = fz_empty_rect;
+                        }
+                        if (ch == NULL)
+                            break;
+                        if (space)
+                            continue;
+                        char buf[8];
+                        word.text.append(buf, fz_runetochar(buf, ch->c));
+                        box = fz_union_rect(box, fz_rect_from_quad(ch->quad));
+                    }
+                }
+            }
+        }
+        fz_always(_ctx) {
+            fz_drop_stext_page(_ctx, text);
+        }
+        fz_catch(_ctx) {
+            out.clear();
+        }
+    }
 };
 
 // ------------------------------------------------------------------------------------ DjVu
@@ -1001,6 +1045,49 @@ public:
             ddjvu_miniexp_release(_doc, text);
         return found;
     }
+    /// The zones "word" of the text layer: (word xmin ymin xmax ymax "text"), in pixels of the
+    /// scan with y going up; a word may also stand as a line of no smaller zones.
+    void collectWords(miniexp_t zone, float height, std::vector<PbPageWord> & out) {
+        if (!miniexp_consp(zone) || !miniexp_symbolp(miniexp_car(zone)))
+            return;
+        const char * kind = miniexp_to_name(miniexp_car(zone));
+        miniexp_t r = miniexp_cdr(zone);
+        int coords[4];
+        for (int i = 0; i < 4; i++) {
+            if (!miniexp_consp(r) || !miniexp_numberp(miniexp_car(r)))
+                return;
+            coords[i] = miniexp_to_int(miniexp_car(r));
+            r = miniexp_cdr(r);
+        }
+        if (miniexp_consp(r) && miniexp_stringp(miniexp_car(r))) {
+            // the zone holds its text: a word, or a line not cut into words (a page or a
+            // paragraph given as one string is too large to pick a word from)
+            const char * s = miniexp_to_str(miniexp_car(r));
+            std::string text(s ? s : "");
+            if (!text.empty() && (strcmp(kind, "word") == 0 || strcmp(kind, "line") == 0)) {
+                PbPageWord word;
+                word.box = PbPageBox((float)coords[0], height - coords[3], (float)coords[2], height - coords[1]);
+                word.text = text;
+                out.push_back(word);
+            }
+            return;
+        }
+        for (; miniexp_consp(r); r = miniexp_cdr(r))
+            collectWords(miniexp_car(r), height, out);
+    }
+    virtual void words(int page, std::vector<PbPageWord> & out) {
+        out.clear();
+        PbPageSize size;
+        if (page < 0 || page >= _count || !pageSize(page, size))
+            return;
+        miniexp_t text;
+        while ((text = ddjvu_document_get_pagetext(_doc, page, "word")) == miniexp_dummy)
+            pump(true);
+        if (!miniexp_consp(text))
+            return;
+        collectWords(text, size.height, out);
+        ddjvu_miniexp_release(_doc, text);
+    }
 };
 
 // ------------------------------------------------------------------------------------ common
@@ -1043,6 +1130,27 @@ PbPageDoc * PbPageDoc::open(const char * path, std::string * error)
             *error = "not a PDF or DjVu file";
         return NULL;
     }
+}
+
+// As render draws a frame: the point (cx, cy) of the page goes to the middle of the buffer, the
+// page is zoomed and turned clockwise by the angle about it (y goes down).
+void PbPageDoc::toBuffer(const PbPageView & view, int width, int height, float px, float py, float & bx, float & by)
+{
+    const float a = view.angle * PB_PI / 180.0f;
+    const float c = cosf(a), s = sinf(a);
+    const float dx = (px - view.cx) * view.zoom, dy = (py - view.cy) * view.zoom;
+    bx = dx * c - dy * s + width * 0.5f;
+    by = dx * s + dy * c + height * 0.5f;
+}
+
+void PbPageDoc::fromBuffer(const PbPageView & view, int width, int height, float bx, float by, float & px, float & py)
+{
+    const float a = view.angle * PB_PI / 180.0f;
+    const float c = cosf(a), s = sinf(a);
+    const float ux = bx - width * 0.5f, uy = by - height * 0.5f;
+    const float zoom = view.zoom > 0 ? view.zoom : 1;
+    px = (ux * c + uy * s) / zoom + view.cx;
+    py = (-ux * s + uy * c) / zoom + view.cy;
 }
 
 PbPageView PbPageDoc::viewOfBox(const PbPageBox & box, float angle, int width, int height)

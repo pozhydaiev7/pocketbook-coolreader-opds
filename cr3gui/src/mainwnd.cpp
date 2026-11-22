@@ -46,6 +46,9 @@
 
 #ifdef CR_POCKETBOOK
 #include "cr3pocketbook.h"
+#ifdef POCKETBOOK_PRO
+#include "pb_kosync.h"
+#endif
 #include "pb_openwith.h"
 #include <inkview.h>
 #endif
@@ -715,10 +718,19 @@ void V3DocViewWin::closing()
     _props->setInt(PROP_FONT_SIZE, _docview->getFontSize());
     saveSettings(lString32::empty_str);
     saveHistory( lString32::empty_str, _props->getBoolDef( PROP_AUTOSAVE_BOOKMARKS, true ) );
+#if defined(CR_POCKETBOOK) && defined(POCKETBOOK_PRO)
+    // the place on the sync server, after it is kept here (a server that is down holds nothing)
+    PbKosync::instance().bookClosing();
+#endif
 }
 
 bool V3DocViewWin::loadDocument( lString32 filename )
 {
+#if defined(CR_POCKETBOOK) && defined(POCKETBOOK_PRO)
+    // the book read up to now sends its place before another one is opened
+    if ( _docview->getDocument() && !_fileName.empty() )
+        PbKosync::instance().bookClosing();
+#endif
     _fileName = filename;
     _loadingFile = true;
     bool loaded = _docview->LoadDocument( filename.c_str() );
@@ -736,6 +748,10 @@ bool V3DocViewWin::loadDocument( lString32 filename )
         _loadFileStart = 0;
         _lastPageCount = _docview->getPageCount();
     }
+#if defined(CR_POCKETBOOK) && defined(POCKETBOOK_PRO)
+    // the places kept are sent and the place on the sync server is asked for a moment later
+    PbKosync::instance().bookOpened();
+#endif
     return true;
 }
 
@@ -950,6 +966,10 @@ bool V3DocViewWin::saveSettings( lString32 filename )
 void V3DocViewWin::applySettings()
 {
     //showWaitIcon();
+#ifdef CR_POCKETBOOK
+    // the items of the main menu the settings menu filled its rows with, left as they were
+    _newProps = mainMenuItemsChanged( _wm, _newProps );
+#endif
     CRPropRef delta = _props ^ _newProps;
     CRLog::trace( "applySettings() - %d options changed", delta->getCount() );
 #ifdef CR_POCKETBOOK
@@ -972,10 +992,24 @@ void V3DocViewWin::applySettings()
     setAccelerators( _wm->getAccTables().get(lString32("main"), _props) );
 }
 
+CRPropRef V3DocViewWin::propsWithView()
+{
+    // The owner: the address of the sync server, set on its screen, went back to the one of the
+    // start when the settings menu was opened and closed again. The settings of the program are
+    // those of the settings alone: the copy of the view gives none of them, a changed one or one
+    // that the settings have no more (the items of the main menu left as the keymaps have them).
+    CRPropRef view = _docview->propsGetCurrent();
+    CRPropRef ofView = LVCreatePropsContainer();
+    for ( int i = 0; i < view->getCount(); i++ )
+        if ( strncmp( view->getName( i ), "cr3.pocketbook.", 15 ) != 0 )
+            ofView->setString( view->getName( i ), view->getValue( i ) );
+    return ofView | _props;
+}
+
 void V3DocViewWin::applySetting( const char * name, const lString32 & value, bool save )
 {
     // as the settings menu does: the settings of the view, one of them changed
-    _props = _docview->propsGetCurrent() | _props;
+    _props = propsWithView();
     _newProps = LVClonePropsContainer( _props );
     _newProps->setString( name, value );
     applySettings();
@@ -987,7 +1021,7 @@ void V3DocViewWin::showSettingsMenu( int showItem )
 {
     LVFontRef menuFont( fontMan->GetFont( MENU_FONT_SIZE, 600, true, css_ff_sans_serif, lString8("Arial")) );
     //_props->set( _docview->propsGetCurrent() );
-    _props = _docview->propsGetCurrent() | _props;
+    _props = propsWithView();
     _newProps = LVClonePropsContainer( _props );
     lvRect rc = _wm->getScreen()->getRect();
     CRMenu * mainMenu = new CRSettingsMenu( _wm, _newProps, MCMD_SETTINGS_APPLY, menuFont,
@@ -1012,7 +1046,7 @@ void V3DocViewWin::showSettingsMenu( int showItem )
 #ifdef POCKETBOOK_PRO
 void V3DocViewWin::showTocTouchMenu(tocentry *tocItems, int length, int currentPage)
 {
-    _props = _docview->propsGetCurrent() | _props;
+    _props = propsWithView();
     _newProps = LVClonePropsContainer( _props );
     lvRect rc = _wm->getScreen()->getRect();
     CRMenu * mainMenu = new CRTocMenu( _wm, _newProps, MCMD_TOC_TOUCH,
@@ -1027,7 +1061,7 @@ void V3DocViewWin::showTocTouchMenu(tocentry *tocItems, int length, int currentP
 
 void V3DocViewWin::showFontSizeMenu()
 {
-    _props = _docview->propsGetCurrent() | _props;
+    _props = propsWithView();
     _newProps = LVClonePropsContainer( _props );
 
     CRMenu * menu = CRSettingsMenu::createFontSizeMenu(_wm, NULL, cr_font_sizes, sizeof(cr_font_sizes)/sizeof(int),
@@ -1038,7 +1072,7 @@ void V3DocViewWin::showFontSizeMenu()
 #if CR_INTERNAL_PAGE_ORIENTATION==1
 void V3DocViewWin::showOrientationMenu()
 {
-    _props = _docview->propsGetCurrent() | _props;
+    _props = propsWithView();
     _newProps = LVClonePropsContainer( _props );
 
     CRMenu * menu = CRSettingsMenu::createOrientationMenu( _wm, NULL, _newProps );
@@ -1144,13 +1178,37 @@ VIEWER_MENU_4ABOUT=About...
     // A book made of a PDF or a DjVu: the way back to the pages of the file as they are is the
     // first item of the menu of the book. (It was an item of the settings menu, on its second
     // page, beside nothing it had to do with.) The other way is "View as a book" in the menu of
-    // the picture mode.
-    if ( pbPdfBookIsOpen() )
+    // the picture mode. The book window keeps the book under the pages shown over it: the menu
+    // over the pages offers only the way to the book (the owner saw both items there).
+    PbPageWindow * pages = PbPageWindow::instance;
+    if ( pages == NULL && pbPdfBookIsOpen() )
         menu_win->addItem( new CRMenuItem( menu_win, PB_CMD_PDF_PAGES, _("View as the original"),
+                                           LVImageSourceRef(), LVFontRef() ) );
+    // Over the pages the menu is this one too, its first item the way to the book (a tester:
+    // the list of the view of a page came in its place). The items the window of the pages has
+    // nothing to act on with are left out below.
+    if ( pages != NULL && pages->canBeBook() )
+        menu_win->addItem( new CRMenuItem( menu_win, PB_CMD_PDF_PAGES, _("View as a book"),
                                            LVImageSourceRef(), LVFontRef() ) );
 #endif
 	CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString32("mainMenuItems"));
-	if ( !menuItems.isNull() && menuItems->length()>1 ) {
+    // (a menu of the keymaps needs two items; one chosen in the settings is a menu)
+    int fewest = 2;
+#ifdef CR_POCKETBOOK
+    // the items chosen in the settings (Control settings, Main menu), when they are set there;
+    // the key of an entry is its number, it is not looked up
+    if ( mainMenuItemsSet( _props ) ) {
+        fewest = 1;
+        menuItems = CRGUIAcceleratorTableRef( new CRGUIAcceleratorTable() );
+        for ( int n = 1; n <= MAIN_MENU_ITEM_COUNT; n++ ) {
+            int cmd = 0, param = 0;
+            lString32 action = _props->getStringDef( lString8(PROP_MAIN_MENU_ITEM).appendDecimal(n).c_str(), "NONE" );
+            if ( commandOfAction( action, cmd, param ) && cmd != 0 )
+                menuItems->add( 0x10000 + n, 0, cmd, param );
+        }
+    }
+#endif
+	if ( !menuItems.isNull() && menuItems->length() >= fewest ) {
 		// get menu from file
 #ifdef CR_POCKETBOOK
         // The list of citations has the row of a new citation, so a menu that has the list does
@@ -1167,6 +1225,10 @@ VIEWER_MENU_4ABOUT=About...
 			int param = acc->commandParam;
 #ifdef CR_POCKETBOOK
             if ( cmd == MCMD_CITE && hasCitesList )
+                continue;
+#endif
+#ifdef CR3_PAGEDOC
+            if ( pages != NULL && PbPageWindow::leavesOut( cmd ) )
                 continue;
 #endif
 			const char * name = getCommandName( cmd, param );
