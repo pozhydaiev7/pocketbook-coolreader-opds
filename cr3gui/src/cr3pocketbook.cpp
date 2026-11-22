@@ -25,6 +25,7 @@
     #endif
     #include "web.h"
     #include "ota_update.h"
+    #include "pb_kosync.h"
     #include "pb_toc.h"
 #endif
 #include "opdsbrowser.h"
@@ -1414,6 +1415,10 @@ static void pbPageShown()
 {
     if (main_win == NULL || isStandByMode)
         return;
+#ifdef POCKETBOOK_PRO
+    // the position sync: the time of the last page turned
+    PbKosync::instance().pageShown(main_win->getDocView()->getCurPage());
+#endif
     bool on = main_win->getProps()->getIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1) != 0;
     // once, and when the setting is changed: what the log lines below are about
     static int logged = -1;
@@ -2391,8 +2396,14 @@ public:
     }
     virtual bool onCommand( int command, int params = 0 )
     {
-        if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)) {
-            // The keyboard handler executes this command: hand it to the reader window.
+        // The keyboard handler executes this command: hand it to the reader window. Every screen
+        // that asks for text here is named (the commands of another one were lost: the login and
+        // the password of the position sync were not kept, and the next tap went to the book).
+        if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)
+#ifdef POCKETBOOK_PRO
+                || PbKosync::isKosyncCommand(command)
+#endif
+                ) {
             _pending = NULL;
             _wm->postCommand(command, params);
             _wm->closeWindow( this );
@@ -2419,6 +2430,36 @@ public:
 };
 
 CRPocketBookKeyboardWindow * CRPocketBookKeyboardWindow::_pending = NULL;
+
+// pbMessageLater: the message waits for the window of the command to be drawn (the owner: "a
+// window appears for a moment and is gone", the message that a catalog wants a login)
+static lString8 pbLaterTitle, pbLaterText;
+static int pbLaterIcon = 0, pbLaterTimeout = 0;
+
+static void pbMessageLaterTimer()
+{
+    Message(pbLaterIcon, const_cast<char *>(pbLaterTitle.c_str()), const_cast<char *>(pbLaterText.c_str()),
+            pbLaterTimeout);
+}
+
+void pbMessageLater(int icon, const char * title, const char * text, int timeout)
+{
+    pbLaterIcon = icon;
+    pbLaterTitle = title;
+    pbLaterText = text;
+    pbLaterTimeout = timeout;
+    SetWeakTimer("PbMessageLater", pbMessageLaterTimer, 150);
+}
+
+bool pbNetConnecting = false;
+
+int pbNetConnect()
+{
+    pbNetConnecting = true;
+    const int rc = NetConnect(NULL);
+    pbNetConnecting = false;
+    return rc;
+}
 
 void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handler)(char *))
 {
@@ -2889,12 +2930,13 @@ private:
     lString32 m_link;
     void freeContents()
     {
-        for (int i = 0; i < _tocLength; i++) {
+        for (int i = 0; _toc != NULL && i < _tocLength; i++) {
             if (_toc[i].text)
                 free(_toc[i].text);
         }
         free(_toc);
         _toc = NULL;
+        _tocLength = 0;
     }
     void switchToRecentBook(int index)
     {
@@ -3483,6 +3525,21 @@ public:
         // Program update over the network
         if (PbOta::isOtaCommand(command))
             return PbOta::instance().onCommand(_wm, command, params);
+        // The position sync of KOReader: its screen and the actions
+        if (PbKosync::isKosyncCommand(command))
+            return PbKosync::instance().onCommand(_wm, command, params);
+        if (command == PB_CMD_KOSYNC) {
+            PbKosync::instance().open(_wm, params == 1);
+            return true;
+        }
+        if (command == PB_CMD_KOSYNC_PUSH) {
+            PbKosync::instance().sendNow();
+            return true;
+        }
+        if (command == PB_CMD_KOSYNC_PULL) {
+            PbKosync::instance().getNow();
+            return true;
+        }
         #endif
         // Debugging: the log of the program
         if (PbDebug::isDebugCommand(command))
@@ -3758,39 +3815,57 @@ public:
         dlg->startWordSelection();
     }
 
+    /// The entries of the contents of the engine that have a title, into _toc, with room for the
+    /// entry "End" after them.
+    void readContents() {
+        LVPtrVector<LVTocItem, false> tocItems;
+        _docview->getFlatToc(tocItems);
+        _tocLength = 0;
+        if (tocItems.length() == 0)
+            return;
+        _toc = (tocentry *) malloc((tocItems.length() + 1) * sizeof(tocentry));
+        int j = 0;
+        for (int i = 0; i < tocItems.length(); i++) {
+            LVTocItem * item = tocItems[i];
+            if (item->getName().empty())
+                continue;
+            _toc[j].level = item->getLevel();
+            _toc[j].position = item->getPage() + 1;
+            _toc[j].page = _toc[j].position;
+            _toc[j].text = strdup(UnicodeToUtf8(item->getName()).c_str());
+            char *p = _toc[j++].text;
+            while (*p) {
+                if (*p == '\r' || *p == '\n') *p = ' ';
+                p++;
+            }
+        }
+        _tocLength = j;
+        if (j == 0) {
+            free(_toc);
+            _toc = NULL;
+        }
+    }
+
     void showContents() {
         if (_toc != NULL)
             freeContents();
-        LVPtrVector<LVTocItem, false> tocItems;
-        _docview->getFlatToc(tocItems);
-        _tocLength = tocItems.length();
+        readContents();
+
+        // A book with no contents of its own: the contents of its headings (h1 to h6, and the
+        // headings a style marks so), which the engine makes. A tester sent an EPUB whose toc.ncx
+        // lists nothing (written so by Calibre): its contents were "Start, Section 1, Section 2...,
+        // End", made of the files of the book, with numbers that were not those of its chapters.
+        // Made once: the engine keeps such contents in the cache of the book with their mark.
+        ldomDocument * doc = _docview->getDocument();
+        if( _tocLength < 2 && doc != NULL && !doc->isTocAlternativeToc() ) {
+            freeContents();
+            doc->buildAlternativeToc();
+            _docview->updatePageNumbers(doc->getToc());
+            readContents();
+            CRLog::info("contents: the book has none, %d entries made of its headings", _tocLength);
+        }
 
         int tocSize;
-
-        if (_tocLength) {
-            tocSize = (_tocLength + 1) * sizeof(tocentry);
-            _toc = (tocentry *) malloc(tocSize);
-            int j = 0;
-            for (int i = 0; i < tocItems.length(); i++) {
-                LVTocItem * item = tocItems[i];
-                if (item->getName().empty())
-                    continue;
-                _toc[j].level = item->getLevel();
-                _toc[j].position = item->getPage() + 1;
-                _toc[j].page = _toc[j].position;
-                _toc[j].text = strdup(UnicodeToUtf8(item->getName()).c_str());
-                char *p = _toc[j++].text;
-                while (*p) {
-                    if (*p == '\r' || *p == '\n') *p = ' ';
-                    p++;
-                }
-            }
-            _tocLength = j;
-            if (j == 0) {
-                free(_toc);
-                _toc = NULL;
-            }
-        }
 
         // If there are no TOC entries try setting the section bounds as TOC
         if( _tocLength < 2 ) {
@@ -3803,6 +3878,7 @@ public:
 
             if( sbounds.length() > 1 ) {
 
+                // Start, the sections, and room for the entry "End"
                 _tocLength = sbounds.length()+2;
                 tocSize = _tocLength * sizeof(tocentry);
                 _toc = (tocentry *) malloc(tocSize);
@@ -3834,14 +3910,6 @@ public:
                     prevPage = page;
                 }
 
-                // End
-                index++;
-                page = main_win->getDocView()->getPageCount();
-                _toc[index].level = 1;
-                _toc[index].position = page;
-                _toc[index].page = page;
-                _toc[index].text = strdup(UnicodeToUtf8(lString32(_("End"))).c_str());
-
                 // Set real TOC real length
                 _tocLength = index+1;
             }
@@ -3853,14 +3921,29 @@ public:
             return;
         }
 
+        bool touchToc = false;
         #ifdef POCKETBOOK_PRO
-
         // If device supports touch, resolution is greater than 800x600 and a FW5 skin is used
-        if( canUseNewTouchToc() && main_win->getProps()->getIntDef(PROP_USE_NEW_TOUCH_TOC, 1) == 1 ) {
+        touchToc = canUseNewTouchToc() && main_win->getProps()->getIntDef(PROP_USE_NEW_TOUCH_TOC, 1) == 1;
+        #endif
+
+        // The last entry is "End" with the number of the last page, wherever the list shows the
+        // pages (the plain list always does): a tester asked for it, as the contents made of the
+        // sections had it and the contents of a book did not. Room for it is kept above.
+        if (!touchToc || main_win->getProps()->getIntDef(PROP_TOC_PAGE_NUMBERS, 1) == 1) {
+            const int page = _docview->getPageCount();
+            _toc[_tocLength].level = 1;
+            _toc[_tocLength].position = page;
+            _toc[_tocLength].page = page;
+            _toc[_tocLength].text = strdup(UnicodeToUtf8(lString32(_("End"))).c_str());
+            _tocLength++;
+        }
+
+        #ifdef POCKETBOOK_PRO
+        if (touchToc) {
             showTocTouchMenu(_toc, _tocLength, _docview->getCurPage() + 1);
             return;
         }
-
         #endif
 
         // The firmware contents window (OpenContents) crashes on firmware 6.11: a plain list instead.
@@ -3940,7 +4023,7 @@ public:
     }
 
     CRPropRef getNewProps() {
-        _props = _docview->propsGetCurrent() | _props;
+        _props = propsWithView();
         _newProps = LVClonePropsContainer( _props );
         return _newProps;
     }
@@ -4416,6 +4499,13 @@ static int pbDictWindowPosition()
     if (CRPocketBookDocView::instance == NULL)
         return PB_DICT_POSITION_AUTO;
     return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
+}
+
+bool pbTocCollapsed()
+{
+    if (CRPocketBookDocView::instance == NULL)
+        return true;
+    return CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_TOC_COLLAPSED, 1) != 0;
 }
 
 // font of the word list of the dictionary window, percent of the size the skin gives it
@@ -7002,8 +7092,10 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_TOC_COLLAPSED, 1);
         #ifdef POCKETBOOK_PRO
         PbOta::setDefaults(main_win->getProps());
+        PbKosync::setDefaults(main_win->getProps());
         #endif
 
         int orient;
@@ -7617,9 +7709,10 @@ static bool need_save_cover = false;
 // alive when the reader leaves to the home screen, and opening the same book later shows the
 // program as it was left, with the settings menu or the touch menu still open over the page
 // (reported from InkPad 4: "sometimes a menu is open when I enter the book"). The touch menu is
-// closed; the settings menu is closed the way the Back key closes it, level by level, so what
-// was changed in it is applied. A screen with a content of its own (a catalog, the statistics,
-// the dictionary, a list with a font sample) stays as it was left.
+// closed, and every window over the book (or over the pages of a PDF or a DjVu): the settings
+// menu the way the Back key closes it, level by level, so what was changed in it is applied; the
+// main menu, the lists, a catalog, the dictionary and the others too (the owner, 2026-11-22: the
+// program must not remember a menu left open; a catalog and the dictionary had been kept).
 // Returns the number of the windows closed. The caller draws the page: the firmware shows the
 // canvas as the program left it, and without a draw of ours the closed menu stayed on the screen
 // over a program that already was in the book (InkPad 4, 2026-11-17).
@@ -7634,19 +7727,31 @@ static int pbCloseMenusOverBook()
         CRPocketBookQuickMenuWindow::instance->SelfCloseNoUpdate();
         closed++;
     }
-    for (int guard = 0; guard < 12 && wm->getWindowCount() > 1; guard++) {
+    for (int guard = 0; guard < 16 && wm->getWindowCount() > 1; guard++) {
         CRGUIWindow * top = wm->getTopVisibleWindow();
-        if (top == NULL || top->getSkinName() != lString32("#settings"))
+        if (top == NULL || top == main_win)
             break;
-        int count = wm->getWindowCount();
-        top->onCommand(MCMD_CANCEL, 0);
-        wm->processPostedEvents();
+        const int count = wm->getWindowCount();
+        if (top->getSkinName() == lString32("#settings")) {
+            // the way the Back key closes it: what was changed in the settings is applied
+            top->onCommand(MCMD_CANCEL, 0);
+            wm->processPostedEvents();
+        } else {
+            // closed as it is: its Back key would open the screen it came from (a list of
+            // catalogs, the settings) over the book again
+            wm->closeWindow(top);
+        }
         if (wm->getWindowCount() >= count)
             break;
         closed++;
     }
-    if (closed > 0)
+    if (closed > 0) {
+        // A window closed here has not tidied up as its Back key does: the word chosen for the
+        // dictionary, the text found, the link picked would stay marked on the page.
+        if (main_win != NULL && main_win->getDocView() != NULL)
+            main_win->getDocView()->clearSelection();
         CRLog::info("Back from the background: %d menu window(s) over the book closed", closed);
+    }
     return closed;
 }
 #endif
@@ -7711,7 +7816,9 @@ int main_handler(int type, int par1, int par2)
 #ifdef POCKETBOOK_PRO
     case EVT_FOREGROUND:
         // back after two seconds or more: to the book, not to a menu left open over it
-        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL)
+        // (not from the dialog of the networks of the firmware, which a window of ours asked for
+        // and waits for: pbNetConnecting)
+        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL && !pbNetConnecting)
             pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
         pbBackgroundAt = 0;
         break;
@@ -7831,6 +7938,8 @@ int main_handler(int type, int par1, int par2)
     case EVT_BACKGROUND:
     	SetWeakTimer("SaveStateTimer", SetSaveStateTimer, 500);
         stopStandByTimer();
+        // the position sync: the place sent while Wi-Fi is on, otherwise kept
+        PbKosync::instance().bookClosing();
         break;
     case EVT_FOREGROUND:
         // the menus over the book were closed: the page goes to the canvas and to the screen
@@ -7839,6 +7948,12 @@ int main_handler(int type, int par1, int par2)
             CRPocketBookWindowManager::instance->update(true);
             restartStandByTimer();
         }
+        // the position sync: the places kept sent, the place asked for
+        PbKosync::instance().foregrounded();
+        break;
+    case PB_EVT_NET_CONNECTED:
+        // Wi-Fi turned on (firmware 6): the places kept sent, the place asked for
+        PbKosync::instance().networkConnected();
         break;
 #endif
     case EVT_EXIT:

@@ -749,6 +749,8 @@ static const char * getCommandName( int command )
     case PB_CMD_LOCK_DEVICE: return _("Lock device");
     case PB_CMD_OTA_UPDATE: return _("Program update");
     case PB_CMD_OTA_UPDATE_DEV: return _("Program update");
+    case PB_CMD_KOSYNC_PUSH: return _("Send the place of the book");
+    case PB_CMD_KOSYNC_PULL: return _("Get the place of the book");
     case PB_CMD_CLEAR_CACHE: return _("Clear cache");
     #ifdef POCKETBOOK_PRO_FW5
     case PB_CMD_OPEN_SYSTEM_PANEL: return _("Open system panel");

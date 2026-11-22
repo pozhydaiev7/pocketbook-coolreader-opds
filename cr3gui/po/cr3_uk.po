@@ -2558,3 +2558,236 @@ msgstr "насиченість"
 #: ../src/settings.cpp
 msgid "Font size of the word list"
 msgstr "Розмір шрифту списку слів"
+
+#: ../src/settings.cpp
+msgid "Contents: levels closed"
+msgstr "Зміст: рівні згорнуті"
+
+#: ../src/settings.cpp
+msgid "Item"
+msgstr "Пункт"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Login..."
+msgstr "Логін..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Password..."
+msgstr "Пароль..."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "None: the catalog is open to all"
+msgstr "Немає: каталог відкритий для всіх"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Forget login and password"
+msgstr "Забути логін і пароль"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Login of the catalog"
+msgstr "Логін каталогу"
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "Password of the catalog"
+msgstr "Пароль каталогу"
+
+
+
+#: ../src/pb_kosync.cpp
+msgid "Reading position sync"
+msgstr "Синхронізація позицій читання"
+
+#: ../src/pb_kosync.cpp
+msgid "Server and login..."
+msgstr "Сервер і логін..."
+
+#: ../src/pb_kosync.cpp
+msgid "Server..."
+msgstr "Сервер..."
+
+#: ../src/pb_kosync.cpp
+msgid "Not set"
+msgstr "Не задано"
+
+#: ../src/pb_kosync.cpp
+msgid "Set"
+msgstr "Задано"
+
+#: ../src/pb_kosync.cpp
+msgid "Address of the sync server"
+msgstr "Адреса сервера синхронізації"
+
+#: ../src/pb_kosync.cpp
+msgid "Login on the sync server"
+msgstr "Логін на сервері синхронізації"
+
+#: ../src/pb_kosync.cpp
+msgid "Password on the sync server"
+msgstr "Пароль на сервері синхронізації"
+
+#: ../src/pb_kosync.cpp
+msgid "The place is asked for when a book is opened and sent when it is closed"
+msgstr "Позиція запитується під час відкриття книги й надсилається під час закриття"
+
+#: ../src/pb_kosync.cpp
+msgid "Newer place from another device"
+msgstr "Новіша позиція з іншого пристрою"
+
+#: ../src/pb_kosync.cpp
+msgid "Older place from another device"
+msgstr "Старіша позиція з іншого пристрою"
+
+#: ../src/pb_kosync.cpp
+msgid "Read there after the last page turned here"
+msgstr "Прочитано там після останнього гортання тут"
+
+#: ../src/pb_kosync.cpp
+msgid "Read there before the last page turned here"
+msgstr "Прочитано там до останнього гортання тут"
+
+#: ../src/pb_kosync.cpp
+msgid "Ask"
+msgstr "Запитати"
+
+#: ../src/pb_kosync.cpp
+msgid "Go there"
+msgstr "Перейти"
+
+#: ../src/pb_kosync.cpp
+msgid "Ignore"
+msgstr "Не переходити"
+
+#: ../src/pb_kosync.cpp
+msgid "Check the login"
+msgstr "Перевірити логін"
+
+#: ../src/pb_kosync.cpp
+msgid "The server is asked whether it knows you"
+msgstr "Сервер перевірить логін і пароль"
+
+#: ../src/pb_kosync.cpp
+msgid "Register on the server"
+msgstr "Зареєструватися на сервері"
+
+#: ../src/pb_kosync.cpp
+msgid "A new user with this login and password"
+msgstr "Новий користувач із цим логіном і паролем"
+
+#: ../src/pb_kosync.cpp
+msgid "Send the place of the book"
+msgstr "Надіслати позицію книги"
+
+#: ../src/pb_kosync.cpp
+msgid "Get the place of the book"
+msgstr "Отримати позицію книги"
+
+#: ../src/pb_kosync.cpp
+msgid "The place sent by another device"
+msgstr "Позиція, надіслана іншим пристроєм"
+
+#: ../src/pb_kosync.cpp
+msgid "Places not sent yet: $1"
+msgstr "Не надіслано позицій: $1"
+
+#: ../src/pb_kosync.cpp
+msgid "Send them now"
+msgstr "Надіслати зараз"
+
+#: ../src/pb_kosync.cpp
+msgid "Places sent: $1 of $2."
+msgstr "Надіслано позицій: $1 з $2."
+
+#: ../src/pb_kosync.cpp
+msgid "Registered: the server knows you now."
+msgstr "Реєстрацію виконано: сервер вас знає."
+
+#: ../src/pb_kosync.cpp
+msgid "The server has a user with this login already."
+msgstr "На сервері вже є користувач із таким логіном."
+
+#: ../src/pb_kosync.cpp
+msgid "The server did not register you (it may take no new users)."
+msgstr "Сервер не зареєстрував вас (можливо, він не приймає нових користувачів)."
+
+#: ../src/pb_kosync.cpp
+msgid "The login is right."
+msgstr "Логін і пароль правильні."
+
+#: ../src/pb_kosync.cpp
+msgid "The server did not accept the login and the password."
+msgstr "Сервер не прийняв логін і пароль."
+
+#: ../src/pb_kosync.cpp
+msgid "The server does not answer. Check its address and the network."
+msgstr "Сервер не відповідає. Перевірте його адресу й мережу."
+
+#: ../src/pb_kosync.cpp
+msgid "The reading position sync is off: Settings, Reading position sync."
+msgstr "Синхронізацію позицій читання вимкнено: Налаштування, Синхронізація позицій читання."
+
+#: ../src/pb_kosync.cpp
+msgid "Set the login of the sync server first: Settings, Reading position sync."
+msgstr "Спочатку вкажіть логін сервера синхронізації: Налаштування, Синхронізація позицій читання."
+
+#: ../src/pb_kosync.cpp
+msgid "No network connection. The place will be sent later."
+msgstr "Немає підключення до мережі. Позицію буде надіслано пізніше."
+
+#: ../src/pb_kosync.cpp
+msgid "The place has been sent."
+msgstr "Позицію надіслано."
+
+#: ../src/pb_kosync.cpp
+msgid "The place was not sent: the server does not answer. It will be sent later."
+msgstr "Позицію не надіслано: сервер не відповідає. Її буде надіслано пізніше."
+
+#: ../src/pb_kosync.cpp
+msgid "The server has no place of this book yet."
+msgstr "На сервері ще немає позиції цієї книги."
+
+#: ../src/pb_kosync.cpp
+msgid "The place on the server is the one sent from this device."
+msgstr "Позицію на сервері надіслано з цього пристрою."
+
+#: ../src/pb_kosync.cpp
+msgid "The place is the same already."
+msgstr "Позиція вже збігається."
+
+#: ../src/pb_kosync.cpp
+msgid "The book has gone to the place sent by another device."
+msgstr "Книгу відкрито на позиції, надісланій іншим пристроєм."
+
+#: ../src/pb_kosync.cpp
+msgid "Go to the newer place $1 sent by \"$2\"?"
+msgstr "Перейти на новішу позицію $1 з пристрою \"$2\"?"
+
+#: ../src/pb_kosync.cpp
+msgid "Go to the older place $1 sent by \"$2\"?"
+msgstr "Перейти на старішу позицію $1 з пристрою \"$2\"?"
+
+#: ../src/pb_kosync.cpp
+msgid "The certificate of the server is not accepted."
+msgstr "Сертифікат сервера не прийнято."
+
+#: ../src/pb_kosync.cpp
+msgid "The server sends the requests to another address. Check the address of the server."
+msgstr "Сервер переспрямовує запити на іншу адресу. Перевірте адресу сервера."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The catalog asks for a login and a password. Set them in its card: Login..., Password..."
+msgstr "Каталог просить логін і пароль. Укажіть їх у його картці: «Логін...», «Пароль...»."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "The catalog did not accept the login and the password. Check them in its card: Login..., Password..."
+msgstr "Каталог не прийняв логін і пароль. Перевірте їх у його картці: «Логін...», «Пароль...»."
+
+#: ../src/opds/opdsbrowser.cpp
+msgid "New catalog"
+msgstr "Новий каталог"
+
+#: ../src/pb_kosync.cpp
+msgid "Set the login and the password first."
+msgstr "Спочатку вкажіть логін і пароль."
+
+msgid "The catalog refused the request. If it asks for a login, set it in its card: Login..., Password..."
+msgstr "Каталог відмовив у доступі. Якщо він вимагає логін, укажіть його в картці каталогу: «Логін...», «Пароль...»."

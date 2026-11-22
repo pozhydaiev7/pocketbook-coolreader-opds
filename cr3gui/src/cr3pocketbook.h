@@ -60,6 +60,11 @@ enum CRPbCommands {
     PB_CMD_OPDS_CATALOGS,
     PB_CMD_READING_STATS,
     PB_CMD_DEBUG,
+    // the position sync of KOReader (pb_kosync.h): its screen (param 1: opened from the settings),
+    // the place of the open book sent, taken
+    PB_CMD_KOSYNC,
+    PB_CMD_KOSYNC_PUSH,
+    PB_CMD_KOSYNC_PULL,
     // the lists of the font face, the font size and the font weight with a sample (pb_fontpick.h)
     PB_CMD_FONT_FACE,
     PB_CMD_FONT_SIZE,
@@ -107,11 +112,14 @@ enum CRPbCommands {
 #define PROP_POCKETBOOK_ROTATE_MODE "cr3.pocketbook.rotate_mode"
 #define PROP_POCKETBOOK_ROTATE_ANGLE "cr3.pocketbook.rotate_angle"
 #define PROP_POCKETBOOK_GRAYBUFFER_BPP "cr3.pocketbook.buffer.bpp"
+// the contents open with the first level seen and the branch of the page read (1, the default),
+// or with every level (0); a branch opens and closes by its triangle (pb_toctree.h)
+#define PROP_POCKETBOOK_TOC_COLLAPSED "cr3.pocketbook.toc.collapsed"
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.7.2-opds-alpha2"
-#define CR_PB_BUILD_DATE "2026-11-19"
+#define CR_PB_VERSION "0.0.7.2-opds-alpha8"
+#define CR_PB_BUILD_DATE "2026-11-22"
 
 #define PB_ROTATE_MODE_360 0
 #define PB_ROTATE_MODE_180 1
@@ -217,7 +225,22 @@ void pbRequestLibraryScan();
 // The handler gets the entered text, or an empty string/NULL on cancel.
 void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handler)(char *));
 
+// A message of the firmware shown a moment later, over the window the command that asks for it
+// opens or goes back to (shown at once, it was drawn over by that window and gone at once).
+void pbMessageLater(int icon, const char * title, const char * text, int timeout);
+
+// The network connected through the firmware: NetConnect(NULL), the last network or the dialog of
+// the networks. The firmware may take the screen for that dialog and give it back: while
+// pbNetConnecting is set, the program sent to the background and back has not been left by the
+// reader (no place of a book is sent for it, no window over the book is closed: the one that
+// asked for the network is still at work).
+extern bool pbNetConnecting;
+int pbNetConnect();
+
 #define MIN_PAGE_TURN_SWIPE_WIDTH 0.1 /* 10% */
+
+// True when the contents open with their branches closed (PROP_POCKETBOOK_TOC_COLLAPSED).
+bool pbTocCollapsed();
 
 #ifdef POCKETBOOK_PRO
 void toggleSystemPanel();

@@ -25,15 +25,9 @@ using namespace opdsui;
 
 namespace {
 
-// Root certificates of the firmware. With one of them (or with the default of libcurl) the
-// certificate of the server is checked; when that check is refused, the request is made again
+// The certificate of the server is checked with the root certificates of the firmware
+// (web::caFile, or the default of libcurl); when that check is refused, the request is made again
 // without it, as the OPDS catalogs are read; the log says which way a request went.
-const char * const CA_FILES[] = {
-    "/ebrmain/share/ssl/certs/ca-certificates.crt",
-    "/etc/ssl/certs/ca-certificates.crt",
-    "/etc/ssl/cert.pem",
-    NULL
-};
 
 const char * const WINDOW_TITLE = "CoolReader";
 
@@ -242,7 +236,7 @@ bool networkUp(bool connect)
         return true;
     if (!connect)
         return false;
-    int rc = NetConnect(NULL);
+    int rc = pbNetConnect();
     CRLog::info("OTA: NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
     return rc == NET_OK;
 }
@@ -384,12 +378,7 @@ bool PbOta::fetch(bool connect, lString32 & error)
     rq.userAgent = "CoolReader-PocketBook/" CR_PB_VERSION;
     rq.accept = "application/vnd.github+json";
     rq.verifyPeer = true;
-    for (int i = 0; CA_FILES[i]; i++) {
-        if (access(CA_FILES[i], R_OK) == 0) {
-            rq.caInfo = CA_FILES[i];
-            break;
-        }
-    }
+    rq.caInfo = web::caFile();
     std::string body;
     bool ok = web::request(url, rq, &body, NULL);
     _verified = ok ? 1 : _verified;
@@ -845,18 +834,14 @@ void PbOta::download()
     rq.progressData = &progress;
     // the same way the list was got
     rq.verifyPeer = _verified == 1;
-    for (int i = 0; rq.verifyPeer && CA_FILES[i]; i++) {
-        if (access(CA_FILES[i], R_OK) == 0) {
-            rq.caInfo = CA_FILES[i];
-            break;
-        }
-    }
+    if (rq.verifyPeer)
+        rq.caInfo = web::caFile();
     CRLog::info("OTA: download %s", _card.url.c_str());
     bool ok = web::request(_card.url, rq, NULL, OTA_PACKAGE_PART);
     if (!ok && (rq.curlCode == CURLE_COULDNT_RESOLVE_HOST || rq.curlCode == CURLE_COULDNT_CONNECT)) {
         // the firmware told of a connection that was gone: connected anew, the download is
         // tried once more
-        int rc = NetConnect(NULL);
+        int rc = pbNetConnect();
         CRLog::info("OTA: the download failed (%s); NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rq.error.c_str(),
                     rc, QueryNetwork());
         if (rc == NET_OK) {

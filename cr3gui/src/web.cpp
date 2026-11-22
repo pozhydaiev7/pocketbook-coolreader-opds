@@ -1,9 +1,55 @@
 #include <crengine.h>
+#include <unistd.h>
 #include "web.h"
  
 //have to re-declare static members at file level
 char web::errorBuffer[CURL_ERROR_SIZE];
 string web::buffer;
+long web::lastHttpCode = 0;
+string web::authHost;
+string web::authUser;
+string web::authPassword;
+
+string web::hostOf(const string &url)
+{
+    size_t start = url.find("://");
+    start = start == string::npos ? 0 : start + 3;
+    // a login written in the address ("user:password@host") is no part of the host
+    const size_t authority = url.find_first_of("/?#", start);
+    const size_t at = url.rfind('@', authority == string::npos ? string::npos : authority);
+    if (at != string::npos && at >= start && (authority == string::npos || at < authority))
+        start = at + 1;
+    size_t end;
+    if (start < url.size() && url[start] == '[')
+        end = url.find(']', start) == string::npos ? string::npos : url.find(']', start) + 1;
+    else
+        end = url.find_first_of(":/?#", start);
+    string host = url.substr(start, end == string::npos ? string::npos : end - start);
+    for (size_t i = 0; i < host.size(); i++)
+        if (host[i] >= 'A' && host[i] <= 'Z')
+            host[i] = (char)(host[i] - 'A' + 'a');
+    return host;
+}
+
+void web::setCredentials(const string &url, const string &user, const string &password)
+{
+    authHost = user.empty() ? string() : hostOf(url);
+    authUser = user;
+    authPassword = password;
+}
+
+// The login goes to the host of the catalog only: a book or a cover kept on another server (a
+// CDN) does not get it. libcurl does not send it on a redirect to another host either
+// (CURLOPT_UNRESTRICTED_AUTH stays off). A catalog of Calibre asks for Digest, most others
+// for Basic: libcurl answers what the server asks for.
+void web::applyCredentials(CURL *curl, const string &url)
+{
+    if (authUser.empty() || authHost.empty() || hostOf(url) != authHost)
+        return;
+    curl_easy_setopt(curl, CURLOPT_HTTPAUTH, (long)(CURLAUTH_BASIC | CURLAUTH_DIGEST));
+    curl_easy_setopt(curl, CURLOPT_USERNAME, authUser.c_str());
+    curl_easy_setopt(curl, CURLOPT_PASSWORD, authPassword.c_str());
+}
 
 // One libcurl handle serves every request of the program. A handle made and dropped for each
 // request opened a new connection every time: name lookup, TCP and the TLS handshake again, 0.3
@@ -171,12 +217,14 @@ string web::easycurl(const string &url, bool post, const string &postparamstring
       curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20L);
       curl_easy_setopt(curl, CURLOPT_TIMEOUT, 60L);
       webAcceptCompressed(curl);
+      applyCredentials(curl, url);
 
       // Attempt to retrieve the remote page
       CRLog::trace("web::easycurl(): Attempt to retrieve the remote page");
       result = curl_easy_perform(curl);
       long httpCode = 0;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+      lastHttpCode = httpCode;
       webLogTimes(curl, "page", url);
       // the handle stays (see WebHandle): the cookies it got go to their file now
       curl_easy_setopt(curl, CURLOPT_COOKIELIST, "FLUSH");
@@ -246,12 +294,14 @@ bool web::easycurlBinary(const string &url, bool post, const string &postparamst
       curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 20L);
       curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 100L);
       curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 60L);
+      applyCredentials(curl, url);
 
       // Attempt to retrieve the remote page
       CRLog::trace("web::easycurlBinary(): Attempt to retrieve the remote binary");
       result = curl_easy_perform(curl);
       long httpCode = 0;
       curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+      lastHttpCode = httpCode;
 
       webLogTimes(curl, "file", url);
       // the handle stays (see WebHandle): the cookies it got go to their file now
@@ -303,6 +353,7 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
     rq.httpCode = 0;
     rq.curlCode = CURLE_FAILED_INIT;
     rq.error.clear();
+    rq.redirectUrl.clear();
     if (body)
         body->clear();
 
@@ -326,11 +377,15 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
     struct curl_slist *headers = NULL;
     if (rq.accept)
         headers = curl_slist_append(headers, (string("Accept: ") + rq.accept).c_str());
+    for (size_t i = 0; i < rq.headers.size(); i++)
+        headers = curl_slist_append(headers, rq.headers[i].c_str());
+    if (!rq.body.empty())
+        headers = curl_slist_append(headers, "Content-Type: application/json");
 
     curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorText);
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, rq.followRedirects ? 1L : 0L);
     curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 10L);
     if (fp) {
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, requestToFile);
@@ -341,6 +396,13 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
     }
     if (headers)
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    // a body makes a POST; another method is put over it (PUT of the position sync)
+    if (!rq.body.empty()) {
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, rq.body.c_str());
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)rq.body.size());
+    }
+    if (rq.method)
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, rq.method);
     if (rq.userAgent)
         curl_easy_setopt(curl, CURLOPT_USERAGENT, rq.userAgent);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, rq.verifyPeer ? 2L : 0L);
@@ -366,11 +428,18 @@ bool web::request(const string &url, WebRequest &rq, string *body, const char *o
 
     CURLcode result = curl_easy_perform(curl);
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &rq.httpCode);
+    if (!rq.followRedirects) {
+        char * location = NULL;
+        if (curl_easy_getinfo(curl, CURLINFO_REDIRECT_URL, &location) == CURLE_OK && location)
+            rq.redirectUrl = location;
+    }
     webLogTimes(curl, fp ? "file" : "page", url);
     // The handle stays (see WebHandle). The list of headers and the text of the error belong
     // to this call: the handle must not keep their addresses.
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, (struct curl_slist *)NULL);
     curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, (char *)NULL);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, (char *)NULL);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, (char *)NULL);
     if (headers)
         curl_slist_free_all(headers);
     if (fp && fclose(fp) != 0 && result == CURLE_OK)
@@ -388,6 +457,21 @@ bool web::isCertificateError(int curlCode)
 {
     return curlCode == CURLE_SSL_CACERT || curlCode == CURLE_PEER_FAILED_VERIFICATION
         || curlCode == CURLE_SSL_CACERT_BADFILE;
+}
+
+const char * web::caFile()
+{
+    // the root certificates of the firmware, in the places firmwares keep them
+    static const char * const files[] = {
+        "/ebrmain/share/ssl/certs/ca-certificates.crt",
+        "/etc/ssl/certs/ca-certificates.crt",
+        "/etc/ssl/cert.pem",
+        NULL
+    };
+    for (int i = 0; files[i]; i++)
+        if (access(files[i], R_OK) == 0)
+            return files[i];
+    return NULL;
 }
 //---------------------------------------------------------------------------
 int web::writer(char *data, size_t size, size_t nmemb, string *buffer)
