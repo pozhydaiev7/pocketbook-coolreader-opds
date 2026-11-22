@@ -102,6 +102,10 @@ enum CRPbCommands {
 // font of the word list of the dictionary window: percent of the size the skin gives it. The rows
 // of the list are as high as the font asks, so a smaller font shows more words in the window.
 #define PROP_POCKETBOOK_DICT_LIST_FONT "cr3.pocketbook.dict.list.font"
+// font of the article of the dictionary window: percent of the size the program gives it (that of
+// the texts of the touch menu). Set apart from the font of the list (a tester: the rows of the list
+// are tapped and must stay large enough for a finger, the article is only read and may be small).
+#define PROP_POCKETBOOK_DICT_ARTICLE_FONT "cr3.pocketbook.dict.article.font"
 // 0 turns off the direct copy of the page to the screen canvas (no menu item, cr3.ini only)
 #define PROP_POCKETBOOK_DIRECT_BLIT "cr3.pocketbook.direct.blit"
 // 0: the image of the next page is not drawn ahead while a page is read
@@ -118,7 +122,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.7.2-opds-alpha8"
+#define CR_PB_VERSION "0.0.7.2-opds-alpha9"
 #define CR_PB_BUILD_DATE "2026-11-22"
 
 #define PB_ROTATE_MODE_360 0
@@ -216,6 +220,12 @@ bool isTouchFw5Skin();
 
 // Saves the position of the current book and opens a downloaded file in the reader.
 void pbOpenDownloadedBook(const lString32 & path);
+
+// "Close book": asks the firmware to put the program to the background, where the book is saved
+// and the program ends; false when the firmware cannot, and the book is closed by the caller.
+bool pbQuitViaBackground();
+// True from that request on: the files are written, nothing is written again.
+bool pbQuitInProgress();
 
 // Starts the scan of the firmware library in the background, so that the library shows a file
 // CoolReader has written or deleted (a downloaded book, the log file). See opdsbrowser.cpp.

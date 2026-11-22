@@ -60,6 +60,10 @@ msgstr "Вибачте, посібник користувача CoolReader дл�
 msgid "Help"
 msgstr "Довідка"
 
+#: ../src/mainwnd.cpp
+msgid "User manual"
+msgstr "Посібник користувача"
+
 #: ../src/mainwnd.cpp:848
 msgid "Main Menu"
 msgstr "Головне меню CoolReader"
@@ -2289,7 +2293,15 @@ msgstr "Скасувати"
 
 #: ../src/settings.cpp
 msgid "Dictionary settings"
-msgstr "Словник"
+msgstr "Налаштування словника"
+
+#: ../src/settings.cpp
+msgid "OPDS catalog settings"
+msgstr "Налаштування OPDS-каталогів"
+
+#: ../src/settings.cpp
+msgid "Reading position sync settings"
+msgstr "Налаштування синхронізації позицій читання"
 
 #: ../src/settings.cpp
 msgid "Word search"
@@ -2541,7 +2553,7 @@ msgstr "у книзі"
 
 #: ../src/pb_fontpick.cpp
 msgid "The quick brown fox jumps over the lazy dog. 0123456789"
-msgstr "Жебракують філософи при ґанку церкви в Гадячі, ще й шатро їхнє п’яне знаємо. 0123456789"
+msgstr "Чуєш їх, доцю, га? Кумедна ж ти, прощайся без ґольфів! 0123456789"
 
 #: ../src/settings.cpp
 msgid "Prepare next page"
@@ -2558,6 +2570,10 @@ msgstr "насиченість"
 #: ../src/settings.cpp
 msgid "Font size of the word list"
 msgstr "Розмір шрифту списку слів"
+
+#: ../src/settings.cpp
+msgid "Font size of the article"
+msgstr "Розмір шрифту статті"
 
 #: ../src/settings.cpp
 msgid "Contents: levels closed"

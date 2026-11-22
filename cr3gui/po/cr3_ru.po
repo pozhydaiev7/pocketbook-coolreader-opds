@@ -64,6 +64,10 @@ msgstr "Извините, для текущего языка инструкци�
 msgid "Help"
 msgstr "Справка"
 
+#: ../src/mainwnd.cpp
+msgid "User manual"
+msgstr "Руководство пользователя"
+
 #: ../src/mainwnd.cpp:848
 msgid "Main Menu"
 msgstr "Главное меню"
@@ -2313,7 +2317,15 @@ msgstr "Отмена"
 
 #: ../src/settings.cpp
 msgid "Dictionary settings"
-msgstr "Словарь"
+msgstr "Настройки словаря"
+
+#: ../src/settings.cpp
+msgid "OPDS catalog settings"
+msgstr "Настройки OPDS-каталогов"
+
+#: ../src/settings.cpp
+msgid "Reading position sync settings"
+msgstr "Настройки синхронизации позиций чтения"
 
 #: ../src/settings.cpp
 msgid "Word search"
@@ -2582,6 +2594,10 @@ msgstr "жирность"
 #: ../src/settings.cpp
 msgid "Font size of the word list"
 msgstr "Размер шрифта списка слов"
+
+#: ../src/settings.cpp
+msgid "Font size of the article"
+msgstr "Размер шрифта статьи"
 
 #: ../src/settings.cpp
 msgid "Contents: levels closed"

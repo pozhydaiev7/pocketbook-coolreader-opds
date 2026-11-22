@@ -1579,8 +1579,11 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("Exact"), "1"},
         {NULL, NULL}
     };
-    // percent of the font size the skin gives to the word list of the dictionary window
+    // percent of the font size the word list and the article of the dictionary window have by
+    // themselves (a tester asked for more values: "there is room on the screen")
     item_def_t dict_list_font_options[] = {
+        {"50%", "50"},
+        {"60%", "60"},
         {"70%", "70"},
         {"80%", "80"},
         {"90%", "90"},
@@ -1588,6 +1591,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {"110%", "110"},
         {"125%", "125"},
         {"150%", "150"},
+        {"175%", "175"},
+        {"200%", "200"},
         {NULL, NULL}
     };
     item_def_t rotate_angle_options[] = {
@@ -2169,6 +2174,10 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     createSettingsMenuItem(dictSettingsMenu, mm_dictListFont, _("Font size of the word list"),
                            "cr3_option_dict_list_font", valueFont, PROP_POCKETBOOK_DICT_LIST_FONT,
                            dict_list_font_options);
+    // and the font of the article by itself: it is read, not tapped, and may be smaller
+    createSettingsMenuItem(dictSettingsMenu, mm_dictArticleFont, _("Font size of the article"),
+                           "cr3_option_dict_article_font", valueFont, PROP_POCKETBOOK_DICT_ARTICLE_FONT,
+                           dict_list_font_options);
     // without a touch screen only the firmware keyboard can be used: no choice is offered
     if (pbKeyboardUsable())
         createSettingsMenuItem(dictSettingsMenu, mm_dictKeyboard, _("Search keyboard"),
@@ -2184,12 +2193,14 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 */
 
     // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
-    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
+    // The rows of the settings menu that set something up are named "... settings" (the owner);
+    // the list itself keeps its caption "OPDS catalogs".
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalog settings") ) );
 
     // POSITION SYNC of KOReader: the switch, and the screen of the server and of the login (pb_kosync.h)
     #ifdef POCKETBOOK_PRO
     if( isNetworkSupported() ) {
-        CRMenu * syncMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Reading position sync"),
+        CRMenu * syncMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Reading position sync settings"),
                                                      "cr3_option_controls", valueFont, CRPropRef() );
         syncMenu->setAccelerators( _menuAccelerators );
         syncMenu->setSkinName(lString32("#settings"));

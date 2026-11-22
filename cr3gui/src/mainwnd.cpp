@@ -1126,7 +1126,8 @@ void V3DocViewWin::showHelpDialog()
     }
 	//lString8 help = UnicodeToUtf8( LVReadTextFile( _helpFile ) );
 	if ( !help.empty() ) {
-		CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("Help")), help, lvRect(), true, true );
+		// the caption names the document shown: the user manual (it was "Help")
+		CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("User manual")), help, lvRect(), true, true );
                 int fs = _props->getIntDef( PROP_FONT_SIZE, 22 );
                 dlg->getDocView()->setFontSize(fs);
 		_wm->activateWindow( dlg );
@@ -1265,7 +1266,7 @@ VIEWER_MENU_4ABOUT=About...
 					LVFontRef() ) );
 		if ( !_helpFile.empty() )
 			menu_win->addItem( new CRMenuItem( menu_win, MCMD_HELP,
-					_("Help"),
+					_("User manual"),
 					LVImageSourceRef(),
 					LVFontRef() ) );
 		menu_win->addItem( new CRMenuItem( menu_win, MCMD_HELP_KEYS,

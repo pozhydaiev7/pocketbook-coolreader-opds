@@ -279,7 +279,7 @@
     </title>
     <p>This item of the reading menu opens an online library: browse its sections, search it, download a book and open it at once, without leaving the program. Wi-Fi is needed; if it is off, the program asks the device to connect.</p>
     <empty-line/>
-    <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalogs</emphasis>».</p>
+    <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalog settings</emphasis>».</p>
     <image l:href="#i_026.png"/>
     <subtitle>List of catalogs</subtitle>
     <p>Flibusta is always in the list: its address can be changed to a mirror, but it cannot be deleted or renamed. Other catalogs are added with «<emphasis>Add catalog...</emphasis>»: it opens the card of the new catalog, where its name, address, login and password are set; a catalog left without an address is not kept.</p>
@@ -342,7 +342,7 @@
      <empty-line/>
      <image l:href="#i_026.png"/>
      <subtitle>Default font face</subtitle>
-     <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: the first lines of the page you are reading.</p>
+     <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: a sentence with every letter of the alphabet and the digits.</p>
      <p>A tap on a font chooses it: the font gets a triangle mark and the sample is drawn with it. The font of the book has the note «in the book». The screens of the list are turned with the arrows of the title or by a swipe.</p>
      <p>The font chosen is set when you leave the list (the back arrow at the title or the Back key), and the book is laid out again. To keep the font of the book, tap the font with the note «in the book» before leaving.</p>
      <p><emphasis>Value:</emphasis> list of fonts</p>
@@ -632,9 +632,12 @@
      <p>What is shown when the dictionary does not have the word: the list of the nearest words, or a message that the word is not found.</p>
      <p><emphasis>Value:</emphasis> with nearest words / exact</p>
      <image l:href="#i_026.png"/>
+     <subtitle>Font size of the article</subtitle>
+     <p>The font size of the article in the dictionary window, in percent of its usual size. It is set apart from the word list: the rows of the list are tapped, the article is only read and may be smaller.</p>
+     <p><emphasis>Value:</emphasis> from 50 % to 200 %</p>
      <subtitle>Font size of the word list</subtitle>
      <p>The font size of the word list of the dictionary window, in percent of the size the interface skin gives it. The rows of the list follow the font: the smaller it is, the more words the window holds.</p>
-     <p><emphasis>Value:</emphasis> from 70 % to 150 %</p>
+     <p><emphasis>Value:</emphasis> from 50 % to 200 %</p>
      <image l:href="#i_026.png"/>
      <subtitle>Search keyboard</subtitle>
      <p>The keyboard for typing a word. Only devices with a touch screen have this item.</p>
@@ -642,13 +645,13 @@
     </section>
     <section>
      <title>
-      <p>OPDS catalogs</p>
+      <p>OPDS catalog settings</p>
      </title>
      <p>Opens the list of the online book catalogs: open a catalog, add one, change a name and an address, set the default catalog (see «<emphasis>Book catalog (OPDS)</emphasis>»).</p>
     </section>
     <section>
      <title>
-      <p>Reading position sync</p>
+      <p>Reading position sync settings</p>
      </title>
      <p>The place of a book is kept on a sync server of KOReader and taken by the other devices of the same user: KOReader on a computer, a phone or another reader, Readest, CoolReader on another PocketBook. A book is known by its file (the contents of the file, not its name), so every device must have the same file.</p>
      <p>«<emphasis>Server and login...</emphasis>» opens the screen of the sync: the address of the server (the server of KOReader by default; a server of your own works the same way: Calibre-Web-Automated, Kavita, korrosync), the login and the password (only its MD5 is kept, as the protocol sends it). «<emphasis>Register on the server</emphasis>» makes a new user with them, «<emphasis>Check the login</emphasis>» asks the server whether it knows you.</p>
@@ -875,6 +878,9 @@
     <empty-line/>
     <p>Font size of the word list of the dictionary, in percent of the size of the interface skin:</p>
     <p><strong>cr3.pocketbook.dict.list.font=100</strong></p>
+    <empty-line/>
+    <p>Font size of the article of the dictionary, in percent of its usual size:</p>
+    <p><strong>cr3.pocketbook.dict.article.font=100</strong></p>
     <empty-line/>
     <p>Search keyboard of the dictionary (0 – CoolReader / 1 – firmware):</p>
     <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>

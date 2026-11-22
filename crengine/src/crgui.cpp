@@ -706,6 +706,25 @@ lvPoint CRGUIWindowBase::getMinScrollSize( int page, int pages )
 }
 
 #define BATTERY_ICON_SIZE 60
+/// The battery at the right end of a title bar: the width of its box, and the space left between
+/// the icon and the edge of the title. The box was 60 pixels with the icon in its middle; the icon
+/// of a high-density screen is 54 pixels wide (mainwnd.cpp, batteryIcon), so it stood 3 pixels
+/// from the edge of the screen (a tester: "the battery sticks to the right edge"). The icon keeps
+/// at least the distance the title text keeps from its own edge (the border of the title skin).
+static int batteryBoxWidth( CRGUIWindowManager * wm, CRRectSkinRef titleSkin, int & margin )
+{
+    int iconWidth = 0;
+    LVRefVec<LVImageSource> & icons = wm->getBatteryIcons();
+    if ( icons.length() > 0 && !icons[0].isNull() )
+        iconWidth = icons[0]->GetWidth();
+    margin = ( BATTERY_ICON_SIZE - iconWidth ) / 2;
+    int border = titleSkin.isNull() ? 0 : titleSkin->getBorderWidths().right;
+    if ( margin < border )
+        margin = border;
+    int width = iconWidth + margin * 2;
+    return width < BATTERY_ICON_SIZE ? BATTERY_ICON_SIZE : width;
+}
+
 /// calculates scroll rectangle for specified window rectangle
 bool CRGUIWindowBase::getScrollRect( lvRect & rc )
 {
@@ -732,8 +751,10 @@ bool CRGUIWindowBase::getScrollRect( lvRect & rc )
                 rc = rc2;
             else
                 rc.left = rc.right - rc.width()/4;
-            rc.left -= BATTERY_ICON_SIZE;
-            rc.right -= BATTERY_ICON_SIZE;
+            int batteryMargin = 0;
+            int batteryBox = batteryBoxWidth( _wm, titleSkin, batteryMargin );
+            rc.left -= batteryBox;
+            rc.right -= batteryBox;
         } else if ( !sskin.isNull() ) {
             rc.bottom += h;
         }
@@ -1165,9 +1186,15 @@ void CRGUIWindowBase::drawTitleBar()
         return;
     titleSkin->draw( buf, titleRc );
 
+    // the icon is drawn in the middle of its rectangle: the box less the space at both sides
+    int batteryMargin = 0;
+    int batteryBox = batteryBoxWidth( _wm, titleSkin, batteryMargin );
     lvRect batteryRc( titleRc );
-    batteryRc.left = batteryRc.right - BATTERY_ICON_SIZE;
-    batteryRc.shrinkBy( titleSkin->getBorderWidths() );
+    lvRect titleBorders = titleSkin->getBorderWidths();
+    batteryRc.top += titleBorders.top;
+    batteryRc.bottom -= titleBorders.bottom;
+    batteryRc.right -= batteryMargin;
+    batteryRc.left = titleRc.right - batteryBox + batteryMargin;
     _wm->drawBattery( buf, batteryRc );
 
     CRScrollSkinRef sskin = skin->getScrollSkin();
