@@ -1,8 +1,8 @@
 /*
  * Choice of the font face, the font size and the font weight of the text, with a sample.
  *
- * A list of the values with a panel under it: the first lines of the page being read, drawn
- * with the value tapped. A tap on a value chooses it and changes the sample; leaving the list
+ * A list of the values with a panel under it: a sentence with every letter of the alphabet,
+ * drawn with the value tapped. A tap on a value chooses it and changes the sample; leaving the list
  * sets the value chosen, and the book is laid out again once, for the value the reader has
  * chosen by its look. Before, a tap in the list of the settings menu set the value and closed
  * the list, and what the value looks like was seen only when the menu was closed and the book
@@ -47,7 +47,7 @@ public:
     virtual void drawPanel(LVDrawBuf & buf, const lvRect & rc, lUInt32 textColor);
 
 private:
-    PbFontPick() : _kind(SIZE), _fromSettings(false), _settingsItem(0), _current(0), _tried(0), _screen(-1),
+    PbFontPick() : _kind(SIZE), _fromSettings(false), _settingsItem(0), _current(0), _tried(0), _screen(-1), _perScreen(0),
                    _size(0), _weight(400) {}
 
     Kind _kind;
@@ -58,6 +58,7 @@ private:
     int _current; // the value of the book
     int _tried;   // the value of the sample
     int _screen;  // screen of the list, -1: the one with the value of the sample
+    int _perScreen; // values on a screen of the list, 0: not laid out yet
     // the font of the sample: the value tried and the two other settings of the book
     lString8 _face;
     int _size;
@@ -66,7 +67,6 @@ private:
     LVFontRef _captionFont;
 
     void loadValues();
-    void loadSample();
     void setTried(int index);
     void show(CRGUIWindowManager * wm);
     void close(CRGUIWindowManager * wm);

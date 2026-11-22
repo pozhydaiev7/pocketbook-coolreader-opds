@@ -279,7 +279,7 @@
     </title>
     <p>This item of the reading menu opens an online library: browse its sections, search it, download a book and open it at once, without leaving the program. Wi-Fi is needed; if it is off, the program asks the device to connect.</p>
     <empty-line/>
-    <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalogs</emphasis>».</p>
+    <p>The icon opens the default catalog, or the list of catalogs when none is the default. The same list is in the settings menu: «<emphasis>OPDS catalog settings</emphasis>».</p>
     <image l:href="#i_026.png"/>
     <subtitle>List of catalogs</subtitle>
     <p>Flibusta is always in the list: its address can be changed to a mirror, but it cannot be deleted or renamed. Other catalogs are added with «<emphasis>Add catalog...</emphasis>»: it opens the card of the new catalog, where its name, address, login and password are set; a catalog left without an address is not kept.</p>
@@ -342,7 +342,7 @@
      <empty-line/>
      <image l:href="#i_026.png"/>
      <subtitle>Default font face</subtitle>
-     <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: the first lines of the page you are reading.</p>
+     <p>A list of all fonts on the device, system and user ones, each shown in its own letters. Under the list is a sample: a sentence with every letter of the alphabet and the digits.</p>
      <p>A tap on a font chooses it: the font gets a triangle mark and the sample is drawn with it. The font of the book has the note «in the book». The screens of the list are turned with the arrows of the title or by a swipe.</p>
      <p>The font chosen is set when you leave the list (the back arrow at the title or the Back key), and the book is laid out again. To keep the font of the book, tap the font with the note «in the book» before leaving.</p>
      <p><emphasis>Value:</emphasis> list of fonts</p>
@@ -576,7 +576,7 @@
      <subtitle>A PDF or DjVu with text as a book</subtitle>
      <p>A PDF that has text is opened as any book: the text of the file is shown in the font, the size and the styles of the reader, with hyphenation, the dictionary, citations, bookmarks and the search. The layout of the original is not kept: fonts, columns and the place on the page are dropped. Taken over: paragraphs, headings and the contents, bold and italic, monospace, superscript and subscript, tables (with and without rules), pictures, verse, footnotes (as text after the paragraph their page ends in). Drawings, schemes and formulas are put in as a picture of that part of the page. Running titles and page numbers are left out; a paragraph cut by the end of a page is put together.</p>
      <p>The book is made when the file is opened for the first time and kept: the next time the file opens at once. A PDF of scans (pages that are pictures, with a recognised text under them or without) is opened in the picture mode.</p>
-     <p>Between the two views of one file. From the book: the first item of the main menu of the book, "View as the original", opens the page of the file the place of the book on the screen comes from. From the picture mode: the menu item "View as a book" opens the book at the place of that page. The choice is remembered for the file. For all files: "PDF and DjVu" &gt; "A new file with text".</p>
+     <p>Between the two views of one file. From the book: the first item of the main menu of the book, "View as the original", opens the page of the file the place of the book on the screen comes from. From the picture mode: the menu item "View as a book" opens the book at the place of that page. The choice is remembered for the file. For all files: "PDF and DjVu settings" &gt; "A new file with text".</p>
      <p>In a book made of a PDF, a formula on a line of its own and a formula inside a line that has a root, a sum or an integral sign are shown as pictures. Drawings become pictures of the page too. Pictures are taken by their size on paper and by their place: small marks, rules and whatever lies whole in the top or the bottom margin of a page (the mark of a publisher, the ornament of a running title) do not get into the book.</p>
      <p>A DjVu with a text layer (the text a program recognised when the file was made) is opened as a book in the same way. The book is as good as the recognition: paragraphs are taken from the file or put together by the indents and the gaps of the lines, divided words are joined, running titles and page numbers are left out, the contents of the file become the contents of the book, the first page becomes the cover. Pictures, drawings and formulas that have no text in the layer are cut out of the page as pictures. Only what stands inside the text block of a page and is at least 12 by 5 mm is taken; rules, frames and ornaments that are the same on three pages and more are not. From the book to the pages: the same item of the main menu of the book, "View as the original". For all files at once: "DjVu view settings" &gt; "A new file with text". A DjVu without a text layer is opened in the picture mode.</p>
      <p><emphasis>Value:</emphasis> as the original / as a book</p>
@@ -584,7 +584,7 @@
      <p>While a page is read, the next one is prepared ahead, so a page turn does not wait for the page to be decoded (the item "Prepare next page" of the display settings).</p>
      <image l:href="#i_026.png"/>
      <subtitle>Menu</subtitle>
-     <p>The menu is the one of a book: icons at the top and the page bar at the bottom. The icons: home, contents (those of the file, when it has them), bookmarks (a long tap sets and takes off the bookmark of the page), dictionary, view of the page, OPDS catalog, reading statistics, rotation, settings. The bar at the bottom goes to any page; the chapters of the file are marked on it and the current one is named. The icon "view of the page" stands in the place of the search and opens a list: scale, leafing, set the frame, "View as a book", go to a page, book info, close the book. The main menu (its key, a long press of «Menu», a tap zone) is the one of a book; its first item, «View as a book», opens the book of a file with text. The action «PDF and DjVu: book or original» goes from the book to the pages and back: it can be put on a tap zone or in the main menu (a device without the key «Menu»). The search and the citations work on the text of a book: the view of the original has none of them.</p>
+     <p>The menu is the one of a book: icons at the top and the page bar at the bottom. The icons: home, contents (those of the file, when it has them), bookmarks (a long tap sets and takes off the bookmark of the page), dictionary, view of the page, OPDS catalog, reading statistics, rotation, settings. The bar at the bottom goes to any page; the chapters of the file are marked on it and the current one is named. The icon "view of the page" stands in the place of the search and opens a list: scale, leafing, set the frame, "View as a book", go to a page, book info, close the book. The main menu (its key, a long press of «Menu», a tap zone) is the one of a book; its first item, «View as a book», opens the book of a file with text. The action «PDF and DjVu: book or original» goes from the book to the pages and back: it can be put on a tap zone or in the main menu (a device without the key «Menu»). The search and the citations work on the text of a book: in the view of the original such rows of the main menu are gray and cannot be chosen. The list of the recent books, the manual and the table of the keys work as over a book.</p>
      <image l:href="#i_026.png"/>
      <subtitle>Dictionary and bookmarks</subtitle>
      <p>The dictionary works over the pages of a file with text (a PDF with text, a DjVu with a text layer): the zone of the dictionary looks up the word under the finger, the icon of the dictionary takes the first word of the screen. The word is marked on the page; the arrows go to the word beside it and to the line above or under, a page turn turns the pages under the window. On a page without text (a scan) the window opens with the search: the word is typed.</p>
@@ -606,7 +606,7 @@
      <p>Over the page or under it the status line of a book is shown, by the same settings ("Page settings"): the title (the one the file names, else the name of the file), the clock, the battery, the page number and the number of pages, the pages left to the end of the chapter and the marks of the chapters by the contents of the file. The page is drawn in the rest of the screen. "Book info" of the list "view of the page" shows the title and the author the file names, the name and the size of the file, the number of pages and the size of a page.</p>
      <image l:href="#i_026.png"/>
      <subtitle>Settings of PDF and DjVu</subtitle>
-     <p>The folder "PDF and DjVu" of the settings menu, one for both kinds of files. "A new file with text": how a file with text the program has not seen yet is opened, as a book or as the original. "Scale of a new file" and "Leafing of a new file": what such a file is opened with in the view of the original. "Page number in the corner": whether the page number and the number of pages are shown in the lower right corner. Whether the reader opens such files with CoolReader is set in the folder "Open with CoolReader", with the other kinds of files.</p>
+     <p>The folder "PDF and DjVu settings" of the settings menu, one for both kinds of files. "A new file with text": how a file with text the program has not seen yet is opened, as a book or as the original. "Scale of a new file" and "Leafing of a new file": what such a file is opened with in the view of the original. "Page number in the corner": whether the page number and the number of pages are shown in the lower right corner. Whether the reader opens such files with CoolReader is set in the folder "File associations", with the other kinds of files.</p>
      <p>«Orientation of the pages»: the screen is turned for the pages of these files only (as the books, 0°, 90°, 180°, 270°) and turned back when they are left. A turn chosen over the pages changes this value, not the orientation of the books.</p>
     </section>
     <section>
@@ -673,9 +673,12 @@
      <p>What is shown when the dictionary does not have the word: the list of the nearest words, or a message that the word is not found.</p>
      <p><emphasis>Value:</emphasis> with nearest words / exact</p>
      <image l:href="#i_026.png"/>
+     <subtitle>Font size of the article</subtitle>
+     <p>The font size of the article in the dictionary window, in percent of its usual size. It is set apart from the word list: the rows of the list are tapped, the article is only read and may be smaller.</p>
+     <p><emphasis>Value:</emphasis> from 50 % to 200 %</p>
      <subtitle>Font size of the word list</subtitle>
      <p>The font size of the word list of the dictionary window, in percent of the size the interface skin gives it. The rows of the list follow the font: the smaller it is, the more words the window holds.</p>
-     <p><emphasis>Value:</emphasis> from 70 % to 150 %</p>
+     <p><emphasis>Value:</emphasis> from 50 % to 200 %</p>
      <image l:href="#i_026.png"/>
      <subtitle>Search keyboard</subtitle>
      <p>The keyboard for typing a word. Only devices with a touch screen have this item.</p>
@@ -683,13 +686,13 @@
     </section>
     <section>
      <title>
-      <p>OPDS catalogs</p>
+      <p>OPDS catalog settings</p>
      </title>
      <p>Opens the list of the online book catalogs: open a catalog, add one, change a name and an address, set the default catalog (see «<emphasis>Book catalog (OPDS)</emphasis>»).</p>
     </section>
     <section>
      <title>
-      <p>Reading position sync</p>
+      <p>Reading position sync settings</p>
      </title>
      <p>The place of a book is kept on a sync server of KOReader and taken by the other devices of the same user: KOReader on a computer, a phone or another reader, Readest, CoolReader on another PocketBook. A book is known by its file (the contents of the file, not its name), so every device must have the same file.</p>
      <p>«<emphasis>Server and login...</emphasis>» opens the screen of the sync: the address of the server (the server of KOReader by default; a server of your own works the same way: Calibre-Web-Automated, Kavita, korrosync), the login and the password (only its MD5 is kept, as the protocol sends it). «<emphasis>Register on the server</emphasis>» makes a new user with them, «<emphasis>Check the login</emphasis>» asks the server whether it knows you.</p>
@@ -710,7 +713,7 @@
     </section>
     <section>
      <title>
-      <p>Open with CoolReader</p>
+      <p>File associations</p>
      </title>
      <p>A folder of the settings menu with a line for every kind of file the program opens: FB2, EPUB, MOBI (also PRC, AZW, PDB), DOC (also DOCX, ODT), RTF, TXT, HTML, CHM, PDF, DjVu. A tap switches the value, which shows what the list of the reader says now. Until you change the lines of PDF and DjVu, the program of the reader opens these files.</p>
      <p>"No": CoolReader is not offered for such files. "In the Open with list": CoolReader is in the "Open with" menu of a file, and a tap opens the file with the program that opened it before. "By default": a tap opens the file with CoolReader, the other program stays in "Open with".</p>
@@ -926,6 +929,9 @@
     <empty-line/>
     <p>Font size of the word list of the dictionary, in percent of the size of the interface skin:</p>
     <p><strong>cr3.pocketbook.dict.list.font=100</strong></p>
+    <empty-line/>
+    <p>Font size of the article of the dictionary, in percent of its usual size:</p>
+    <p><strong>cr3.pocketbook.dict.article.font=100</strong></p>
     <empty-line/>
     <p>Search keyboard of the dictionary (0 – CoolReader / 1 – firmware):</p>
     <p><strong>cr3.pocketbook.dict.keyboard=0</strong></p>

@@ -63,7 +63,7 @@ Browse an online library, search it, download a book and open it in the reader, 
 - **Catalogs:** [Flibusta](https://flibusta.is/opds) is always in the list (its address can be changed to a mirror, it cannot be deleted); any other OPDS catalog can be added with its address and name.
 - **How to open it:**
   - the catalog icon in the touch quick menu (tap the centre of the page) opens the default catalog, or the list of catalogs when none is the default;
-  - *Settings → OPDS catalogs* shows the list: open a catalog, add one, or edit them (name, address, default catalog, delete);
+  - *Settings → OPDS catalog settings* shows the list: open a catalog, add one, or edit them (name, address, default catalog, delete);
   - *Other catalog…* in the catalog menu switches catalogs.
 - **Navigation:** the arrow at the caption and the first row of every screen go one level up; from the catalog start page, back to the book.
 - **Catalog sections and search.** Search is two-step, as the catalog serves it: first choose authors or books, then the result list.
@@ -153,7 +153,7 @@ That build was published as a binary only. Its changes are re-implemented here f
 ### Other changes
 
 - **Debugging.** Logging is off by default. *Settings → Debugging* turns the log on and off on the device, with the level *Info* or *Error*. The log is `/mnt/ext1/cr3log.txt`; the log of the previous run is kept as `cr3log.prev.txt`. Turning the debugging off deletes both.
-- **Font chosen by a sample** (since 0.0.7.1): the lists of the font face, the font size and the font weight have a sample under them, the first lines of the page being read drawn with the value tapped. The value chosen is set when the list is left.
+- **Font chosen by a sample** (since 0.0.7.1): the lists of the font face, the font size and the font weight have a sample under them, a sentence with every letter of the alphabet drawn with the value tapped. The value chosen is set when the list is left.
 - **Text windows** (the manual, *Key functions*, *Book information*): pages are turned by the tap zones and swipes of the book.
 - ***Document embedded fonts*** turned off also drops the font family named by the styles of a book, so the text is drawn with the chosen font.
 - **Manuals** in Russian, Ukrainian and English.

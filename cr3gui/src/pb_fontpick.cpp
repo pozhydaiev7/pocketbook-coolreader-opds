@@ -37,8 +37,16 @@ lString32 weightLabel(int weight)
     return lString32::itoa(weight);
 }
 
-// longest text the sample is made of: more than any panel shows
-const int SAMPLE_MAX_TEXT = 1200;
+// The height of the caption of the sample: the line above the panel, the line with the word
+// "Sample" and the gaps around it.
+int sampleCaptionHeight(LVFontRef cf)
+{
+    int h = cf->getHeight();
+    int t = h / 16;
+    if (t < 1)
+        t = 1;
+    return 3 * t + h / 4 + h + h / 4;
+}
 
 } // namespace
 
@@ -93,33 +101,6 @@ void PbFontPick::loadValues()
     }
 }
 
-// The text of the page being read, as one paragraph. A page without text (a cover, a picture)
-// gives a sentence with every letter of the alphabet.
-void PbFontPick::loadSample()
-{
-    _sample.clear();
-    LVDocView * view = main_win->getDocView();
-    LVRef<ldomXRange> range = view->getPageDocumentRange(-1);
-    lString32 text;
-    if (!range.isNull())
-        text = range->getRangeText(U' ', SAMPLE_MAX_TEXT);
-    bool space = true;
-    for (int i = 0; i < text.length() && _sample.length() < SAMPLE_MAX_TEXT; i++) {
-        lChar32 ch = text[i];
-        bool blank = ch == U' ' || ch == U'\t' || ch == U'\r' || ch == U'\n' || ch == 0xA0;
-        if (blank) {
-            if (!space)
-                _sample << U' ';
-            space = true;
-        } else {
-            _sample << ch;
-            space = false;
-        }
-    }
-    if (_sample.length() < 40)
-        _sample = tr("The quick brown fox jumps over the lazy dog. 0123456789");
-}
-
 void PbFontPick::setTried(int index)
 {
     if (index < 0 || index >= (int)_values.size())
@@ -146,9 +127,14 @@ void PbFontPick::open(CRGUIWindowManager * wm, Kind kind, bool fromSettings, int
     loadValues();
     if (_values.empty())
         return;
-    loadSample();
+    // The sample is a sentence with every letter of the alphabet, in the language of the
+    // interface, as the font lists of text editors show. It was the text of the page being
+    // read: a page without text (a cover, a page of a PDF shown as a picture) gave this
+    // sentence instead, and what the sample would hold could not be told in advance.
+    _sample = tr("The quick brown fox jumps over the lazy dog. 0123456789");
     setTried(_current);
     _screen = -1;
+    _perScreen = 0;
     CRLog::info("Font choice %d opened: %d values, the book has \"%s\", size %d, weight %d",
                 (int)kind, (int)_values.size(), _face.c_str(), _size, _weight);
     show(wm);
@@ -160,18 +146,31 @@ void PbFontPick::show(CRGUIWindowManager * wm)
     lString32 caption = _kind == FACE ? tr("Default font face")
                       : _kind == SIZE ? tr("Default font size") : tr("Font weight");
     OpdsMenu * menu = new OpdsMenu(wm, caption, rc, true);
-    int rows = menu->setupRows(false);
+    // Rows of two lines, as high as the rows of the other lists of the program. With rows of
+    // one line and a sample two fifths of the screen high the list looked squashed (a tester).
+    int rows = menu->setupRows(true);
     _captionFont = menu->subFont;
     // The rows of the screen: the values, the sample. No row "Back to settings": the arrow at
     // the caption and the Back key leave the list, a row doing the same under that arrow was
     // reported as a duplicate (InkPad 4).
-    int panelRows = rows * 2 / 5;
-    if (panelRows < 3)
-        panelRows = 3;
+    // The sample takes two rows: its caption and two or three lines of a reading size. A font
+    // higher than that (the largest sizes) gets the rows its caption and one line need.
+    int th = menu->titleFont->getHeight();
+    int rowHeight = th + 2 * (th / 3) + menu->subFont->getHeight(); // as OpdsMenu::setupRows
+    int panelRows = 2;
+    LVFontRef sf = fontMan->GetFont(_size, _weight, false, css_ff_serif, _face);
+    if (!sf.isNull() && rowHeight > 0) {
+        int need = sampleCaptionHeight(_captionFont) + sf->getHeight();
+        if (need > panelRows * rowHeight)
+            panelRows = (need + rowHeight - 1) / rowHeight;
+    }
+    if (panelRows > rows - 2)
+        panelRows = rows - 2;
     int perScreen = rows - panelRows;
-    if (perScreen < 2) {
-        perScreen = 2;
-        panelRows = rows - perScreen;
+    // another number of values on a screen: the screen with the value of the sample again
+    if (perScreen != _perScreen) {
+        _perScreen = perScreen;
+        _screen = -1;
     }
     int count = (int)_values.size();
     int screens = (count + perScreen - 1) / perScreen;
@@ -212,8 +211,8 @@ void PbFontPick::show(CRGUIWindowManager * wm)
     activate(wm, menu);
 }
 
-// The sample: a line with the word "Sample" and the font it is drawn with, then the text of the
-// page in that font, as many whole lines as the panel holds.
+// The sample: a line with the word "Sample" and the font it is drawn with, then the sentence
+// in that font, as many whole lines as the panel holds.
 void PbFontPick::drawPanel(LVDrawBuf & buf, const lvRect & rc, lUInt32 textColor)
 {
     LVFontRef cf = _captionFont;
@@ -236,7 +235,7 @@ void PbFontPick::drawPanel(LVDrawBuf & buf, const lvRect & rc, lUInt32 textColor
     font = fitText(cf, font, r.width() - textWidth(cf, label) - cf->getHeight());
     cf->DrawTextString(&buf, r.right - textWidth(cf, font), y, font.c_str(), font.length(), U'?', NULL, false, 0);
     buf.SetTextColor(textColor);
-    y += cf->getHeight() + cf->getHeight() / 4;
+    y = rc.top + sampleCaptionHeight(cf);
 
     LVFontRef sf = fontMan->GetFont(_size, _weight, false, css_ff_serif, _face);
     if (sf.isNull())

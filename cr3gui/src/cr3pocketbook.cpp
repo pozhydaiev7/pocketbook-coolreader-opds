@@ -638,6 +638,13 @@ class CRPocketBookGlobals * pbGlobals = NULL;
 
 static int keyPressed = -1;
 static bool exiting = false;
+#ifdef POCKETBOOK_PRO
+// "Close book" (pbQuitViaBackground). 0: not asked for. 1: the files of the program are written,
+// the firmware is asked to put the program to the background. 2: in the background, the firmware
+// is being told the page. 3: all is done, the program ends. From 1 on nothing is written again.
+static int pbQuitStage = 0;
+static long long pbQuitAt = 0;
+#endif
 
 
 char key_buffer[KEY_BUFFER_LEN];
@@ -3590,13 +3597,10 @@ public:
         _wm->update(true);
     }
 
-    virtual void closing()
+    // The files the program keeps itself: the statistics, the position in the book, the settings,
+    // the history. Returns the time the statistics and the sensor were done at.
+    long long saveOwnFiles()
     {
-        CRLog::trace("V3DocViewWin::closing();");
-        long long perfClosing = pbPerfNow();
-        // a book closed before the pause that makes its power-off cover was over
-        pbCoverMake();
-        long long perfCover = pbPerfNow();
         PbStatsView::flush();
         stopGSensor();
         readingOff();
@@ -3606,28 +3610,65 @@ public:
         }
         long long perfStats = pbPerfNow();
         V3DocViewWin::closing();
-        long long perfSaved = pbPerfNow();
-        // The page of the book for the library of the firmware (libbookstate). It takes 0.35 s;
-        // 5 to 14 s were logged three times on InkPad 4, each time when the book was left a
-        // second after its cache file had been written (a layout after a font change): the
-        // firmware waits for the storage. That wait is in the background, after the home
-        // screen is shown. Giving the page to the firmware while the book is read instead
-        // would cost its 0.35 s at every page, so it stays here.
+#ifdef CR3_PAGEDOC
+        // the picture mode: the page, the frames and the bookmarks of the PDF or DjVu file
+        if (PbPageWindow::instance != NULL)
+            PbPageWindow::instance->keep();
+#endif
+        // The book and the settings are saved: this run ends the proper way. Said before the
+        // firmware is asked: the firmware may take seconds to answer, and another copy of the
+        // program started in that time puts its own marker.
+        unlink( PB_RUN_MARKER );
+        return perfStats;
+    }
+
+    // The page of the book for the library of the firmware (libbookstate). It takes 0.35 s, and
+    // 5 s when the firmware does not answer (the request waits 5000 ms; logged on InkPad 4
+    // while the library was being scanned, 14 s once). That wait is in the background, after
+    // the home screen is shown (the Home key, and "Close book": pbQuitViaBackground). Giving
+    // the page to the firmware while the book is read instead would cost its 0.35 s at every
+    // page, so it stays here.
+    void tellFirmwarePage()
+    {
 #ifdef CR3_PAGEDOC
         // the picture mode: the book window holds no book, the page is that of the PDF or DjVu file
-        if (PbPageWindow::instance != NULL) {
-            PbPageWindow::instance->keep();
+        if (PbPageWindow::instance != NULL)
             pbGlobals->saveState(PbPageWindow::instance->page(), PbPageWindow::instance->pageCount());
-        } else
+        else
 #endif
         pbGlobals->saveState(getDocView()->getCurPage(), getDocView()->getPageCount());
+    }
+
+    // "Close book", behind the home screen: what is not written to the files of the program
+    void quitTellFirmware()
+    {
+        // a book closed before the pause that makes its power-off cover was over
+        pbCoverMake();
+        tellFirmwarePage();
+    }
+
+    virtual void closing()
+    {
+        CRLog::trace("V3DocViewWin::closing();");
+#ifdef POCKETBOOK_PRO
+        // "Close book" has written the files already, before the home screen was shown
+        // (pbQuitViaBackground). A second write at the end of the program could go over the
+        // history written by another copy of the program, started for the next book meanwhile.
+        if (pbQuitStage != 0)
+            return;
+#endif
+        long long perfClosing = pbPerfNow();
+        // a book closed before the pause that makes its power-off cover was over
+        pbCoverMake();
+        long long perfCover = pbPerfNow();
+        long long perfStats = saveOwnFiles();
+        long long perfSaved = pbPerfNow();
+        tellFirmwarePage();
         if (pbPerfOn())
             CRLog::info("perf: exit: power-off cover %.1f ms, statistics and sensor %.1f, settings, history and "
                         "book cache %.1f, book state of the firmware %.1f", PB_PERF_MS(perfCover - perfClosing),
                         PB_PERF_MS(perfStats - perfCover), PB_PERF_MS(perfSaved - perfStats),
                         PB_PERF_MS(pbPerfNow() - perfSaved));
-        // the book and the settings are saved: this run ends the proper way
-        unlink( PB_RUN_MARKER );
         if (!exiting) {
             free(standByImage);
             CloseApp();
@@ -3655,6 +3696,12 @@ public:
 
     bool onCommand(int command, int params)
     {
+#ifdef POCKETBOOK_PRO
+        // "Close book": the files are written, then the home screen; the firmware is told the
+        // page behind it
+        if (command == MCMD_QUIT && pbQuitViaBackground())
+            return true;
+#endif
         // OPDS catalog browser
         if (OpdsBrowser::isOpdsCommand(command))
             return OpdsBrowser::instance().onCommand(_wm, command, params);
@@ -3916,6 +3963,23 @@ public:
         case MCMD_OPEN_RECENT_BOOK: {
 #ifdef BACKGROUND_CACHE_FILE_CREATION
             CRPocketBookWindowManager::instance->cancelCacheSwap();
+#endif
+#ifdef CR3_PAGEDOC
+            // Over the pages of a PDF or a DjVu (the picture mode; the list of the recent books
+            // works there as over a book, a tester asked for it): the window of the pages goes
+            // first. The file it shows keeps its own page for the firmware; switchToRecentBook
+            // would write the page of the book window, which is not the page of that file.
+            if (PbPageWindow::instance != NULL) {
+                const int index = command == MCMD_SWITCH_TO_RECENT_BOOK ? 1 : params;
+                LVPtrVector<CRFileHistRecord> & files = _docview->getHistory()->getRecords();
+                // nothing to open: the pages stay
+                if (index < 1 || index >= files.length() || !LVFileExists(files.get(index)->getFilePathName()))
+                    return true;
+                PbPageWindow::instance->keep();
+                pbGlobals->saveState(PbPageWindow::instance->page(), PbPageWindow::instance->pageCount());
+                pbGlobals->setFileName(files.get(index)->getFilePathName());
+                _wm->closeWindow(PbPageWindow::instance);
+            } else
 #endif
             // the book chosen in the list of the recent books, or the one read before this one
             switchToRecentBook(command == MCMD_SWITCH_TO_RECENT_BOOK ? 1 : params);
@@ -4312,6 +4376,19 @@ public:
     // firmware does not take it, the windows are laid out for what it gives.
     void onUserEvent(bool cameBack)
     {
+#ifdef CR3_PAGEDOC
+        // The pages of a PDF or a DjVu with an orientation of their own: it is that of the
+        // program alone (SetOrientation), so the firmware may put its own back without a word.
+        // A tester, with 270 degrees set for the pages: after the cover was closed and opened the
+        // screen was empty until the touch menu had been opened and closed (which turns the
+        // screen for the pages again, PbPageWindow::reactivated). The orientation is set again at
+        // every event of the user, as on the way back to the screen. (What the firmware does at
+        // the wake-up is not known from a log.)
+        if (!cameBack && PbPageWindow::instance != NULL) {
+            const int own = getProps()->getIntDef(PROP_POCKETBOOK_PAGES_ORIENTATION, -1);
+            cameBack = own >= 0 && own <= 3;
+        }
+#endif
         if (cameBack) {
             int have = GetOrientation();
             int want = cr_oriantations[CRPocketBookWindowManager::instance->getScreenOrientation() & 3];
@@ -4717,6 +4794,18 @@ static int pbDictListFontScale()
         return 100;
     int scale = CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_LIST_FONT, 100);
     return scale < 50 ? 50 : scale > 200 ? 200 : scale;
+}
+
+// font size of the article of the dictionary window: the size of the texts of the touch menu
+// (pbCrFontSize), by the percent of the setting "Font size of the article"
+static int pbDictArticleFontSize()
+{
+    int scale = 100;
+    if (CRPocketBookDocView::instance != NULL)
+        scale = CRPocketBookDocView::instance->getProps()->getIntDef(PROP_POCKETBOOK_DICT_ARTICLE_FONT, 100);
+    scale = scale < 50 ? 50 : scale > 200 ? 200 : scale;
+    int size = pbCrFontSize * scale / 100;
+    return size < 8 ? 8 : size;
 }
 
 // true when a word that is not in the dictionary gives "word not found" instead of the nearest words
@@ -5881,7 +5970,8 @@ bool CRPbDictionaryView::translateMulti(const lString32 &w)
 
 void CRPbDictionaryView::translate(const lString32 &w)
 {
-    getDocView()->setFontSize( pbCrFontSize );
+    // (taken at every word, so a change of the setting is seen in the next article)
+    getDocView()->setFontSize( pbDictArticleFontSize() );
 
     lString8 body;
 
@@ -7410,6 +7500,7 @@ int InitDoc(const char *exename, char *fileName)
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_POSITION, PB_DICT_POSITION_AUTO);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_EXACT, 0);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_LIST_FONT, 100);
+        main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_ARTICLE_FONT, 100);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_DICT_KEYBOARD, PB_DICT_KEYBOARD_CR);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_ROTATE_MODE, PB_ROTATE_MODE_360);
         main_win->getProps()->setIntDef(PROP_POCKETBOOK_PAGE_PREPARE, 1);
@@ -7627,11 +7718,107 @@ lString32 getPbModelNumber() {
 }
 
 #ifdef POCKETBOOK_PRO
+// "Close book" took as long as the firmware took to answer about the book (libbookstate, see
+// CRPocketBookDocView::tellFirmwarePage): the page stayed on the screen for 5 seconds when the
+// firmware was busy, and half a second more when the power-off cover was not made yet. The Home
+// key had no such wait: the firmware shows the home screen and the program works behind it.
+// "Close book" goes the same way now, in three steps.
+// 1. On the screen: the files the program keeps itself are written (the statistics, the position,
+//    the settings, the history; 0.1 to 0.2 s), then the firmware is asked to put the program to
+//    the background. The reader can open the next book only after the home screen is shown, so
+//    another copy of the program started for that book finds the files complete, and this copy
+//    writes none of them again.
+// 2. In the background (EVT_BACKGROUND, SetSaveStateTimer): the power-off cover and the page for
+//    the library of the firmware.
+// 3. The program ends, a moment later: when the reader has tapped the same book meanwhile the
+//    firmware puts this copy back on the screen (EVT_FOREGROUND), and it stays, as after the
+//    Home key.
+// GoToBackground is looked up at run time; without it, or when no EVT_BACKGROUND comes, the book
+// is closed as before, on the screen.
+#define PB_QUIT_FALLBACK_MS 1500
+#define PB_QUIT_END_MS 150
+
+static void pbQuitFallback()
+{
+    if (pbQuitStage != 1)
+        return;
+    pbQuitStage = 0;
+    CRLog::info("Close book: no EVT_BACKGROUND in %d ms, the book is closed on the screen", PB_QUIT_FALLBACK_MS);
+    if (CRPocketBookWindowManager::instance->getWindowCount() != 0)
+        CRPocketBookWindowManager::instance->closeAllWindows();
+}
+
+static void pbQuitEnd()
+{
+    if (pbQuitStage != 3)
+        return;
+    CRLog::info("Close book: done %.1f ms after the command, the program ends", PB_PERF_MS(pbPerfNow() - pbQuitAt));
+    CloseApp();
+}
+
+// EVT_FOREGROUND: the firmware has put the program back on the screen
+static void pbQuitForegrounded()
+{
+    // 1: the answer to the request has not come yet, the fallback decides
+    if (pbQuitStage < 2)
+        return;
+    ClearTimer(pbQuitEnd);
+    pbQuitStage = 0;
+    CRLog::info("Close book: the reader came back to the book before the program ended, the program stays");
+}
+
+bool pbQuitInProgress()
+{
+    return pbQuitStage != 0;
+}
+
 void SetSaveStateTimer(){
     if (exiting || !CRPocketBookDocView::instance) return;
+    if (pbQuitStage == 1) {
+        // "Close book": the files are written already
+        ClearTimer(pbQuitFallback);
+        pbQuitStage = 2;
+        long long t = pbPerfNow();
+        CRPocketBookDocView::instance->quitTellFirmware();
+        CRLog::info("Close book: in the background %.1f ms after the command; the power-off cover and the page "
+                    "for the firmware took %.1f ms", PB_PERF_MS(t - pbQuitAt), PB_PERF_MS(pbPerfNow() - t));
+        pbQuitStage = 3;
+        SetHardTimer("QuitEnd", pbQuitEnd, PB_QUIT_END_MS);
+        return;
+    }
+    if (pbQuitStage != 0)
+        return;
     exiting = true;
     CRPocketBookDocView::instance->closing();
     exiting = false;
+}
+
+bool pbQuitViaBackground()
+{
+    if (pbQuitStage != 0)
+        return true; // a second command while the first is at work
+    if (exiting || CRPocketBookDocView::instance == NULL || !MultitaskingSupported())
+        return false;
+    static void (*goToBackground)() = NULL;
+    static bool looked = false;
+    if (!looked) {
+        looked = true;
+        void * lib = dlopen("libinkview.so", RTLD_LAZY);
+        if (lib != NULL)
+            *(void **)(&goToBackground) = dlsym(lib, "GoToBackground");
+        if (goToBackground == NULL)
+            CRLog::info("Close book: GoToBackground is not in libinkview, the book is closed on the screen");
+    }
+    if (goToBackground == NULL)
+        return false;
+    pbQuitAt = pbPerfNow();
+    CRPocketBookDocView::instance->saveOwnFiles();
+    pbQuitStage = 1;
+    SetHardTimer("QuitFallback", pbQuitFallback, PB_QUIT_FALLBACK_MS);
+    CRLog::info("Close book: the files are written in %.1f ms, the firmware is asked for the home screen",
+                PB_PERF_MS(pbPerfNow() - pbQuitAt));
+    goToBackground();
+    return true;
 }
 
 #ifdef POCKETBOOK_PRO_FW5
@@ -8188,6 +8375,7 @@ int main_handler(int type, int par1, int par2)
         if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL && !pbNetConnecting)
             pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
         pbBackgroundAt = 0;
+        pbQuitForegrounded();
         break;
 #endif
     default:
@@ -8227,6 +8415,12 @@ int main_handler(int type, int par1, int par2)
     switch (type) {
     case EVT_SHOW:
 
+        // What was posted before the program came to the screen is done before the first
+        // picture: a PDF or a DjVu opened at the start posts the turn of the screen to the
+        // orientation of its pages (PbPageWindow::followOrientation), and posted commands were
+        // done only after an event of the user. A tester, with 270 degrees set for the pages: the
+        // file came upright and turned at the first tap.
+        CRPocketBookWindowManager::instance->processPostedEvents();
         CRPocketBookWindowManager::instance->update(true);
         pbGlobals->BookReady();
 
@@ -8303,7 +8497,8 @@ int main_handler(int type, int par1, int par2)
         break;
 #ifdef POCKETBOOK_PRO
     case EVT_BACKGROUND:
-    	SetWeakTimer("SaveStateTimer", SetSaveStateTimer, 500);
+        // after "Close book" nothing is waited for: the reader does not come back to this run
+        SetWeakTimer("SaveStateTimer", SetSaveStateTimer, pbQuitStage == 1 ? 50 : 500);
         stopStandByTimer();
         // the position sync: the place sent while Wi-Fi is on, otherwise kept
         PbKosync::instance().bookClosing();
@@ -8337,6 +8532,10 @@ int main_handler(int type, int par1, int par2)
             if (pbPerfOn())
                 CRLog::info("perf: exit: windows closed, the book and its cache file released in %.1f ms",
                             PB_PERF_MS(pbPerfNow() - perfExit));
+#ifdef POCKETBOOK_PRO
+            // after "Close book" the marker may be that of another copy of the program
+            if (pbQuitStage == 0)
+#endif
             unlink( PB_RUN_MARKER );
 #ifdef POCKETBOOK_PRO
             // the connection kept between the requests to a catalog

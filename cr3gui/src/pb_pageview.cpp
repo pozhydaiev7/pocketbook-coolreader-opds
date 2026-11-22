@@ -373,6 +373,9 @@ void PbPageWindow::followOrientation()
 
 void PbPageWindow::closing()
 {
+    // "Close book" has written the file state already, before the home screen was shown
+    if (pbQuitInProgress())
+        return;
     saveState();
     // the position sync: the page sent while Wi-Fi is on, otherwise kept
     PbKosync::instance().pagesClosing();
@@ -1209,10 +1212,23 @@ bool PbPageWindow::onCommand(int command, int params)
     }
     case PB_PAGEVIEW_CMD_SETTINGS:
         return main_win->onCommand(MCMD_SETTINGS, 0);
+    case MCMD_SETTINGS_APPLY: {
+        // The settings menu was left: the book window applies the settings, and the pages take
+        // what is theirs (the orientation of the pages, the page number, the status line). The
+        // menu closes before this command comes, so reactivated() had seen the settings as they
+        // were: the owner chose "Orientation of the pages" and nothing happened until another
+        // menu was opened and closed.
+        const bool done = main_win->onCommand(command, params);
+        reactivated();
+        return done;
+    }
     case PB_PAGEVIEW_CMD_EXIT:
     case MCMD_CANCEL:
     case MCMD_QUIT:
         saveState();
+        // the home screen first, the file is saved behind it
+        if (pbQuitViaBackground())
+            return true;
         _wm->closeAllWindows();
         return true;
     default:
@@ -1241,21 +1257,20 @@ bool PbPageWindow::leavesOut(int command)
     // the commands of the book view (lvdocview.h) end where those of the main menu start
     if (command >= 100 && command < MAIN_MENU_COMMANDS_START)
         return true;
+    // Not here: the list of the recent books with the book opened from it, the manual and the
+    // table of the keys. They do not act on the text of a book, and over the pages they do what
+    // they do over a book (a tester; they were left out with the rest). The book window does
+    // them; a book of the list closes the window of the pages first (CRPocketBookDocView::onCommand).
     switch (command) {
     case MCMD_GO_LINK:
     case MCMD_GO_LINK_APPLY:
-    case MCMD_OPEN_RECENT_BOOK:
-    case MCMD_SWITCH_TO_RECENT_BOOK:
     case MCMD_SEARCH_FINDFIRST:
     case MCMD_DICT_VKEYBOARD:
     case MCMD_DICT_FIND:
     case MCMD_NEXT_MODE:
     case MCMD_PREV_MODE:
-    case MCMD_RECENT_BOOK_LIST:
     case MCMD_KBD_NEXTLAYOUT:
     case MCMD_KBD_PREVLAYOUT:
-    case MCMD_HELP:
-    case MCMD_HELP_KEYS:
     case PB_CMD_SELECT_DICT:
     case PB_CMD_TRANSLATE:
     case PB_CMD_BOOKMARK_REMOVE:

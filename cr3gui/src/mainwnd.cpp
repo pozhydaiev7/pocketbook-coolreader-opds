@@ -1137,7 +1137,8 @@ void V3DocViewWin::showHelpDialog()
     }
 	//lString8 help = UnicodeToUtf8( LVReadTextFile( _helpFile ) );
 	if ( !help.empty() ) {
-		CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("Help")), help, lvRect(), true, true );
+		// the caption names the document shown: the user manual (it was "Help")
+		CRViewDialog * dlg = new CRViewDialog( _wm, lString32(_("User manual")), help, lvRect(), true, true );
                 int fs = _props->getIntDef( PROP_FONT_SIZE, 22 );
                 dlg->getDocView()->setFontSize(fs);
 		_wm->activateWindow( dlg );
@@ -1160,6 +1161,40 @@ void V3DocViewWin::showCitesMenu()
     _wm->activateWindow( menu_win );
 }
 
+#if defined(CR_POCKETBOOK) && defined(CR3_PAGEDOC)
+// A row of the main menu that has nothing to act on over the pages of a PDF or a DjVu (the picture
+// mode): shown in gray in its place. A tap on it does nothing and the menu stays (the owner: gray
+// tells that the row cannot be tapped, no message is needed). Such rows were left out, and a
+// tester took the shorter menu for another menu: "leave them as inactive, the menu would not
+// change".
+class CRInactiveMenuItem : public CRMenuItem
+{
+public:
+    CRInactiveMenuItem( CRMenu * menu, int id, const char * label )
+        : CRMenuItem( menu, id, label, LVImageSourceRef(), LVFontRef() ) { }
+    /// chosen: nothing is done (CRMenu::onItemSelect)
+    virtual int onSelect() { return 1; }
+    /// As CRMenuItem::Draw, the text in gray
+    virtual void Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected )
+    {
+        (void)selected;
+        const lUInt32 gray = 0x888888;
+        _itemDirty = false;
+        lvRect itemBorders = skin->getBorderWidths();
+        skin->draw( buf, rc );
+        lvRect textRect = rc;
+        textRect.left += DrawIcon( buf, rc, itemBorders );
+        lString32 s1, s2;
+        if ( !_label.split2( cs32("\t"), s1, s2 ) )
+            s1 = _label;
+        skin->drawText( buf, textRect, s1, getFont(), gray, skin->getBackgroundColor(), skin->getTextAlign() );
+        if ( !s2.empty() )
+            valueSkin->drawText( buf, textRect, s2, LVFontRef(), gray, valueSkin->getBackgroundColor(),
+                                 valueSkin->getTextAlign() );
+    }
+};
+#endif
+
 void V3DocViewWin::showMainMenu()
 {
     lvRect fullRc = _wm->getScreen()->getRect();
@@ -1181,15 +1216,23 @@ VIEWER_MENU_4ABOUT=About...
     // the picture mode. The book window keeps the book under the pages shown over it: the menu
     // over the pages offers only the way to the book (the owner saw both items there).
     PbPageWindow * pages = PbPageWindow::instance;
-    if ( pages == NULL && pbPdfBookIsOpen() )
+    // true when the menu has the way to the other view as its first item: the same action chosen
+    // for the menu in the settings ("PDF and DjVu: book or original") is not shown a second time
+    // (a tester had both rows in the menu over the pages)
+    bool viewSwitchShown = false;
+    if ( pages == NULL && pbPdfBookIsOpen() ) {
         menu_win->addItem( new CRMenuItem( menu_win, PB_CMD_PDF_PAGES, _("View as the original"),
                                            LVImageSourceRef(), LVFontRef() ) );
+        viewSwitchShown = true;
+    }
     // Over the pages the menu is this one too, its first item the way to the book (a tester:
     // the list of the view of a page came in its place). The items the window of the pages has
-    // nothing to act on with are left out below.
-    if ( pages != NULL && pages->canBeBook() )
+    // nothing to act on with are shown as inactive below (CRInactiveMenuItem).
+    if ( pages != NULL && pages->canBeBook() ) {
         menu_win->addItem( new CRMenuItem( menu_win, PB_CMD_PDF_PAGES, _("View as a book"),
                                            LVImageSourceRef(), LVFontRef() ) );
+        viewSwitchShown = true;
+    }
 #endif
 	CRGUIAcceleratorTableRef menuItems = _wm->getAccTables().get(lString32("mainMenuItems"));
     // (a menu of the keymaps needs two items; one chosen in the settings is a menu)
@@ -1227,8 +1270,8 @@ VIEWER_MENU_4ABOUT=About...
             if ( cmd == MCMD_CITE && hasCitesList )
                 continue;
 #endif
-#ifdef CR3_PAGEDOC
-            if ( pages != NULL && PbPageWindow::leavesOut( cmd ) )
+#if defined(CR_POCKETBOOK) && defined(CR3_PAGEDOC)
+            if ( cmd == PB_CMD_PDF_PAGES && viewSwitchShown )
                 continue;
 #endif
 			const char * name = getCommandName( cmd, param );
@@ -1240,6 +1283,13 @@ VIEWER_MENU_4ABOUT=About...
 				if ( keyname && keyname[0] )
 					label << "\t" << keyname;
 			}
+#if defined(CR_POCKETBOOK) && defined(CR3_PAGEDOC)
+            // over the pages: what has nothing to act on there stays in its place, inactive
+            if ( pages != NULL && PbPageWindow::leavesOut( cmd ) ) {
+                menu_win->addItem( new CRInactiveMenuItem( menu_win, cmd, label.c_str() ) );
+                continue;
+            }
+#endif
 			menu_win->addItem( new CRMenuItem( menu_win, cmd,
 				label.c_str(),
 				LVImageSourceRef(),
@@ -1297,7 +1347,7 @@ VIEWER_MENU_4ABOUT=About...
 					LVFontRef() ) );
 		if ( !_helpFile.empty() )
 			menu_win->addItem( new CRMenuItem( menu_win, MCMD_HELP,
-					_("Help"),
+					_("User manual"),
 					LVImageSourceRef(),
 					LVFontRef() ) );
 		menu_win->addItem( new CRMenuItem( menu_win, MCMD_HELP_KEYS,

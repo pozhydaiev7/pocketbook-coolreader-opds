@@ -1589,8 +1589,11 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {_("Exact"), "1"},
         {NULL, NULL}
     };
-    // percent of the font size the skin gives to the word list of the dictionary window
+    // percent of the font size the word list and the article of the dictionary window have by
+    // themselves (a tester asked for more values: "there is room on the screen")
     item_def_t dict_list_font_options[] = {
+        {"50%", "50"},
+        {"60%", "60"},
         {"70%", "70"},
         {"80%", "80"},
         {"90%", "90"},
@@ -1598,6 +1601,8 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         {"110%", "110"},
         {"125%", "125"},
         {"150%", "150"},
+        {"175%", "175"},
+        {"200%", "200"},
         {NULL, NULL}
     };
 #ifdef CR3_PAGEDOC
@@ -2201,16 +2206,28 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     mainMenuSettings->reconfigure( 0 );
     controlSettingsMenu->addItem( mainMenuSettings );
 #endif
+
+    // "Control settings" stands with the other folders named "... settings", under "Display
+    // settings" and above the folder of PDF and DjVu (the owner: the settings of those files are a
+    // thing apart; the folder stood between the two).
+    if ( !controlSettingsMenu->getItems().empty()) {
+        controlSettingsMenu->reconfigure( 0 );
+        mainMenu->addItem( controlSettingsMenu );
+    } else {
+        delete controlSettingsMenu;
+        controlSettingsMenu = NULL;
+    }
+
 #ifdef CR3_PAGEDOC
     // One group for the picture mode of PDF and DjVu files, with one set of values (the owner,
     // after a tester: "the settings are the same, as the way these files are read is"; they were
     // two groups with the same items). It holds what is special to these files, mostly to books
     // of pictures; a text taken from such a file is shown with the common font and style settings,
     // so there is no font here. An item with two or three values is switched by a tap in place, as
-    // in the other groups. Whether the reader opens these files with this program stands in "Open
-    // with CoolReader", with the other kinds of files.
+    // in the other groups. Whether the reader opens these files with this program stands in "File
+    // associations", with the other kinds of files.
     {
-        CRMenu * pageMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("PDF and DjVu"),
+        CRMenu * pageMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("PDF and DjVu settings"),
                                                     "cr3_option_pages", valueFont, CRPropRef());
         pageMenu->setSkinName(lString32("#settings"));
         pageMenu->setAccelerators( _menuAccelerators );
@@ -2236,14 +2253,6 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     }
 #endif
 
-    if ( !controlSettingsMenu->getItems().empty()) {
-        controlSettingsMenu->reconfigure( 0 );
-        mainMenu->addItem( controlSettingsMenu );
-    } else {
-        delete controlSettingsMenu;
-        controlSettingsMenu = NULL;
-    }
-
 #ifdef POCKETBOOK_PRO
     //====== Dictionary settings ========
     CRMenu * dictSettingsMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Dictionary settings"),
@@ -2260,6 +2269,10 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
     createSettingsMenuItem(dictSettingsMenu, mm_dictListFont, _("Font size of the word list"),
                            "cr3_option_dict_list_font", valueFont, PROP_POCKETBOOK_DICT_LIST_FONT,
                            dict_list_font_options);
+    // and the font of the article by itself: it is read, not tapped, and may be smaller
+    createSettingsMenuItem(dictSettingsMenu, mm_dictArticleFont, _("Font size of the article"),
+                           "cr3_option_dict_article_font", valueFont, PROP_POCKETBOOK_DICT_ARTICLE_FONT,
+                           dict_list_font_options);
     // without a touch screen only the firmware keyboard can be used: no choice is offered
     if (pbKeyboardUsable())
         createSettingsMenuItem(dictSettingsMenu, mm_dictKeyboard, _("Search keyboard"),
@@ -2274,13 +2287,15 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         mainMenu->addItem( setTime );
 */
 
-    // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one)
-    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalogs") ) );
+    // OPDS CATALOGS: the list to choose a catalog from (the touch menu icon opens the default one).
+    // The rows of the settings menu that set something up are named "... settings" (the owner);
+    // the list itself keeps its caption "OPDS catalogs".
+    mainMenu->addItem( new CRSettingsScreenItem( mainMenu, PB_CMD_OPDS_CATALOGS, _("OPDS catalog settings") ) );
 
     // POSITION SYNC of KOReader: the switch, and the screen of the server and of the login (pb_kosync.h)
     #ifdef POCKETBOOK_PRO
     if( isNetworkSupported() ) {
-        CRMenu * syncMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Reading position sync"),
+        CRMenu * syncMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Reading position sync settings"),
                                                      "cr3_option_controls", valueFont, CRPropRef() );
         syncMenu->setAccelerators( _menuAccelerators );
         syncMenu->setSkinName(lString32("#settings"));
@@ -2298,13 +2313,14 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
 
 #ifdef CR_POCKETBOOK
     {
-        // "Open with CoolReader": a line for every kind of book the engine opens. The value is
+        // "File associations" (was "Open with CoolReader"; the owner: the usual name of what ties
+        // the kinds of files to a program): a line for every kind of book the engine opens. The value is
         // what the list of the reader says (pb_openwith.h); the list is changed when the settings
         // are applied (V3DocViewWin::applySettings). PDF and DjVu are lines of it like the others
         // (they stood in their own groups only; the owner, after a tester: "it would be logical
         // to put the associations of PDF and DjVu into the common menu"), in a build that reads
         // such files.
-        CRMenu * openMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("Open with CoolReader"),
+        CRMenu * openMenu = new CRSettingsGroupMenu( _wm, mainMenu, _menuItemId++, _("File associations"),
                                                     "cr3_option_pages", valueFont, CRPropRef());
         openMenu->setSkinName(lString32("#settings"));
         openMenu->setAccelerators( _menuAccelerators );
