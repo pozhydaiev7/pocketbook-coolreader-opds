@@ -10,8 +10,8 @@
 #
 # <line> names the build tree: <PBDEV>/sources/cr3-line-<line>. Every line of versions (a branch
 # checked out in a clone or a git worktree of its own) has its tree and its object files, so a
-# switch between the lines rebuilds nothing. Lines in use: "master" (0.0.7.x-opds) and "v8"
-# (0.0.8-opds, branch pdf-djvu).
+# switch between the lines rebuilds nothing. Line in use: "master" (the release 0.0.8-opds was
+# built in the tree "v8" of the former branch pdf-djvu).
 #
 # Steps: the clone is copied into the tree with LF line ends (sync.py); cmake and make in
 # <tree>/pbpro5; the binary is stripped; updateReleases.sh makes the release archive; the package

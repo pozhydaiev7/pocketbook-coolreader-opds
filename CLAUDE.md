@@ -2,7 +2,7 @@
 
 Read `dev/README.md` before anything else: where the code is, how to set up a new machine (WSL,
 the SDK), how a package is built, checked and put on a reader, the PC bench, and the rules of the
-owner. On the branch `pdf-djvu` read `dev/pdfdjvu/STATUS.md` next: the state of the PDF and DjVu work.
+owner. For PDF and DjVu read `dev/pdfdjvu/STATUS.md` next: the state of that work.
 
 The short form of the rules:
 
@@ -12,5 +12,4 @@ The short form of the rules:
 - WSL builds: announce, at most 4 jobs with `nice`, `wsl.exe --shutdown` afterwards.
 - Every feature: strings in `cr3gui/po`, the three manuals, an entry in `CHANGELOG.md`.
 - Speed over beauty of the code; measure on the bench (`dev/bench`) before and after.
-- Lines of versions: `master` is `0.0.7.x-opds`; `pdf-djvu` is `0.0.8-opds-alphaN`, not merged
-  into `master`, and `master` is merged into it often.
+- One line of versions, in `master`: `0.0.8-opds` is released, test builds are `-alphaN`.

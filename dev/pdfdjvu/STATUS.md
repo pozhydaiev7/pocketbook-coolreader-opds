@@ -1,6 +1,6 @@
 # PDF and DjVu: state of the work
 
-Branch `pdf-djvu`, versions `0.0.8-opds-alphaN`. The plan the owner approved on 2026-11-18 is
+Branch `master` since the release `0.0.8-opds` (2026-11-23); before it the branch `pdf-djvu`, test builds `0.0.8-opds-alphaN`. The plan the owner approved on 2026-11-18 is
 `PLAN.ru.md` (Russian, as he reads it). This file is the short English state: what is decided,
 what is measured, what comes next. Update it at the end of every working session.
 

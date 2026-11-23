@@ -11,6 +11,8 @@ the current engine of CoolReader, and adds:
 - **StarDict and XDXF dictionaries**, several dictionaries looked up at once;
 - **reading statistics**;
 - **updates over the network**, from the releases of this repository;
+- **PDF and DjVu** (since 0.0.8), as the file has them or as a book in your font;
+- **reading position sync** with KOReader (since 0.0.8);
 - citations selected by touch, auto rotation, six touch skins and the changes of the community build
   0.0.6-17-62.2 by sergkv12 ([4pda](https://4pda.to/forum/index.php?showtopic=886480&st=2420#entry76669650)).
 
@@ -35,6 +37,33 @@ of [dderugin/pocketbook-coolreader](https://github.com/dderugin/pocketbook-coolr
   - since 0.0.7.1: the next page is drawn in memory while a page is read, so a page turn only shows it (*Display settings → Prepare next page*, on by default).
 - **Wait icon** while a big book is laid out again; taps made meanwhile are dropped.
 - Reading positions and bookmarks of the earlier versions are converted. A book is laid out again at its first opening: the cache files of the old engine are not used.
+
+### PDF and DjVu
+
+Since 0.0.8-opds.
+
+- **The file as it is.** A PDF or a DjVu, also one inside a zip, is shown page by page as the file has it: the view for scanned and photographed books. You choose the scale (whole page, page width, the content without the margins, or automatic, where every page is levelled by itself, which helps with crooked scans) and the way the pages are turned (a page at once, by frames, or as a ribbon).
+- **The file as a book.** A PDF with text and a DjVu with a text layer open as an ordinary book: in your font and size, with hyphenation, the dictionary, citations, bookmarks and search. Headings, the contents, tables, pictures and footnotes are carried over; running titles and page numbers are left out. The book is made when the file is opened for the first time, which takes a while for a big file; after that it opens at once.
+- **From one view to the other.** The first item of the main menu, *View as the original* or *View as a book*, changes the view and keeps your place. The same can be put on a tap zone.
+- **Everything a book has.** In the original view the tap zones, the touch menu, the status line, the contents, bookmarks, *Go to page* and the dictionary (tap a word of the page) work as in a book. The main menu has the same rows; those that cannot work over a picture of a page (search, citations) are gray.
+- **An orientation of their own.** *Settings → PDF and DjVu settings → Orientation of the pages*: for example scans in landscape while books stay upright.
+- *Settings → File associations* gives any kind of file back to the reading program of the firmware.
+
+### Reading position sync
+
+Since 0.0.8-opds.
+
+- The place where you stopped is kept on a KOReader sync server and taken by your other devices: KOReader on a phone, a computer or another reader, or CoolReader on another PocketBook. The file must be the same on all of them.
+- *Settings → Reading position sync settings*: the switch (off by default) and *Server and login...*. The server of KOReader is set from the start; a server of your own works as well (Calibre-Web-Automated, Kavita, korrosync). You can register right from the reader.
+- The place is sent when you close the book or leave the program and asked for when you open it. A newer place from another device is offered with a question. Without Wi-Fi the place is kept and sent later.
+
+### Contents and main menu
+
+Since 0.0.8-opds.
+
+- **Levels that fold.** A long contents list opens with its first level and the branch you are reading; a tap on the triangle opens or closes a branch. *Display settings → Contents: levels closed* shows every level as before. A book without a contents list gets one made of its headings. *End* is the last entry of every contents list.
+- **Main menu of your own.** *Control settings → Main menu*: choose what each of its items does.
+- **OPDS catalogs with a login.** A catalog closed by a password (a Calibre library, for example) opens with the login and the password set in its card.
 
 ### Program update
 
@@ -171,7 +200,7 @@ The install is by USB:
 2. Connect the reader by USB. The folder `system` of the reader is hidden: turn on the hidden files in the file manager of the PC. If the reader has CoolReader, back up `system/share/cr3` and `system/bin/cr3-pb.app` from it.
 3. Copy the folders `system` and `applications` from the archive to the root of the reader's storage, replacing the existing files.
 4. Disconnect USB and restart the reader.
-5. Tap a book: FB2, EPUB, TXT, RTF and HTML open in CoolReader; in the line of versions 0.0.8, PDF and DjVu too. The reading program of the firmware stays in the menu of a long tap, *Open with*.
+5. Tap a book: FB2, EPUB, TXT, RTF and HTML open in CoolReader; since 0.0.8, PDF and DjVu too. The reading program of the firmware stays in the menu of a long tap, *Open with*.
 6. If the menu still looks like the old 3×3 grid, choose the skin:
    *Settings → Display settings → Skin → pb740fw5.cr3skin*.
 
@@ -255,7 +284,7 @@ All source code, except the `thirdparty` directory, is provided under the terms 
 GNU GPL, version 2 or (at your option) any later version (see [LICENSE](LICENSE) and the headers
 of the source files). The libraries in `thirdparty` keep their own licenses.
 
-The line of versions 0.0.8 (branch `pdf-djvu`) shows PDF files with [MuPDF](https://mupdf.com/)
+Since 0.0.8 the program shows PDF files with [MuPDF](https://mupdf.com/)
 (GNU AGPL, version 3) and DjVu files with [DjVuLibre](https://djvu.sourceforge.net/) (GNU GPL,
 version 2 or later). Their sources are not in this repository: `dev/pdfdjvu/fetch_sources.sh`
 downloads the unchanged release archives by their checksums. A program built with them is

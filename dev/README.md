@@ -16,18 +16,14 @@ package target is `pro5` (firmware 5 and 6, toolchain `SDK_481`).
 
 | Line | Branch | Versions | State |
 |---|---|---|---|
-| current | `master` | `0.0.7.x-opds`, test builds `-alphaN` | released: `0.0.7-opds` |
-| PDF and DjVu | `pdf-djvu` | `0.0.8-opds-alphaN` | in work; not merged into `master`; `master` is merged into it often |
+| current | `master` | `0.0.8-opds`, test builds `-alphaN` | released: `0.0.8-opds` |
 
 The version is `CR_PB_VERSION` and `CR_PB_BUILD_DATE` in `cr3gui/src/cr3pocketbook.h`. A test build
 is a GitHub pre-release; the update screen of the program offers pre-releases only with *Test
 versions* on. Release notes: English first, then `## Русский` and `## Українська`.
 
-Two lines are kept side by side as two working folders of one repository (`git worktree`), so both
-can be built without a switch:
-
-    git worktree add ../pocketbook-coolreader-opds-v8 pdf-djvu
-    git -C ../pocketbook-coolreader-opds-v8 merge master        # bring master into the line
+There is one line of versions, in `master`. The branch `pdf-djvu` (PDF and DjVu, the test builds
+`0.0.8-opds-alphaN`) became `master` with the release `0.0.8-opds` and was removed.
 
 ## Where the code is
 
@@ -84,12 +80,10 @@ What it takes to go on with the work on a PC that has nothing yet. Steps 1 to 5 
    Nothing else is installed for the device build: curl, inkview and the other device libraries
    are in the sysroot of the SDK, the rest is in `thirdparty/` of this repository.
 4. **The clone on the Windows side**, with `core.autocrlf=true`. The paths of this guide are
-   those of the first machine (`C:\Temp\pocketbook-coolreader-opds.git` for `master`,
-   `C:\Temp\pocketbook-coolreader-opds-v8` for `pdf-djvu`); any folder will do, the build script
-   takes the clone it lies in:
+   those of the first machine (`C:\Temp\pocketbook-coolreader-opds.git`); any folder will do, the
+   build script takes the clone it lies in:
 
        git clone https://github.com/pozhydaiev7/pocketbook-coolreader-opds C:\Temp\pocketbook-coolreader-opds.git
-       git -C C:\Temp\pocketbook-coolreader-opds.git worktree add ../pocketbook-coolreader-opds-v8 pdf-djvu
 
 5. **The first build** (a full one, about ten minutes with 4 jobs), from Git Bash:
 
@@ -101,7 +95,7 @@ What it takes to go on with the work on a PC that has nothing yet. Steps 1 to 5 
    Arial and Georgia with their bold and italic faces from `C:\Windows\Fonts`), then
    `bash dev/bench/bench2.sh books` and the commands of "The PC bench" below. Page hashes depend
    on the fonts, so pages are compared between two trees on one machine, not between machines.
-7. **PDF and DjVu** (branch `pdf-djvu`): `dev/pdfdjvu/STATUS.md` is the state of that work;
+7. **PDF and DjVu**: `dev/pdfdjvu/STATUS.md` is the state of that work;
    `fetch_sources.sh` downloads MuPDF and DjVuLibre into `~/PBDEV/pdfdjvu`, the `build_*.sh`
    scripts build them for the reader and for the PC.
 
@@ -112,7 +106,7 @@ taken from the reader, the books of the owner used by the bench.
 
     JOBS=4 bash <clone>/dev/build/build_package.sh <line> [clean|check]
 
-`<line>` is `master` or `v8`; it only names the build tree, the sources are those of the clone the
+`<line>` is `master`; it only names the build tree, the sources are those of the clone the
 script lies in. The script copies the clone into the tree (`sync.py`), runs cmake and make in
 `<tree>/pbpro5`, strips the binary, runs `updateReleases.sh pro5` and writes the checked package
 `cr3-v<version>-pro5.zip` to `C:\Temp\cr3-opds-build\beta` (`CR3_OUT`). The first build of a tree
