@@ -14494,10 +14494,31 @@ ldomNode * ldomDocumentWriterFilter::OnTagOpen( const lChar32 * nsname, const lC
                 // cause a display hash mismatch).
                 // So, we'll set it on the FORM just after it's created below
                 setDisplayNone = true;
+                // The Lib.ru books of the first years (the FORM is the rating one, kept by
+                // the copies of other sites too) have a single PRE, opened before this DIV,
+                // and the whole text is in it:
+                //   <body><pre><div align="right"><form ...>...</form></div>
+                // The PRE met after the detection is swapped with a DIV below; this one was
+                // made before the format was known, and its text stayed preformatted: every
+                // line of the file was a line of its own on the page. Swap it here the same
+                // way. Nothing but this DIV is in it yet, so the styles of the two are
+                // set again, and the text that follows is parsed into paragraphs.
+                ldomNode * outerPre = node->getParentNode();
+                if ( outerPre && outerPre->getNodeId() == el_pre && outerPre->getChildCount() == 1 ) {
+                    outerPre->setNodeId( el_div );
+                    outerPre->setAttributeValue(LXML_NS_NONE, attr_ParserHint, U"ParseAsPre");
+                    outerPre->initNodeStyle();
+                    node->initNodeStyle();
+                    _libRuParseAsPre = true;
+                }
             }
         }
         // If the first FORM met doesn't match, no need keep detecting
         _libRuDocumentToDetect = false;
+    }
+    else if ( _libRuDocumentDetected && id == el_form ) {
+        // The same books repeat the rating FORM after the text: not a part of the book
+        setDisplayNone = true;
     }
     // Fixed 20180503: this was done previously in any case, but now only
     // if _libRuDocumentDetected. We still allow the old behaviour if
