@@ -12,4 +12,4 @@ The short form of the rules:
 - WSL builds: announce, at most 4 jobs with `nice`, `wsl.exe --shutdown` afterwards.
 - Every feature: strings in `cr3gui/po`, the three manuals, an entry in `CHANGELOG.md`.
 - Speed over beauty of the code; measure on the bench (`dev/bench`) before and after.
-- One line of versions, in `master`: `0.0.8-opds` is released, test builds are `-alphaN`.
+- One line of versions, in `master`: `0.0.8.1-opds` is released, test builds are `-alphaN`.
