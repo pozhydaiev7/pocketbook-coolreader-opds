@@ -107,8 +107,12 @@ void CRRecentBooksMenu::handleContextMenu(int index)
 {
     // the command may close the menu, which is deleted then: see CRCitesMenu::handleContextMenu
     CRGUIWindowManager * wm = _wm;
-    wm->postCommand(index, 0);
-    wm->processPostedEvents();
+    pbFirmwareMenuClosed(index);
+    // index <= 0: the menu was closed without a choice
+    if (index > 0) {
+        wm->postCommand(index, 0);
+        wm->processPostedEvents();
+    }
     wm->resetTillUp();
 }
 #endif

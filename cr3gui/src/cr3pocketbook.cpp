@@ -42,6 +42,7 @@
 #include "pb_toclist.h"
 #include "pb_keyboard.h"
 #include "pb_singlecopy.h"
+#include "pb_marknames.h"
 #include <stdarg.h>
 
 #ifdef PB_DB_STATE_SUPPORTED
@@ -196,6 +197,94 @@ static void pbLayoutWaitEnd()
     // main_handler() sets the exact moment when it is done with that event.
     pbStaleInputUntil = pbPerfNow() + 1500000;
     pbLayoutWaitEnded = true;
+}
+
+// A question of the firmware asked by the program on its own (Dialog): the place of the book sent
+// by another device, a new version found. The window of the question is the firmware's, and the
+// touches go to it until it is answered. When the program draws its screen over the window (the
+// program left by the Home key and given another book, a page drawn), the picture of the window is
+// gone and the window is still open: the owner could not tap anything in any book until the
+// question was asked once more and answered. So the program knows when such a question is open
+// and closes it itself when it is about to be drawn over: an answer not given is "no".
+static bool pbQuestionOpen = false;
+static long long pbQuestionAt = 0; // moment of pbPerfNow() it was asked
+static void (*pbQuestionHandler)(int) = NULL;
+
+static void pbQuestionAnswered(int button)
+{
+    void (*handler)(int) = pbQuestionHandler;
+    CRLog::info("question of the firmware: button %d%s", button, pbQuestionOpen ? "" : ", after it was closed by the program");
+    pbQuestionOpen = false;
+    pbQuestionHandler = NULL;
+    if (handler != NULL)
+        handler(button);
+}
+
+void pbQuestionClose(const char * why)
+{
+    if (!pbQuestionOpen)
+        return;
+    CRLog::info("question of the firmware: closed without an answer, %s", why);
+    pbQuestionOpen = false;
+    pbQuestionHandler = NULL;
+    CloseDialog();
+}
+
+void pbQuestion(int icon, const char * title, const char * text, const char * button1, const char * button2,
+                void (*handler)(int))
+{
+    pbQuestionClose("another question is asked");
+    pbQuestionOpen = true;
+    pbQuestionAt = pbPerfNow();
+    pbQuestionHandler = handler;
+    CRLog::info("question of the firmware: asked");
+    Dialog(icon, title, text, button1, button2, pbQuestionAnswered);
+}
+
+// A menu of the firmware (OpenMenu) closed without a choice, by a tap beside it. That tap is for
+// the menu alone. What of it the firmware gives to the program after the menu is closed, its
+// lift alone or the whole tap, is not a tap on the list under the menu: before pbMenuTapUntil
+// it is dropped, one tap at most. (A tester: the menu of a bookmark cannot be left without a
+// choice; a tap that reached the list set the bookmark or went to it.)
+static long long pbMenuTapUntil = 0; // moment of pbPerfNow()
+// The picture of such a menu is taken off the screen by the EVT_SHOW the firmware sends when the
+// menu is closed. Where none has come a quarter of a second later, the windows are drawn anew
+// (pbFirmwareMenuClosed): the picture of the menu stayed over the list otherwise.
+static bool pbMenuRedrawPending = false;
+
+// true: the touch event belongs to the tap that closed a menu of the firmware
+static bool pbMenuTapInput(int type)
+{
+    static bool touch = false; // the touch of such a tap is not lifted yet
+    bool pending = pbMenuTapUntil != 0 && pbPerfNow() < pbMenuTapUntil;
+    switch (type) {
+    case EVT_POINTERDOWN:
+        touch = pending;
+        pbMenuTapUntil = 0;
+        if (touch)
+            CRLog::info("menu of the firmware: the tap that closed it is dropped");
+        return touch;
+    case EVT_POINTERUP: {
+        bool drop = touch || pending;
+        if (!touch && pending)
+            CRLog::info("menu of the firmware: the lift of the tap that closed it is dropped");
+        touch = false;
+        pbMenuTapUntil = 0;
+        return drop;
+    }
+    case EVT_POINTERMOVE:
+    case EVT_POINTERLONG:
+    case EVT_POINTERHOLD:
+#ifdef EVT_POINTERDRAG
+    case EVT_POINTERDRAG:
+#endif
+#if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
+    case EVT_MTSYNC:
+#endif
+        return touch;
+    default:
+        return false;
+    }
 }
 
 // true: the input event was made during a layout and is not acted on
@@ -765,6 +854,8 @@ private:
     int _directScanline;
     int _directOrientation;
     int _shiftState;             // shiftCanvasUp(): 0 not checked yet, 1 direct, -1 firmware calls
+    // the frame of the program was cleared when it left the screen: see blankFrame()
+    bool _frameBlank;
     void drawStretch(int x, int y, int w, int h);
     bool directUsable(icanvas * & cv);
     void checkDirect(icanvas * cv, int x, int y, int w, int h);
@@ -792,6 +883,7 @@ public:
         _directScanline = 0;
         _directOrientation = -1;
         _shiftState = 0;
+        _frameBlank = false;
         if (m_bpp == 4) {
             if (width > height)
                 _buf4bpp = new lUInt8[ (width + 1)/2 * width ];
@@ -808,7 +900,27 @@ public:
         ClearScreen();
         draw(0, 0, _front->GetWidth(), _front->GetHeight());
         PageSnapshot();
+        // (the picture was for the firmware; the frame of a program that is off the screen
+        // stays cleared)
+        if (_frameBlank)
+            ClearScreen();
     }
+    /// The frame of the program is cleared, in the memory of the firmware only: nothing is sent to
+    /// the screen. Called when the program leaves the screen. When the firmware brings the
+    /// program back it shows that frame before the program gets a word: with another book to
+    /// open (one copy of the program), the page of the book before was on the screen for half a
+    /// second or a second (the owner: "I still see the previous book when I open a new one").
+    /// A cleared frame is shown in its place. The page is copied anew, whole, by the next
+    /// update(): of the same book when the program comes back to it, or of the new one.
+    void blankFrame(bool black)
+    {
+        if (black)
+            FillArea(0, 0, ScreenWidth(), ScreenHeight(), 0x00000000);
+        else
+            ClearScreen();
+        _frameBlank = true;
+    }
+    bool frameBlank() const { return _frameBlank; }
     bool setForceSoftUpdate(bool force)
     {
         bool ret = _forceSoft;
@@ -1156,11 +1268,36 @@ int listTocHandler(int action, int x, int y, int idx, int state)
 int main_handler(int type, int par1, int par2);
 
 static int link_altParm = 0;
+static void pbMenuRedrawTimer()
+{
+    if (!pbMenuRedrawPending || CRPocketBookWindowManager::instance == NULL)
+        return;
+    pbMenuRedrawPending = false;
+    CRLog::info("menu of the firmware: no EVT_SHOW after it was closed, the windows are drawn anew");
+    CRPocketBookWindowManager::instance->update(true);
+}
+
+void pbFirmwareMenuClosed(int index)
+{
+    CRLog::info("menu of the firmware closed, index %d%s", index, index > 0 ? "" : ": no choice");
+    if (index > 0) {
+        pbMenuTapUntil = 0;
+        return;
+    }
+    pbMenuTapUntil = pbPerfNow() + 400000;
+    pbMenuRedrawPending = true;
+    SetWeakTimer("CR3MenuRedraw", pbMenuRedrawTimer, 250);
+}
+
 void handle_LinksContextMenu(int index)
 {
-    CRPocketBookWindowManager::instance->postCommand(index,
-                                                     index == MCMD_GO_LINK ? 0 : link_altParm);
-    CRPocketBookWindowManager::instance->processPostedEvents();
+    pbFirmwareMenuClosed(index);
+    // index <= 0: the menu was closed without a choice
+    if (index > 0) {
+        CRPocketBookWindowManager::instance->postCommand(index,
+                                                         index == MCMD_GO_LINK ? 0 : link_altParm);
+        CRPocketBookWindowManager::instance->processPostedEvents();
+    }
     CRPocketBookWindowManager::instance->resetTillUp();
 }
 
@@ -1849,10 +1986,22 @@ void CRPocketBookScreen::flush( bool full )
 
 void CRPocketBookScreen::update( const lvRect & rc2, bool full )
 {
-    if (rc2.isEmpty() && !full)
+    // the frame was cleared when the program left the screen (blankFrame): all of it is copied
+    // anew, also the rows that have not changed
+    const bool wholeFrame = _frameBlank;
+    _frameBlank = false;
+    if (rc2.isEmpty() && !full && !wholeFrame)
         return;
+    // A question of the firmware that is about to be drawn over is closed (pbQuestionClose): its
+    // window would stay open, unseen. Not for the rows of the clock, which are beside the window,
+    // and not in the first moments, for what the event that asked the question still draws.
+    if (pbQuestionOpen && !pbClockTick && (full || rc2.height() > _front->GetHeight() / 4)
+            && pbPerfNow() - pbQuestionAt > 700000)
+        pbQuestionClose("the screen is drawn over it");
     bool isDocWnd = (main_win == CRPocketBookWindowManager::instance->getTopVisibleWindow());
     lvRect rc = rc2;
+    if (wholeFrame)
+        rc = lvRect(0, 0, _front->GetWidth(), _front->GetHeight());
     rc.left &= ~3;
     rc.right = (rc.right + 3) & ~3;
 
@@ -2777,6 +2926,10 @@ public:
         // that asks for text here is named (the commands of another one were lost: the login and
         // the password of the position sync were not kept, and the next tap went to the book).
         if (OpdsBrowser::isOpdsCommand(command) || PbStatsView::isStatsCommand(command)
+                || command == PB_CMD_BOOKMARK_NAME_APPLY || command == PB_CMD_BOOKMARK_NAME_CANCEL
+#ifdef CR3_PAGEDOC
+                || command == PB_PAGEVIEW_CMD_MARK_NAME_APPLY || command == PB_PAGEVIEW_CMD_MARK_NAME_CANCEL
+#endif
 #ifdef POCKETBOOK_PRO
                 || PbKosync::isKosyncCommand(command)
 #endif
@@ -2844,6 +2997,28 @@ void pbOpenKeyboard(const char * title, char * buffer, int maxlen, void (*handle
         new CRPocketBookKeyboardWindow(CRPocketBookWindowManager::instance, title, buffer, maxlen, handler));
 }
 
+// The name of a bookmark of a book being typed (PB_CMD_BOOKMARK_NAME, PB_CMD_BOOKMARK_NEW): the
+// place of the bookmark in the list, the mode the list was in, whether the bookmark is set when
+// the keyboard is confirmed, and the text of the keyboard.
+static int pbBookmarkNamePlace = 0;
+static bool pbBookmarkNameGoMode = true;
+static bool pbBookmarkNameNew = false;
+static bool pbBookmarkNameThere = false; // the page shown had its bookmark: none is set, that one is named
+static char pbBookmarkNameText[PB_MARK_NAME_MAX + 8];
+
+// The keyboard gives the text typed, or no text at all (NULL) when it was left. A new bookmark is
+// set by a confirmed keyboard also when nothing was typed (the owner: the name may be left out,
+// Enter alone sets the bookmark as it was set before). The name of a bookmark that is there is
+// changed by a text only: nothing typed leaves it as it is.
+static void pbBookmarkNameTyped(char * s)
+{
+    CRLog::info("bookmark name: the keyboard gave %s", s == NULL ? "no text (it was left)" : *s ? "a text" : "an empty text");
+    bool confirmed = pbBookmarkNameNew ? s != NULL : (s != NULL && *s);
+    if (s == NULL)
+        pbBookmarkNameText[0] = 0;
+    executeCommand(confirmed ? PB_CMD_BOOKMARK_NAME_APPLY : PB_CMD_BOOKMARK_NAME_CANCEL, 0);
+}
+
 class CRPbDictionaryDialog;
 class CRPbDictionaryMenu;
 
@@ -2882,6 +3057,7 @@ private:
     void searchDictionary();
     bool openDictionary(const lString32 & id);
     bool translateMulti(const lString32 &w);
+    void openListWord(const lString8 & word, const lString8 & translation);
     bool getToolbarRect(lvRect & rc, int & slotWidth, int & imageHeight);
 protected:
     virtual void selectDictionary();
@@ -2970,6 +3146,7 @@ public:
     int getTopItem() { return _topItem; }
     int getSelectedItem() { return _selectedItem; }
     lString8 getCurItemWord();
+    lString8 getCurItemTranslation();
     // Index of the list item drawn at screen row y, or -1 (uses the same geometry as CRMenu::drawClient).
     int itemIndexAt(int y);
     // How many whole list rows fit into the dictionary window. The min-item-count of the skin is not
@@ -3037,6 +3214,9 @@ protected:
     // the finger went down in the dictionary window: the window gets the touch until it is lifted,
     // also where the finger leaves the window
     bool _touchInDictView;
+    // the finger went down over the book: the book gets the touch until it is lifted, also where
+    // the window comes under the finger
+    bool _touchOnBook;
 #ifdef CR3_PAGEDOC
     // The window over the pages of a PDF or a DjVu (its words: PbPageWindow::dictWord*), NULL over a
     // book. Set every time the window is shown (showDictDialog).
@@ -3057,7 +3237,7 @@ public:
     void setPages(PbPageWindow * pages) { _pages = pages; }
 #endif
     CRPbDictionaryDialog(CRGUIWindowManager * wm) : CRGUIWindowBase(wm), _dictView(NULL),
-        _touchDownX(-1), _touchDownY(-1), _touchInDictView(false)
+        _touchDownX(-1), _touchDownY(-1), _touchInDictView(false), _touchOnBook(false)
     {
 #ifdef CR3_PAGEDOC
         _pages = NULL;
@@ -3116,16 +3296,25 @@ public:
 
         lvPoint pt (x, y);
 
-        if (CRTOUCH_DOWN == evType)
+        if (CRTOUCH_DOWN == evType) {
             _touchInDictView = _dictView->getRect().isPointInside(pt);
-        if (_touchInDictView && !_dictView->getRect().isPointInside(pt))
+            _touchOnBook = !_touchInDictView;
+        }
+        // A touch that began over the book stays a touch of the book where the window has come
+        // under the finger meanwhile (the word chosen at the touch moves the window to the other
+        // half of the screen): the window took the lift of the finger for a tap on its article
+        // or on its word list.
+        const bool inWindow = !_touchOnBook && _dictView->getRect().isPointInside(pt);
+        if (CRTOUCH_UP == evType)
+            _touchOnBook = false;
+        if (_touchInDictView && !inWindow)
         {
             // a swipe that started in the window and ends over the book: no word is selected
             if (CRTOUCH_UP == evType)
                 _touchInDictView = false;
             return _dictView->onTouchEvent(x, y, evType);
         }
-        if (_dictView->getRect().isPointInside(pt))
+        if (inWindow)
         {
             _touchDownX = _touchDownY = -1;
             if (CRTOUCH_UP == evType)
@@ -4180,7 +4369,10 @@ public:
 
         case PB_CMD_SET_BOOKMARK:
             CRLog::trace("PB_CMD_SET_BOOKMARK");
-            main_win->getDocView()->saveCurrentPageShortcutBookmark(0);
+            // (a page that has its bookmark gets no second one; the icon of the touch menu asks
+            // before it sends the command, a key does not)
+            if (main_win->getDocView()->currentPageIsBookmarked() == NULL)
+                main_win->getDocView()->saveCurrentPageShortcutBookmark(0);
             return true;
 
         case PB_CMD_UNSET_BOOKMARK:
@@ -4210,6 +4402,76 @@ public:
         case PB_CMD_FULL_UPDATE:
             CRPocketBookScreen::instance->resetFullUpdateCounter();
             FullUpdate();
+            return true;
+        case PB_CMD_BOOKMARK_NAME:
+        case PB_CMD_BOOKMARK_NEW: {
+            // The name of a bookmark, from the list of the bookmarks. A tester: a bookmark is of
+            // use when one can tell what it was set for. The name is the comment of the
+            // bookmark, kept with it in the history file.
+            //   _NAME: the keyboard with the name the bookmark of the place has.
+            //   _NEW: a bookmark is being set in the place; the keyboard asks for its name first
+            //         (the owner), and the bookmark is set when the keyboard is confirmed.
+            pbBookmarkNameGoMode = params >= 1000;
+            pbBookmarkNamePlace = params % 1000;
+            pbBookmarkNameNew = command == PB_CMD_BOOKMARK_NEW;
+            pbBookmarkNameText[0] = 0;
+            // The page shown has its bookmark already: a second one of the same page tells
+            // nothing (the owner), and the list had as many of them as places were tapped. No
+            // bookmark is set then, in whatever place: the one of the page is kept where it is,
+            // and the keyboard has its name, to be changed.
+            pbBookmarkNameThere = false;
+            if (pbBookmarkNameNew) {
+                CRBookmark * there = _docview->currentPageIsBookmarked();
+                if (there != NULL) {
+                    pbBookmarkNameThere = true;
+                    pbBookmarkNamePlace = there->getShortcut();
+                }
+            }
+            if (!pbBookmarkNameNew || pbBookmarkNameThere) {
+                CRFileHistRecord * rec = _docview->getCurrentFileHistRecord();
+                CRBookmark * bm = rec != NULL ? rec->getShortcutBookmark(pbBookmarkNamePlace) : NULL;
+                if (bm == NULL) {
+                    showBookmarksMenu(pbBookmarkNameGoMode);
+                    return true;
+                }
+                lString8 name = UnicodeToUtf8(bm->getCommentText());
+                strncpy(pbBookmarkNameText, name.c_str(), sizeof(pbBookmarkNameText) - 1);
+                pbBookmarkNameText[sizeof(pbBookmarkNameText) - 1] = 0;
+            }
+            pbOpenKeyboard(_("Bookmark name"), pbBookmarkNameText, sizeof(pbBookmarkNameText) - 1, pbBookmarkNameTyped);
+            return true;
+        }
+        case PB_CMD_BOOKMARK_NAME_APPLY: {
+            // one line, no spaces at its ends; spaces alone are no name
+            lString32 name = Utf8ToUnicode(lString8(pbMarkNameClean(pbBookmarkNameText).c_str()));
+            if (pbBookmarkNameNew) {
+                // the bookmark of the page shown, as "Set bookmark" made it; the book again. A
+                // page that has its bookmark keeps it: the name typed is given to it, nothing
+                // typed leaves its name as it is.
+                if (!pbBookmarkNameThere)
+                    _docview->doCommand(DCMD_BOOKMARK_SAVE_N, pbBookmarkNamePlace);
+                CRFileHistRecord * rec = _docview->getCurrentFileHistRecord();
+                CRBookmark * bm = rec != NULL ? rec->getShortcutBookmark(pbBookmarkNamePlace) : NULL;
+                if (bm != NULL && !name.empty())
+                    bm->setCommentText(name);
+                CRLog::info("bookmark name: %s the place %d, %s",
+                            pbBookmarkNameThere ? "the page has its bookmark in" : "a bookmark set in", pbBookmarkNamePlace,
+                            bm == NULL ? "not made" : name.empty() ? "no name typed" : "with the name typed");
+                saveHistory(lString32::empty_str);
+                return true;
+            }
+            CRFileHistRecord * rec = _docview->getCurrentFileHistRecord();
+            CRBookmark * bm = rec != NULL ? rec->getShortcutBookmark(pbBookmarkNamePlace) : NULL;
+            if (bm != NULL) {
+                bm->setCommentText(name);
+                saveHistory(lString32::empty_str);
+            }
+            showBookmarksMenu(pbBookmarkNameGoMode);
+            return true;
+        }
+        case PB_CMD_BOOKMARK_NAME_CANCEL:
+            // the keyboard was left: nothing is set or changed, the list again, as it was
+            showBookmarksMenu(pbBookmarkNameGoMode);
             return true;
         case PB_CMD_INVERT_DISPLAY:
             toggleInvertDisplay();
@@ -5873,27 +6135,11 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
             break;
 
           case PB_DICT_ARTICLE_LIST:
-            tmpRc= clientRc;
-            tmpRc.left += clientRc.width() * 2/3;
-            if ( tmpRc.isPointInside( pn ) )//PgUp, PgDn
+            // A tap anywhere on a row opens the article of the row. The right third of the list
+            // used to turn its page (the upper half back, the lower half forward): the owner
+            // tapped the translation beside the word and the list leafed, "not intuitive at
+            // all". The list is leafed by a vertical swipe (above) and by the keys.
             {
-            CRLog::trace("CRDV::onTouchEvent() PB_DICT_ARTICLE_LIST tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
-              tmpRc.bottom -= clientRc.height()/2;
-              if ( tmpRc.isPointInside( pn ) )
-                command = PB_CMD_UP;
-              else
-                command = PB_CMD_DOWN;
-
-            // _wm->postCommand( command, 0 );
-            // return true;
-              return _dictMenu->onCommand( command, 1 );
-            }
-            else//select item
-            {
-                tmpRc= clientRc;
-                tmpRc.right  -= clientRc.width() * 1/3;
-                tmpRc.bottom -= clientRc.height()/2;
-
                 // Same row geometry as the list drawing; out-of-list taps are ignored
                 // instead of turning the page (the PB743 word selection problem).
                 int nselect = _dictMenu->itemIndexAt( y );
@@ -5902,7 +6148,10 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
 
                     if ( nselect != _dictMenu->getSelectedItem() )
                         _dictMenu->setCurItem( nselect );
-                    translate( Utf8ToUnicode(_dictMenu->getCurItemWord()) );
+                    // (copies: the rows of the list are made anew while the word is looked up)
+                    lString8 rowWord = _dictMenu->getCurItemWord();
+                    lString8 rowTranslation = _dictMenu->getCurItemTranslation();
+                    openListWord( rowWord, rowTranslation );
                     Update();
                     _wm->postCommand( PB_DICT_DEACTIVATE, 0 );
                 }
@@ -6333,6 +6582,47 @@ void CRPbDictionaryView::translate(const lString32 &w)
     CRLog::trace("CRPbDictionaryView::translate() end");
 }
 
+// The article of a row of the word list, chosen by a tap. It is the article the row has. The word
+// of the row used to be looked up instead, and that gave another article, or nothing new:
+//   - the dictionary of the firmware gives "-appointed" for "appointed" when it has both, so the
+//     second of the two never opened (a tester);
+//   - the row of the word looked up last (the first row of the list opened from its article) was
+//     "the same word" for translate(), which left the list as it was.
+// With "Selected dictionaries" the word is looked up in all of them first, for the articles of
+// the others; the article of the row is shown when that does not end with an article.
+void CRPbDictionaryView::openListWord(const lString8 & word, const lString8 & translation)
+{
+    lString32 w = Utf8ToUnicode(word);
+    if (_selectedDicts) {
+        _word.clear();
+        translate(w);
+        if (_translateResult != 0 && _selectedIndex != PB_DICT_ARTICLE_LIST)
+            return;
+    }
+    getDocView()->setFontSize( pbDictArticleFontSize() );
+    _word = w;
+    // an article that only sends to another word
+    lString32 redirect = detectDictionaryRedirectFor(translation.c_str());
+    if (!redirect.empty()) {
+        lString32 to = redirect;
+        lString32 from = w;
+        to.lowercase();
+        from.lowercase();
+        if (to != from) {
+            translate(redirect);
+            return;
+        }
+    }
+    _translateResult = 2;
+    // the list button shows the words from this one on
+    _haveNewWord = true;
+    _newWord = word;
+    _newTranslation = translation;
+    _selectedIndex = PB_DICT_DEACTIVATE;
+    setTranslation(CRViewDialog::makeFb2Xml(createArticle(word.c_str(), translation.c_str())));
+    setDirty();
+}
+
 void CRPbDictionaryView::setTranslation(lString8 translation)
 {
     _stream = LVCreateStringStream( translation );
@@ -6609,6 +6899,12 @@ lString8 CRPbDictionaryMenu::getCurItemWord()
     return item->getWord();
 }
 
+lString8 CRPbDictionaryMenu::getCurItemTranslation()
+{
+    CRPbDictionaryMenuItem *item = static_cast<CRPbDictionaryMenuItem *>(_items[_selectedItem]);
+    return item->getTranslation();
+}
+
 bool CRPbDictionaryMenu::onCommand( int command, int params )
 {
     CRLog::trace("CRPbDictionaryMenu::onCommand( %d, %d )", command, params);
@@ -6674,7 +6970,7 @@ void CRPbDictionaryMenu::reconfigure( int flags )
 
 CRPbDictionaryDialog::CRPbDictionaryDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, lString8 css )
     : CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView()), _docDirty(true), _curPage(0),
-    _lastWordX(0), _lastWordY(0), _touchDownX(-1), _touchDownY(-1), _touchInDictView(false)
+    _lastWordX(0), _lastWordY(0), _touchDownX(-1), _touchDownY(-1), _touchInDictView(false), _touchOnBook(false)
 {
     _wordSelector = NULL;
     _fullscreen = true;
@@ -8876,7 +9172,7 @@ int main_handler(int type, int par1, int par2)
             break;
     }
 
-    if (pbStaleInput(type, par1))
+    if (pbMenuTapInput(type) || pbStaleInput(type, par1))
         return 0;
 
     // The events of the firmware that are no tap and no key go to the log, with the number of
@@ -8915,6 +9211,9 @@ int main_handler(int type, int par1, int par2)
         break;
 #ifdef POCKETBOOK_PRO
     case EVT_FOREGROUND:
+        // a question of the firmware left without an answer when the program left the screen:
+        // the screen is drawn anew now, and the window of the question would stay open, unseen
+        pbQuestionClose("the program is back on the screen");
         // back after two seconds or more: to the book, not to a menu left open over it
         // (not from the dialog of the networks of the firmware, which a window of ours asked for
         // and waits for: pbNetConnecting)
@@ -8967,6 +9266,7 @@ int main_handler(int type, int par1, int par2)
         // orientation of its pages (PbPageWindow::followOrientation), and posted commands were
         // done only after an event of the user. A tester, with 270 degrees set for the pages: the
         // file came upright and turned at the first tap.
+        pbMenuRedrawPending = false;
         CRPocketBookWindowManager::instance->processPostedEvents();
         CRPocketBookWindowManager::instance->update(true);
         pbGlobals->BookReady();
@@ -9045,6 +9345,14 @@ int main_handler(int type, int par1, int par2)
         stopStandByTimer();
         // the position sync: the place sent while Wi-Fi is on, otherwise kept
         PbKosync::instance().bookClosing();
+        // The frame of the program is cleared: it is what the firmware shows first when it brings
+        // the program back, and with another book to open that was the page of the book before
+        // (CRPocketBookScreen::blankFrame). Not for the dialog of the networks a window of the
+        // program waits for: the program is back at once, with the same screen.
+        if (!pbNetConnecting && CRPocketBookScreen::instance != NULL) {
+            CRPocketBookScreen::instance->blankFrame(pbNightMode());
+            CRLog::info("frame: cleared, the program has left the screen");
+        }
         break;
     case EVT_FOREGROUND:
         // one copy of the program: a start of it may have left a book for this copy to open
@@ -9054,6 +9362,14 @@ int main_handler(int type, int par1, int par2)
             pbMenusClosedOnReturn = false;
             CRPocketBookWindowManager::instance->update(true);
             restartStandByTimer();
+        }
+        // the frame was cleared when the program left the screen and nothing has drawn it since
+        // (the program is back with the book it had): the page again, whole
+        if (CRPocketBookScreen::instance != NULL && CRPocketBookScreen::instance->frameBlank()) {
+            const long long frameT = pbPerfNow();
+            CRPocketBookWindowManager::instance->update(true);
+            CRLog::info("frame: drawn anew in %.0f ms, the program is back with the screen it had",
+                        PB_PERF_MS(pbPerfNow() - frameT));
         }
         // the position sync: the places kept sent, the place asked for
         PbKosync::instance().foregrounded();

@@ -3023,3 +3023,7 @@ msgstr "Спочатку вкажіть логін і пароль."
 
 msgid "The catalog refused the request. If it asks for a login, set it in its card: Login..., Password..."
 msgstr "Каталог відмовив у доступі. Якщо він вимагає логін, укажіть його в картці каталогу: «Логін...», «Пароль...»."
+
+#: ../src/bmkdlg.cpp ../src/pb_pageview.cpp
+msgid "Bookmark name"
+msgstr "Назва закладки"

@@ -42,6 +42,7 @@ public:
     virtual int getDefaultSelectionIndex();
     void showContextMenu();
     void handleContextMenu(int index);
+    void newBookmark();
 #endif
     virtual bool onCommand( int command, int params );
 };

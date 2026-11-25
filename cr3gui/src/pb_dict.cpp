@@ -4,6 +4,7 @@
 #include "pb_dict.h"
 #include "pb_stardict.h"
 #include "pb_xdxf.h"
+#include "pb_dicword.h"
 
 #include <inkview.h>
 #include <dirent.h>
@@ -58,6 +59,78 @@ private:
     {
         dst = src != NULL ? lString8(src) : lString8::empty_str;
     }
+    // The dictionary of the firmware and the word asked for, for pbDicFindWord() (pb_dicword.h).
+    struct Firmware {
+        static bool take(int rc, const char * wd, const char * tr, std::string & word, std::string & article)
+        {
+            if (rc == 0 || wd == NULL)
+                return false;
+            word = wd;
+            article = tr != NULL ? tr : "";
+            return true;
+        }
+        int lookup(const char * what, std::string & word, std::string & article)
+        {
+            char *wd = NULL, *tr = NULL;
+            int rc = LookupWord((char *)what, &wd, &tr);
+            return take(rc, wd, tr, word, article) ? rc : 0;
+        }
+        bool next(std::string & word, std::string & article)
+        {
+            char *wd = NULL, *tr = NULL;
+            return take(LookupNext(&wd, &tr), wd, tr, word, article);
+        }
+        bool prev(std::string & word, std::string & article)
+        {
+            char *wd = NULL, *tr = NULL;
+            return take(LookupPrevious(&wd, &tr), wd, tr, word, article);
+        }
+    };
+    struct Rules {
+        lString32 _wanted;  // in lower case unless the letter case counts
+        lString32 _letters; // its letters and digits, in lower case
+        bool _exactCase;
+        static lString32 letters(const lString32 & s)
+        {
+            lString32 out;
+            for (int i = 0; i < s.length(); i++)
+                if (lGetCharProps(s[i]) & (CH_PROP_ALPHA | CH_PROP_DIGIT))
+                    out << s[i];
+            out.lowercase();
+            return out;
+        }
+        Rules(const lString8 & what, bool exactCase) : _wanted(Utf8ToUnicode(what)), _exactCase(exactCase)
+        {
+            _letters = letters(_wanted);
+            if (!_exactCase)
+                _wanted.lowercase();
+        }
+        bool same(const std::string & word)
+        {
+            lString32 w = Utf8ToUnicode(word.c_str());
+            if (!_exactCase)
+                w.lowercase();
+            return w == _wanted;
+        }
+        bool alike(const std::string & word)
+        {
+            return !_letters.empty() && letters(Utf8ToUnicode(word.c_str())) == _letters;
+        }
+    };
+    // LookupWord() of the firmware, with the word itself looked for beside the word it gives;
+    // exactCase: the word as it is written (a word of the list), any letter case otherwise
+    int find(const lString8 & what, bool exactCase, lString8 & word, lString8 & article)
+    {
+        Firmware dic;
+        Rules rules(what, exactCase);
+        std::string wd, tr;
+        int rc = pbDicFindWord(dic, what.c_str(), rules, wd, tr);
+        if (rc != 0) {
+            word = lString8(wd.c_str());
+            article = lString8(tr.c_str());
+        }
+        return rc;
+    }
 public:
     PbInkviewDict(const char * name) : _name(name)
     {
@@ -90,18 +163,11 @@ public:
     {
         if (!open())
             return 0;
-        char *wd = NULL, *tr = NULL;
-        lString8 what = UnicodeToUtf8(w);
-        int rc = LookupWord((char *)what.c_str(), &wd, &tr);
+        int rc = find(UnicodeToUtf8(w), false, word, article);
         if (rc == 0) {
             lString32 lower = w;
             lower.lowercase();
-            what = UnicodeToUtf8(lower);
-            rc = LookupWord((char *)what.c_str(), &wd, &tr);
-        }
-        if (rc != 0) {
-            assign(word, wd);
-            assign(article, tr);
+            rc = find(UnicodeToUtf8(lower), false, word, article);
         }
         return rc;
     }
@@ -117,8 +183,10 @@ public:
     }
     virtual bool seek(const lString8 & word)
     {
-        char *wd = NULL, *tr = NULL;
-        return open() && LookupWord((char *)word.c_str(), &wd, &tr) != 0;
+        // (the word itself: from "-appointed", given for "appointed", the next page of the list
+        // began with "appointed" once more)
+        lString8 wd, tr;
+        return open() && find(word, true, wd, tr) != 0;
     }
     virtual bool next(lString8 & word, lString8 & article)
     {

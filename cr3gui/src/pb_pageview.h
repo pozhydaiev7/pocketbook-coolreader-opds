@@ -26,6 +26,8 @@
 #define PB_PAGEVIEW_H_INCLUDED
 
 #include <crgui.h>
+#include <map>
+#include <string>
 #include <vector>
 #include "pb_pagedoc.h"
 
@@ -50,6 +52,11 @@ enum PbPageWindowCommands {
     PB_PAGEVIEW_CMD_MARK_GO,      // to the page of the bookmark
     PB_PAGEVIEW_CMD_MARK_SAVE,    // the page shown into the place (an empty place: a new bookmark)
     PB_PAGEVIEW_CMD_MARK_DELETE,
+    PB_PAGEVIEW_CMD_MARK_NAME,    // the keyboard for the name of the bookmark
+    PB_PAGEVIEW_CMD_MARK_NEW,     // the keyboard for the name of a bookmark that is set when it is confirmed
+    // from the keyboard: confirmed, or left (nothing set or changed, the list again)
+    PB_PAGEVIEW_CMD_MARK_NAME_APPLY,
+    PB_PAGEVIEW_CMD_MARK_NAME_CANCEL,
     PB_PAGEVIEW_CMD_SCALE = 68100,  // + PbPageScale
     PB_PAGEVIEW_CMD_PAGE = 68200,   // + index in the list of bookmarks, up to 68999
     PB_PAGEVIEW_CMD_LAST = 68999
@@ -170,6 +177,8 @@ private:
     float _angle[2];        // by the parity of the page index: [0] the first, the third... page
     OwnFrame _own[2];
     std::vector<int> _marks;
+    // the names of the bookmarks that have one, by the page (UTF-8); see pb_marknames.h
+    std::map<int, std::string> _markNames;
     bool _showNumber;
     int _mode;              // PbPageMode: kept with the state, read by modeOf
     int _direction;         // of the last page turn: 1 forward, -1 back
@@ -280,8 +289,10 @@ private:
     void showScaleList();
     /// the list of the bookmarks, as that of a book (goMode: a tap goes to the page, else sets)
     void showMarks(bool goMode);
-    /// PB_PAGEVIEW_CMD_MARK_GO, _SAVE, _DELETE with the place in the list
+    /// PB_PAGEVIEW_CMD_MARK_GO, _SAVE, _DELETE, _NAME with the place in the list
     void markCommand(int command, int index);
+    /// the name typed for the bookmark of a page; empty: the bookmark has no name
+    void setMarkName(int page, const lString32 & name);
     void showContents();
     void showInfo();
     void toggleMark();

@@ -42,7 +42,9 @@ void CRLinksDialog::draw()
                     lvRect rc = rects[j];
                     lvPoint topLeft = rc.topLeft();
                     lvPoint bottomRight = rc.bottomRight();
-                    if ( _docview->docToWindowPoint(topLeft) && _docview->docToWindowPoint(bottomRight) ) {
+                    // (the bottom of a rectangle: a link of the lowest line of the page has its
+                    // bottom on the first row of the next page)
+                    if ( _docview->docToWindowPoint(topLeft) && _docview->docToWindowPoint(bottomRight, true) ) {
                         rc.left = topLeft.x;
                         rc.top = topLeft.y;
                         rc.right = bottomRight.x;

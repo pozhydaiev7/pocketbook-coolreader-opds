@@ -3432,7 +3432,10 @@ bool LVDocView::getCursorRect(ldomXPointer ptr, lvRect & rc,
 
 		lvPoint topLeft = rc.topLeft();
 		lvPoint bottomRight = rc.bottomRight();
-		if (docToWindowPoint(topLeft) && docToWindowPoint(bottomRight)) {
+		// The bottom right corner is the point just under the rectangle: for a word of the lowest
+		// line of a page it is the first row of the next page, so it is asked for as the bottom
+		// of a rectangle. Asked for as a point, no word of that line had a place on the screen.
+		if (docToWindowPoint(topLeft) && docToWindowPoint(bottomRight, true)) {
 			rc.setTopLeft(topLeft);
 			rc.setBottomRight(bottomRight);
 			return true;

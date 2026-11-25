@@ -20,6 +20,9 @@
 extern V3DocViewWin * main_win;
 // language of the interface, as the firmware names it ("ru", "uk", "en")
 extern lString32 currentLang;
+// cr3pocketbook.cpp: a question of the firmware that the program closes when it is drawn over
+void pbQuestion(int icon, const char * title, const char * text, const char * button1, const char * button2,
+                void (*handler)(int));
 
 using namespace opdsui;
 
@@ -745,7 +748,9 @@ void PbOta::autoCheck()
     if (!notes.empty())
         text << "\n\n" << u16(notes);
     _question = UnicodeToUtf8(text);
-    Dialog(ICON_INFORMATION, WINDOW_TITLE, _question.c_str(), _("Details"), _("Not now"), offerHandler);
+    // (asked on the program's own, at its start: closed by the program when it is drawn over;
+    // a question not answered is asked again at the next automatic check)
+    pbQuestion(ICON_INFORMATION, WINDOW_TITLE, _question.c_str(), _("Details"), _("Not now"), offerHandler);
 }
 
 void PbOta::offerAnswered(int button)

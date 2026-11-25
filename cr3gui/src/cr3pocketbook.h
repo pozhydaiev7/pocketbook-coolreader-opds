@@ -74,6 +74,15 @@ enum CRPbCommands {
     // the screen turned for the pages of a PDF or a DjVu, the orientation of the books kept as it
     // is in the settings: param is the angle as PROP_POCKETBOOK_ORIENTATION has it (0..3)
     PB_CMD_ROTATE_FOR_PAGES,
+    // The name of a bookmark of a book. param: the place of the bookmark in the list (from 1),
+    // plus 1000 when the list was in the mode that goes to a bookmark (it is shown again in its
+    // mode). _NAME: the keyboard with the name of the bookmark of the place. _NEW: the keyboard
+    // for the name of a bookmark that is set in the place when the keyboard is confirmed, with
+    // or without a name. From the keyboard: confirmed (_APPLY), or left (_CANCEL).
+    PB_CMD_BOOKMARK_NAME,
+    PB_CMD_BOOKMARK_NEW,
+    PB_CMD_BOOKMARK_NAME_APPLY,
+    PB_CMD_BOOKMARK_NAME_CANCEL,
 
     PB_CMD_NONE
 };
@@ -148,7 +157,7 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.8.2-opds-alpha1"
+#define CR_PB_VERSION "0.0.8.2-opds-alpha2"
 #define CR_PB_BUILD_DATE "2026-11-25"
 
 #define PB_ROTATE_MODE_360 0
@@ -256,6 +265,20 @@ bool pbQuitInProgress();
 // Starts the scan of the firmware library in the background, so that the library shows a file
 // CoolReader has written or deleted (a downloaded book, the log file). See opdsbrowser.cpp.
 void pbRequestLibraryScan();
+
+// A question of the firmware with two buttons (Dialog) that the program asks on its own, not as an
+// answer to a tap: the handler gets the button, 1 or 2. The program closes the question itself,
+// without an answer, when its window is about to be drawn over (the program back on the screen,
+// another book opened, the screen drawn): the window would stay open, unseen, and take every
+// touch. pbQuestionClose(): closes the question that is open, if one is; why goes to the log.
+void pbQuestion(int icon, const char * title, const char * text, const char * button1, const char * button2,
+                void (*handler)(int));
+void pbQuestionClose(const char * why);
+
+// Called by the handler of a menu of the firmware (OpenMenu) with the index the firmware gives:
+// when the menu was closed without a choice (index <= 0), the tap that closed it is not acted on
+// where the firmware gives it, or its lift, to the program too.
+void pbFirmwareMenuClosed(int index);
 
 // Opens the firmware on-screen keyboard safely from a CR3 menu command (see CRPocketBookKeyboardWindow).
 // The handler gets the entered text, or an empty string/NULL on cancel.

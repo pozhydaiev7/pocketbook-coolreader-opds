@@ -627,7 +627,8 @@ bool PbKosync::pulled(const std::string & document, const kosync::Progress & her
         text.replaceParam(2, Utf8ToUnicode(there.device.c_str()));
         static lString8 question;
         question = UnicodeToUtf8(text);
-        Dialog(ICON_QUESTION, const_cast<char *>("CoolReader"), question.c_str(), _("Yes"), _("No"), offeredHandler);
+        // (asked on the program's own: closed by the program when it is drawn over, see pbQuestion)
+        pbQuestion(ICON_QUESTION, "CoolReader", question.c_str(), _("Yes"), _("No"), offeredHandler);
         return false;
     }
     }
@@ -638,6 +639,8 @@ bool PbKosync::pulled(const std::string & document, const kosync::Progress & her
 
 void PbKosync::bookOpened()
 {
+    // the question of a place of the book before is not for this one
+    pbQuestionClose("another book is opened");
     _offeredValid = false;
     _pagesOverBook = false;
     // the pages of the other view are not those of this one: the first page shown is no turn

@@ -30,6 +30,7 @@
 #include "pb_pdfbook.h"
 #include "pb_kosync.h"
 #include "pb_pagesearch.h"
+#include "pb_marknames.h"
 #include "viewdlg.h"
 
 extern V3DocViewWin * main_win;
@@ -48,6 +49,27 @@ const char * const PAGES_DIR = STATEPATH "/cr3/pages";
 lString32 tr(const char * s)
 {
     return lString32(_(s));
+}
+
+// The name of a bookmark being typed (PbPageWindow::markCommand): the page of the bookmark that is
+// named, or the place of the list a new bookmark is being set in (markNameNew); the mode the list
+// was in, for the list shown again; the text of the keyboard.
+int markNamePage = -1;
+int markNamePlace = -1;
+bool markNameNew = false;
+bool markNameGoMode = true;
+char markNameText[PB_MARK_NAME_MAX + 8];
+
+// The keyboard gives the text typed, or no text at all (NULL) when it was left. A new bookmark is
+// set by a confirmed keyboard also when nothing was typed (the owner: the name may be left out);
+// the name of a bookmark that is there is changed by a text only.
+void markNameTyped(char * s)
+{
+    CRLog::info("bookmark name: the keyboard gave %s", s == NULL ? "no text (it was left)" : *s ? "a text" : "an empty text");
+    bool confirmed = markNameNew ? s != NULL : (s != NULL && *s);
+    if (s == NULL)
+        markNameText[0] = 0;
+    executeCommand(confirmed ? PB_PAGEVIEW_CMD_MARK_NAME_APPLY : PB_PAGEVIEW_CMD_MARK_NAME_CANCEL, 0);
 }
 
 double nowMs()
@@ -428,6 +450,14 @@ void PbPageWindow::loadState()
             if (fscanf(f, "%d", &page) != 1) break;
             if (page >= 0 && page < _doc->pageCount())
                 _marks.push_back(page);
+        } else if (strcmp(key, "markname") == 0) {
+            // the name of the bookmark of a page: the rest of the line (pb_marknames.h)
+            char rest[512];
+            int page = 0;
+            std::string name;
+            if (fgets(rest, sizeof(rest), f) == NULL) break;
+            if (pbMarkNameParse(rest, page, name))
+                _markNames[page] = name;
         } else {
             // the rest of a line this version does not know
             int c;
@@ -457,6 +487,15 @@ void PbPageWindow::saveState()
         fprintf(f, "frame%d %.2f %.2f %.5f %d\n", i, _own[i].cx, _own[i].cy, _own[i].zoom, _own[i].set ? 1 : 0);
     for (size_t i = 0; i < _marks.size(); i++)
         fprintf(f, "mark %d\n", _marks[i]);
+    // the names go with their bookmarks: the name of a page that has no bookmark any more is dropped
+    for (std::map<int, std::string>::iterator it = _markNames.begin(); it != _markNames.end(); ) {
+        if (std::find(_marks.begin(), _marks.end(), it->first) == _marks.end()) {
+            _markNames.erase(it++);
+            continue;
+        }
+        fputs(pbMarkNameLine(it->first, it->second).c_str(), f);
+        ++it;
+    }
     fprintf(f, "file %s\n", UnicodeToUtf8(_path).c_str());
     fclose(f);
     rename(temp.c_str(), _stateFile.c_str());
@@ -1208,7 +1247,30 @@ bool PbPageWindow::onCommand(int command, int params)
     case PB_PAGEVIEW_CMD_MARK_GO:
     case PB_PAGEVIEW_CMD_MARK_SAVE:
     case PB_PAGEVIEW_CMD_MARK_DELETE:
+    case PB_PAGEVIEW_CMD_MARK_NAME:
+    case PB_PAGEVIEW_CMD_MARK_NEW:
         markCommand(command, params);
+        return true;
+    case PB_PAGEVIEW_CMD_MARK_NAME_APPLY: {
+        lString32 name = Utf8ToUnicode(lString8(markNameText));
+        if (markNameNew) {
+            // the page shown into the place, as "Set bookmark" did it, and its name when one was
+            // typed; the page again. A page that has its bookmark already keeps the name it has
+            // when nothing was typed.
+            const bool marked = isMarked();
+            markCommand(PB_PAGEVIEW_CMD_MARK_SAVE, markNamePlace);
+            if (!marked || !pbMarkNameClean(markNameText).empty())
+                setMarkName(_page, name);
+            setDirty();
+            return true;
+        }
+        setMarkName(markNamePage, name);
+        showMarks(markNameGoMode);
+        return true;
+    }
+    case PB_PAGEVIEW_CMD_MARK_NAME_CANCEL:
+        // the keyboard was left: nothing is set or changed, the list again, as it was
+        showMarks(markNameGoMode);
         return true;
     case PB_PAGEVIEW_CMD_INFO:
     case MCMD_ABOUT:
@@ -2233,7 +2295,7 @@ bool PbPageWindow::searchTouch(int x, int y, CRGUITouchEventType evType)
 class PbPageMarkItem : public CRMenuItem
 {
     int _page;          // from 0; -1 for an empty place
-    lString32 _text;    // "Page 12 (7.45%)  Chapter"
+    lString32 _text;    // "Page 12 (7.45%)  Name · Chapter"
 public:
     PbPageMarkItem(CRMenu * menu, int id, int page, const lString32 & text)
         : CRMenuItem(menu, id, lString32(_("Empty slot")), LVImageSourceRef(), LVFontRef()), _page(page), _text(text)
@@ -2300,28 +2362,37 @@ public:
         if (_selectedItem < 0 || _selectedItem >= _items.length())
             return;
         PbPageMarkItem * item = static_cast<PbPageMarkItem *>(_items[_selectedItem]);
-        if (item->empty() && command != PB_PAGEVIEW_CMD_MARK_SAVE)
+        // A bookmark that is being set is asked for its name first (PB_PAGEVIEW_CMD_MARK_NEW):
+        // "Set bookmark", and a tap on an empty place in the mode that goes too, as in the list
+        // of a book (there "go" of an empty place sets a bookmark; here it did nothing).
+        if (command == PB_PAGEVIEW_CMD_MARK_SAVE || (item->empty() && command == PB_PAGEVIEW_CMD_MARK_GO))
+            command = PB_PAGEVIEW_CMD_MARK_NEW;
+        else if (item->empty())
             return;
+        markNameGoMode = _goMode;
         closeMenu(command, _selectedItem);
     }
     void showContextMenu()
     {
         if (_selectedItem < 0 || _selectedItem >= _items.length())
             return;
-        // (the index of an item of the menu of the firmware is a short: 1 to 3, the command is
+        // (the index of an item of the menu of the firmware is a short: 1 to 4, the command is
         // found by marksContextChosen)
         static imenu context[] = {
             { ITEM_ACTIVE, 1, NULL, NULL },
             { ITEM_ACTIVE, 2, NULL, NULL },
+            { ITEM_ACTIVE, 4, NULL, NULL },
             { ITEM_ACTIVE, 3, NULL, NULL },
             { 0, 0, NULL, NULL }
         };
         context[0].text = (char *)_("Set bookmark");
         context[1].text = (char *)_("Go to bookmark");
-        context[2].text = (char *)_("Delete bookmark");
+        context[2].text = (char *)_("Bookmark name");
+        context[3].text = (char *)_("Delete bookmark");
         const bool empty = static_cast<PbPageMarkItem *>(_items[_selectedItem])->empty();
         context[1].type = empty ? ITEM_INACTIVE : ITEM_ACTIVE;
         context[2].type = empty ? ITEM_INACTIVE : ITEM_ACTIVE;
+        context[3].type = empty ? ITEM_INACTIVE : ITEM_ACTIVE;
         lvRect client;
         getClientRect(client);
         lvPoint size = getMaxItemSize();
@@ -2345,6 +2416,7 @@ public:
         case PB_PAGEVIEW_CMD_MARK_GO:
         case PB_PAGEVIEW_CMD_MARK_SAVE:
         case PB_PAGEVIEW_CMD_MARK_DELETE:
+        case PB_PAGEVIEW_CMD_MARK_NAME:
             // from the menu of the long press
             choose(command);
             return true;
@@ -2375,12 +2447,19 @@ public:
 // the command chosen in the menu of the long press goes to the list, as the list of a book does it
 static void marksContextChosen(int index)
 {
-    static const int commands[4] = { 0, PB_PAGEVIEW_CMD_MARK_SAVE, PB_PAGEVIEW_CMD_MARK_GO, PB_PAGEVIEW_CMD_MARK_DELETE };
-    if (marksMenu == NULL || index < 1 || index > 3)
+    static const int commands[5] = { 0, PB_PAGEVIEW_CMD_MARK_SAVE, PB_PAGEVIEW_CMD_MARK_GO, PB_PAGEVIEW_CMD_MARK_DELETE,
+                                     PB_PAGEVIEW_CMD_MARK_NAME };
+    pbFirmwareMenuClosed(index);
+    if (marksMenu == NULL)
         return;
     CRGUIWindowManager * wm = marksMenu->getWindowManager();
-    wm->postCommand(commands[index], 0);
-    wm->processPostedEvents();
+    // index < 1: the menu was closed without a choice. The long press that opened the menu is over
+    // then too: the list waited for its lift (resetTillUp), which the menu had taken, and did
+    // not take the next tap.
+    if (index >= 1 && index <= 4) {
+        wm->postCommand(commands[index], 0);
+        wm->processPostedEvents();
+    }
     wm->resetTillUp();
 }
 
@@ -2399,8 +2478,14 @@ void PbPageWindow::showMarks(bool goMode)
         const int percent = count > 1 ? (int)((long long)page * 10000 / (count - 1)) : 0;
         text.replaceParam(2, lString32::itoa(percent / 100) << "." << lString32::itoa(percent % 100 / 10)
                                  << lString32::itoa(percent % 10));
+        // the name given to the bookmark, then the chapter, as the list of a book has them
         lString32 chapter = chapterName(page);
-        if (!chapter.empty())
+        std::map<int, std::string>::const_iterator named = _markNames.find(page);
+        if (named != _markNames.end()) {
+            text << "  " << Utf8ToUnicode(lString8(named->second.c_str()));
+            if (!chapter.empty())
+                text << Utf8ToUnicode(lString8(" \xC2\xB7 ")) << chapter;
+        } else if (!chapter.empty())
             text << "  " << chapter;
         menu->addItem(new PbPageMarkItem(menu, (int)i + 1, page, text));
         if (page == _page)
@@ -2423,6 +2508,18 @@ void PbPageWindow::showMarks(bool goMode)
     _wm->activateWindow(menu);
 }
 
+void PbPageWindow::setMarkName(int page, const lString32 & name)
+{
+    if (std::find(_marks.begin(), _marks.end(), page) == _marks.end())
+        return;
+    std::string clean = pbMarkNameClean(UnicodeToUtf8(name).c_str());
+    if (clean.empty())
+        _markNames.erase(page);
+    else
+        _markNames[page] = clean;
+    saveState();
+}
+
 void PbPageWindow::markCommand(int command, int index)
 {
     if (command == PB_PAGEVIEW_CMD_MARK_GO) {
@@ -2430,19 +2527,34 @@ void PbPageWindow::markCommand(int command, int index)
             goToPage(_marks[index]);
         return;
     }
+    if (command == PB_PAGEVIEW_CMD_MARK_NAME || command == PB_PAGEVIEW_CMD_MARK_NEW) {
+        // The keyboard for the name of a bookmark; what is typed comes back as
+        // PB_PAGEVIEW_CMD_MARK_NAME_APPLY (markNameTyped). _NAME: the name the bookmark of the
+        // place has. _NEW: a bookmark is being set in the place; it is set when the keyboard is
+        // confirmed, with or without a name.
+        markNameNew = command == PB_PAGEVIEW_CMD_MARK_NEW;
+        markNamePlace = index;
+        markNameText[0] = 0;
+        // a page that has its bookmark gets no second one (pbMarkSet): the keyboard has the name
+        // of the one it has, to be changed
+        if (!markNameNew || isMarked()) {
+            if (!markNameNew && (index < 0 || index >= (int)_marks.size()))
+                return;
+            markNamePage = markNameNew ? _page : _marks[index];
+            std::map<int, std::string>::const_iterator named = _markNames.find(markNamePage);
+            strncpy(markNameText, named != _markNames.end() ? named->second.c_str() : "", sizeof(markNameText) - 1);
+            markNameText[sizeof(markNameText) - 1] = 0;
+        }
+        pbOpenKeyboard(_("Bookmark name"), markNameText, sizeof(markNameText) - 1, markNameTyped);
+        return;
+    }
     if (command == PB_PAGEVIEW_CMD_MARK_DELETE) {
         if (index >= 0 && index < (int)_marks.size())
             _marks.erase(_marks.begin() + index);
     } else {
-        // the page shown into the place: in place of the bookmark there, or a new one
-        if (index >= 0 && index < (int)_marks.size())
-            _marks.erase(_marks.begin() + index);
-        if (!isMarked()) {
-            size_t at = 0;
-            while (at < _marks.size() && _marks[at] < _page)
-                at++;
-            _marks.insert(_marks.begin() + at, _page);
-        }
+        // the page shown into the place: in place of the bookmark there, or a new one; a page that
+        // has its bookmark keeps it, and the place is left as it is
+        pbMarkSet(_marks, index, _page);
     }
     saveState();
     setDirty();

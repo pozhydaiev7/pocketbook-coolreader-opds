@@ -215,7 +215,10 @@
     <empty-line/>
     <p>In the list you can make new bookmarks and go to the pages of the old ones. The chosen bookmark has a triangle mark.</p>
     <empty-line/>
-    <p>A long tap on a row opens the context menu: set a bookmark, delete it or go to its page.</p>
+    <p>When a bookmark is set from the list (a tap on an empty row, or «Set bookmark»), the keyboard for its name opens first. The name tells what the bookmark was set for, and it may be left out: the keyboard confirmed with no text sets a bookmark without a name, and the keyboard left sets no bookmark and shows the list again. The name is shown in the first line after the page and the percent, before the chapter; the second line is the text the page begins with.</p>
+    <p>The name of a bookmark that is there is changed by «Bookmark name» of the context menu; to take it off, type a space in its place. A long tap on the bookmark icon of the reading menu sets a bookmark at once, without a name.</p>
+    <p>A page has one bookmark. When the page shown has its bookmark already, no second one is made, whatever row of the list it is set in: the keyboard shows the name of the bookmark the page has, and the name can be changed.</p>
+    <p>A long tap on a row opens the context menu: set a bookmark, name it, delete it or go to its page.</p>
     <empty-line/>
     <p>Keys in the list of bookmarks:</p>
     <p><strong>Next/Prev</strong> – turn pages;</p>
@@ -580,7 +583,7 @@
      <image l:href="#i_026.png"/>
      <subtitle>Dictionary and bookmarks</subtitle>
      <p>The dictionary works over the pages of a file with text (a PDF with text, a DjVu with a text layer): the zone of the dictionary looks up the word under the finger, the icon of the dictionary takes the first word of the screen. The word is marked on the page; the arrows go to the word beside it and to the line above or under, a page turn turns the pages under the window. On a page without text (a scan) the window opens with the search: the word is typed.</p>
-     <p>The list of the bookmarks is the one of a book: a place for each bookmark with the page, the place in percent and the chapter, empty places after them; a tap goes to a bookmark or sets one, a long press opens «Set bookmark, Go to bookmark, Delete bookmark».</p>
+     <p>The list of the bookmarks is the one of a book: a place for each bookmark with the page, the place in percent and the chapter, empty places after them; a tap goes to a bookmark or sets one, a long press opens «Set bookmark, Go to bookmark, Bookmark name, Delete bookmark». A bookmark set from the list asks for its name first (it may be left out); the name is shown after the page and the percent, before the chapter.</p>
      <image l:href="#i_026.png"/>
      <subtitle>Scale</subtitle>
      <p>What is shown on the screen. "Whole page": the page with its margins. "Page width": the page as wide as the screen. "Whole content": the margins are cut off automatically, and for a page photographed on a dark table the table is cut off too. "Content width": the same, as wide as the screen. "Own frame": the frame you have set in "Set the frame". "Automatic, every page levelled": for a book scanned or photographed crookedly; this scale is the default. The program finds the tilt of the lines of every page by itself, turns the page level and cuts off its margins; with the leafing "By frames" the content is as wide as the screen. A page without lines of text (a picture, an empty page) is left as it is. If the automatic frame does not fit, open "Set the frame": it starts from what is on the screen, and "Done" sets "Own frame".</p>

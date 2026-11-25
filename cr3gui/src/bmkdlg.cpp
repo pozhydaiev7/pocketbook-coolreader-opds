@@ -22,6 +22,20 @@ CRBookmarkMenuItem::CRBookmarkMenuItem( CRMenu * menu, int shortcut, CRBookmark 
 
 }
 
+/// What follows the page and the percent in the first line of the row of a bookmark: the name
+/// given to the bookmark (its comment, see PB_CMD_BOOKMARK_NAME), then the chapter. The second
+/// line stays the text of the page (the owner: it is by that text that one finds one's way; the
+/// name stood in its place at first). A citation has no name: its comment is its own.
+static lString32 bookmarkRowTitle( CRBookmark * bookmark )
+{
+    lString32 title = bookmark->getTitleText();
+    if ( bookmark->getType() != bmkt_pos || bookmark->getCommentText().empty() )
+        return title;
+    if ( title.empty() )
+        return bookmark->getCommentText();
+    return bookmark->getCommentText() + Utf8ToUnicode(lString8(" \xC2\xB7 ")) + title;
+}
+
 void CRBookmarkMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin, CRRectSkinRef valueSkin, bool selected )
 {
     _itemDirty = false;
@@ -46,7 +60,7 @@ void CRBookmarkMenuItem::Draw( LVDrawBuf & buf, lvRect & rc, CRRectSkinRef skin,
     lString32 postext(_("Page $1 ($2%)"));
     postext.replaceIntParam(1, _page+1);
     postext.replaceParam(2, lString32::itoa( _bookmark->getPercent()/100 ) << "." << fmt::decimal(_bookmark->getPercent()%100));
-    postext << "  " << _bookmark->getTitleText();
+    postext << "  " << bookmarkRowTitle( _bookmark );
     skin->drawText( buf, posRect, postext );
     if ( !text.empty() )
         valueSkin->drawText( buf, textRect, text );
@@ -119,6 +133,7 @@ static CRBookmarkMenu *bmkDialog = NULL;
 static imenu _contextMenu[] = {
 	{ITEM_ACTIVE, DCMD_BOOKMARK_SAVE_N, NULL, NULL},
 	{ITEM_ACTIVE, DCMD_BOOKMARK_GO_N, NULL, NULL},
+	{ITEM_ACTIVE, PB_CMD_BOOKMARK_NAME, NULL, NULL},
 	{ITEM_ACTIVE, PB_CMD_BOOKMARK_REMOVE, NULL, NULL},
 	{ 0, 0, NULL, NULL }
 };
@@ -154,13 +169,16 @@ void CRBookmarkMenu::showContextMenu()
     lvRect clientRect;
     getClientRect(clientRect);
     lvPoint itemSize = getMaxItemSize();
+	// the name and the removal are for a place that has a bookmark
 	_contextMenu[2].type = item->getBookmark() ? ITEM_ACTIVE : ITEM_INACTIVE;
+	_contextMenu[3].type = item->getBookmark() ? ITEM_ACTIVE : ITEM_INACTIVE;
         int y = clientRect.top + (itemSize.y + separatorHeight) * (_selectedItem - _topItem) +
 			((itemSize.y + separatorHeight)/4);
 	if (_contextMenu[0].text == NULL) {
 		_contextMenu[0].text = (char *)_("Set bookmark");
 		_contextMenu[1].text = (char *)_("Go to bookmark");
-		_contextMenu[2].text = (char *)_("Delete bookmark");
+		_contextMenu[2].text = (char *)_("Bookmark name");
+		_contextMenu[3].text = (char *)_("Delete bookmark");
 	}
 	OpenMenu(_contextMenu, 
 		_goToMode ? DCMD_BOOKMARK_GO_N : DCMD_BOOKMARK_SAVE_N,
@@ -169,12 +187,26 @@ void CRBookmarkMenu::showContextMenu()
 		handle_contextMenu);
 }
 
+/// A bookmark is being set in the selected place of the list. The window of the book asks for its
+/// name first and sets the bookmark when the keyboard is confirmed, with the name typed or, when
+/// nothing was typed, without one, as it was set before; the keyboard left, nothing is set and
+/// the list is shown again (PB_CMD_BOOKMARK_NEW; the owner asked for this order). The mode of the
+/// list goes with the place, for the list shown again.
+void CRBookmarkMenu::newBookmark()
+{
+    closeMenu( PB_CMD_BOOKMARK_NEW, _selectedItem + 1 + (_goToMode ? 1000 : 0) );
+}
+
 void CRBookmarkMenu::handleContextMenu(int index)
 {
     // the command may close the menu, which is deleted then: see CRCitesMenu::handleContextMenu
     CRGUIWindowManager * wm = _wm;
-    wm->postCommand(index, 0);
-    wm->processPostedEvents();
+    pbFirmwareMenuClosed(index);
+    // index <= 0: the menu was closed without a choice
+    if (index > 0) {
+        wm->postCommand(index, 0);
+        wm->processPostedEvents();
+    }
     wm->resetTillUp();
 }
 
@@ -244,8 +276,17 @@ bool CRBookmarkMenu::onCommand( int command, int params )
         setMode( !_goToMode );
         return true;
     } else if (command == MCMD_SELECT) {
-		if (_selectedItem >= 0)
+		if (_selectedItem >= 0) {
+#ifdef CR_POCKETBOOK
+			// A tap that sets a bookmark (the mode that sets, or an empty place in either mode)
+			// asks for the name of the bookmark first: see newBookmark().
+			if ( !_goToMode || static_cast<CRBookmarkMenuItem *>(_items[_selectedItem])->getBookmark() == NULL ) {
+				newBookmark();
+				return true;
+			}
+#endif
 			closeMenu( _goToMode ? DCMD_BOOKMARK_GO_N : DCMD_BOOKMARK_SAVE_N, _selectedItem + 1 );
+		}
 		return true;
 	} else if (command == MCMD_SELECT_LONG) {
 #ifdef CR_POCKETBOOK
@@ -264,7 +305,18 @@ bool CRBookmarkMenu::onCommand( int command, int params )
 	}
 #ifdef CR_POCKETBOOK
 	 else if (command == DCMD_BOOKMARK_SAVE_N || command == DCMD_BOOKMARK_GO_N) {
-		 closeMenu( command, _selectedItem + 1 );
+		 // from the menu of a long press; "Go to bookmark" of an empty place sets one
+		 if (_selectedItem < 0)
+			 return true;
+		 if (command == DCMD_BOOKMARK_SAVE_N || static_cast<CRBookmarkMenuItem *>(_items[_selectedItem])->getBookmark() == NULL)
+			 newBookmark();
+		 else
+			 closeMenu( command, _selectedItem + 1 );
+		 return true;
+	 } else if (command == PB_CMD_BOOKMARK_NAME) {
+		 // the keyboard is opened by the window of the book, which has the bookmark by its place
+		 if (_selectedItem >= 0 && static_cast<CRBookmarkMenuItem *>(_items[_selectedItem])->getBookmark() != NULL)
+			 closeMenu( command, _selectedItem + 1 + (_goToMode ? 1000 : 0) );
 		 return true;
 	 } else if (command == PB_CMD_BOOKMARK_REMOVE && _selectedItem >= 0) {
 		 CRBookmarkMenuItem *item = static_cast<CRBookmarkMenuItem *>(_items[_selectedItem]);
@@ -337,6 +389,7 @@ void CRCitesMenu::handleContextMenu(int index)
     // deleted list after it; with "Edit citation", which opens a window in the memory just
     // freed, the program stopped with a segmentation fault.
     CRGUIWindowManager * wm = _wm;
+    pbFirmwareMenuClosed(index);
     // index <= 0: the menu was closed without a choice
     if (index > 0) {
         CRLog::info("CRCitesMenu: action %d of the citation menu", index);
