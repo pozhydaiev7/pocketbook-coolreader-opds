@@ -331,7 +331,7 @@ PbPageWindow::PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lStri
       _direction(1), _stamp(1),
       _adjust(false), _adjAngle(0), _touchStarted(false), _head(NULL), _tocRead(false), _bookAngle(-1),
       _wordsPage(-1), _wordsFrame(-1), _wordsStamp(0), _word(-1),
-      _foundTurn(0), _findSawText(false), _findHidden(false), _findLooked(0), _findStarted(0), _findShown(0), _findPanel(0),
+      _findStamp(0), _foundTurn(0), _findSawText(false), _findHidden(false), _findLooked(0), _findStarted(0), _findShown(0), _findPanel(0),
       _findPressed(false)
 {
     _angle[0] = _angle[1] = 0;
@@ -1082,6 +1082,30 @@ bool PbPageWindow::onCommand(int command, int params)
         searchEnd();
         return true;
     }
+    if (searching()) {
+        // The keys Up and Down go to the place found before and after, whichever of these
+        // commands the key map of the device gives them (none of them does anything else over
+        // the pages). The arrows of the panel were the only way, and a reader without a touch
+        // screen has nothing to tap them with.
+        switch (command) {
+        case DCMD_ZOOM_OUT:
+        case DCMD_LINEDOWN:
+        case MCMD_SCROLL_FORWARD:
+        case MCMD_NEXT_ITEM:
+            searchMove(1);
+            setDirty();
+            return true;
+        case DCMD_ZOOM_IN:
+        case DCMD_LINEUP:
+        case MCMD_SCROLL_BACK:
+        case MCMD_PREV_ITEM:
+            searchMove(-1);
+            setDirty();
+            return true;
+        default:
+            break;
+        }
+    }
     if (command >= PB_TOC_SAFE_CMD_RANGE && command < PB_TOC_SAFE_CMD_RANGE + _doc->pageCount() + 1) {
         goToPage(command - PB_TOC_SAFE_CMD_RANGE - 1);
         return true;
@@ -1826,6 +1850,9 @@ const std::vector<PbPageBox> & PbPageWindow::foundOn(int page)
     static const std::vector<PbPageBox> none;
     if (!searching() || page < 0 || page >= (int)_findKnown.size() || _findKnown[page] == 1)
         return none;
+    // places this layout does not show: nothing to stop at and nothing to draw
+    if (_findKnown[page] == 3 && _findStamp == _stamp)
+        return none;
     _foundTurn++;
     FoundPage * slot = &_found[0];
     for (int i = 0; i < 4; i++) {
@@ -1857,6 +1884,20 @@ const std::vector<PbPageBox> & PbPageWindow::foundOn(int page)
 void PbPageWindow::searchStops(int page, std::vector<int> & stops)
 {
     stops.clear();
+    // A page whose places this layout does not show (a running title the scale of the content
+    // leaves out) is remembered as such: it was read and compared again at every step of the
+    // walk, the four pages kept having long given way (on a file with the title of the book on
+    // 70 pages of 106, every "next" read them all). Another layout may show them: asked anew.
+    if (_findStamp != _stamp) {
+        _findStamp = _stamp;
+        for (size_t i = 0; i < _findKnown.size(); i++)
+            if (_findKnown[i] == 3)
+                _findKnown[i] = 2;
+    }
+    if (page >= 0 && page < (int)_findKnown.size() && _findKnown[page] == 3) {
+        _findHidden = true;
+        return;
+    }
     if (page >= 0 && page < (int)_findKnown.size() && _findKnown[page] == 0) {
         // a page to read: a bar on the screen once the pass through the file has taken a second,
         // then every second and a half (an update of the screen takes a third of a second itself)
@@ -1913,6 +1954,9 @@ void PbPageWindow::searchStops(int page, std::vector<int> & stops)
     }
     std::sort(stops.begin(), stops.end());
     stops.erase(std::unique(stops.begin(), stops.end()), stops.end());
+    // the page has places (boxes is not empty), none of them shown
+    if (stops.empty())
+        _findKnown[page] = 3;
 }
 
 void PbPageWindow::screenEnd(int & page, int & row)

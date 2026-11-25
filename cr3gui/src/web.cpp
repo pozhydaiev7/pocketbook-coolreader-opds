@@ -1,6 +1,37 @@
 #include <crengine.h>
+#include <pthread.h>
 #include <unistd.h>
 #include "web.h"
+
+// One request at a time, whichever thread makes it. The automatic position sync makes its
+// requests in a thread of its own (pb_kosync.cpp, AutoJob), and the handle that is kept, the
+// login of a catalog and the TLS library of the firmware are shared by all the requests. A
+// request made inside another one by the same thread (from the progress callback of a download)
+// goes on as before: the lock is taken again by the thread that holds it.
+static pthread_mutex_t webMutex;
+static pthread_once_t webMutexOnce = PTHREAD_ONCE_INIT;
+
+static void webMutexInit()
+{
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&webMutex, &attr);
+    pthread_mutexattr_destroy(&attr);
+}
+
+class WebLock
+{
+    WebLock(const WebLock &);
+    WebLock & operator = (const WebLock &);
+public:
+    WebLock()
+    {
+        pthread_once(&webMutexOnce, webMutexInit);
+        pthread_mutex_lock(&webMutex);
+    }
+    ~WebLock() { pthread_mutex_unlock(&webMutex); }
+};
  
 //have to re-declare static members at file level
 char web::errorBuffer[CURL_ERROR_SIZE];
@@ -33,6 +64,7 @@ string web::hostOf(const string &url)
 
 void web::setCredentials(const string &url, const string &user, const string &password)
 {
+    WebLock lock;
     authHost = user.empty() ? string() : hostOf(url);
     authUser = user;
     authPassword = password;
@@ -94,6 +126,7 @@ public:
 
 void web::cleanup()
 {
+    WebLock lock;
     if (sharedHandle != NULL && !sharedHandleBusy) {
         // the cookies of the handle are written to their file here
         curl_easy_cleanup(sharedHandle);
@@ -179,6 +212,7 @@ string web::post(const string &url, map<string, string> &m)
 //---------------------------------------------------------------------------
 string web::easycurl(const string &url, bool post, const string &postparamstring)
 {
+    WebLock lock;
     CRLog::trace("web::easycurl(%s)", url.c_str());
  
     // Our curl objects
@@ -247,6 +281,7 @@ string web::easycurl(const string &url, bool post, const string &postparamstring
 //---------------------------------------------------------------------------
 bool web::easycurlBinary(const string &url, bool post, const string &postparamstring, const string &outfilename)
 {
+    WebLock lock;
     CRLog::trace("web::easycurlBinary(%s, bool, %s, %s)", url.c_str(), postparamstring.c_str(), outfilename.c_str());
  
     // Our curl objects
@@ -350,6 +385,7 @@ static int requestProgress(void *data, double dltotal, double dlnow, double ulto
 
 bool web::request(const string &url, WebRequest &rq, string *body, const char *outFile)
 {
+    WebLock lock;
     rq.httpCode = 0;
     rq.curlCode = CURLE_FAILED_INIT;
     rq.error.clear();

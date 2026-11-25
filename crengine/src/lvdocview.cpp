@@ -773,8 +773,12 @@ LVDocImageRef LVDocView::getPageImage( int delta )
 		// The image of a page shown before is kept with the header of that time. Shown
 		// again a minute later (a page turn back), it would have the old clock: such an
 		// image is dropped and the page is drawn again.
+		// An image that was made without its header (prepared ahead) has the rows of the
+		// header free of text: its header alone is drawn again. The page shown is drawn for
+		// the clock every minute, and the whole page was laid out and drawn for it.
 		lString32 stamp = pageHeaderStamp();
-		if ( delta == 0 )
+		int stale = delta == 0 ? m_imageCache.staleHeader( p, stamp ) : 0;
+		if ( stale == 2 )
 			m_imageCache.dropStale( p, stamp );
 		ref = m_imageCache.get( -1, p );
 		if ( !ref.isNull() ) {
@@ -783,6 +787,9 @@ LVDocImageRef LVDocView::getPageImage( int delta )
 			// position are those of the moment the page is shown
 			if ( m_imageCache.takeHeaderPending( -1, p ) ) {
 				drawLeftOutPageHeader( ref->getDrawBuf(), p );
+				m_imageCache.setHeaderStamp( p, stamp );
+			} else if ( stale == 1 ) {
+				redrawPageHeader( ref->getDrawBuf(), p );
 				m_imageCache.setHeaderStamp( p, stamp );
 			}
 			return ref;
@@ -968,6 +975,21 @@ void LVDocView::drawLeftOutPageHeader( LVDrawBuf * buf, int page )
 	getPageHeaderRectangle( m_pages[page]->index, info );
 	drawPageHeader( buf, info, m_pages[page]->index, m_pageHeaderInfo, m_pages.length() );
 	buf->SetClipRect( NULL );
+}
+
+void LVDocView::redrawPageHeader( LVDrawBuf * buf, int page )
+{
+	if ( page < 0 || page >= m_pages.length() )
+		return;
+	// the rows isPageHeaderBandClean() found free of text when the image was made
+	lvRect info;
+	getPageHeaderRectangle( page, info );
+	int top, bottom;
+	if ( !pageHeaderBand( m_pageHeaderPos, info, buf->GetHeight(), top, bottom ) )
+		return;
+	buf->SetClipRect( NULL );
+	buf->FillRect( 0, top, buf->GetWidth(), bottom, m_backgroundColor );
+	drawLeftOutPageHeader( buf, page );
 }
 
 bool LVDocView::preparePageImage( int delta, const char ** reason )
@@ -2471,6 +2493,10 @@ int LVDocView::GetPos() {
 int LVDocView::SetPos(int pos, bool savePos, bool allowScrollAfterEnd) {
 	LVLock lock(getMutex());
 	_posIsSet = true;
+	// a place set and kept: the percent of a position not read back is not for it (see
+	// goToBookmark()); checkPos() calls with savePos false, having taken the percent itself
+	if (savePos)
+		_posPercent = -1;
     CHECK_RENDER("setPos()")
 	//if ( m_posIsSet && m_pos==pos )
 	//    return;
@@ -5785,6 +5811,12 @@ void LVDocView::goToBookmark(ldomXPointer bm) {
     CHECK_RENDER("goToBookmark()")
 	_posIsSet = false;
 	_posBookmark = bm;
+	// The place is set by its pointer: the percent of a kept position whose pointer was not read
+	// back (restorePosition) is not for it. Left set, it was taken by a later checkPos() without
+	// a pointer (the pointer dropped by a new layout) and moved the book. (goToPage() and
+	// SetPos() are called by checkPos() itself and by the layout before the first checkPos():
+	// they leave the percent alone.)
+	_posPercent = -1;
 }
 
 /// get page number by bookmark

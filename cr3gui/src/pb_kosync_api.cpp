@@ -134,6 +134,12 @@ Result send(const Account & account, const char * method, const std::string & pa
     bool verify = true;
     // at most: a redirect to the same host, and the request again without the check of the certificate
     for (int attempt = 0; attempt < 4; attempt++) {
+        // told to stop: no request is started (no answer: the place stays in the queue)
+        if (account.stopped()) {
+            r.http = 0;
+            r.error = "stopped";
+            break;
+        }
         WebRequest rq;
         rq.connectTimeout = account.connectTimeout;
         rq.timeout = account.timeout;
@@ -410,6 +416,9 @@ int queueDrain(const Account & account, const std::string & model, const std::st
     int sent = 0, newer = 0;
     size_t done = 0;
     for (; done < lines.size(); done++) {
+        // told to stop: this place and the ones after it stay in the queue
+        if (account.stopped())
+            break;
         std::string document;
         Progress place;
         long at = 0;
@@ -417,7 +426,7 @@ int queueDrain(const Account & account, const std::string & model, const std::st
             continue;
         Progress there;
         Result r = pull(account, document, there);
-        if (!r.ok() && keepQueue(r))
+        if (account.stopped() || (!r.ok() && keepQueue(r)))
             break;
         // another 4xx of the question (a server that tells "no place yet" so): the push decides
         const bool fromHere = there.device == model && there.deviceId == deviceId;

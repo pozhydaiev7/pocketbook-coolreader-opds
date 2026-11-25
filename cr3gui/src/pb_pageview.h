@@ -214,7 +214,10 @@ private:
     // panel under the page goes to the next and to the previous screen that has one.
     lString32 _find;        // what is looked for, as it is compared; empty: no search
     lString32 _findTyped;   // as it was typed, for the panel
-    std::vector<signed char> _findKnown;    // by page: 0 not looked at, 1 nothing there, 2 has places
+    // by page: 0 not looked at, 1 nothing there, 2 has places, 3 has places and the layout
+    // _findStamp shows none of them (a 3 is a 2 again when the layout changes)
+    std::vector<signed char> _findKnown;
+    unsigned _findStamp;    // the layout (_stamp) the marks 3 of _findKnown were made for
     struct FoundPage {
         int page;
         unsigned used;

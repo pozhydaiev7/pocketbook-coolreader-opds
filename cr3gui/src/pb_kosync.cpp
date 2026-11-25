@@ -7,6 +7,8 @@
 #include <lvtinydom.h>
 #include <lvdocview.h>
 #include <dlfcn.h>
+#include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,11 +77,24 @@ bool networkOn()
 // The firmware may take the screen to connect (its dialog of the networks): the program in the
 // background and back meanwhile is no book closed and opened (pbNetConnecting, cr3pocketbook.h).
 
+bool autoConnecting();
+
 // Wi-Fi through the firmware for an action asked by the reader (the last network or its dialog)
 bool ensureNetwork()
 {
     if (networkOn())
         return true;
+    // The thread of the automatic sync may be turning Wi-Fi on already: the firmware is not
+    // asked for two connections at once, this one waits for that one (the reader has asked for
+    // the action, an hourglass tells it is on its way).
+    if (autoConnecting()) {
+        ShowHourglassForce();
+        for (int i = 0; i < 400 && autoConnecting(); i++)
+            usleep(100000);
+        HideHourglass();
+        if (networkOn())
+            return true;
+    }
     const int rc = pbNetConnect();
     CRLog::info("kosync: NetConnect(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
     return rc == NET_OK && networkOn();
@@ -88,11 +103,10 @@ bool ensureNetwork()
 // Wi-Fi for the automatic sync: KOReader turns it on only where that asks nothing of the reader
 // (wifi_enable_action "turn_on"); here through NetConnectSilent of the firmware, looked up at run
 // time (not every firmware has it). Without it the automatic sync waits for Wi-Fi turned on.
-bool connectQuietly()
+typedef int (*NetConnectSilentFn)(const char *);
+
+NetConnectSilentFn quietConnect()
 {
-    if (networkOn())
-        return true;
-    typedef int (*NetConnectSilentFn)(const char *);
     static NetConnectSilentFn connectSilent = NULL;
     static bool looked = false;
     if (!looked) {
@@ -102,15 +116,116 @@ bool connectQuietly()
             *(void **)(&connectSilent) = dlsym(lib, "NetConnectSilent");
         CRLog::info("kosync: NetConnectSilent %s", connectSilent ? "found" : "not found: no Wi-Fi turned on by the sync");
     }
-    if (connectSilent == NULL)
-        return false;
-    ShowHourglassForce();
-    pbNetConnecting = true;
-    const int rc = connectSilent(NULL);
-    pbNetConnecting = false;
-    HideHourglass();
-    CRLog::info("kosync: NetConnectSilent(NULL) = %d, QueryNetwork() = 0x%x", rc, QueryNetwork());
-    return networkOn();
+    return connectSilent;
+}
+
+// ---- The automatic sync off the screen
+//
+// A book opened (and the program back on the screen, Wi-Fi turned on) turns Wi-Fi on, sends the
+// places kept and asks for the place of the book. Done in the handler of the timer, it held the
+// program for as long as that took: 23.6 s with an hourglass on the reader of the owner (Wi-Fi
+// turned on by the firmware), then three requests of 0.4 to 0.8 s each. It is done by a thread
+// now, and the program goes on: the reader turns pages meanwhile.
+//
+// The thread gets a copy of what it needs (the account, the places kept, the book) and touches
+// nothing of the program: it calls the firmware (the network) and the requests (pb_kosync_api,
+// web: one request at a time, see web.cpp). What it brings back is used by the program when its
+// timer finds the job done (PbKosync::autoFinish): the places sent leave the queue as it is
+// then, and the place of the server is weighed against the place the book is at then.
+struct AutoJob {
+    // given to the job
+    NetConnectSilentFn connect;         // turns Wi-Fi on when it is off; NULL: only while it is on
+    kosync::Account account;
+    std::string model, deviceId;
+    std::vector<std::string> queue;     // the places kept when the job started
+    std::string document;               // the open book; empty: none
+    long startedAt;
+    // brought back
+    bool online;
+    int connectMs;                      // the time the firmware took to turn Wi-Fi on
+    int connectRc;                      // and what it answered (NET_OK 0)
+    int networkBefore;                  // QueryNetwork() before that
+    std::vector<std::string> left;      // the places kept after the sending
+    int sent, newer;
+    bool asked;
+    kosync::Result result;
+    kosync::Progress there;
+    // connecting: the thread is in the firmware, turning Wi-Fi on (that cannot be stopped and may
+    // take half a minute). done: set by the thread when it has ended. abandoned: set by the
+    // program when it is closed; the thread starts nothing more (no connection, no request: the
+    // requests read it through Account::stop). `connecting` and `abandoned` change under `state`,
+    // so that the program knows for sure whether the thread is in the firmware: it waits for a
+    // thread that is not, and leaves the job to one that is (PbKosync::shutdown).
+    pthread_mutex_t state;
+    volatile int connecting;
+    volatile int done;
+    volatile int abandoned;
+    AutoJob() : connect(NULL), startedAt(0), online(false), connectMs(0), connectRc(0), networkBefore(0), sent(0),
+                newer(0), asked(false), connecting(0), done(0), abandoned(0)
+    {
+        pthread_mutex_init(&state, NULL);
+    }
+    ~AutoJob() { pthread_mutex_destroy(&state); }
+private:
+    AutoJob(const AutoJob &);
+    AutoJob & operator = (const AutoJob &);
+};
+
+AutoJob * autoJob = NULL;
+pthread_t autoThread;
+
+// The thread of the automatic sync is in the firmware, turning Wi-Fi on.
+bool autoConnecting()
+{
+    return autoJob != NULL && autoJob->connecting != 0;
+}
+
+// pbNetConnecting is not set while the thread turns Wi-Fi on. It tells "the program was sent to
+// the background by the dialog of the networks, not by the reader", and makes a book closed
+// meanwhile send and keep nothing: right while the program was held by that dialog, wrong now,
+// when the reader can close the book during the half minute the thread is in the firmware (the
+// place would be neither sent nor kept). The connection of the thread shows no dialog.
+void * autoJobRun(void * arg)
+{
+    AutoJob * job = (AutoJob *)arg;
+    job->online = networkOn();
+    if (!job->online && job->connect != NULL) {
+        pthread_mutex_lock(&job->state);
+        const bool go = !job->abandoned;
+        if (go)
+            job->connecting = 1;
+        pthread_mutex_unlock(&job->state);
+        if (go) {
+            struct timeval t0, t1;
+            gettimeofday(&t0, NULL);
+            job->networkBefore = QueryNetwork();
+            job->connectRc = job->connect(NULL);
+            gettimeofday(&t1, NULL);
+            job->connectMs = (int)((t1.tv_sec - t0.tv_sec) * 1000 + (t1.tv_usec - t0.tv_usec) / 1000);
+            pthread_mutex_lock(&job->state);
+            job->connecting = 0;
+            pthread_mutex_unlock(&job->state);
+            // (a job the program has left is not to call the firmware again: see `abandoned` below)
+            if (!job->abandoned)
+                job->online = networkOn();
+        }
+    }
+    if (job->online && !job->abandoned) {
+        // the places kept first, then the place of the book (KOReader: drainQueue, then getProgress)
+        if (!job->left.empty())
+            job->sent = kosync::queueDrain(job->account, job->model, job->deviceId, job->left, &job->newer);
+        if (!job->document.empty() && !job->abandoned) {
+            job->result = kosync::pull(job->account, job->document, job->there);
+            job->asked = true;
+        }
+    }
+    job->done = 1;
+    return NULL;
+}
+
+void autoJobTimer()
+{
+    PbKosync::instance().autoFinish();
 }
 
 // The open book: its file (the one given to the program, an archive as it is, as KOReader takes
@@ -253,6 +368,29 @@ void writeQueue(CRPropRef props, const std::vector<std::string> & lines)
             props->setString(key.c_str(), value);
     }
     main_win->saveSettings(lString32::empty_str);
+}
+
+// The places the job has sent (or found older than the server's) leave the queue as it is now:
+// a place may have been kept while the job was on its way.
+void takeSentOffQueue(const AutoJob & job)
+{
+    if (main_win == NULL || job.left.size() == job.queue.size())
+        return;
+    CRPropRef props = main_win->getProps();
+    const std::vector<std::string> now = readQueue(props);
+    std::vector<std::string> kept;
+    for (size_t i = 0; i < now.size(); i++) {
+        bool given = false, left = false;
+        for (size_t k = 0; k < job.queue.size() && !given; k++)
+            given = job.queue[k] == now[i];
+        for (size_t k = 0; k < job.left.size() && !left; k++)
+            left = job.left[k] == now[i];
+        if (!given || left)
+            kept.push_back(now[i]);
+    }
+    writeQueue(props, kept);
+    CRLog::info("kosync: of the %d places kept %d sent, %d left for a newer place on the server, %d still kept",
+                (int)job.queue.size(), job.sent, job.newer, (int)kept.size());
 }
 
 } // namespace
@@ -433,6 +571,12 @@ bool PbKosync::pullPlace(const std::string & document, const kosync::Progress & 
     kosync::Result r = kosync::pull(accountFor(true), document, there);
     if (interactive)
         HideHourglass();
+    return pulled(document, here, r, there, interactive);
+}
+
+bool PbKosync::pulled(const std::string & document, const kosync::Progress & here, const kosync::Result & r,
+                      const kosync::Progress & there, bool interactive)
+{
     CRLog::info("kosync: place of %s asked: HTTP %ld, found %d, %s (%.4f) at %ld from %s %s", document.c_str(),
                 r.http, there.found ? 1 : 0, there.progress.c_str(), there.percentage, there.timestamp,
                 there.device.c_str(), r.error.c_str());
@@ -532,25 +676,137 @@ void PbKosync::networkConnected()
 
 void PbKosync::autoPull(bool connect)
 {
-    if (!enabled() || !loggedIn())
+    // the program is being closed (shutdown): no job is started that nobody would wait for
+    if (_closed || !enabled() || !loggedIn())
         return;
+    // One job at a time. The one on its way sends the places kept; the place it asks for may be
+    // that of another book (a book opened while Wi-Fi was coming up): asked again when it ends.
+    if (autoJob != NULL) {
+        _autoAgain = true;
+        _autoAgainConnect = _autoAgainConnect || connect;
+        return;
+    }
     lString32 file;
     kosync::Progress here;
     const bool book = currentBook(file, here);
     const long now = (long)time(NULL);
     if (book && kosync::debounced(now, _pullAt))
         return;
-    if (!(connect ? connectQuietly() : networkOn()))
+    NetConnectSilentFn quiet = NULL;
+    if (!networkOn()) {
+        quiet = connect ? quietConnect() : NULL;
+        if (quiet == NULL)
+            return;
+    }
+    AutoJob * job = new AutoJob();
+    job->connect = quiet;
+    job->account = accountFor(true);
+    job->account.stop = &job->abandoned;
+    job->model = deviceModel();
+    job->deviceId = deviceId();
+    job->queue = readQueue(main_win->getProps());
+    job->left = job->queue;
+    if (book)
+        job->document = documentOf(file);
+    job->startedAt = now;
+    if (job->queue.empty() && job->document.empty()) {
+        delete job;
         return;
-    // the places kept first, then the place of the book (KOReader: drainQueue, then getProgress)
-    drainQueue();
-    if (!book)
+    }
+    // The signals of the program stay with the thread of the program: the new thread starts with
+    // all of them blocked (a thread takes the mask of the one that makes it).
+    sigset_t all, before;
+    sigfillset(&all);
+    pthread_sigmask(SIG_BLOCK, &all, &before);
+    const int rc = pthread_create(&autoThread, NULL, autoJobRun, job);
+    pthread_sigmask(SIG_SETMASK, &before, NULL);
+    if (rc != 0) {
+        CRLog::error("kosync: no thread for the automatic sync");
+        delete job;
         return;
-    const std::string document = documentOf(file);
-    if (document.empty())
+    }
+    autoJob = job;
+    // A hard timer: a weak one waits for the next event while the device sleeps between the
+    // events, and what the job brought back (the book gone to the place of the server, or the
+    // question about it) would come at the next touch, in the middle of the reading.
+    SetHardTimer("KosyncJob", autoJobTimer, 500);
+}
+
+void PbKosync::autoFinish()
+{
+    AutoJob * job = autoJob;
+    if (job == NULL)
         return;
-    _pullAt = now;
-    pullPlace(document, here, false);
+    if (!job->done) {
+        SetHardTimer("KosyncJob", autoJobTimer, 500);
+        return;
+    }
+    pthread_join(autoThread, NULL);
+    autoJob = NULL;
+    // (the firmware of the owner answered at once, and with no network, after Wi-Fi had been
+    // turned off by hand in its panel: the answer and the state before tell such cases apart)
+    if (job->connect != NULL)
+        CRLog::info("kosync: the firmware asked to turn Wi-Fi on off the screen: NetConnectSilent(NULL) = %d in %d ms, "
+                    "QueryNetwork() 0x%x before and 0x%x now, the network is %s", job->connectRc, job->connectMs,
+                    job->networkBefore, QueryNetwork(), job->online ? "on" : "not on");
+    if (job->online && main_win != NULL && enabled()) {
+        takeSentOffQueue(*job);
+        // the place of the server against the place of the book as it is now: the reader may
+        // have turned pages, or opened another book, while the job was on its way
+        lString32 file;
+        kosync::Progress here;
+        if (job->asked && currentBook(file, here) && documentOf(file) == job->document) {
+            _pullAt = job->startedAt;
+            pulled(job->document, here, job->result, job->there, false);
+        }
+    }
+    // the firmware was asked to turn Wi-Fi on and did not (no network it knows around)
+    const bool noNetwork = job->connect != NULL && !job->online;
+    delete job;
+    // A request that came while the job was on its way (another book opened, the program back
+    // on the screen): made now. For the book the job has asked about it ends at the debounce.
+    // Wi-Fi the firmware has just failed to turn on is not asked for again at once (another
+    // half minute in the firmware for nothing): the request is made if Wi-Fi is on by itself.
+    if (_autoAgain) {
+        const bool connect = _autoAgainConnect && !noNetwork;
+        _autoAgain = _autoAgainConnect = false;
+        autoPull(connect);
+    }
+}
+
+void PbKosync::shutdown()
+{
+    // no automatic request from now on: a timer set by a book just opened is taken off, and one
+    // that comes after all starts nothing (autoPull)
+    _closed = true;
+    _autoAgain = _autoAgainConnect = false;
+    ClearTimer(pullConnectTimer);
+    ClearTimer(pullTimer);
+    ClearTimer(autoJobTimer);
+    AutoJob * job = autoJob;
+    if (job == NULL)
+        return;
+    autoJob = NULL;
+    // The job starts nothing more: no connection, and no request (Account::stop).
+    pthread_mutex_lock(&job->state);
+    job->abandoned = 1;
+    const bool inFirmware = job->connecting != 0;
+    pthread_mutex_unlock(&job->state);
+    if (inFirmware) {
+        // The firmware is turning Wi-Fi on, which may take half a minute and cannot be stopped:
+        // the job is left to the thread, which touches nothing but the job when the firmware
+        // returns (no request, no line of the log), whatever the program has freed by then.
+        pthread_detach(autoThread);
+        CRLog::info("kosync: Wi-Fi is being turned on by the firmware, the automatic sync is left there, the program closes");
+        return;
+    }
+    // A request on its way is waited for: it ends within its limits (2 s to connect, 5 s for
+    // the answer), and none is started after it. The thread is gone before the engine is shut
+    // down with its logger.
+    pthread_join(autoThread, NULL);
+    if (job->online)
+        takeSentOffQueue(*job);
+    delete job;
 }
 
 #ifdef CR3_PAGEDOC

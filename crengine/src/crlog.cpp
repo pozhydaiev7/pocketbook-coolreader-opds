@@ -41,9 +41,50 @@ extern "C" {
 
 class CRFileLogger;
 
+// One lock for the logger. The PocketBook program has a thread beside its own (the position sync,
+// cr3gui/src/pb_kosync.cpp) that writes lines to the log, while the program may replace the logger
+// (the log turned on or off) or delete it (the engine shut down): the thread wrote through a
+// logger that was freed. The functions that write a line and the ones that replace the logger
+// take the lock; a line is written whole. The lock is taken again by the thread that holds it
+// (setLogLevel() writes a line).
+#ifdef _WIN32
+class CRLogLock
+{
+public:
+    CRLogLock() { }
+};
+#else
+#include <pthread.h>
+static pthread_mutex_t crlogMutex;
+static pthread_once_t crlogMutexOnce = PTHREAD_ONCE_INIT;
+
+static void crlogMutexInit()
+{
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&crlogMutex, &attr);
+    pthread_mutexattr_destroy(&attr);
+}
+
+class CRLogLock
+{
+    CRLogLock(const CRLogLock &);
+    CRLogLock & operator = (const CRLogLock &);
+public:
+    CRLogLock()
+    {
+        pthread_once(&crlogMutexOnce, crlogMutexInit);
+        pthread_mutex_lock(&crlogMutex);
+    }
+    ~CRLogLock() { pthread_mutex_unlock(&crlogMutex); }
+};
+#endif
+
 CRLog * CRLog::CRLOG = NULL;
 void CRLog::setLogger( CRLog * logger )
 {
+	CRLogLock lock;
 	if ( CRLOG!=NULL ) {
 		delete CRLOG;
 	}
@@ -52,6 +93,7 @@ void CRLog::setLogger( CRLog * logger )
 
 void CRLog::setLogLevel( CRLog::log_level level )
 {
+	CRLogLock lock;
 	if ( !CRLOG )
 		return;
 	warn( "Changing log level from %d to %d", (int)CRLOG->curr_level, (int)level );
@@ -60,6 +102,7 @@ void CRLog::setLogLevel( CRLog::log_level level )
 
 CRLog::log_level CRLog::getLogLevel()
 {
+	CRLogLock lock;
 	if ( !CRLOG )
 		return LL_INFO;
 	return CRLOG->curr_level;
@@ -67,6 +110,7 @@ CRLog::log_level CRLog::getLogLevel()
 
 bool CRLog::isLogLevelEnabled( CRLog::log_level level )
 {
+	CRLogLock lock;
 	if ( !CRLOG )
 		return false;
 	return (CRLOG->curr_level >= level);
@@ -74,6 +118,7 @@ bool CRLog::isLogLevelEnabled( CRLog::log_level level )
 
 void CRLog::fatal( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG )
 		return;
 	va_list args;
@@ -84,6 +129,7 @@ void CRLog::fatal( const char * msg, ... )
 
 void CRLog::error( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG || CRLOG->curr_level<LL_ERROR )
 		return;
 	va_list args;
@@ -94,6 +140,7 @@ void CRLog::error( const char * msg, ... )
 
 void CRLog::warn( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG || CRLOG->curr_level<LL_WARN )
 		return;
 	va_list args;
@@ -104,6 +151,7 @@ void CRLog::warn( const char * msg, ... )
 
 void CRLog::info( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG || CRLOG->curr_level<LL_INFO )
 		return;
 	va_list args;
@@ -114,6 +162,7 @@ void CRLog::info( const char * msg, ... )
 
 void CRLog::debug( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG || CRLOG->curr_level<LL_DEBUG )
 		return;
 	va_list args;
@@ -124,6 +173,7 @@ void CRLog::debug( const char * msg, ... )
 
 void CRLog::trace( const char * msg, ... )
 {
+	CRLogLock lock;
 	if ( !CRLOG || CRLOG->curr_level<LL_TRACE )
 		return;
 	va_list args;
@@ -219,7 +269,14 @@ protected:
         int memusage = 0;
 #endif
 #endif
+#ifdef _WIN32
         struct tm * bt = localtime(&t);
+#else
+        // the time of this line: localtime() keeps its answer in one place for all the threads
+        // (the line itself is written under the lock of the logger, CRLogLock)
+        struct tm btm;
+        struct tm * bt = localtime_r(&t, &btm);
+#endif
 #if LOG_HEAP_USAGE
         fprintf(f, "%04d/%02d/%02d %02d:%02d:%02d.%04d [%d] %s ", bt->tm_year+1900, bt->tm_mon+1, bt->tm_mday, bt->tm_hour, bt->tm_min, bt->tm_sec, ms/100, memusage, level);
 #else

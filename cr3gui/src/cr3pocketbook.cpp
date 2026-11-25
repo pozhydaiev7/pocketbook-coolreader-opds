@@ -44,6 +44,7 @@
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
+#include <pthread.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <bookstate.h>
@@ -1535,14 +1536,37 @@ static bool pbClockWanted()
     if (main_win == NULL)
         return false;
     CRPropRef props = main_win->getProps();
-    return props->getIntDef(PROP_STATUS_LINE, 0) != 0 && props->getBoolDef(PROP_SHOW_TIME, false);
+    // The status line of the PocketBook settings: 0 at the top, 1 at the bottom, 2 off
+    // (LVDocView::setStatusMode). 0 was taken for "off" here, so with the status line at the top
+    // (the setting of the owner) the timer of the clock was never set: seen on his reader, the
+    // clock stood still, and the log had no line of the clock at all.
+    return props->getIntDef(PROP_STATUS_LINE, 0) != 2 && props->getBoolDef(PROP_SHOW_TIME, false);
+}
+
+// A dialog or a menu of the firmware is on the screen. Some are opened over the page without a
+// window of ours under them (the page selector, the menu of a link): the page is the top window
+// then, and its status line drawn for the clock would go over them. The firmware gives the events
+// to the handler of its dialog while it is open: another handler than ours tells it
+// (GetEventHandler, looked up at run time as get_keylock is).
+static bool pbFirmwareDialogOn()
+{
+    typedef iv_handler (*GetHandlerFn)();
+    static GetHandlerFn getHandler = NULL;
+    static bool looked = false;
+    if (!looked) {
+        looked = true;
+        void * lib = dlopen("libinkview.so", RTLD_LAZY);
+        if (lib != NULL)
+            *(void **)(&getHandler) = dlsym(lib, "GetEventHandler");
+    }
+    return getHandler != NULL && getHandler() != main_handler;
 }
 
 // The window whose status line shows the clock now: the page of the book or the pages of a PDF
 // or a DjVu, with nothing over it; NULL otherwise
 static CRGUIWindow * pbClockWindow()
 {
-    if (main_win == NULL || CRPocketBookWindowManager::instance == NULL || isTouchMenuVisible)
+    if (main_win == NULL || CRPocketBookWindowManager::instance == NULL || isTouchMenuVisible || pbFirmwareDialogOn())
         return NULL;
     CRGUIWindow * top = CRPocketBookWindowManager::instance->getTopVisibleWindow();
 #ifdef CR3_PAGEDOC
@@ -7256,7 +7280,6 @@ bool isBrowserScriptSupported() {
 
 void pbLaunchWaitBinary(const char *binary, const char *param1, const char *param2, const char *param3) {
     pid_t cpid;
-    pid_t child_pid;
     cpid = fork();
 
     switch (cpid) {
@@ -7265,9 +7288,12 @@ void pbLaunchWaitBinary(const char *binary, const char *param1, const char *para
             break;
 
         case 0:
-            child_pid = getpid();
-            CRLog::trace("pbLaunchWaitBinary(): Child: PID %d", child_pid);
-            CRLog::trace("pbLaunchWaitBinary(): Child: Launch %s", binary);
+            // The child does nothing but start the program: no line of the log between fork()
+            // and exec. The program has a second thread now (the position sync, pb_kosync.cpp),
+            // and a lock that thread held at the moment of the fork (the lock of the logger) stays
+            // taken in the child for ever: the child waited for it, and the program for the child.
+            // A program that does not start ends the child at once, without the exit handlers
+            // and the destructors of this program.
             execl(
                 binary,
                 binary,
@@ -7276,7 +7302,7 @@ void pbLaunchWaitBinary(const char *binary, const char *param1, const char *para
                 param3,
                 NULL
                 );
-            exit(0);
+            _exit(127);
 
         default:
             CRLog::trace("pbLaunchWaitBinary(): Parent: Waiting for %d to finish", cpid);
@@ -8444,8 +8470,21 @@ static int pbCloseMenusOverBook()
 }
 #endif
 
+// The thread the program runs in (main). The position sync has a thread of its own that calls
+// the firmware to turn Wi-Fi on (pb_kosync.cpp): should the firmware hand events of the program
+// to that thread while it is there, they are not handled in it (the program is made for one
+// thread), and the log tells.
+static pthread_t pbMainThread;
+
 int main_handler(int type, int par1, int par2)
 {
+    if (!pthread_equal(pthread_self(), pbMainThread)) {
+        // seen on the reader of the owner: the event 94 (the panel of the firmware is about to
+        // open) comes in a thread of the firmware; the program does nothing with it
+        CRLog::info("event of the firmware %s (%d) came in another thread than that of the program: left out",
+                    getEventName(type), type);
+        return 0;
+    }
 
     if( isStandByMode ) switch (type) {
 
@@ -8654,6 +8693,8 @@ int main_handler(int type, int par1, int par2)
         stopStandByTimer();
 #ifdef POCKETBOOK_PRO
         ClearTimer(SetSaveStateTimer);
+        // the thread of the automatic position sync: a request on its way is waited for
+        PbKosync::instance().shutdown();
 #endif
         {
             long long perfExit = pbPerfNow();
@@ -9028,6 +9069,7 @@ void getInkviewFeatures() {
 
 int main(int argc, char **argv)
 {
+    pbMainThread = pthread_self();
     pbPerfProcessStart = pbPerfNow();
     pbCpuStartMhz = pbCpuMhz();
     forcePartialBwUpdates = false;

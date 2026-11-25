@@ -127,6 +127,10 @@ class LVDocViewImageCache
                 /// the image has the text of the page only: its header is drawn when the page
                 /// is shown, see LVDocView::preparePageImage()
                 bool _headerPending;
+                /// the image was made without its header and the rows of the header were found
+                /// untouched by the text (preparePageImage()): a header that shows something
+                /// else (the clock a minute later) can be drawn again alone, see staleHeader()
+                bool _headerAlone;
                 /// see setHeaderStamp()
                 lString32 _headerStamp;
                 /// moment of the last use, of _useCounter
@@ -163,6 +167,7 @@ class LVDocViewImageCache
             _items[place]._page = page;
             _items[place]._valid = true;
             _items[place]._headerPending = headerPending;
+            _items[place]._headerAlone = headerPending;
             _items[place]._headerStamp.clear();
             _items[place]._used = ++_useCounter;
         }
@@ -192,6 +197,19 @@ class LVDocViewImageCache
             for ( int i=0; i<ITEM_COUNT; i++ )
                 if ( _items[i]._valid && _items[i]._page==page && page!=-1 )
                     _items[i]._headerStamp = stamp;
+        }
+        /// The header drawn on the image of the page against what a header shows now: 0 the same
+        /// (or no image, or no header drawn on it yet), 1 something else and the header can be
+        /// drawn again alone, 2 something else and the whole image is to be drawn again.
+        int staleHeader( int page, const lString32 & stamp )
+        {
+            LVLock lock( _mutex );
+            for ( int i=0; i<ITEM_COUNT; i++ ) {
+                if ( _items[i]._valid && _items[i]._ready && !_items[i]._headerPending
+                     && _items[i]._page==page && page!=-1 && _items[i]._headerStamp != stamp )
+                    return _items[i]._headerAlone ? 1 : 2;
+            }
+            return 0;
         }
         /// drops the image of the page when its header is drawn and shows something else;
         /// any: whatever its header shows
@@ -252,6 +270,7 @@ class LVDocViewImageCache
                 _items[i]._thread.Clear();
                 _items[i]._valid = false;
                 _items[i]._headerPending = false;
+                _items[i]._headerAlone = false;
                 _items[i]._drawbuf.Clear();
                 _items[i]._offset = -1;
                 _items[i]._page = -1;
@@ -264,6 +283,7 @@ class LVDocViewImageCache
                 _items[i]._valid = false;
                 _items[i]._ready = false;
                 _items[i]._headerPending = false;
+                _items[i]._headerAlone = false;
                 _items[i]._used = 0;
             }
         }
@@ -467,6 +487,10 @@ private:
     bool isPageHeaderBandClean( LVDrawBuf * buf, int page );
     /// draws the header of the page on its image prepared without one
     void drawLeftOutPageHeader( LVDrawBuf * buf, int page );
+    /// draws the header of a page again on its image: the rows of the header are cleared to the
+    /// background first; for an image whose text has left those rows untouched (see
+    /// LVDocViewImageCache::staleHeader())
+    void redrawPageHeader( LVDrawBuf * buf, int page );
     /// what a page header drawn now shows of the things that change with time: the clock
     lString32 pageHeaderStamp() const;
 #endif

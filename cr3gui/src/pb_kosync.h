@@ -13,7 +13,9 @@
  * of KOReader does (plugins/kosync.koplugin/main.lua):
  *  - a book opened, and the program back on the screen: the places not sent yet are sent, then
  *    the place of the book is asked for. Wi-Fi is turned on for it when the firmware can do it
- *    without a dialog (NetConnectSilent); otherwise only while Wi-Fi is on;
+ *    without a dialog (NetConnectSilent); otherwise only while Wi-Fi is on. All of it is done
+ *    by a thread, and the program is not held while Wi-Fi comes up and the server answers
+ *    (pb_kosync.cpp, AutoJob);
  *  - a book closed (another one opened, the program closed or sent to the background): its place
  *    is sent while Wi-Fi is on, otherwise kept and sent at the next chance (the queue of KOReader);
  *  - Wi-Fi turned on (EVT_NET_CONNECTED, firmware 6): the places kept are sent, the place is asked;
@@ -114,8 +116,14 @@ public:
     /// when the book went to the place it got.
     void sendNow();
     bool getNow();
-    /// The timers: the automatic request, with Wi-Fi turned on for it or not.
+    /// The timers: the automatic request, with Wi-Fi turned on for it or not. It is made by a
+    /// thread (pb_kosync.cpp, AutoJob), the program goes on meanwhile; autoFinish is the timer
+    /// that takes what the thread has brought back.
     void autoPull(bool connect);
+    void autoFinish();
+    /// The program is closed: a request of the automatic sync on its way is waited for (a few
+    /// seconds at most), Wi-Fi being turned on by the firmware is not.
+    void shutdown();
     /// A page went to the screen (the book window, the pages of a PDF or a DjVu): a page turned
     /// when it is another one than the page before (KOReader: onPageUpdate). The time of the last
     /// page turned tells a place of another device sent after it (newer) from one sent before.
@@ -137,8 +145,9 @@ public:
 
 private:
     PbKosync()
-        : _fromSettings(false), _held(false), _pagesOverBook(false), _lookupLogged(false), _pushAt(0), _pullAt(0),
-          _lastTurn(0), _shownPage(-1), _openedAt(0), _offeredValid(false)
+        : _fromSettings(false), _held(false), _pagesOverBook(false), _lookupLogged(false), _autoAgain(false),
+          _autoAgainConnect(false), _closed(false), _pushAt(0), _pullAt(0), _lastTurn(0), _shownPage(-1),
+          _openedAt(0), _offeredValid(false)
     {
         keyBuffer[0] = 0;
     }
@@ -148,6 +157,11 @@ private:
     // place of the book window is older than the one the pages sent when they went
     bool _pagesOverBook;
     bool _lookupLogged;
+    // an automatic request came while the thread was on its way with another one: made when
+    // that one ends (autoFinish), with Wi-Fi turned on for it if any of them asked for that
+    bool _autoAgain, _autoAgainConnect;
+    // the program is being closed (shutdown): no automatic request is started any more
+    bool _closed;
     // the times (time()) of the last automatic push and pull of the open book: KOReader waits 25 s
     // between two (its plugin lives as long as a book, so a book opened starts them anew)
     long _pushAt, _pullAt;
@@ -174,6 +188,9 @@ private:
     /// The place on the server for the open book, and what is done with it; true when the book
     /// went to it.
     bool pullPlace(const std::string & document, const kosync::Progress & here, bool interactive);
+    /// What is done with the place the server gave (r, there) for the open book at `here`.
+    bool pulled(const std::string & document, const kosync::Progress & here, const kosync::Result & r,
+                const kosync::Progress & there, bool interactive);
     /// The queue: a place kept (the one of the same book replaced) with the time it was read here,
     /// the places sent; the number of places that left the queue, sent or found newer on the server.
     void keepInQueue(const std::string & document, const kosync::Progress & place);

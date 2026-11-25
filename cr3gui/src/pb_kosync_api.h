@@ -49,7 +49,12 @@ struct Account {
     // made again without the check, as the update of the program does). A redirect is followed
     // to the same host only: the key goes to this server.
     const char * caInfo;
-    Account() : connectTimeout(5), timeout(10), caInfo(NULL) { }
+    // The requests are made by a thread that may be told to stop (the program is closed): while
+    // *stop is not 0 no request is started, the one on its way ends within its limits. A place
+    // not sent for that stays in the queue. NULL: nothing stops the requests.
+    const volatile int * stop;
+    Account() : connectTimeout(5), timeout(10), caInfo(NULL), stop(NULL) { }
+    bool stopped() const { return stop != NULL && *stop != 0; }
 };
 
 /// True when the libcurl looks up names in a thread of its own (CURL_VERSION_ASYNCHDNS): only then
