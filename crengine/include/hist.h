@@ -250,7 +250,10 @@ public:
         const lString32 & author,
         const lString32 & series,
         ldomXPointer ptr );
-    ldomXPointer restorePosition(  ldomDocument * doc, lString32 fpathname, size_t sz );
+    /// The last position of the file. lostPercent gets -1, or, when the history has the file and the
+    /// pointer of its position is not one of this document (a null pointer is returned), the percent
+    /// kept with the pointer, 0..10000.
+    ldomXPointer restorePosition(  ldomDocument * doc, lString32 fpathname, size_t sz, int * lostPercent = NULL );
     CRFileHist()
     {
     }

@@ -1373,10 +1373,6 @@ msgstr "加速刷新模式"
 msgid "Gray buffer depth (needs restart)"
 msgstr "灰阶深度(需重启)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "自定义系统主题(需重启)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "新版目录"
@@ -1924,10 +1920,6 @@ msgstr "升级到V"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "无标题"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "已应用自定义系统主题，即将重启CR3。"
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

@@ -1369,10 +1369,6 @@ msgstr "Турборежим оновлення"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Глибина буферу сірого (треба перезапуск)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Власна системна тема (треба перезапуск)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Новий вигляд змісту книги"
@@ -1933,10 +1929,6 @@ msgstr "Оновлено до версії "
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Без назви"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Застосовано власну системну тему користувача. CoolReader 3 зараз перезапуститься."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."
@@ -2766,6 +2758,22 @@ msgstr "Розмір сторінки"
 #: ../src/pb_pageview.cpp
 msgid "Not in the view of the original. A file with text has it when viewed as a book."
 msgstr "У перегляді оригіналу недоступно. Файл із текстом має це у вигляді «Дивитися як книгу»."
+
+#: ../src/pb_pageview.cpp
+msgid "In the text of the file: a PDF with text, a DjVu with a text layer"
+msgstr "По тексту файлу: PDF із текстом, DjVu з текстовим шаром"
+
+#: ../src/pb_pageview.cpp
+msgid "Not found in the text of the file."
+msgstr "У тексті файлу не знайдено."
+
+#: ../src/pb_pageview.cpp
+msgid "The file has no text to search in: its pages are pictures."
+msgstr "У файлі немає тексту для пошуку: його сторінки — зображення."
+
+#: ../src/pb_pageview.cpp
+msgid "Found only in the margins, which this scale leaves out. The scale \"Whole page\" shows them."
+msgstr "Знайдено лише на полях, яких цей масштаб не показує. Їх показує масштаб «Уся сторінка»."
 
 #: ../src/settings.cpp
 msgid "Contents: levels closed"

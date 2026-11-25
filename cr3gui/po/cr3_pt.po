@@ -1359,10 +1359,6 @@ msgstr ""
 msgid "Gray buffer depth (needs restart)"
 msgstr ""
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr ""
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr ""
@@ -1901,10 +1897,6 @@ msgstr ""
 
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
-msgstr ""
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
 msgstr ""
 
 #: ../src/cr3pocketbook.cpp:5848

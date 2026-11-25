@@ -121,8 +121,7 @@ int fw_minor;
 int touchPointing;
 std::clock_t last_drawTemporaryZoom;
 
-void setCustomSystemTheme();
-void removeCustomSystemTheme();
+void pbDropCustomSystemTheme();
 
 static const char *def_menutext[9] = {
     "@Goto_page", "@Exit", "@Search",
@@ -974,6 +973,7 @@ public:
     void updateCache();
 #endif
     void preparePage();
+    void clockTick();
 };
 
 CRPocketBookWindowManager * CRPocketBookWindowManager::instance = NULL;
@@ -1488,6 +1488,145 @@ void CRPocketBookWindowManager::preparePage()
                     (int)((perfT0 - pbPageShownAt) / 1000), pbPagePrepareDelay);
 }
 
+// The clock of the status line while a page is read without input. A page went to the screen
+// with the time of that moment and kept it until the next page turn: a page read for ten minutes
+// showed a time ten minutes old (testers). The status line is now drawn again when the minute
+// changes:
+//  - A hard timer, set for the start of the next minute. A weak one waits for the next event
+//    while the device sleeps between the events, which it does with a page on the screen.
+//  - The window on the screen is drawn again. The engine draws the page of a book anew because
+//    its clock is another one (LVDocView::getPageImage, the stamp of the header); the pages of a
+//    PDF or a DjVu draw their status line at every drawing. Only the rows that changed go to the
+//    screen, by a partial update that is not counted towards the full one
+//    (CRPocketBookScreen::update). The page is not taken as shown again (statistics, the page
+//    prepared ahead).
+//  - Nothing is drawn and the timer is not set again in the standby mode, in the background,
+//    while the device is locked (get_keylock of the firmware, looked up at run time: a firmware
+//    without it must still start the program) and PB_CLOCK_IDLE_MIN minutes after the last
+//    input: a device left with a page open does not wake up every minute for hours. An input,
+//    or the return to the screen, sets the timer again.
+//  - With a window or the menu over the page, or while a command runs, nothing is drawn, and
+//    the timer goes on.
+// The original program had such an update for one day in March 2015 (statusUpdateThread: a weak
+// timer, the whole page laid out and drawn), then turned off as "not working fine".
+#define PB_CLOCK_IDLE_MIN 30
+static bool pbClockTick = false;      // the window is being drawn again for the clock alone
+static long long pbClockDue = 0;      // moment of pbPerfNow() the timer is set for; 0: not set
+static long long pbClockInputAt = 0;  // moment of the last input
+static void pbClockArm(bool input);
+
+// 1 the device is locked, 0 it is not, -1 the firmware does not tell
+static int pbKeyLocked()
+{
+    static int (*getKeylock)() = NULL;
+    static bool looked = false;
+    if (!looked) {
+        looked = true;
+        void * lib = dlopen("libinkview.so", RTLD_LAZY);
+        if (lib != NULL)
+            *(void **)(&getKeylock) = dlsym(lib, "get_keylock");
+    }
+    return getKeylock == NULL ? -1 : (getKeylock() != 0 ? 1 : 0);
+}
+
+// True when the status line of the settings has a clock
+static bool pbClockWanted()
+{
+    if (main_win == NULL)
+        return false;
+    CRPropRef props = main_win->getProps();
+    return props->getIntDef(PROP_STATUS_LINE, 0) != 0 && props->getBoolDef(PROP_SHOW_TIME, false);
+}
+
+// The window whose status line shows the clock now: the page of the book or the pages of a PDF
+// or a DjVu, with nothing over it; NULL otherwise
+static CRGUIWindow * pbClockWindow()
+{
+    if (main_win == NULL || CRPocketBookWindowManager::instance == NULL || isTouchMenuVisible)
+        return NULL;
+    CRGUIWindow * top = CRPocketBookWindowManager::instance->getTopVisibleWindow();
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL && top == PbPageWindow::instance)
+        return PbPageWindow::instance->showsClock() ? top : NULL;
+#endif
+    LVDocView * view = main_win->getDocView();
+    if (top == main_win && view->getPageheaderPosition() != 0 && (view->getPageHeaderInfo() & PGHDR_CLOCK) != 0)
+        return top;
+    return NULL;
+}
+
+static void pbClockTimer()
+{
+    pbClockDue = 0;
+    if (!exiting && CRPocketBookWindowManager::instance != NULL)
+        CRPocketBookWindowManager::instance->clockTick();
+}
+
+// Sets the timer for the start of the next minute, unless it is set. input: the reader has
+// touched the device or the program has come to the screen; the minutes are counted from now.
+static void pbClockArm(bool input)
+{
+    long long now = pbPerfNow();
+    if (input)
+        pbClockInputAt = now;
+    // a timer five seconds late is taken for lost
+    if (pbClockDue != 0 && now >= pbClockDue - 61000000LL && now < pbClockDue + 5000000LL)
+        return;
+    pbClockDue = 0;
+    if (exiting || isStandByMode || pbBackgroundAt != 0 || !pbClockWanted())
+        return;
+    // the seconds of the minute are the same in every time zone
+    int ms = 60200 - (int)((now / 1000) % 60000);
+    pbClockDue = now + (long long)ms * 1000;
+    SetHardTimer(const_cast<char *>("ClockMinute"), pbClockTimer, ms);
+}
+
+static void pbClockCancel()
+{
+    if (pbClockDue != 0) {
+        pbClockDue = 0;
+        ClearTimer(pbClockTimer);
+    }
+}
+
+void CRPocketBookWindowManager::clockTick()
+{
+    long long now = pbPerfNow();
+    int locked = pbKeyLocked();
+    bool again = false;
+    const char * state = "drawn";
+    if (isStandByMode)
+        state = "not drawn: standby";
+    else if (pbBackgroundAt != 0)
+        state = "not drawn: the program is in the background";
+    else if (locked == 1)
+        state = "not drawn: the device is locked";
+    else if (now - pbClockInputAt > (long long)PB_CLOCK_IDLE_MIN * 60000000LL)
+        state = "not drawn: no input for a long time";
+    else if (!pbClockWanted())
+        state = "not drawn: the status line has no clock";
+    else {
+        again = true;
+        CRGUIWindow * window = pbClockWindow();
+        if (m_incommand || !_events.empty())
+            state = "not drawn: a command runs or events wait";
+        else if (window == NULL)
+            state = "not drawn: a window or the menu is over the page";
+        else {
+            window->setDirty();
+            pbClockTick = true;
+            update(false);
+            pbClockTick = false;
+        }
+    }
+    if (pbPerfOn())
+        CRLog::info("clock: the minute has changed, the status line %s; key lock of the firmware %d, %d s after the "
+                    "last input, %.1f ms; the timer is %s", state, locked, (int)((now - pbClockInputAt) / 1000000),
+                    PB_PERF_MS(pbPerfNow() - now), again ? "set for the next minute" : "not set again");
+    if (again)
+        pbClockArm(false);
+}
+
 // Reading statistics of the page just drawn. Counted when the page has gone to the screen, at
 // every exit of CRPocketBookScreen::flush(): the word count and the write to the log do not
 // delay the page. The pause before the next page is drawn ahead starts here too.
@@ -1498,6 +1637,9 @@ struct PbStatsAfterFlush {
         if (!pbStatsPagePending)
             return;
         pbStatsPagePending = false;
+        // the same page with another minute in its status line: not shown again
+        if (pbClockTick)
+            return;
         long long perfT0 = pbPerfNow();
         if (main_win != NULL)
             PbStatsView::pageShown(main_win->getDocView());
@@ -1589,6 +1731,19 @@ void CRPocketBookScreen::update( const lvRect & rc2, bool full )
     lvRect rc = rc2;
     rc.left &= ~3;
     rc.right = (rc.right + 3) & ~3;
+
+    // The minute of the clock (pbClockTick): the rows of the status line alone, by a partial
+    // update that is not counted towards the full one. Rows of more than a quarter of the
+    // screen are not a status line: they go the usual way.
+    if (pbClockTick && !full && rc.height() <= _front->GetHeight() / 4) {
+        draw(0, rc.top, _front->GetWidth(), rc.height());
+        if (forcePartialBwUpdates)
+            PartialUpdateBW(0, rc.top, _front->GetWidth(), rc.height());
+        else
+            PartialUpdate(0, rc.top, _front->GetWidth(), rc.height());
+        pbPerf.mode = forcePartialBwUpdates ? "PartialUpdateBW" : "PartialUpdate";
+        return;
+    }
 
     if( forcePartialUpdates )
         full = false;
@@ -1724,8 +1879,8 @@ static bool tmPages()
 }
 
 /// The icon of a place of the top row. Over the pages of a PDF or DjVu the search gives its place
-/// to the list of the view of a page (scale, leafing, the frame): there is no text to search in
-/// pictures, and a file with text is read as a book, which has the search.
+/// to the list of the view of a page (scale, leafing, the frame). The search in the text of the
+/// pages is the first row of that list (PbPageWindow::showMenu) and an item of the main menu.
 static const char * tmIcon(int i)
 {
     if (tmPages() && strcmp(touchMenuIcons[i], "search") == 0)
@@ -4771,6 +4926,11 @@ void pbShowDictOverPages(bool atPoint, int x, int y)
     if (CRPocketBookDocView::instance != NULL && PbPageWindow::instance != NULL)
         CRPocketBookDocView::instance->showDictOverPages(PbPageWindow::instance, atPoint, x, y);
 }
+
+lString32 pbSearchTyped()
+{
+    return Utf8ToUnicode(key_buffer);
+}
 #endif
 
 static int pbDictWindowPosition()
@@ -7094,34 +7254,6 @@ bool isBrowserScriptSupported() {
 }
 #endif
 
-lString32 lastClock;
-void startStatusUpdateThread(int ms);
-void statusUpdateThread() {
-    lString32 currentClock = main_win->getDocView()->getTimeString();
-    int ms = 1000;
-    if( currentClock != lastClock ) {
-
-        CRPocketBookWindowManager::instance->postCommand(DCMD_REFRESH_PAGE, 0);
-        main_win->getDocView()->requestRender();
-        main_win->getDocView()->checkRender();
-
-        bool save = forcePartialUpdates;
-        forcePartialUpdates = true;
-        CRPocketBookWindowManager::instance->update(true);
-        forcePartialUpdates = save;
-
-        lastClock = currentClock;
-        ms = 60000;
-    }
-    startStatusUpdateThread(ms);
-}
-void startStatusUpdateThread(int ms) {
-    SetWeakTimer(const_cast<char *>("statusUpdateThread"), statusUpdateThread, ms);
-}
-void stopSatusUpdateThread() {
-    ClearTimer(statusUpdateThread);
-}
-
 void pbLaunchWaitBinary(const char *binary, const char *param1, const char *param2, const char *param3) {
     pid_t cpid;
     pid_t child_pid;
@@ -7938,6 +8070,7 @@ void enterStandByMode() {
     // the page is not read while the device is in standby
     PbStatsView::flush();
     pbPagePrepareCancel();
+    pbClockCancel();
 
     #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
 
@@ -7995,6 +8128,7 @@ void exitStandByMode() {
 
     isStandByMode = false;
     restartStandByTimer();
+    pbClockArm(true);
 }
 void restartStandByTimer() {
 
@@ -8357,6 +8491,7 @@ int main_handler(int type, int par1, int par2)
     case EVT_KEYRELEASE:
         pbPagePrepareArm();
         pbCoverArm();
+        pbClockArm(true);
         break;
     case EVT_HIDE:
     case EVT_EXIT:
@@ -8366,6 +8501,7 @@ int main_handler(int type, int par1, int par2)
             pbBackgroundAt = pbPerfNow();
 #endif
         pbPagePrepareCancel();
+        pbClockCancel();
         break;
 #ifdef POCKETBOOK_PRO
     case EVT_FOREGROUND:
@@ -8376,6 +8512,7 @@ int main_handler(int type, int par1, int par2)
             pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
         pbBackgroundAt = 0;
         pbQuitForegrounded();
+        pbClockArm(true);
         break;
 #endif
     default:
@@ -8441,9 +8578,6 @@ int main_handler(int type, int par1, int par2)
                         lString8( CR_PB_BUILD_DATE )
                     ).c_str(), 4000);
                 iv_unlink(PB_FRESH_UPDATE_MARKER);
-                #ifdef POCKETBOOK_PRO_FW5
-                removeCustomSystemTheme();
-                #endif
             }
 
             #if defined(POCKETBOOK_PRO) && !defined(POCKETBOOK_PRO_PRO2)
@@ -8458,13 +8592,9 @@ int main_handler(int type, int par1, int par2)
             #endif
             long long perfUpdated = pbPerfNow();
 
-            // Set/Remove custom system theme
+            // The system theme an earlier version could put into the firmware is taken out
             #ifdef POCKETBOOK_PRO_FW5
-            CRPropRef props = CRPocketBookDocView::instance->getProps();
-            if( props->getIntDef(PROP_CUSTOM_SYSTEM_THEME, 0) == 0 )
-                removeCustomSystemTheme();
-            else
-                setCustomSystemTheme();
+            pbDropCustomSystemTheme();
             #endif
             long long perfTheme = pbPerfNow();
 
@@ -8494,6 +8624,7 @@ int main_handler(int type, int par1, int par2)
                             PB_PERF_MS(perfLock - perfTheme), PB_PERF_MS(pbPerfNow() - perfLock));
         }
         restartStandByTimer();
+        pbClockArm(true);
         break;
 #ifdef POCKETBOOK_PRO
     case EVT_BACKGROUND:
@@ -8777,137 +8908,51 @@ void exitApp() {
 
 #ifdef POCKETBOOK_PRO_FW5
 
-void setCustomSystemTheme() {
+// The versions up to 0.0.8-opds had the setting "Custom system theme". Turned on, it copied
+// LineCustom.pbt into the themes of the user (system/themes) and named it in the settings of the
+// firmware (global.cfg, "theme") in place of "Line". The file is a whole theme of the firmware
+// made in 2015 for PocketBook 626 (theme.device), the home screen laid out in points of a screen
+// 758 wide. A reader with a current firmware was reported left with its top panel only, and a restart
+// of the reader did not help: the name stays in global.cfg. The setting and the file are gone.
+// Here a reader where the theme was turned on gets "Line" back, the only theme the setting was
+// ever applied over, and the copies of the file are deleted, so that the firmware does not offer
+// the theme either.
+void pbDropCustomSystemTheme() {
 
-    CRLog::trace("setCustomSystemTheme()");
+    // the file of a package before 0.0.8.1-opds, left by an install over the old folder
+    if( access( USERDATA"/share/cr3/systemtheme/LineCustom.pbt", F_OK ) != -1 )
+        iv_unlink(USERDATA"/share/cr3/systemtheme/LineCustom.pbt");
+    rmdir(USERDATA"/share/cr3/systemtheme");
+
+    // the setting did nothing on a screen smaller than this
     if( max(ScreenWidth(), ScreenHeight()) < 1000 )
         return;
 
-    CRLog::trace("setCustomSystemTheme(): GetGlobalConfig");
+    if( access( USERTHEMESPATH"/LineCustom.pbt", F_OK ) != -1 )
+        iv_unlink(USERTHEMESPATH"/LineCustom.pbt");
+
     iconfig *gcfg = OpenConfig(const_cast<char *>(GLOBALCONFIGFILE), NULL);
-
-    CRLog::trace("setCustomSystemTheme(): ReadString");
-    const char *currentTheme = ReadString(gcfg, "theme", "Line");
-
-    CRLog::trace("setCustomSystemTheme(): if");
-    if( strcmp(currentTheme, "Line") == 0 ) {
-        bool ok = true;
-        CRLog::trace("setCustomSystemTheme(): if: access");
-        if( !(access( USERTHEMESPATH"/LineCustom.pbt", F_OK ) != -1) &&
-            access( USERDATA"/share/cr3/systemtheme/LineCustom.pbt", F_OK ) != -1 )
-        {
-            CRLog::trace("setCustomSystemTheme(): if: access: copy");
-            copy_file(
-                USERDATA"/share/cr3/systemtheme/LineCustom.pbt",
-                USERTHEMESPATH"/LineCustom.pbt"
-                );
-            CRLog::trace("setCustomSystemTheme(): if: access: ok?");
-            ok = access( USERTHEMESPATH"/LineCustom.pbt", F_OK ) != -1;
-        }
-        CRLog::trace("setCustomSystemTheme(): if: ok");
-        if( ok ) {
-            CRLog::trace("setCustomSystemTheme(): if: ok: WriteString");
-            WriteString(gcfg, "theme", "LineCustom");
-            CRLog::trace("setCustomSystemTheme(): if: ok: SaveConfig");
-            SaveConfig(gcfg);
-            CRLog::trace("setCustomSystemTheme(): if: ok: CloseConfig");
-            CloseConfig(gcfg);
-            CRLog::trace("setCustomSystemTheme(): if: ok: NotifyConfigChanged");
-            NotifyConfigChanged();
-
-            CRLog::trace("setCustomSystemTheme(): if: ok: message");
-            Message(ICON_INFORMATION, const_cast<char*>("CR3"), _("Custom system theme applied. CR3 will now restart."), 3000);
-
-            // Mark the required restart
-            CRLog::trace("setCustomSystemTheme(): if: ok: mark restart");
-            FILE *marker;
-            char buffer[2] = "x";
-            marker = fopen(OTA_RESTART_MARK, "wb");
-            fwrite(buffer, 1, 1, marker);
-            fclose(marker);
-
-            // Show hour glass
-            CRLog::trace("setCustomSystemTheme(): if: ok: hourglass");
-            #ifdef POCKETBOOK_PRO_FW5
-            ShowPureHourglassForce();
-            #elif !defined(POCKETBOOK_PRO_PRO2)
-            ShowHourglassForce();
-            #endif
-            CRLog::trace("setCustomSystemTheme(): if: ok: PartialUpdate");
-            PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
-
-            // Exit
-            CRLog::trace("setCustomSystemTheme(): if: ok: exitApp");
-            exitApp();
-        }
-    }
-    else {
-        CRLog::trace("setCustomSystemTheme(): else: CloseConfigNoSave");
+    if( strcmp(ReadString(gcfg, "theme", "Line"), "LineCustom") != 0 ) {
         CloseConfigNoSave(gcfg);
-    }
-    CRLog::trace("setCustomSystemTheme(): done");
-}
-
-void removeCustomSystemTheme() {
-
-    CRLog::trace("removeCustomSystemTheme()");
-    if( max(ScreenWidth(), ScreenHeight()) < 1000 )
         return;
+    }
+    CRLog::info("The system theme LineCustom of an earlier version is replaced by Line");
+    WriteString(gcfg, "theme", "Line");
+    SaveConfig(gcfg);
+    CloseConfig(gcfg);
+    NotifyConfigChanged();
 
-    CRLog::trace("removeCustomSystemTheme(): GetGlobalConfig");
-    iconfig *gcfg = OpenConfig(const_cast<char *>(GLOBALCONFIGFILE), NULL);
+    Message(ICON_INFORMATION, const_cast<char*>("CR3"), _("Restored default system theme. CR3 will now restart."), 3000);
 
-    CRLog::trace("removeCustomSystemTheme(): ReadString");
-    const char *currentTheme = ReadString(gcfg, "theme", "Line");
-
-    CRLog::trace("removeCustomSystemTheme(): if");
-    if( strcmp(currentTheme, "LineCustom") == 0 ) {
-
-        CRLog::trace("removeCustomSystemTheme(): if: access");
-        if( access( USERTHEMESPATH"/LineCustom.pbt", F_OK ) != -1 ) {
-            CRLog::trace("removeCustomSystemTheme(): if: access: unlink");
-            iv_unlink(USERTHEMESPATH"/LineCustom.pbt");
-        }
-
-        CRLog::trace("removeCustomSystemTheme(): if: ok: WriteString");
-        WriteString(gcfg, "theme", "Line");
-        CRLog::trace("removeCustomSystemTheme(): if: ok: SaveConfig");
-        SaveConfig(gcfg);
-        CRLog::trace("removeCustomSystemTheme(): if: ok: CloseConfig");
-        CloseConfig(gcfg);
-        CRLog::trace("removeCustomSystemTheme(): if: ok: NotifyConfigChanged");
-        NotifyConfigChanged();
-
-        CRLog::trace("removeCustomSystemTheme(): if: ok: message");
-        Message(ICON_INFORMATION, const_cast<char*>("CR3"), _("Restored default system theme. CR3 will now restart."), 3000);
-
-        // Mark the required restart
-        CRLog::trace("removeCustomSystemTheme(): if: ok: mark restart");
-        FILE *marker;
-        char buffer[2] = "x";
-        marker = fopen(OTA_RESTART_MARK, "wb");
-        fwrite(buffer, 1, 1, marker);
+    // the program is started again by its launcher: it drew with the theme taken out
+    FILE *marker = fopen(OTA_RESTART_MARK, "wb");
+    if( marker != NULL ) {
+        fwrite("x", 1, 1, marker);
         fclose(marker);
-
-        // Show hour glass
-        CRLog::trace("removeCustomSystemTheme(): if: ok: hourglass");
-        #ifdef POCKETBOOK_PRO_FW5
-        ShowPureHourglassForce();
-        #elif !defined(POCKETBOOK_PRO_PRO2)
-        ShowHourglassForce();
-        #endif
-        CRLog::trace("removeCustomSystemTheme(): if: ok: PartialUpdate");
-        PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
-
-        // Exit
-        CRLog::trace("removeCustomSystemTheme(): if: ok: exitApp");
-        exitApp();
     }
-    else {
-        CRLog::trace("removeCustomSystemTheme(): else: CloseConfigNoSave");
-        CloseConfigNoSave(gcfg);
-    }
-    CRLog::trace("removeCustomSystemTheme(): done");
+    ShowPureHourglassForce();
+    PartialUpdate(0, 0, ScreenWidth(), ScreenHeight());
+    exitApp();
 }
 
 #endif

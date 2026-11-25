@@ -1372,10 +1372,6 @@ msgstr "Mod actualizare turbo"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Adâncime buffer gri (necesită restart)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Temă custom (necesită restart)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Folosește noul meniu pentru cuprins"
@@ -1923,10 +1919,6 @@ msgstr "Actualizat la v"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Fără titlu"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Temă custom aplicată. CR3 se va restarta."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

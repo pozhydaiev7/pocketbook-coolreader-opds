@@ -1373,10 +1373,6 @@ msgstr "Gyors frissítési mód"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Szürke puffermérete (újraindítás szükséges)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Egyéni rendszertéma (újraindítás szükséges)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Új TOC menü használata"
@@ -1925,10 +1921,6 @@ msgstr "Frissítve erre: v"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Névtelen"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Az egyedi rendszertéma alkalmazásra került. A CR3 most újraindul."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

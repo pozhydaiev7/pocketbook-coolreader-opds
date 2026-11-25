@@ -690,14 +690,31 @@ public:
     }
     virtual void words(int page, std::vector<PbPageWord> & out) {
         out.clear();
-        if (!loadList(page))
+        if (page < 0 || page >= _count)
             return;
+        // The commands of the page when they are kept (the page on the screen, the one prepared
+        // ahead). Any other page is read beside them and let go: the search goes through the
+        // whole file, and the two kept pages with their decoded pictures stay as they are.
+        fz_display_list * list = NULL;
+        for (int i = 0; i < 2; i++)
+            if (_slots[i].page == page)
+                list = _slots[i].list;
         fz_stext_page * text = NULL;
+        fz_page * p = NULL;
         fz_var(text);
+        fz_var(p);
         fz_try(_ctx) {
             fz_stext_options options;
             memset(&options, 0, sizeof(options));
-            text = fz_new_stext_page_from_display_list(_ctx, _cur->list, &options);
+            if (list != NULL)
+                text = fz_new_stext_page_from_display_list(_ctx, list, &options);
+            else {
+                p = fz_load_page(_ctx, _doc, page);
+                const fz_rect bound = fz_bound_page(_ctx, p);
+                _origins[page].x = bound.x0;
+                _origins[page].y = bound.y0;
+                text = fz_new_stext_page_from_page(_ctx, p, &options);
+            }
             const float ox = _origins[page].x, oy = _origins[page].y;
             for (fz_stext_block * b = text->first_block; b; b = b->next) {
                 if (b->type != FZ_STEXT_BLOCK_TEXT)
@@ -727,6 +744,7 @@ public:
         }
         fz_always(_ctx) {
             fz_drop_stext_page(_ctx, text);
+            fz_drop_page(_ctx, p);
         }
         fz_catch(_ctx) {
             out.clear();

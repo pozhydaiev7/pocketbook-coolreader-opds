@@ -1369,10 +1369,6 @@ msgstr "Turbouuendusrežiim"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Halli värvi puhvrisügavus (vajab restarti)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Kohandatud süsteemiteema (vajab restarti)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Kasuta uut TOC menüüd"
@@ -1920,10 +1916,6 @@ msgstr "Uuendatud versioonini v"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Pealkirjata"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Kohandatud süsteemiteema jõustatud. CR3 teeb nüüd restardi."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

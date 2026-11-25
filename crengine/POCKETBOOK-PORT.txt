@@ -80,3 +80,9 @@ Settings/history save failures now produce a warning once per failure episode;
 a successful retry resets it. Atomic writes and backup retention remain intact.
 The unsupported legacy font.embolding slider is removed from the UI; the saved
 key is retained for rollback, and the supported Normal/Bold control remains.
+
+A pointer step keeps a '.' inside an element name (ParseXPathStep): bad HTML
+opens elements such as <a.b>, and positions inside them were not read back.
+A last position whose pointer is not one of the document is taken by the
+percent kept with it in the history (CRFileHist::restorePosition,
+LVDocView::_posPercent, checkPos) instead of the beginning of the book.

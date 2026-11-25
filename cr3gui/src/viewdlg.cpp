@@ -24,6 +24,7 @@
 #include "tocdlg.h"
 #include <cri18n.h>
 #include "selnavig.h"
+#include "pb_findpage.h"
 
 #ifdef CR_POCKETBOOK
 #include "cr3pocketbook.h"
@@ -342,15 +343,14 @@ int CRViewDialog::findPagesText( lString32 pattern, int origin, int direction )
 	}
 	LVArray<ldomWord> words;
 	for (int i = start; i != end; i += direction) {
-		LVRef<ldomXRange> range = _docview->getPageDocumentRange( i );
-		if (!range.isNull()) {
-			if (range->findText(pattern, true, false, words, 200, _docview->getPageHeight(i), true)) {
-				CRLog::debug("CRViewDialog::findPagesText: pattern found");
-				_docview->clearSelection();
-				_docview->goToPage(i);
-				_docview->selectWords( words );
-				return i;
-			}
+		// the places on the page itself (pb_findpage.h): a paragraph that goes on to the next
+		// page gave its places there too, and the search stopped on a page with nothing to show
+		if (pbFindOnPage(_docview, i, pattern, words)) {
+			CRLog::debug("CRViewDialog::findPagesText: pattern found");
+			_docview->clearSelection();
+			_docview->goToPage(i);
+			_docview->selectWords( words );
+			return i;
 		}
 	}
     CRLog::debug("CRViewDialog::findPagesText: pattern not found");

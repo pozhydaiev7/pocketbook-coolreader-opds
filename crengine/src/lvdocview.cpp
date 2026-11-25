@@ -196,7 +196,7 @@ static int def_font_sizes[] = { 18, 20, 22, 24, 29, 33, 39, 44 };
 
 LVDocView::LVDocView(int bitsPerPixel, bool noDefaultDocument) :
 	m_bitsPerPixel(bitsPerPixel), m_dx(400), m_dy(200), _pos(0), _page(0),
-			_posIsSet(false), m_battery_state(CR_BATTERY_STATE_NO_BATTERY),
+			_posIsSet(false), _posPercent(-1), m_battery_state(CR_BATTERY_STATE_NO_BATTERY),
 			m_battery_charging_conn(CR_BATTERY_CHARGER_NO),
 			m_battery_charge_level(0)
 #if (LBOOK==1)
@@ -693,10 +693,21 @@ void LVDocView::checkPos() {
 	_posIsSet = true;
 	LVLock lock(getMutex());
 	if (_posBookmark.isNull()) {
+		// No pointer: the beginning of the book, or the place a kept position tells by its percent
+		// when its pointer was not read back (restorePosition). The percent was cut down when it was
+		// kept, so the next one is taken: it stays on the same page of a book of under 10000 pages.
+		int y = 0;
+		if (_posPercent >= 0 && m_doc) {
+			int h = m_doc->getFullHeight();
+			y = (int)((lInt64)h * (_posPercent + 1) / 10000);
+			if (y >= h)
+				y = h > 0 ? h - 1 : 0;
+		}
+		_posPercent = -1;
 		if (isPageMode()) {
-			goToPage(0);
+			goToPage(y > 0 ? m_pages.FindNearestPage(y, 0) : 0);
 		} else {
-			SetPos(0, false);
+			SetPos(y, false);
 		}
 	} else {
 		if (isPageMode()) {
@@ -4240,7 +4251,17 @@ void LVDocView::restorePosition() {
 #endif
 //    CRLog::debug("m_hist.restorePosition(%s, %d)", LCSTR(fn),
 //			m_filesize);
-    ldomXPointer pos = m_hist.restorePosition(m_doc, fn, m_filesize);
+    int lostPercent = -1;
+    ldomXPointer pos = m_hist.restorePosition(m_doc, fn, m_filesize, &lostPercent);
+    _posPercent = -1;
+	if (pos.isNull() && lostPercent >= 0) {
+		// the place is taken by its percent at the first use of the position (checkPos)
+		CRLog::info("LVDocView::restorePosition() - the pointer of the last position is not one of this document, "
+				"the position is taken by its percent %d.%02d", lostPercent / 100, lostPercent % 100);
+		_posPercent = lostPercent;
+		_posBookmark = ldomXPointer();
+		_posIsSet = false;
+	} else
 	if (!pos.isNull()) {
 		//goToBookmark( pos );
 		CRLog::info("LVDocView::restorePosition() - last position is found");
@@ -5156,6 +5177,7 @@ void LVDocView::createEmptyDocument() {
 	_posIsSet = false;
 	m_swapDone = false;
 	_posBookmark = ldomXPointer();
+	_posPercent = -1;
 	//lUInt32 saveFlags = 0;
 
 	//m_doc ? m_doc->getDocFlags() : DOC_FLAG_DEFAULTS;
@@ -7029,7 +7051,6 @@ void LVDocView::propsUpdateDefaults(CRPropRef props) {
     props->setIntDef(PROP_CTRL_PAGE_TURN_SWIPES, 1);
     props->setIntDef(PROP_CTRL_FRONT_LIGHT_SWIPES, 2);
     props->setIntDef(PROP_CTRL_PINCH_ZOOM, 1);
-    props->setIntDef(PROP_CUSTOM_SYSTEM_THEME, 0);
     props->setIntDef(PROP_USE_NEW_TOUCH_TOC, 1);
     props->limitValueMinMax(PROP_FONT_TRACKING, -500, 500, 0);
 #else

@@ -214,8 +214,9 @@ public:
                 i++;
                 if (attrvalue[i]>='0' && attrvalue[i]<='9')
                     n2 = (attrvalue[i++]-'0')*10;
+                // added to the tens: "42.60%" used to be read as 42.00, "2.34%" as 2.04
                 if (attrvalue[i]>='0' && attrvalue[i]<='9')
-                    n2 = (attrvalue[i++]-'0');
+                    n2 += (attrvalue[i++]-'0');
             }
             _curr_bookmark->setPercent( n1*100 + n2 );
         } else if ( lStr_cmp(attrname, "timestamp")==0 && state==in_bm ) {
@@ -603,15 +604,24 @@ CRFileHistRecord * CRFileHist::savePosition( lString32 fpathname, size_t sz,
     return rec;
 }
 
-ldomXPointer CRFileHist::restorePosition( ldomDocument * doc, lString32 fpathname, size_t sz )
+ldomXPointer CRFileHist::restorePosition( ldomDocument * doc, lString32 fpathname, size_t sz, int * lostPercent )
 {
+    if ( lostPercent )
+        *lostPercent = -1;
     lString32 name;
     lString32 path;
     splitFName( fpathname, path, name );
     int index = findEntry( name, path, (lvsize_t)sz );
     if ( index>=0 ) {
         makeTop( index );
-        return doc->createXPointer( _records[0]->getLastPos()->getStartPos() );
+        CRBookmark * last = _records[0]->getLastPos();
+        ldomXPointer pos = doc->createXPointer( last->getStartPos() );
+        // The pointer is not one of this document: the book was laid out another way when it was
+        // kept (another version of the program builds another tree of a page of bad HTML), or the
+        // pointer cannot be read. The percent kept with it still tells the place.
+        if ( pos.isNull() && lostPercent && !last->getStartPos().empty() )
+            *lostPercent = last->getPercent();
+        return pos;
     }
     return ldomXPointer();
 }

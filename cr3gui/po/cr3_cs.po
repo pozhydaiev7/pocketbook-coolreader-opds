@@ -1375,10 +1375,6 @@ msgstr "Režim obnovení Turbo"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Hloubka bufferu šedé (vyžaduje restart)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Uživatelský motiv vzhledu (vyžaduje restart)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr ""
@@ -1926,10 +1922,6 @@ msgstr "Aktualizováno na"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Neoznačený"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Byl nastaven uživatelský motiv vzhledu. CR3 se nyní restartuje."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

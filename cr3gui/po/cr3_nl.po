@@ -1371,10 +1371,6 @@ msgstr "Turbomodus voor verversing"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Grijsbufferdiepte (vereist herstart)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Aangepast systeemthema (vereist herstart)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Nieuwe inhoudsopgave gebruiken"
@@ -1923,10 +1919,6 @@ msgstr "Bijgewerkt naar v"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Zonder titel"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Aangepast systeemthema ingesteld. CR3 wordt nu opnieuw gestart."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

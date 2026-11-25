@@ -8837,6 +8837,22 @@ bool img_scaling_options_t::update( CRPropRef props, int fontSize )
     return updated;
 }
 
+// True when the '.' at s begins the point of a pointer: ".12" at its very end. Any other '.' is a
+// part of the name of an element. The HTML parser takes "<a.b>" for a tag (isValidIdentChar has
+// the '.'), toString() writes the name as it is, "/html/body/pre/a.b/text()[15].4999", and the
+// name used to be cut at its '.': the pointer was not read back, so the reading position, the
+// bookmarks and the citations of everything inside such an element were lost. A page of Lib.ru
+// with the text in <pre> has such "tags" in the text itself, never closed, so the rest of the
+// book lies inside them.
+static bool isXPathPointDot( const lChar32 * s )
+{
+    if ( *s != '.' || s[1] < '0' || s[1] > '9' )
+        return false;
+    for ( s++; *s >= '0' && *s <= '9'; s++ )
+        ;
+    return *s == 0;
+}
+
 xpath_step_t ParseXPathStep( const lChar32 * &path, lString32 & name, int & index )
 {
     int pos = 0;
@@ -8870,7 +8886,8 @@ xpath_step_t ParseXPathStep( const lChar32 * &path, lString32 & name, int & inde
             path += pos;
             return (flgPrefix==2) ? xpath_step_point : xpath_step_nodeindex;
         }
-        while (s[pos] && s[pos]!='[' && s[pos]!='/' && s[pos]!='.')
+        // a '.' of the name itself is not the end of the name (isXPathPointDot)
+        while (s[pos] && s[pos]!='[' && s[pos]!='/' && (s[pos]!='.' || !isXPathPointDot(s+pos)))
             pos++;
         if (pos==nstart)
             return xpath_step_error;

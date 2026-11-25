@@ -20,6 +20,7 @@
 #include "mainwnd.h"
 #include "pb_toc.h"
 #include "pb_pageview.h"
+#include "pb_pdfbook_place.h"
 #include "pb_pdftext.h"
 #include "pb_djvutext.h"
 #include "pb_kosync.h"
@@ -41,6 +42,8 @@ double nowMs()
 lString32 openBook;     // its path
 lString32 openSource;   // the file of the reader it is made of (the archive, when the PDF lies in one)
 int openPages = 0;
+// the page of the file the screen of the book stands on, and its way to a page
+PbBookPlace openPlace;
 
 /// The name of the kept book of the document file `file`, which the reader knows as `path`.
 lString8 bookOf(const lString8 & file, const lString32 & path, bool djvu)
@@ -200,6 +203,7 @@ void setOpen(const lString8 & book, const lString32 & path)
 {
     openBook = Utf8ToUnicode(book);
     openSource = path;
+    openPlace.reset();
     lString32 source;
     openPages = 0;
     readSource(book, source, openPages);
@@ -256,39 +260,14 @@ bool pbPdfBookGoPage(int page)
 {
     if (!pbPdfBookIsOpen())
         return false;
-    // the first element of the page carries the id "pgN"; a page with nothing on it has none,
-    // and the next one that has is taken
-    LVDocView * view = main_win->getDocView();
-    ldomDocument * doc = view->getDocument();
-    for (int n = page + 1; doc != NULL && n <= openPages; n++) {
-        const lString32 id = lString32("pg") + lString32::itoa(n);
-        if (doc->getElementById(id.c_str()) != NULL) {
-            view->goLink(lString32("#") + id, false);
-            return true;
-        }
-    }
-    return false;
+    return openPlace.goPage(main_win->getDocView(), page, openPages);
 }
 
 bool pbPdfBookPlace(lString32 & source, int & page, int & pages)
 {
     if (!pbPdfBookIsOpen())
         return false;
-    LVDocView * view = main_win->getDocView();
-    ldomDocument * doc = view->getDocument();
-    // the last page of the file whose first element stands at or above the top of the screen
-    const int top = view->GetPos();
-    page = 0;
-    for (int n = 1; doc != NULL && n <= openPages; n++) {
-        ldomNode * node = doc->getElementById((lString32("pg") + lString32::itoa(n)).c_str());
-        if (node == NULL)
-            continue;
-        lvRect rc;
-        node->getAbsRect(rc);
-        if (rc.top > top + 2)
-            break;
-        page = n - 1;
-    }
+    page = openPlace.pageOf(main_win->getDocView(), openPages);
     source = openSource;
     pages = openPages;
     return pages > 0;

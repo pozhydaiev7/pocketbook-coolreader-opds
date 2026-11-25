@@ -153,5 +153,4 @@
 #define PROP_CTRL_PAGE_TURN_SWIPES "window.swipes.pageturn"
 #define PROP_CTRL_FRONT_LIGHT_SWIPES "window.swipes.frontlight"
 #define PROP_CTRL_PINCH_ZOOM "window.pinch.zoom"
-#define PROP_CUSTOM_SYSTEM_THEME "pocketbook.system.custom_theme"
 #define PROP_USE_NEW_TOUCH_TOC "pocketbook.toc.use_new_touch_toc"

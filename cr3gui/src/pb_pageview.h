@@ -58,6 +58,9 @@ enum PbPageWindowCommands {
 /// The dictionary of the reader over the pages (cr3pocketbook.cpp): the word at the point of the
 /// screen (atPoint), or the first word of the screen; on a page without text the word is typed.
 void pbShowDictOverPages(bool atPoint, int x, int y);
+/// What was typed on the keyboard of the search (cr3pocketbook.cpp): MCMD_SEARCH opens it, as over
+/// a book, and MCMD_SEARCH_FINDFIRST comes when it is closed.
+lString32 pbSearchTyped();
 
 /// What the reader chose for a file that can be read both ways (a PDF with text).
 enum PbPageMode {
@@ -95,6 +98,13 @@ public:
     const lString32 & path() const { return _path; }
     /// Writes the page, the frames and the bookmarks of the file (the program goes to the background or ends).
     void keep() { saveState(); }
+    /// True when the window has a status line with a clock in it: it is drawn again when the
+    /// minute changes (pbClockTimer, cr3pocketbook.cpp).
+    bool showsClock() const
+    {
+        return _head != NULL && _pageRc.height() + _findPanel < _rect.height() && _head->getPageheaderPosition() != 0
+               && (_head->getPageHeaderInfo() & PGHDR_CLOCK) != 0;
+    }
     // What the touch menu of the reader and the status line show of the file, as of a book:
     /// True when the page shown has a bookmark.
     bool isMarked() const;
@@ -189,6 +199,59 @@ private:
     int _word;              // the word chosen, -1 for none
     /// The words of the screen as it is now (made again when the place has changed).
     void collectWords();
+    /// A part of a page on the screen: one frame, or in the ribbon the rows of a strip.
+    struct ScreenPart {
+        int page;
+        lvRect rc;          // on the screen
+        PbPageView view;    // the frame the part is drawn by, in a buffer of the size of rc
+    };
+    void screenParts(std::vector<ScreenPart> & parts);
+    /// Where a rectangle of the page of the part lies on the screen; false when it is not seen there.
+    static bool boxOnPart(const ScreenPart & part, const PbPageBox & box, lvRect & rc);
+
+    // The search in the text of the pages (pb_pagesearch.h): a PDF with text, a DjVu with a text
+    // layer. The places found are shown inverted on every screen while the search lasts, and a
+    // panel under the page goes to the next and to the previous screen that has one.
+    lString32 _find;        // what is looked for, as it is compared; empty: no search
+    lString32 _findTyped;   // as it was typed, for the panel
+    std::vector<signed char> _findKnown;    // by page: 0 not looked at, 1 nothing there, 2 has places
+    struct FoundPage {
+        int page;
+        unsigned used;
+        std::vector<PbPageBox> boxes;
+        FoundPage() : page(-1), used(0) { }
+    };
+    FoundPage _found[4];    // the pages looked at last, with their places
+    unsigned _foundTurn;
+    bool _findSawText;      // a page looked at had text
+    bool _findHidden;       // a place was found in a part of a page the scale does not show
+    int _findLooked;        // pages looked at
+    double _findStarted, _findShown;    // of the pass through the file: for its progress bar
+    int _findPanel;         // the height of the panel under the page part, 0 without a search
+    bool _findPressed;      // the finger went down on the panel
+    bool searching() const { return !_find.empty(); }
+    int searchPanelHeight() const;
+    /// MCMD_SEARCH_FINDFIRST: looks for what was typed, from the screen shown on.
+    void searchStart(const lString32 & typed);
+    void searchEnd();
+    /// To the next (1) or the previous (-1) screen that has a place; round the end of the file.
+    void searchMove(int direction);
+    /// The places of a page (page units); kept for the pages looked at last.
+    const std::vector<PbPageBox> & foundOn(int page);
+    /// Where the search stands on a page: its frames that have a place, or in the ribbon the rows
+    /// of its strip the places lie at; in their order.
+    void searchStops(int page, std::vector<int> & stops);
+    /// The stops as the walk of the search asks for them (PbPageSearchWalk).
+    struct StopsOf;
+    friend struct StopsOf;
+    /// The place right after the screen shown: the next frame, or in the ribbon the page and the
+    /// row of its strip right under the screen.
+    void screenEnd(int & page, int & pos);
+    void searchGo(int page, int pos, int direction);
+    void searchButtons(std::vector<lvRect> & rects);
+    void drawFound(LVDrawBuf * canvas);
+    void drawSearchPanel(LVDrawBuf * canvas);
+    bool searchTouch(int x, int y, CRGUITouchEventType evType);
 
     PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lString32 & path, const lString8 & stateFile);
     void loadState();

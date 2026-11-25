@@ -1374,10 +1374,6 @@ msgstr "Турбо режим"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Дълбочина на буфера за сивия цвят (изисква рестартиране)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Потребителска тема на системата (изисква рестартиране)"
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Използване на новото меню за съдържанието"
@@ -1925,10 +1921,6 @@ msgstr "Обновено до версия"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Неозаглавено"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Потребителската тема е приложена. Програмата ще се рестартира."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

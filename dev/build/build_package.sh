@@ -59,6 +59,13 @@ if [ -f "$TREE/cr3gui/src/pb_pagedoc.cpp" ] && [ -f "$PBDEV/pdfdjvu/arm/lib/libm
     PAGEDOC="-D PDFDJVU_DIR=$PBDEV/pdfdjvu"
     echo "PDF and DjVu: with the libraries of $PBDEV/pdfdjvu/arm/lib"
 fi
+# A build folder configured without them is made anew: cmake keeps its first configuration, and
+# the tree "master", configured before the line had PDF and DjVu, gave a package without them
+# (0.0.8.1-opds-alpha1, the program half its size, 0 errors).
+if [ -n "$PAGEDOC" ] && [ -f CMakeCache.txt ] && ! grep -q '^PDFDJVU_DIR' CMakeCache.txt; then
+    echo "the build folder was configured without PDF and DjVu: made anew"
+    cd .. && rm -rf pbpro5 && mkdir -p pbpro5 && cd pbpro5 || exit 1
+fi
 if [ ! -f Makefile ]; then
     cmake $PAGEDOC \
         -D CMAKE_TOOLCHAIN_FILE="$TREE/tools/toolchain-arm-obreey-linux-gnueabi-pocketbook.cmake" \

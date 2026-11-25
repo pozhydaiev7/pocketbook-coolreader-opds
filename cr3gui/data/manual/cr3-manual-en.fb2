@@ -504,14 +504,6 @@
      <p>The number of gray shades of the page buffer.</p>
      <p><emphasis>Value:</emphasis> auto / 2 / 3 / 4 / 8 bits per pixel</p>
      <image l:href="#i_026.png"/>
-     <subtitle>Custom system theme (needs restart)</subtitle>
-     <p>A system theme that changes the look of PocketBook.</p>
-     <p><emphasis>Value:</emphasis> on / off</p>
-     <cite>
-      <p><strong>Attention!</strong></p>
-      <p>A theme that does not suit your device may break the interface.</p>
-     </cite>
-     <image l:href="#i_026.png"/>
      <subtitle>Use new TOC menu</subtitle>
      <p>Show the table of contents in the new style; otherwise show a plain list of chapters with indents and page numbers.</p>
      <p><emphasis>Value:</emphasis> on / off</p>

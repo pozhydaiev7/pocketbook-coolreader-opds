@@ -29,6 +29,7 @@
 #include "opdsmenu.h"
 #include "pb_pdfbook.h"
 #include "pb_kosync.h"
+#include "pb_pagesearch.h"
 #include "viewdlg.h"
 
 extern V3DocViewWin * main_win;
@@ -182,8 +183,8 @@ void pageChosen(int page)
         PbPageWindow::instance->getWindowManager()->postCommand(PB_PAGEVIEW_CMD_GOTO_APPLY, page);
 }
 
-/// The search and the citations work on the text of a book. A file with text is read as one
-/// ("View as a book"); the pages shown as they are, are pictures.
+/// The citations work on the text of a book. A file with text is read as one ("View as a book");
+/// the pages shown as they are, are pictures.
 void notInOriginal(int command)
 {
     (void)command;
@@ -329,7 +330,9 @@ PbPageWindow::PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lStri
       _scale(PB_PAGE_SCALE_PAGE), _leafing(PB_PAGE_LEAF_PAGE), _showNumber(true), _mode(PB_PAGE_MODE_AUTO),
       _direction(1), _stamp(1),
       _adjust(false), _adjAngle(0), _touchStarted(false), _head(NULL), _tocRead(false), _bookAngle(-1),
-      _wordsPage(-1), _wordsFrame(-1), _wordsStamp(0), _word(-1)
+      _wordsPage(-1), _wordsFrame(-1), _wordsStamp(0), _word(-1),
+      _foundTurn(0), _findSawText(false), _findHidden(false), _findLooked(0), _findStarted(0), _findShown(0), _findPanel(0),
+      _findPressed(false)
 {
     _angle[0] = _angle[1] = 0;
     _fullscreen = true;
@@ -490,7 +493,11 @@ void PbPageWindow::reactivated()
 void PbPageWindow::framesOfPage(int page, std::vector<PbPageView> & frames)
 {
     const int par = page & 1;
-    _doc->framesOf(page, _scale, _leafing, _angle[par], _own[par], _pageRc.width(), _pageRc.height(), frames);
+    // "Next page at once" shows the first frame of a page alone. While a search lasts the page
+    // has all its frames, so that a place found in a part of the page that frame leaves out can
+    // be shown; a page turn goes to the first frame of the next page as before.
+    const int leafing = _leafing == PB_PAGE_LEAF_PAGE && searching() ? PB_PAGE_LEAF_FRAMES : _leafing;
+    _doc->framesOf(page, _scale, leafing, _angle[par], _own[par], _pageRc.width(), _pageRc.height(), frames);
 }
 
 void PbPageWindow::drawShot(Shot & shot, int page, int frame)
@@ -775,11 +782,16 @@ void PbPageWindow::draw()
         LVGrayDrawBuf image(W, H, bpp, &_shown.pixels[0]);
         image.DrawTo(canvas, _pageRc.left, _pageRc.top, 0, NULL);
     }
+    // the places the search has found on this screen; the frame kept holds the page alone
+    if (searching() && !_adjust)
+        drawFound(canvas);
     // the status line: drawn when the page is shown, so its clock is the one of this moment;
     // the frame prepared ahead holds the page alone
     drawHead(canvas);
     if (_adjust)
         drawAdjustPanel(canvas);
+    else if (searching())
+        drawSearchPanel(canvas);
     else if (_showNumber)
         drawNumber(canvas);
     if (CRLog::isInfoEnabled()) {
@@ -1020,6 +1032,9 @@ bool PbPageWindow::onTouch(int x, int y, CRGUITouchEventType evType)
 {
     if (_adjust)
         return adjustTouch(x, y, evType);
+    // the panel of the search takes the taps on it; the page is leafed and tapped as always
+    if (searching() && searchTouch(x, y, evType))
+        return true;
     if (evType == CRTOUCH_DOWN) {
         _touchStart = lvPoint(x, y);
         _touchStarted = true;
@@ -1060,6 +1075,11 @@ bool PbPageWindow::onCommand(int command, int params)
         // the keys of the page turn and Back leave the frame as it was
         if (command == MCMD_CANCEL || command == MCMD_QUIT || command == PB_CMD_MAIN_MENU || command == PB_QUICK_MENU)
             adjustEnd(false);
+        return true;
+    }
+    if (searching() && (command == MCMD_CANCEL || command == MCMD_QUIT)) {
+        // Back ends the search first: the file stays open
+        searchEnd();
         return true;
     }
     if (command >= PB_TOC_SAFE_CMD_RANGE && command < PB_TOC_SAFE_CMD_RANGE + _doc->pageCount() + 1) {
@@ -1180,6 +1200,15 @@ bool PbPageWindow::onCommand(int command, int params)
         pbShowDictOverPages(false, 0, 0);
         return true;
     case MCMD_SEARCH:
+        // The search in the text of the pages (a tester hoped for it in a PDF and a DjVu with a
+        // text layer). The keyboard is the one of the search of a book, opened by the book window;
+        // what was typed comes here as MCMD_SEARCH_FINDFIRST, this window being the top one.
+        return main_win->onCommand(command, params);
+    case MCMD_SEARCH_FINDFIRST:
+        if (params)
+            searchStart(pbSearchTyped());
+        setDirty();
+        return true;
     case MCMD_CITE:
         notInOriginal(command);
         return true;
@@ -1264,7 +1293,6 @@ bool PbPageWindow::leavesOut(int command)
     switch (command) {
     case MCMD_GO_LINK:
     case MCMD_GO_LINK_APPLY:
-    case MCMD_SEARCH_FINDFIRST:
     case MCMD_DICT_VKEYBOARD:
     case MCMD_DICT_FIND:
     case MCMD_NEXT_MODE:
@@ -1276,8 +1304,7 @@ bool PbPageWindow::leavesOut(int command)
     case PB_CMD_BOOKMARK_REMOVE:
     case PB_CMD_STATUS_LINE:
     case PB_CMD_CLEAR_CACHE:
-    // the search and the citations of a book: there is no text on the screen to act on
-    case MCMD_SEARCH:
+    // the citations of a book: they are taken from its text
     case MCMD_CITE:
     case MCMD_CITES_LIST:
         return true;
@@ -1438,6 +1465,10 @@ void PbPageWindow::layout()
                 rc.bottom -= h;
         }
     }
+    // The panel of the search stands under the page, not over it: a place found in the last
+    // lines of a page is not hidden by it.
+    _findPanel = searching() ? searchPanelHeight() : 0;
+    rc.bottom -= _findPanel;
     const bool resized = rc.width() != _pageRc.width() || rc.height() != _pageRc.height();
     _pageRc = rc;
     if (resized) {
@@ -1448,13 +1479,13 @@ void PbPageWindow::layout()
 
 void PbPageWindow::drawHead(LVDrawBuf * canvas)
 {
-    if (_head == NULL || _pageRc.height() >= _rect.height())
+    if (_head == NULL || _pageRc.height() + _findPanel >= _rect.height())
         return;
     lvRect band = _rect;
     if (_pageRc.top > _rect.top)
         band.bottom = _pageRc.top;
     else
-        band.top = _pageRc.bottom;
+        band.top = _pageRc.bottom + _findPanel;
     canvas->FillRect(band.left, band.top, band.right, band.bottom, 0xFFFFFF);
     int charge = 0;
     bool charging = false;
@@ -1514,6 +1545,9 @@ void PbPageWindow::showMenu()
     OpdsMenu * menu = new OpdsMenu(_wm, caption, rc, false);
     menu->setupRows(true);
     menu->setCloseCommand(PB_PAGEVIEW_CMD_CLOSE);
+    // The search of the text of the pages. The touch menu has this list where a book has the
+    // icon of the search (cr3pocketbook.cpp, tmIcon), so the search is the first row of it.
+    menu->add(MCMD_SEARCH, tr("Search"), tr("In the text of the file: a PDF with text, a DjVu with a text layer"));
     menu->add(PB_PAGEVIEW_CMD_SCALE_LIST, tr("Scale") + U": " + tr(scaleName(_scale)));
     menu->add(PB_PAGEVIEW_CMD_LEAFING,
               tr("Leafing") + U": " + tr(_leafing == PB_PAGE_LEAF_FRAMES ? "By frames"
@@ -1573,21 +1607,10 @@ void PbPageWindow::showScaleList()
 // of a page goes to the screen by the frame of its part (PbPageDoc::toBuffer). A tester: "the
 // dictionaries with the text layer in the view of the original"; the layer of a PDF or a DjVu has
 // the place of every word on the page.
-void PbPageWindow::collectWords()
+void PbPageWindow::screenParts(std::vector<ScreenPart> & parts)
 {
-    if (_wordsPage == _page && _wordsFrame == _frame && _wordsStamp == _stamp)
-        return;
-    _words.clear();
-    _word = -1;
-    _wordsPage = _page;
-    _wordsFrame = _frame;
-    _wordsStamp = _stamp;
-    struct Part {
-        int page;
-        lvRect rc;          // on the screen
-        PbPageView view;    // the frame the part is drawn by, in a buffer of the size of rc
-    };
-    std::vector<Part> parts;
+    typedef ScreenPart Part;
+    parts.clear();
     const int H = _pageRc.height();
     if (_leafing == PB_PAGE_LEAF_RIBBON) {
         // as drawRibbon lays the strips out
@@ -1629,29 +1652,47 @@ void PbPageWindow::collectWords()
         part.view = frames[_frame >= 0 && _frame < (int)frames.size() ? _frame : 0];
         parts.push_back(part);
     }
+}
+
+bool PbPageWindow::boxOnPart(const ScreenPart & part, const PbPageBox & b, lvRect & rc)
+{
+    const int w = part.rc.width(), h = part.rc.height();
+    // the box of the four corners of the rectangle on the screen
+    float xs[4], ys[4];
+    PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y0, xs[0], ys[0]);
+    PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y0, xs[1], ys[1]);
+    PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y1, xs[2], ys[2]);
+    PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y1, xs[3], ys[3]);
+    float x0 = xs[0], x1 = xs[0], y0 = ys[0], y1 = ys[0];
+    for (int n = 1; n < 4; n++) {
+        x0 = xs[n] < x0 ? xs[n] : x0;
+        x1 = xs[n] > x1 ? xs[n] : x1;
+        y0 = ys[n] < y0 ? ys[n] : y0;
+        y1 = ys[n] > y1 ? ys[n] : y1;
+    }
+    rc = lvRect((int)x0 + part.rc.left, (int)y0 + part.rc.top, (int)x1 + 1 + part.rc.left, (int)y1 + 1 + part.rc.top);
+    // what is out of the part (the rest of the page off the screen) is not on the screen
+    return rc.intersect(part.rc) && rc.width() >= 2 && rc.height() >= 2;
+}
+
+void PbPageWindow::collectWords()
+{
+    if (_wordsPage == _page && _wordsFrame == _frame && _wordsStamp == _stamp)
+        return;
+    _words.clear();
+    _word = -1;
+    _wordsPage = _page;
+    _wordsFrame = _frame;
+    _wordsStamp = _stamp;
+    std::vector<ScreenPart> parts;
+    screenParts(parts);
     for (size_t k = 0; k < parts.size(); k++) {
-        const Part & part = parts[k];
+        const ScreenPart & part = parts[k];
         std::vector<PbPageWord> words;
         _doc->words(part.page, words);
-        const int w = part.rc.width(), h = part.rc.height();
         for (size_t i = 0; i < words.size(); i++) {
-            const PbPageBox & b = words[i].box;
-            // the box of the four corners of the word on the screen
-            float xs[4], ys[4];
-            PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y0, xs[0], ys[0]);
-            PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y0, xs[1], ys[1]);
-            PbPageDoc::toBuffer(part.view, w, h, b.x0, b.y1, xs[2], ys[2]);
-            PbPageDoc::toBuffer(part.view, w, h, b.x1, b.y1, xs[3], ys[3]);
-            float x0 = xs[0], x1 = xs[0], y0 = ys[0], y1 = ys[0];
-            for (int n = 1; n < 4; n++) {
-                x0 = xs[n] < x0 ? xs[n] : x0;
-                x1 = xs[n] > x1 ? xs[n] : x1;
-                y0 = ys[n] < y0 ? ys[n] : y0;
-                y1 = ys[n] > y1 ? ys[n] : y1;
-            }
-            lvRect rc((int)x0 + part.rc.left, (int)y0 + part.rc.top, (int)x1 + 1 + part.rc.left, (int)y1 + 1 + part.rc.top);
-            // a word out of the part (the rest of the page off the screen) is not on the screen
-            if (!rc.intersect(part.rc) || rc.width() < 2 || rc.height() < 2)
+            lvRect rc;
+            if (!boxOnPart(part, words[i].box, rc))
                 continue;
             ScreenWord word;
             word.text = Utf8ToUnicode(words[i].text.c_str());
@@ -1755,6 +1796,386 @@ void PbPageWindow::dictDrawPage(LVDrawBuf * canvas)
         if (rc.intersect(clip))
             canvas->InvertRect(rc.left, rc.top, rc.right, rc.bottom);
     }
+}
+
+// ------------------------------------------------------------------------------------ search
+// The search in the text of the pages: a PDF with text, a DjVu with a text layer (a tester hoped
+// for it; the window used to answer "not in the view of the original", the search being that of a
+// book made of the file). The text of a page is the words the dictionary picks from; what is
+// typed is looked for in them (pb_pagesearch.h), page by page from the screen shown on and round
+// the end of the file. While the search lasts every screen shows its places inverted, and a panel
+// under the page goes to the next and to the previous screen that has one. A page is read when
+// the search comes to it: a file of a thousand pages is not read whole to find the next place.
+
+enum { FIND_CLOSE = 0, FIND_LABEL, FIND_PREV, FIND_NEXT, FIND_COUNT };
+
+struct PbPageWindow::StopsOf : public PbPageStops {
+    PbPageWindow * window;
+    StopsOf(PbPageWindow * w) : window(w) { }
+    virtual void stopsOf(int page, std::vector<int> & stops) { window->searchStops(page, stops); }
+};
+
+int PbPageWindow::searchPanelHeight() const
+{
+    const int h = _rect.height() / 16;
+    return h > 40 ? h : 40;
+}
+
+const std::vector<PbPageBox> & PbPageWindow::foundOn(int page)
+{
+    static const std::vector<PbPageBox> none;
+    if (!searching() || page < 0 || page >= (int)_findKnown.size() || _findKnown[page] == 1)
+        return none;
+    _foundTurn++;
+    FoundPage * slot = &_found[0];
+    for (int i = 0; i < 4; i++) {
+        if (_found[i].page == page) {
+            _found[i].used = _foundTurn;
+            return _found[i].boxes;
+        }
+        if (_found[i].used < slot->used)
+            slot = &_found[i];
+    }
+    std::vector<PbPageWord> words;
+    _doc->words(page, words);
+    if (!words.empty())
+        _findSawText = true;
+    std::vector<PbPageBox> boxes;
+    PbPageSearch::find(words, _find, boxes);
+    if (_findKnown[page] == 0)
+        _findLooked++;
+    _findKnown[page] = boxes.empty() ? 1 : 2;
+    // a page with nothing on it takes no place among the kept ones
+    if (boxes.empty())
+        return none;
+    slot->page = page;
+    slot->used = _foundTurn;
+    slot->boxes.swap(boxes);
+    return slot->boxes;
+}
+
+void PbPageWindow::searchStops(int page, std::vector<int> & stops)
+{
+    stops.clear();
+    if (page >= 0 && page < (int)_findKnown.size() && _findKnown[page] == 0) {
+        // a page to read: a bar on the screen once the pass through the file has taken a second,
+        // then every second and a half (an update of the screen takes a third of a second itself)
+        const double now = nowMs();
+        if (now - _findStarted >= 1000 && now - _findShown >= 1500) {
+            _findShown = now;
+            main_win->showProgress(lString32("cr3_wait_icon.png"), _findLooked * 100 / (int)_findKnown.size());
+        }
+    }
+    // (a copy: the places kept may give way to those of another page)
+    const std::vector<PbPageBox> boxes = foundOn(page);
+    if (boxes.empty())
+        return;
+    const int W = _pageRc.width(), H = _pageRc.height();
+    // A place the scale does not show is no stop: the scales of the content leave the margins
+    // out, and with them a running title (found on the PC bench: the title of the book at the
+    // top of every page was a stop with nothing to see on 70 screens of 106).
+    if (_leafing == PB_PAGE_LEAF_RIBBON) {
+        // the row of the strip the middle of a place lies at: the strip is the page turned by its
+        // angle, q = R(angle) * p (renderStrip)
+        PbPageStrip strip;
+        stripOfPage(page, strip);
+        const float a = strip.angle * PI_F / 180.0f;
+        const float c = cosf(a), s = sinf(a);
+        for (size_t i = 0; i < boxes.size(); i++) {
+            const float mx = (boxes[i].x0 + boxes[i].x1) * 0.5f, my = (boxes[i].y0 + boxes[i].y1) * 0.5f;
+            const float across = (mx * c - my * s - strip.qcx) * strip.zoom;
+            const int row = (int)((mx * s + my * c - strip.qy0) * strip.zoom);
+            if (row < 0 || row >= strip.height || across < -W * 0.5f || across >= W * 0.5f) {
+                _findHidden = true;
+                continue;
+            }
+            stops.push_back(row);
+        }
+    } else {
+        // a place belongs to the first frame its middle is seen in
+        std::vector<PbPageView> frames;
+        framesOfPage(page, frames);
+        for (size_t i = 0; i < boxes.size(); i++) {
+            const float mx = (boxes[i].x0 + boxes[i].x1) * 0.5f, my = (boxes[i].y0 + boxes[i].y1) * 0.5f;
+            int owner = -1;
+            for (size_t f = 0; f < frames.size() && owner < 0; f++) {
+                float bx = 0, by = 0;
+                PbPageDoc::toBuffer(frames[f], W, H, mx, my, bx, by);
+                if (bx >= 0 && bx < W && by >= 0 && by < H)
+                    owner = (int)f;
+            }
+            if (owner < 0) {
+                _findHidden = true;
+                continue;
+            }
+            stops.push_back(owner);
+        }
+    }
+    std::sort(stops.begin(), stops.end());
+    stops.erase(std::unique(stops.begin(), stops.end()), stops.end());
+}
+
+void PbPageWindow::screenEnd(int & page, int & row)
+{
+    if (_leafing != PB_PAGE_LEAF_RIBBON) {
+        page = _page;
+        row = _frame + 1;
+        return;
+    }
+    // as drawRibbon lays the strips out
+    const int H = _pageRc.height(), count = _doc->pageCount(), gap = ribbonGap();
+    int y = 0;
+    for (int p = _page; p < count; p++) {
+        PbPageStrip strip;
+        stripOfPage(p, strip);
+        int from = p == _page ? _frame : 0;
+        if (from >= strip.height)
+            from = strip.height - 1;
+        if (from < 0)
+            from = 0;
+        const int rest = strip.height - from;
+        if (y + rest > H) {
+            page = p;
+            row = from + (H - y);
+            return;
+        }
+        y += rest + gap;
+        if (y >= H) {
+            page = p + 1;
+            row = 0;
+            return;
+        }
+    }
+    page = count;
+    row = 0;
+}
+
+void PbPageWindow::searchGo(int page, int pos, int direction)
+{
+    _page = page;
+    if (_leafing == PB_PAGE_LEAF_RIBBON) {
+        // the place a quarter of the screen under its top
+        const int above = _pageRc.height() / 4;
+        _frame = pos > above ? pos - above : 0;
+    } else
+        _frame = pos;
+    _direction = direction;
+    setDirty();
+    PbKosync::instance().pageShown(_page);
+}
+
+void PbPageWindow::searchStart(const lString32 & typed)
+{
+    lString32 shown = typed;
+    shown.trim();
+    const lString32 pattern = PbPageSearch::fold(shown);
+    // nothing typed: a search that is on stays as it is
+    if (pattern.empty())
+        return;
+    const bool was = searching();
+    const int count = _doc->pageCount();
+    _find = pattern;
+    _findTyped = shown;
+    _findKnown.assign(count, 0);
+    for (int i = 0; i < 4; i++) {
+        _found[i].page = -1;
+        _found[i].used = 0;
+        _found[i].boxes.clear();
+    }
+    _findSawText = false;
+    _findHidden = false;
+    _findLooked = 0;
+    _findStarted = nowMs();
+    _findShown = 0;
+    if (!was) {
+        // the page part gives room to the panel; the place stays
+        const int frame = _frame;
+        layout();
+        _frame = frame;
+    }
+    // from the screen shown on, itself first; then from the beginning of the file up to it
+    int page = 0, pos = 0, endPage = 0, endPos = 0;
+    bool here = false;
+    screenEnd(endPage, endPos);
+    StopsOf stops(this);
+    if (!PbPageSearchWalk::first(stops, count, _page, _frame, endPage, endPos, page, pos, here)) {
+        const bool sawText = _findSawText, hidden = _findHidden;
+        searchEnd();
+        lString8 text = UnicodeToUtf8(tr(hidden ? "Found only in the margins, which this scale leaves out. The scale \"Whole page\" shows them."
+                                         : sawText ? "Not found in the text of the file."
+                                         : "The file has no text to search in: its pages are pictures."));
+        Message(ICON_INFORMATION, const_cast<char *>("@Search"), const_cast<char *>(text.c_str()), 3000);
+        return;
+    }
+    if (CRLog::isInfoEnabled())
+        CRLog::info("search over the pages: the first place on the page %d of %d, %d pages read in %.0f ms", page + 1,
+                    count, _findLooked, nowMs() - _findStarted);
+    // a place on the screen shown: the screen stays
+    if (!here)
+        searchGo(page, pos, 1);
+    setDirty();
+}
+
+void PbPageWindow::searchEnd()
+{
+    if (!searching())
+        return;
+    _find.clear();
+    _findTyped.clear();
+    _findKnown.clear();
+    for (int i = 0; i < 4; i++) {
+        _found[i].page = -1;
+        _found[i].boxes.clear();
+    }
+    _findPressed = false;
+    // the page part takes the room of the panel back; "next page at once" has one frame again
+    const int frame = _leafing == PB_PAGE_LEAF_PAGE ? 0 : _frame;
+    layout();
+    _frame = frame;
+    changed();
+}
+
+void PbPageWindow::searchMove(int direction)
+{
+    _findStarted = nowMs();
+    _findShown = 0;
+    int page = 0, pos = 0, endPage = 0, endPos = 0;
+    screenEnd(endPage, endPos);
+    StopsOf stops(this);
+    const bool found = PbPageSearchWalk::move(stops, _doc->pageCount(), direction, _page, _frame, endPage, endPos, page,
+                                              pos);
+    // (a progress bar may have stood over the page)
+    setDirty();
+    if (!found) {
+        // the places on this screen are the only ones
+        Message(ICON_INFORMATION, const_cast<char *>("@Search"), const_cast<char *>("@No_more_matches"), 2000);
+        return;
+    }
+    searchGo(page, pos, direction);
+}
+
+void PbPageWindow::drawFound(LVDrawBuf * canvas)
+{
+    std::vector<ScreenPart> parts;
+    screenParts(parts);
+    std::vector<lvRect> rects;
+    for (size_t k = 0; k < parts.size(); k++) {
+        const std::vector<PbPageBox> boxes = foundOn(parts[k].page);
+        for (size_t i = 0; i < boxes.size(); i++) {
+            lvRect rc;
+            if (!boxOnPart(parts[k], boxes[i], rc))
+                continue;
+            // a little more than the letters take
+            rc.left -= 2;
+            rc.right += 2;
+            rc.top -= 1;
+            rc.bottom += 1;
+            if (!rc.intersect(parts[k].rc))
+                continue;
+            // Rectangles that meet become one: a part inverted twice would look as it did before.
+            for (size_t n = 0; n < rects.size();) {
+                if (rects[n].intersects(rc)) {
+                    rc.extend(rects[n]);
+                    rects.erase(rects.begin() + n);
+                    n = 0;
+                } else
+                    n++;
+            }
+            rects.push_back(rc);
+        }
+    }
+    lvRect clip;
+    canvas->GetClipRect(&clip);
+    for (size_t i = 0; i < rects.size(); i++) {
+        lvRect rc = rects[i];
+        if (rc.intersect(clip))
+            canvas->InvertRect(rc.left, rc.top, rc.right, rc.bottom);
+    }
+}
+
+void PbPageWindow::searchButtons(std::vector<lvRect> & rects)
+{
+    // one row under the page: the cross that ends the search, what is looked for (a tap types
+    // another text), to the previous place, to the next one
+    rects.assign(FIND_COUNT, lvRect());
+    const int top = _pageRc.bottom, bottom = top + _findPanel;
+    const int bw = _rect.width() / 7;
+    rects[FIND_CLOSE] = lvRect(_rect.left, top, _rect.left + bw, bottom);
+    rects[FIND_LABEL] = lvRect(_rect.left + bw, top, _rect.right - bw * 2, bottom);
+    rects[FIND_PREV] = lvRect(_rect.right - bw * 2, top, _rect.right - bw, bottom);
+    rects[FIND_NEXT] = lvRect(_rect.right - bw, top, _rect.right, bottom);
+}
+
+void PbPageWindow::drawSearchPanel(LVDrawBuf * canvas)
+{
+    if (_findPanel < 1)
+        return;
+    std::vector<lvRect> rects;
+    searchButtons(rects);
+    for (int i = 0; i < FIND_COUNT; i++) {
+        const lvRect & rc = rects[i];
+        canvas->FillRect(rc.left, rc.top, rc.right, rc.bottom, 0x000000);
+        canvas->FillRect(rc.left + 2, rc.top + 2, rc.right - 2, rc.bottom - 2, 0xFFFFFF);
+    }
+    drawArrow(canvas, rects[FIND_PREV], ADJ_LEFT);
+    drawArrow(canvas, rects[FIND_NEXT], ADJ_RIGHT);
+    // the cross: two strokes, drawn (the font may have no sign for it)
+    const lvRect & cross = rects[FIND_CLOSE];
+    const int half = cross.height() / 5 > 5 ? cross.height() / 5 : 5;
+    const int cx = (cross.left + cross.right) / 2, cy = (cross.top + cross.bottom) / 2;
+    for (int d = -half; d <= half; d++) {
+        canvas->FillRect(cx + d - 1, cy + d - 1, cx + d + 2, cy + d + 2, 0x000000);
+        canvas->FillRect(cx + d - 1, cy - d - 1, cx + d + 2, cy - d + 2, 0x000000);
+    }
+    const lvRect & label = rects[FIND_LABEL];
+    LVFontRef font = pageWindowFont(label.height() * 2 / 5);
+    if (font.isNull())
+        return;
+    const int pad = label.height() / 3;
+    const int room = label.width() - pad * 2;
+    lString32 text = tr("Search") + U": " + _findTyped;
+    if ((int)font->getTextWidth(text.c_str(), text.length()) > room) {
+        // what does not fit is cut off at its end
+        while (text.length() > 1) {
+            text.erase(text.length() - 1, 1);
+            const lString32 cut = text + U"...";
+            if ((int)font->getTextWidth(cut.c_str(), cut.length()) <= room)
+                break;
+        }
+        text << U"...";
+    }
+    canvas->SetTextColor(0x000000);
+    font->DrawTextString(canvas, label.left + pad, label.top + (label.height() - font->getHeight()) / 2, text.c_str(),
+                         text.length(), '?', NULL, false);
+}
+
+bool PbPageWindow::searchTouch(int x, int y, CRGUITouchEventType evType)
+{
+    const lvRect panel(_rect.left, _pageRc.bottom, _rect.right, _pageRc.bottom + _findPanel);
+    const lvPoint pt(x, y);
+    if (evType == CRTOUCH_DOWN) {
+        _findPressed = panel.isPointInside(pt);
+        if (_findPressed)
+            // not a tap of the page
+            _touchStarted = false;
+        return _findPressed;
+    }
+    if (!_findPressed)
+        return false;
+    if (evType != CRTOUCH_UP)
+        return true;
+    _findPressed = false;
+    std::vector<lvRect> rects;
+    searchButtons(rects);
+    if (rects[FIND_CLOSE].isPointInside(pt))
+        searchEnd();
+    else if (rects[FIND_LABEL].isPointInside(pt))
+        _wm->postCommand(MCMD_SEARCH, 0);
+    else if (rects[FIND_PREV].isPointInside(pt))
+        searchMove(-1);
+    else if (rects[FIND_NEXT].isPointInside(pt))
+        searchMove(1);
+    return redrawAfterTouch();
 }
 
 // ------------------------------------------------------------------------------------ bookmarks

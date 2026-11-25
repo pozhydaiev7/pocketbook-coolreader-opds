@@ -1373,10 +1373,6 @@ msgstr "Mode de mise à jour turbo"
 msgid "Gray buffer depth (needs restart)"
 msgstr "Niveau de profondeur du gris (nécessite un redémarrage)"
 
-#: ../src/settings.cpp:1772
-msgid "Custom system theme (needs restart)"
-msgstr "Thème système customisé (nécessite un redémarrage) "
-
 #: ../src/settings.cpp:1778
 msgid "Use new TOC menu"
 msgstr "Utiliser le sommaire généré automatiquement"
@@ -1925,10 +1921,6 @@ msgstr "Mis à jour vers v"
 #: ../src/cr3pocketbook.cpp:5452
 msgid "Untitled"
 msgstr "Sans titre"
-
-#: ../src/cr3pocketbook.cpp:5785
-msgid "Custom system theme applied. CR3 will now restart."
-msgstr "Thème système customisé appliqué. CR3 va redémarrer."
 
 #: ../src/cr3pocketbook.cpp:5848
 msgid "Restored default system theme. CR3 will now restart."

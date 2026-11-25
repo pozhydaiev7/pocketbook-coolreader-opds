@@ -362,6 +362,9 @@ private:
     int _page; // >=0 is correct page number, <0 - get based on _pos
     bool _posIsSet;
     ldomXPointer _posBookmark; // bookmark for current position
+    // 0..10000: the position to take when _posBookmark is null, the percent of a kept position
+    // whose pointer was not read back (restorePosition); -1: none. Used once, by checkPos().
+    int _posPercent;
 
     int m_battery_state;
     int m_battery_charging_conn;

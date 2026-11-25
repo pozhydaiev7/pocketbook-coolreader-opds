@@ -287,7 +287,11 @@ std::string partialMd5(const char * path)
 
 double roundPercent(double percent)
 {
-    return floor(percent * 10000.0) / 10000.0;
+    // A value cut before is cut again where it is compared and where it is sent, and must stay
+    // the same: 0.7515 is kept as 0.75149999..., times 10000 it is 7514.99..., and the plain
+    // floor gave 0.7514 (the page 121 of 161 went to the server so). The millionth of a step
+    // makes up for that.
+    return floor(percent * 10000.0 + 1e-6) / 10000.0;
 }
 
 std::string jsonString(const std::string & s)

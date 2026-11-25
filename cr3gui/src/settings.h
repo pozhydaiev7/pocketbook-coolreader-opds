@@ -105,9 +105,6 @@ enum MainMenuItems_t {
     mm_CtrlPageTurnSwipes,
     mm_CtrlFrontLightSwipes,
     mm_CtrlPinchZoom,
-#ifdef POCKETBOOK_PRO_FW5
-    mm_customSystemTheme,
-#endif
 #ifdef POCKETBOOK_PRO
     mm_useNewTouchTOC,
     mm_tocPageNumbers,
