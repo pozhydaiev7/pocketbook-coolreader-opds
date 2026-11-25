@@ -4259,6 +4259,17 @@ CRFileHistRecord * LVDocView::getCurrentFileHistRecord() {
 }
 
 /// save last file position
+CRFileHistRecord * LVDocView::getOpenFileHistRecord() {
+	if (m_filename.empty())
+		return NULL;
+	lString32 fn = m_filename;
+#ifdef ORIGINAL_FILENAME_PATCH
+	if (!m_originalFilename.empty())
+		fn = m_originalFilename;
+#endif
+	return m_hist.getRecord(fn, m_filesize);
+}
+
 void LVDocView::savePosition() {
 	getCurrentFileHistRecord();
 }
@@ -4570,6 +4581,8 @@ void LVDocView::adoptArchiveHistoryRecord(const lString32 & fileName, lvsize_t a
     }
     if (dropped != NULL)
         delete m_hist.getRecords().remove(dropped);
+    // the record under the size of the archive is not taken back from the history file
+    m_hist.dropped(LVExtractFilename(fileName), archiveSize);
     CRLog::info("history: one record of %s, under the size of the book %d (the archive: %d)", LCSTR(fileName),
                 (int)m_filesize, (int)archiveSize);
 }

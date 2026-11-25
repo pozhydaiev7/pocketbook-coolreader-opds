@@ -30,6 +30,7 @@
 
 #include "lvptrvec.h"
 #include "lvstring.h"
+#include "lvstring32collection.h"
 #include <time.h>
 
 enum bmk_type {
@@ -232,6 +233,10 @@ public:
 class CRFileHist {
 private:
     LVPtrVector<CRFileHistRecord> _records;
+    // the records taken out of the history for good by this copy of the program (drop, dropped):
+    // the name and the size of each, not taken back from the file
+    lString32Collection _dropped;
+    bool isDropped( CRFileHistRecord * rec );
     int findEntry( const lString32 & fname, const lString32 & fpath, lvsize_t sz ) const;
     void makeTop( int index );
 public:
@@ -244,6 +249,23 @@ public:
     LVPtrVector<CRFileHistRecord> & getRecords() { return _records; }
     CRFileHistRecord* getRecord(const lString32 & fileName, size_t fileSize );
     bool loadFromStream( LVStreamRef stream );
+    /// The firmware keeps a copy of the program for every book that was opened and left by the
+    /// Home key, each with the history as it was when that copy started; every copy writes the
+    /// whole file. A copy written last took back what the others had written: the position of a
+    /// book just read was lost when an older copy ended after it (all of them end when the reader
+    /// is turned off). So a copy is trusted with the record of the book it has open only (`mine`,
+    /// NULL when it has none): that record goes first, the records of the other books are taken
+    /// from `file`, the history file as it is now. At most maxItems+1 records, as limit() leaves.
+    bool saveMergedToStream( LVStream * stream, CRFileHist & file, CRFileHistRecord * mine, int maxItems );
+    /// The same for the list kept in memory: `mine` stays, the records of the other books are
+    /// those of `file`, which is left empty. The records of the other books kept before are
+    /// deleted: nothing may point to them when this is called.
+    void takeOthersFrom( CRFileHist & file, CRFileHistRecord * mine );
+    /// The record is taken out of the history for good (the reader deleted it in the list of the
+    /// recent books): it is not taken back from the file.
+    void drop( int index );
+    /// A record of this name and size was taken out of the history by other means.
+    void dropped( const lString32 & name, lvpos_t size );
     bool saveToStream( LVStream * stream );
     CRFileHistRecord * savePosition( lString32 fpathname, size_t sz, 
         const lString32 & title,

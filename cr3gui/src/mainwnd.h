@@ -157,6 +157,9 @@ public:
     bool saveHistory( lString32 filename, bool exportBookmarks = true );
     bool loadHistory( LVStreamRef stream );
     bool saveHistory( LVStreamRef stream );
+    /// The records of the other books are taken from the history file as it is now: another copy
+    /// of the program may have written them since this one read it (CRFileHist::takeOthersFrom).
+    void refreshHistory();
     bool loadDictConfig( lString32 filename );
 	bool setHelpFile( lString32 filename );
 	lString32 getHelpFile( );

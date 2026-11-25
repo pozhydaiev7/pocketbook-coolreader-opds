@@ -616,6 +616,9 @@ public:
     lString32 getNavigationPath() const;
     /// returns pointer to bookmark/last position containter of currently opened file
     CRFileHistRecord * getCurrentFileHistRecord();
+    /// The record the history has of the open file, as it is: nothing is made or changed (NULL when
+    /// no file is open or the history has no record of it).
+    CRFileHistRecord * getOpenFileHistRecord();
 	/// -1 moveto previous chapter, 0 to current chaoter first pae, 1 to next chapter
 	bool moveByChapter( int delta );
     void addBoundsPage(ldomNode *section, int height, lUInt16 section_id);

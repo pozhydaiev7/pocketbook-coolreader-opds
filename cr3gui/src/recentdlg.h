@@ -21,6 +21,7 @@ private:
     lString32 _helpText;
     int _helpHeight;
     LVPtrVector<CRFileHistRecord> * _files;
+    CRFileHist * _history;
     bool removeItem( int index );
 public:
     CRRecentBooksMenu(CRGUIWindowManager * wm, LVDocView * docview, int numItems, lvRect & rc);

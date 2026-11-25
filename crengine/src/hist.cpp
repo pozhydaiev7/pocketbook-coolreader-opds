@@ -344,38 +344,130 @@ static void putBookmark( LVStream * stream, CRBookmark * bmk )
     putTag(stream, 3, "/bookmark");
 }
 
+static const char * hist_xml_hdr = "\xef\xbb\xbf<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FictionBookMarks>\r\n";
+static const char * hist_xml_ftr = "</FictionBookMarks>\r\n";
+
+static void putRecord( LVStream * stream, CRFileHistRecord * rec )
+{
+    putTag( stream, 1, "file" );
+    putTag( stream, 2, "file-info" );
+    putTagValue( stream, 3, "doc-title", rec->getTitle() );
+    putTagValue( stream, 3, "doc-author", rec->getAuthor() );
+    putTagValue( stream, 3, "doc-series", rec->getSeries() );
+    putTagValue( stream, 3, "doc-filename", rec->getFileName() );
+    putTagValue( stream, 3, "doc-filepath", rec->getFilePath() );
+    putTagValue( stream, 3, "doc-filesize", lString32::itoa( (unsigned int)rec->getFileSize() ) );
+    putTagValue( stream, 3, "doc-dom-version", lString32::itoa( (unsigned int)rec->getDOMversion() ) );
+    putTag( stream, 2, "/file-info" );
+    putTag( stream, 2, "bookmark-list" );
+    putBookmark( stream, rec->getLastPos() );
+    for ( int j=0; j<rec->getBookmarks().length(); j++) {
+        CRBookmark * bmk = rec->getBookmarks()[j];
+        putBookmark( stream, bmk );
+    }
+    putTag( stream, 2, "/bookmark-list" );
+    putTag( stream, 1, "/file" );
+}
+
 bool CRFileHist::saveToStream( LVStream * targetStream )
 {
     if (!targetStream) return false;
     LVStreamRef streamref = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
     LVStream * stream = streamref.get();
-    const char * xml_hdr = "\xef\xbb\xbf<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FictionBookMarks>\r\n";
-    const char * xml_ftr = "</FictionBookMarks>\r\n";
-    //const char * crlf = "\r\n";
-    *stream << xml_hdr;
-    for ( int i=0; i<_records.length(); i++ ) {
-        CRFileHistRecord * rec = _records[i];
-        putTag( stream, 1, "file" );
-        putTag( stream, 2, "file-info" );
-        putTagValue( stream, 3, "doc-title", rec->getTitle() );
-        putTagValue( stream, 3, "doc-author", rec->getAuthor() );
-        putTagValue( stream, 3, "doc-series", rec->getSeries() );
-        putTagValue( stream, 3, "doc-filename", rec->getFileName() );
-        putTagValue( stream, 3, "doc-filepath", rec->getFilePath() );
-        putTagValue( stream, 3, "doc-filesize", lString32::itoa( (unsigned int)rec->getFileSize() ) );
-        putTagValue( stream, 3, "doc-dom-version", lString32::itoa( (unsigned int)rec->getDOMversion() ) );
-        putTag( stream, 2, "/file-info" );
-        putTag( stream, 2, "bookmark-list" );
-        putBookmark( stream, rec->getLastPos() );
-        for ( int j=0; j<rec->getBookmarks().length(); j++) {
-            CRBookmark * bmk = rec->getBookmarks()[j];
-            putBookmark( stream, bmk );
-        }
-        putTag( stream, 2, "/bookmark-list" );
-        putTag( stream, 1, "/file" );
-    }
-    *stream << xml_ftr;
+    *stream << hist_xml_hdr;
+    for ( int i=0; i<_records.length(); i++ )
+        putRecord( stream, _records[i] );
+    *stream << hist_xml_ftr;
     return LVPumpStream(targetStream, stream) == stream->GetSize();
+}
+
+// the name and the size of a record, as the records taken out of the history are kept
+static lString32 droppedKey( const lString32 & name, lvpos_t size )
+{
+    return name + "/" + lString32::itoa( (unsigned int)size );
+}
+
+bool CRFileHist::isDropped( CRFileHistRecord * rec )
+{
+    if ( _dropped.length() == 0 )
+        return false;
+    lString32 key = droppedKey( rec->getFileName(), rec->getFileSize() );
+    for ( int i=0; i<_dropped.length(); i++ )
+        if ( _dropped[i] == key )
+            return true;
+    return false;
+}
+
+void CRFileHist::dropped( const lString32 & name, lvpos_t size )
+{
+    lString32 key = droppedKey( name, size );
+    for ( int i=0; i<_dropped.length(); i++ )
+        if ( _dropped[i] == key )
+            return;
+    _dropped.add( key );
+}
+
+void CRFileHist::drop( int index )
+{
+    if ( index<0 || index>=_records.length() )
+        return;
+    dropped( _records[index]->getFileName(), _records[index]->getFileSize() );
+    _records.erase( index, 1 );
+}
+
+// the record of the same book: the history finds a book by its name and its size (findEntry)
+static bool sameBook( CRFileHistRecord * a, CRFileHistRecord * b )
+{
+    return a->getFileSize() == b->getFileSize() && a->getFileName() == b->getFileName();
+}
+
+bool CRFileHist::saveMergedToStream( LVStream * targetStream, CRFileHist & file, CRFileHistRecord * mine, int maxItems )
+{
+    if (!targetStream) return false;
+    LVStreamRef streamref = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
+    LVStream * stream = streamref.get();
+    *stream << hist_xml_hdr;
+    int written = 0, taken = 0, leftOut = 0;
+    if ( mine ) {
+        putRecord( stream, mine );
+        written++;
+    }
+    for ( int i=0; i<file._records.length(); i++ ) {
+        CRFileHistRecord * rec = file._records[i];
+        if ( mine && sameBook( rec, mine ) )
+            continue; // the record of the book open here, written above
+        if ( isDropped( rec ) || written > maxItems ) {
+            leftOut++;
+            continue;
+        }
+        putRecord( stream, rec );
+        written++;
+        taken++;
+    }
+    *stream << hist_xml_ftr;
+    if ( mine )
+        CRLog::info("history: the record of the open book %s goes first, at %d.%02d%% [%s]; %d records of the other books "
+                    "are taken from the file, %d left out", LCSTR(mine->getFileName()), mine->getLastPos()->getPercent()/100,
+                    mine->getLastPos()->getPercent()%100, LCSTR(mine->getLastPos()->getStartPos()), taken, leftOut);
+    else
+        CRLog::info("history: no book is open here; %d records are taken from the file, %d left out", taken, leftOut);
+    return LVPumpStream(targetStream, stream) == stream->GetSize();
+}
+
+void CRFileHist::takeOthersFrom( CRFileHist & file, CRFileHistRecord * mine )
+{
+    if ( mine && _records.remove( mine ) == NULL )
+        mine = NULL; // not a record of this history
+    _records.clear();
+    if ( mine )
+        _records.add( mine );
+    while ( file._records.length() > 0 ) {
+        CRFileHistRecord * rec = file._records.remove( 0 );
+        if ( ( mine && sameBook( rec, mine ) ) || isDropped( rec ) )
+            delete rec;
+        else
+            _records.add( rec );
+    }
 }
 
 static void splitFName( lString32 pathname, lString32 & path, lString32 & name )

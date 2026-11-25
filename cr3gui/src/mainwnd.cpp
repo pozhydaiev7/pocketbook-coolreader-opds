@@ -700,7 +700,11 @@ bool V3DocViewWin::loadHistory( lString32 filename )
 	CRLog::trace("V3DocViewWin::loadHistory( %s )", UnicodeToUtf8(filename).c_str());
     _historyFileName = filename;
     LVStreamRef stream = LVOpenFileStream( filename.c_str(), LVOM_READ );
-    return loadHistory( stream );
+    bool read = loadHistory( stream );
+    // what this copy of the program knows the file to hold (see saveHistory)
+    fileContent( filename, _historySaved );
+    _historySavedFile = filename;
+    return read;
 }
 
 void V3DocViewWin::closing()
@@ -770,11 +774,34 @@ bool V3DocViewWin::saveHistory( lString32 filename, bool exportBookmarks )
         _docview->exportBookmarks(_bookmarkDir); //use default filename
     }
     _historyFileName = filename;
+    // The file as it is now. The firmware keeps a copy of the program for every book opened and
+    // left by the Home key, and every copy writes this file: the records of the other books are
+    // taken from the file, this copy changes the record of its own book only
+    // (CRFileHist::saveMergedToStream). A file that is not there or is not read is written from
+    // the history kept here, as before.
+    lString8 onDisk;
+    CRFileHist file;
+    bool fileRead = false;
+    {
+        LVStreamRef stream = LVOpenFileStream( filename.c_str(), LVOM_READ );
+        if ( !stream.isNull() && streamContent( stream, onDisk ) && onDisk.length() > 0
+                && stream->SetPos(0) == 0 )
+            fileRead = file.loadFromStream( stream );
+    }
+    if ( fileRead && filename == _historySavedFile && !sameContent( onDisk, _historySaved ) )
+        CRLog::info("history: another copy of the program has written the history file since this copy read or "
+                    "wrote it: %d bytes then, %d now", _historySaved.length(), onDisk.length());
     LVStreamRef serialized = LVCreateMemoryStream(NULL, 0, false, LVOM_WRITE);
-    bool made = saveHistory(serialized);
+    bool made = fileRead
+        ? _docview->getHistory()->saveMergedToStream( serialized.get(), file, _docview->getOpenFileHistRecord(), 32 )
+        : saveHistory(serialized);
     lString8 content;
     bool known = made && streamContent(serialized, content);
-    if ( known && filename != _historySavedFile ) {
+    if ( fileRead ) {
+        // the bytes the file has now
+        _historySaved = onDisk;
+        _historySavedFile = filename;
+    } else if ( known && filename != _historySavedFile ) {
         // the first save of this run: what the file has now
         fileContent( filename, _historySaved );
         _historySavedFile = filename;
@@ -1080,8 +1107,23 @@ void V3DocViewWin::showOrientationMenu()
 }
 #endif
 
+void V3DocViewWin::refreshHistory()
+{
+    if ( _historyFileName.empty() )
+        return;
+    LVStreamRef stream = LVOpenFileStream( _historyFileName.c_str(), LVOM_READ );
+    CRFileHist file;
+    if ( stream.isNull() || stream->GetSize() == 0 || !file.loadFromStream( stream ) )
+        return;
+    _docview->getHistory()->takeOthersFrom( file, _docview->getOpenFileHistRecord() );
+}
+
 void V3DocViewWin::showRecentBooksMenu()
 {
+    // the other books as the history file has them now: another copy of the program may have
+    // been reading one of them
+    _docview->savePosition();
+    refreshHistory();
     lvRect rc = _wm->getScreen()->getRect();
     CRRecentBooksMenu * menu_win = new CRRecentBooksMenu(_wm, _docview, 8, rc);
     menu_win->reconfigure(0);

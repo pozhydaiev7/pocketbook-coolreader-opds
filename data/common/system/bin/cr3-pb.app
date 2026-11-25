@@ -98,6 +98,35 @@ if [ -d "$FAILED_DIR" ]; then
     rm -rf "$FAILED_DIR" &
 fi
 
+# One copy of the program at a time. The firmware starts this script for every book that is
+# tapped, also while the program runs in the background with another book. The copy that runs
+# names its task and its process in a file; it is left the book to open, given the screen by
+# the tool of the firmware, and this start ends (KOReader does the same on these readers).
+# Without the tool the program itself does it, a moment later. Not in the tests on a PC.
+INSTANCE_FILE=/tmp/cr3-pb.instance
+OPEN_FILE=/tmp/cr3-pb.open
+if [ -z "$CR3_WORK_DIR" ] && [ -f "$INSTANCE_FILE" ]; then
+    read INSTANCE_TASK INSTANCE_PID < "$INSTANCE_FILE"
+    IV2SH=/usr/bin/iv2sh
+    [ -x "$IV2SH" ] || IV2SH=/ebrmain/bin/iv2sh
+    case "x$INSTANCE_TASK$INSTANCE_PID" in
+        x|*[!0-9x]*) INSTANCE_PID= ;;
+    esac
+    if [ -n "$INSTANCE_TASK" ] && [ -n "$INSTANCE_PID" ] && [ -x "$IV2SH" ] \
+            && grep -q "cr3-pb.app" "/proc/$INSTANCE_PID/cmdline" 2>/dev/null; then
+        if printf '%s\n' "$1" > "$OPEN_FILE.new" && mv "$OPEN_FILE.new" "$OPEN_FILE"; then
+            if [ -f "$CR3_DIR/crlog.ini" ]; then
+                echo "`date '+%Y/%m/%d %H:%M:%S'`.0000 INFO one copy: the launcher $$ gives the book $1 to" \
+                    "the running copy (task $INSTANCE_TASK, process $INSTANCE_PID) with $IV2SH and ends" \
+                    >> "$WORK_DIR/cr3log.copies.txt"
+            fi
+            exec "$IV2SH" SetActiveTask "$INSTANCE_TASK" 0
+        fi
+    fi
+    # the book is opened by this start: no request is left behind
+    rm -f "$OPEN_FILE" "$OPEN_FILE.new"
+fi
+
 # Keep starting time
 startedTime="`date +"%s"`"
 

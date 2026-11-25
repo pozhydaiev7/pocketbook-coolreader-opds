@@ -119,6 +119,7 @@ CRRecentBooksMenu::CRRecentBooksMenu(CRGUIWindowManager * wm, LVDocView * docvie
     docview->savePosition(); // to move current file to top
     LVPtrVector<CRFileHistRecord> & files = docview->getHistory()->getRecords();
     _files = &files;
+    _history = docview->getHistory();
     // skip Null
     for ( int i=1; i<files.length(); i++ ) {
         CRFileHistRecord * file = files.get( i );
@@ -229,7 +230,8 @@ bool CRRecentBooksMenu::removeItem( int index )
 	int last = getLastOnPage();
     CRMenuItem * item = getItems()[index];
     int n = item->getId();
-    _files->erase( n, 1 );
+    // deleted for good: not taken back from the history file when it is written
+    _history->drop( n );
     _items.erase( index, 1 );
     for ( int i=0; i<_items.length(); i++ ) {
         if ( _items[i]->getId() > n ) {

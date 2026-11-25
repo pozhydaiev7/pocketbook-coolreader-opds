@@ -41,10 +41,13 @@
 #endif
 #include "pb_toclist.h"
 #include "pb_keyboard.h"
+#include "pb_singlecopy.h"
+#include <stdarg.h>
 
 #ifdef PB_DB_STATE_SUPPORTED
 #include <dlfcn.h>
 #include <pthread.h>
+#include <signal.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <bookstate.h>
@@ -328,6 +331,9 @@ static void pbCpuLog(const char * when)
 // cover of the book for the power-off logo and the standby screen, see pbCoverMake()
 static void pbCoverMake();
 static void pbCoverArm();
+#ifdef POCKETBOOK_PRO
+static void pbInstanceWithdraw();
+#endif
 static void pbCoverForStandBy();
 // The moment the program went to the background; 0 while it is on the screen
 static long long pbBackgroundAt = 0;
@@ -474,7 +480,8 @@ public:
 
     virtual ~CRPocketBookProStateSaver()
     {
-        if (_handle)
+        // not while a thread is inside the library (see saveState)
+        if (_handle && !jobBusy())
         {
             dlclose(_handle);
             _handle = NULL;
@@ -487,34 +494,126 @@ public:
                 _bsSetOpenTimePtr != NULL && _bsClosePtr != NULL);
     }
 
-    bool saveState(char *fileName, int cpage, int npages)
+    // The page of a book for the library of the firmware, with what the call needs: the thread
+    // that makes it touches nothing of the program.
+    struct Job {
+        std::string file;
+        int cpage, npages;
+        bsLoadFuncPtr_t load;
+        bsSetPageFuncPtr_t setCPage, setNPage;
+        bsSetOpenTimeFuncPtr_t setOpenTime;
+        bsSaveCloseFuncPtr_t save, close;
+    };
+
+    // each call of the firmware library is timed: one of them took 5 seconds on an InkPad 4
+    static bool runJob(const Job & job, const char * by)
     {
-        // each call of the firmware library is timed: one of them took 5 seconds on an InkPad 4
         long long t0 = pbPerfNow();
-        bsHandle bs = _bsLoadPtr(fileName);
+        bsHandle bs = job.load((char *)job.file.c_str());
         long long tLoad = pbPerfNow();
         if (bs)
         {
-            _bsSetCPagePtr(bs, cpage + 1);
-            _bsSetNPagePtr(bs, npages);
-            _bsSetOpenTimePtr(bs, time(0));
+            job.setCPage(bs, job.cpage + 1);
+            job.setNPage(bs, job.npages);
+            job.setOpenTime(bs, time(0));
             long long tSet = pbPerfNow();
-            bool saved = _bsSavePtr(bs) != 0;
+            bool saved = job.save(bs) != 0;
             long long tSave = pbPerfNow();
             if (saved)
-                CRLog::trace("Book(%s) state saved to db successfully", fileName);
+                CRLog::trace("Book(%s) state saved to db successfully", job.file.c_str());
             else
-                CRLog::error("Book(%s) state saving to db failed", fileName);
-            _bsClosePtr(bs);
+                CRLog::error("Book(%s) state saving to db failed", job.file.c_str());
+            job.close(bs);
             if (pbPerfOn())
                 CRLog::info("perf: book state of the firmware: bsLoad %.1f ms, page and time set %.1f, bsSave %.1f (%s), "
-                            "bsClose %.1f", PB_PERF_MS(tLoad - t0), PB_PERF_MS(tSet - tLoad), PB_PERF_MS(tSave - tSet),
-                            saved ? "saved" : "FAILED", PB_PERF_MS(pbPerfNow() - tSave));
+                            "bsClose %.1f; %s", PB_PERF_MS(tLoad - t0), PB_PERF_MS(tSet - tLoad), PB_PERF_MS(tSave - tSet),
+                            saved ? "saved" : "FAILED", PB_PERF_MS(pbPerfNow() - tSave), by);
             return true;
         }
         if (pbPerfOn())
-            CRLog::info("perf: book state of the firmware: bsLoad gave nothing in %.1f ms", PB_PERF_MS(tLoad - t0));
+            CRLog::info("perf: book state of the firmware: bsLoad gave nothing in %.1f ms; %s", PB_PERF_MS(tLoad - t0), by);
         return false;
+    }
+
+    // one thread at a time; the page told while it is at work waits (the newest one only)
+    static pthread_mutex_t & jobLock() { static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; return lock; }
+    static bool & jobRunning() { static bool running = false; return running; }
+    static Job * & jobWaiting() { static Job * waiting = NULL; return waiting; }
+
+    static bool jobBusy()
+    {
+        pthread_mutex_lock(&jobLock());
+        const bool busy = jobRunning();
+        pthread_mutex_unlock(&jobLock());
+        return busy;
+    }
+
+    static void * jobThread(void * arg)
+    {
+        Job * job = (Job *)arg;
+        while (job != NULL) {
+            runJob(*job, "asked by a thread, the program went on");
+            delete job;
+            pthread_mutex_lock(&jobLock());
+            job = jobWaiting();
+            jobWaiting() = NULL;
+            if (job == NULL)
+                jobRunning() = false;
+            pthread_mutex_unlock(&jobLock());
+        }
+        return NULL;
+    }
+
+    // The library of the firmware is asked by a thread. Its first call (bsLoad) takes 5 seconds
+    // and gives nothing when the firmware does not answer, which on an InkPad 4 is the usual case
+    // right after the Home key; the program did nothing else meanwhile. With one copy of the
+    // program (pb_singlecopy.h) that was in the way of the next book: a book tapped within those
+    // seconds was opened only after them. The thread is given all it needs (Job) and is not waited
+    // for; a page told while it is at work is told when it is done. Without a thread the call is
+    // made here, as before.
+    bool saveState(char *fileName, int cpage, int npages)
+    {
+        Job * job = new Job;
+        job->file = fileName;
+        job->cpage = cpage;
+        job->npages = npages;
+        job->load = _bsLoadPtr;
+        job->setCPage = _bsSetCPagePtr;
+        job->setNPage = _bsSetNPagePtr;
+        job->setOpenTime = _bsSetOpenTimePtr;
+        job->save = _bsSavePtr;
+        job->close = _bsClosePtr;
+        pthread_mutex_lock(&jobLock());
+        if (jobRunning()) {
+            delete jobWaiting();
+            jobWaiting() = job;
+            pthread_mutex_unlock(&jobLock());
+            if (pbPerfOn())
+                CRLog::info("perf: book state of the firmware: the page waits, the library has not answered the call "
+                            "before yet");
+            return true;
+        }
+        jobRunning() = true;
+        pthread_mutex_unlock(&jobLock());
+        // the signals of the program stay with the thread of the program
+        sigset_t all, before;
+        sigfillset(&all);
+        pthread_sigmask(SIG_BLOCK, &all, &before);
+        pthread_t thread;
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+        const bool started = pthread_create(&thread, &attr, jobThread, job) == 0;
+        pthread_attr_destroy(&attr);
+        pthread_sigmask(SIG_SETMASK, &before, NULL);
+        if (started)
+            return true;
+        pthread_mutex_lock(&jobLock());
+        jobRunning() = false;
+        pthread_mutex_unlock(&jobLock());
+        const bool done = runJob(*job, "no thread could be started, asked by the program");
+        delete job;
+        return done;
     }
 };
 #endif
@@ -536,7 +635,8 @@ private :
 public:
     CRPocketBookGlobals(char *fileName);
     lString32 getFileName() { return _fileName ; }
-    void setFileName( lString32 fn) { _fileName = fn; }
+    // another book: its page is told to the firmware whatever the page of the book before was
+    void setFileName( lString32 fn) { if (fn != _fileName) _saved_page = -1; _fileName = fn; }
     int getKeepOrientation() { return _keepOrientation; }
     const char *getLang() { return _lang.c_str(); }
     const char *getDictionary() { return _pbDictionary.c_str(); }
@@ -7970,6 +8070,8 @@ bool pbQuitViaBackground()
     if (goToBackground == NULL)
         return false;
     pbQuitAt = pbPerfNow();
+    // one copy of the program: this one closes its book and takes no more books
+    pbInstanceWithdraw();
     CRPocketBookDocView::instance->saveOwnFiles();
     pbQuitStage = 1;
     SetHardTimer("QuitFallback", pbQuitFallback, PB_QUIT_FALLBACK_MS);
@@ -8476,6 +8578,266 @@ static int pbCloseMenusOverBook()
 // thread), and the log tells.
 static pthread_t pbMainThread;
 
+#ifdef POCKETBOOK_PRO
+// ---- One copy of the program at a time (pb_singlecopy.h has the rules and the reason).
+// The copy that runs names itself in PB_INSTANCE_FILE when it shows its first page. A start of the
+// program that finds it there (the launcher script first, the program itself when the script could
+// not) leaves the book in PB_OPEN_FILE, gives the running copy the screen and ends; the running
+// copy opens the book when it comes to the screen (pbTakeOpenRequest). KOReader does the same on
+// these readers (platform/pocketbook/koreader.app, tryOpenBook of its device.lua).
+// Every step goes to the log with the words "one copy:". A start that gives its book away ends
+// before it has a log of its own: its lines go to PB_COPIES_LOG, while the log is on.
+//
+// Tried first, on the reader of the owner: a new copy asked the older ones to end (CloseTask). A
+// copy idle in the background ended in 0.2 s and all was well; one that was still writing its files
+// ended 1.5 to 2 s later, and at that moment the firmware made its home screen the active task and
+// took the new copy off the screen. That way is not taken.
+#define PB_INSTANCE_FILE "/tmp/cr3-pb.instance"
+#define PB_OPEN_FILE "/tmp/cr3-pb.open"
+#define PB_COPIES_LOG "/mnt/ext1/cr3log.copies.txt"
+
+// A small file as a string; empty when it is not there
+static std::string pbSmallFile(const char * path)
+{
+    std::string text;
+    FILE * f = fopen(path, "rb");
+    if (f == NULL)
+        return text;
+    char buf[4096];
+    const size_t n = fread(buf, 1, sizeof(buf), f);
+    fclose(f);
+    text.assign(buf, n);
+    return text;
+}
+
+// A small file written whole under another name and put in place
+static bool pbSmallFileWrite(const char * path, const std::string & text)
+{
+    const std::string temp = std::string(path) + ".new";
+    FILE * f = fopen(temp.c_str(), "wb");
+    if (f == NULL)
+        return false;
+    const bool written = fwrite(text.data(), 1, text.size(), f) == text.size();
+    if (fclose(f) != 0 || !written || rename(temp.c_str(), path) != 0) {
+        unlink(temp.c_str());
+        return false;
+    }
+    return true;
+}
+
+// A line of a start of the program that has no log of its own (see above)
+static void pbCopiesFileLog(const char * fmt, ...)
+{
+    if (access(USERDATA "/share/cr3/crlog.ini", F_OK) != 0)
+        return;
+    struct stat st;
+    const bool tooBig = stat(PB_COPIES_LOG, &st) == 0 && st.st_size > 200 * 1024;
+    FILE * f = fopen(PB_COPIES_LOG, tooBig ? "w" : "a");
+    if (f == NULL)
+        return;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    const time_t sec = tv.tv_sec;
+    struct tm t;
+    localtime_r(&sec, &t);
+    fprintf(f, "%04d/%02d/%02d %02d:%02d:%02d.%04d INFO ", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour,
+            t.tm_min, t.tm_sec, (int)(tv.tv_usec / 100));
+    va_list args;
+    va_start(args, fmt);
+    vfprintf(f, fmt, args);
+    va_end(args);
+    fputc('\n', f);
+    fclose(f);
+}
+
+// The tasks of the firmware; `toLog`: a line for each of them
+static std::vector<PbTaskRow> pbTaskRows(bool toLog, int ownTask)
+{
+    std::vector<PbTaskRow> rows;
+    int list[64];
+    memset(list, 0, sizeof(list));
+    const int answered = GetTaskList(list, 64);
+    int n = answered > 64 ? 64 : answered;
+    if (n <= 0) {
+        // the answer is no count: the numbers written to the list are taken
+        n = 0;
+        while (n < 64 && list[n] != 0)
+            n++;
+    }
+    if (toLog)
+        CRLog::info("one copy: the firmware lists %d tasks (GetTaskList = %d)", n, answered);
+    for (int i = 0; i < n; i++) {
+        taskinfo * info = GetTaskInfo(list[i]);
+        const subtaskinfo * sub = info != NULL && info->nsubtasks > 0 && info->subtasks != NULL ? &info->subtasks[0] : NULL;
+        const PbTaskRow row(list[i], info != NULL ? (int)info->mainpid : 0,
+                            info != NULL && info->appname != NULL ? info->appname : "", info != NULL,
+                            sub != NULL ? sub->id : 0);
+        rows.push_back(row);
+        if (!toLog)
+            continue;
+        if (info == NULL)
+            CRLog::info("one copy:   task %d: the firmware gives no information", list[i]);
+        else
+            CRLog::info("one copy:   task %d: process %d, application \"%s\", flags 0x%x, %d subtasks; the first: number %d, "
+                        "name \"%s\", book \"%s\"%s", list[i], (int)info->mainpid, row.app.c_str(), info->flags,
+                        info->nsubtasks, row.subtask, sub != NULL && sub->name != NULL ? sub->name : "",
+                        sub != NULL && sub->book != NULL ? sub->book : "",
+                        PbSingleCopy::isOwn(row, ownTask, (int)getpid(), (int)getppid()) ? " (this copy)" : "");
+    }
+    return rows;
+}
+
+// This copy shows its first page: it can be given books now. The log gets the tasks of the
+// firmware and the number of other copies of the program that run (none is expected).
+static void pbInstancePublish()
+{
+    const int pid = (int)getpid();
+    if (!MultitaskingSupported()) {
+        CRLog::info("one copy: process %d: the firmware runs one program at a time, there are no other copies", pid);
+        return;
+    }
+    const int own = GetCurrentTask();
+    const std::vector<PbTaskRow> rows = pbTaskRows(true, own);
+    const size_t others = PbSingleCopy::others(rows, own, pid, (int)getppid()).size();
+    const bool written = own > 0 && pbSmallFileWrite(PB_INSTANCE_FILE, PbSingleCopy::instanceText(own, pid));
+    CRLog::info("one copy: process %d is the task %d of the firmware; other copies of the program running: %d; %s", pid,
+                own, (int)others, written ? "a later start of the program gives its book to this copy ("
+                                            PB_INSTANCE_FILE ")"
+                                          : "this copy could NOT name itself, a later start opens its book itself");
+}
+
+// This copy ends or closes its book: it takes no more books
+static void pbInstanceWithdraw()
+{
+    int task = 0, pid = 0;
+    if (!PbSingleCopy::parseInstance(pbSmallFile(PB_INSTANCE_FILE), task, pid) || pid != (int)getpid())
+        return;
+    unlink(PB_INSTANCE_FILE);
+    CRLog::info("one copy: process %d takes no more books (it ends or closes its book)", pid);
+}
+
+// A start of the program, before anything is loaded: a running copy gets the book and the screen.
+// The launcher script does this before the program is started at all; this is for a firmware
+// where the script could not (no iv2sh). True: the book is given away, this start ends.
+static bool pbHandBookToRunningCopy(const char * book)
+{
+    int task = 0, pid = 0;
+    if (!PbSingleCopy::parseInstance(pbSmallFile(PB_INSTANCE_FILE), task, pid) || pid == (int)getpid())
+        return false;
+    char proc[64];
+    sprintf(proc, "/proc/%d/cmdline", pid);
+    if (!PbSingleCopy::isOurProcess(pbSmallFile(proc)) || !MultitaskingSupported() || GetTaskInfo(task) == NULL) {
+        // the copy named there is gone
+        unlink(PB_INSTANCE_FILE);
+        pbCopiesFileLog("one copy: process %d: the copy named in " PB_INSTANCE_FILE " (task %d, process %d) does not run; "
+                        "this start opens the book itself", (int)getpid(), task, pid);
+        return false;
+    }
+    const std::string text = PbSingleCopy::openText(book);
+    if (text.empty() || !pbSmallFileWrite(PB_OPEN_FILE, text))
+        return false;
+    const int rc = SetActiveTask(task, 0);
+    pbCopiesFileLog("one copy: process %d, started for the book %s, gives it to the running copy (task %d, process %d): "
+                    "SetActiveTask = %d, %.0f ms after the start; this start ends", (int)getpid(), book, task, pid, rc,
+                    PB_PERF_MS(pbPerfNow() - pbPerfProcessStart));
+    return true;
+}
+
+// The book another start of the program was made for is opened in this copy, the way the first
+// file is opened (InitDoc). False, with the reason: what was open is open again.
+static bool pbOpenHandedBook(const lString32 & fn, const char * & why)
+{
+    CRPocketBookWindowManager * wm = CRPocketBookWindowManager::instance;
+    if (wm == NULL || main_win == NULL) {
+        why = "the program has no book window";
+        return false;
+    }
+    if (!LVFileExists(fn)) {
+        why = "the file is not there";
+        return false;
+    }
+#ifdef BACKGROUND_CACHE_FILE_CREATION
+    wm->cancelCacheSwap();
+#endif
+    const lString32 before = pbGlobals->getFileName();
+    LVDocView * view = main_win->getDocView();
+    // What was read here is kept: the position of the book, or the page of the PDF or DjVu file
+    // (the window of its pages goes, as for a book of the list of the recent ones). The page was
+    // told to the firmware when this copy left the screen.
+#ifdef CR3_PAGEDOC
+    if (PbPageWindow::instance != NULL) {
+        PbPageWindow::instance->keep();
+        wm->closeWindow(PbPageWindow::instance);
+    } else
+#endif
+        view->savePosition();
+    main_win->saveHistory(lString32::empty_str);
+    bool opened = false;
+    for (int attempt = 0; attempt < 2 && !opened; attempt++) {
+        // the book asked for; when it does not open, the one that was open
+        const lString32 path = attempt == 0 ? fn : before;
+        if (path.empty())
+            break;
+        pbGlobals->setFileName(path);
+#ifdef CR3_PAGEDOC
+        lString32 pdfBook;
+        if (PbPageWindow::isPageFile(path) && pbPdfBookFor(path, pdfBook) && main_win->loadDocument(pdfBook))
+            opened = true;
+        else if (PbPageWindow::isPageFile(path))
+            opened = PbPageWindow::open(wm, path);
+        else
+#endif
+            opened = main_win->loadDocument(path);
+        if (attempt == 0 && !opened)
+            why = "the file is not opened";
+        else if (attempt == 1)
+            return false;
+    }
+    if (!opened)
+        return false;
+    // the firmware learns which book the task shows now; the cover for the power-off logo
+    pbTellTaskBook(fn, view->getTitle());
+    if (pbCoverKeyStored() != pbCoverKey()) {
+        pbCoverPending = true;
+        pbCoverArm();
+    }
+    return true;
+}
+
+// This copy comes to the screen: a start of the program may have left it a book to open
+static void pbTakeOpenRequest()
+{
+    if (access(PB_OPEN_FILE, F_OK) != 0)
+        return;
+    const std::string book = PbSingleCopy::parseOpen(pbSmallFile(PB_OPEN_FILE));
+    unlink(PB_OPEN_FILE);
+    const int pid = (int)getpid();
+    if (book.empty()) {
+        CRLog::info("one copy: process %d: the request to open a book names no book", pid);
+        return;
+    }
+    const lString32 fn(book.c_str());
+    if (fn == pbGlobals->getFileName()) {
+        CRLog::info("one copy: process %d is given the book it has open: %s", pid, book.c_str());
+        return;
+    }
+    if (exiting || pbQuitStage != 0) {
+        CRLog::info("one copy: process %d is given the book %s and does not open it: it is ending", pid, book.c_str());
+        return;
+    }
+    CRLog::info("one copy: process %d is given the book %s by another start of the program", pid, book.c_str());
+    const long long t = pbPerfNow();
+    const char * why = "";
+    const bool opened = pbOpenHandedBook(fn, why);
+    if (!opened)
+        Message(ICON_WARNING, const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
+    if (CRPocketBookWindowManager::instance != NULL)
+        CRPocketBookWindowManager::instance->update(true);
+    CRLog::info("one copy: process %d: the book is %s in %.0f ms%s%s", pid, opened ? "opened" : "NOT opened",
+                PB_PERF_MS(pbPerfNow() - t), opened ? "" : ": ", opened ? "" : why);
+}
+#endif
+
 int main_handler(int type, int par1, int par2)
 {
     if (!pthread_equal(pthread_self(), pbMainThread)) {
@@ -8516,6 +8878,15 @@ int main_handler(int type, int par1, int par2)
 
     if (pbStaleInput(type, par1))
         return 0;
+
+    // The events of the firmware that are no tap and no key go to the log, with the number of
+    // the process: the log shows when the program is shown, hidden and ended (see
+    // pbTakeOpenRequest). The events of the keys and of the fingers are left out by their
+    // numbers: keys 25..28 and 40..42, the pointer 29..31, 34, 35 and 44..46, the scroll 33,
+    // several fingers 39 and 47..49, the quick navigation 51..53.
+    if (!((type >= 25 && type <= 31) || (type >= 33 && type <= 35) || (type >= 39 && type <= 53)))
+        CRLog::info("event of the firmware: %s (%d), values %d and %d; process %d", getEventName(type), type,
+                    par1, par2, (int)getpid());
 
     // the next page is drawn ahead after a pause without input: a tap or a key press starts the
     // pause anew; nothing is drawn for a program that leaves the screen
@@ -8654,6 +9025,8 @@ int main_handler(int type, int par1, int par2)
             #ifdef POCKETBOOK_PRO
             // a failed update is reported, the automatic check for a newer version is planned
             PbOta::started();
+            // one copy of the program: a later start gives its book to this copy
+            pbInstancePublish();
             #endif
             if (pbPerfOn())
                 CRLog::info("perf: first show: message and second full update (%s) %.1f ms, system theme %.1f, "
@@ -8674,6 +9047,8 @@ int main_handler(int type, int par1, int par2)
         PbKosync::instance().bookClosing();
         break;
     case EVT_FOREGROUND:
+        // one copy of the program: a start of it may have left a book for this copy to open
+        pbTakeOpenRequest();
         // the menus over the book were closed: the page goes to the canvas and to the screen
         if (pbMenusClosedOnReturn) {
             pbMenusClosedOnReturn = false;
@@ -8690,6 +9065,10 @@ int main_handler(int type, int par1, int par2)
 #endif
     case EVT_EXIT:
         exiting = true;
+#ifdef POCKETBOOK_PRO
+        // one copy of the program: this one ends and takes no more books
+        pbInstanceWithdraw();
+#endif
         stopStandByTimer();
 #ifdef POCKETBOOK_PRO
         ClearTimer(SetSaveStateTimer);
@@ -9090,6 +9469,11 @@ int main(int argc, char **argv)
         printf("No book to open!\n");
         return 1;
     }
+#ifdef POCKETBOOK_PRO
+    // one copy of the program: a copy that runs gets the book, this start ends
+    if (pbHandBookToRunningCopy(argv[1]))
+        return 0;
+#endif
     if (!InitDoc(argv[0], argv[1])) {
         Message(ICON_WARNING,  const_cast<char*>("CoolReader"), const_cast<char*>("@Cant_open_file"), 2000);
         return 2;
