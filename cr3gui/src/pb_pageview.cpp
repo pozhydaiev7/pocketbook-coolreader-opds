@@ -1576,6 +1576,11 @@ void PbPageWindow::setupHead()
     }
     _head->propsApply(part);
     _head->Resize(_rect.width(), _rect.height());
+    // The font of the line (size, face, bold) is made anew by the view when it lays out the book it
+    // holds, and propsApply only asks for that. The view holds no book that is ever laid out, so
+    // it is asked here: the percent of the view did it before alpha3, when the line still asked
+    // the view for its place.
+    _head->checkRender();
     layout();
 }
 

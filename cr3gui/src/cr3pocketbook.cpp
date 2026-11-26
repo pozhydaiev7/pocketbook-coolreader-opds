@@ -6135,10 +6135,20 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
             break;
 
           case PB_DICT_ARTICLE_LIST:
-            // A tap anywhere on a row opens the article of the row. The right third of the list
-            // used to turn its page (the upper half back, the lower half forward): the owner
-            // tapped the translation beside the word and the list leafed, "not intuitive at
-            // all". The list is leafed by a vertical swipe (above) and by the keys.
+            // The right third of the list turns its page: the upper half back, the lower half
+            // forward. alpha2 took it away, for the owner had tapped the translation beside the
+            // word and the list leafed; the users missed it, and the owner had it back in alpha4.
+            // The list is also leafed by a vertical swipe (above) and by the keys.
+            tmpRc = clientRc;
+            tmpRc.left += clientRc.width() * 2 / 3;
+            if ( tmpRc.isPointInside( pn ) )
+            {
+              tmpRc.bottom -= clientRc.height() / 2;
+              command = tmpRc.isPointInside( pn ) ? PB_CMD_UP : PB_CMD_DOWN;
+              CRLog::trace("CRDV::onTouchEvent() PB_DICT_ARTICLE_LIST leafed %s", command == PB_CMD_UP ? "back" : "forward" );
+              return _dictMenu->onCommand( command, 1 );
+            }
+            // a tap on the rest of a row opens the article of the row
             {
                 // Same row geometry as the list drawing; out-of-list taps are ignored
                 // instead of turning the page (the PB743 word selection problem).

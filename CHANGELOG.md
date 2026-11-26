@@ -2,7 +2,13 @@
 
 ## 0.0.8.2-opds (test versions)
 
-Test builds: `0.0.8.2-opds-alpha1`, `0.0.8.2-opds-alpha2`, `0.0.8.2-opds-alpha3`.
+Test builds: `0.0.8.2-opds-alpha1`, `0.0.8.2-opds-alpha2`, `0.0.8.2-opds-alpha3`, `0.0.8.2-opds-alpha4`.
+
+### The word list leafed by a tap again; the font of the status line over the pages (alpha4)
+
+- **The right third of the word list of the dictionary turns its page again** (`CRPbDictionaryView::onTouchEvent`, `cr3gui/src/cr3pocketbook.cpp`): the upper half back, the lower half forward, as before alpha2. The owner: alpha2 took it away, and the users miss it. A tap on the rest of a row opens the article of its word; the vertical swipe and the keys leaf the list as well. A tap on the translation in the right third leafs the list, which is why alpha2 had taken it away.
+- **The font of the status line over the pages of a PDF or a DjVu did not follow the settings** (`PbPageWindow::setupHead`, `cr3gui/src/pb_pageview.cpp`). The owner, with alpha3: the font of the line got smaller and no longer changes with the settings, while that of a book does. The line is drawn by a view of the engine that holds no book, and the view makes its font (size, face, bold) anew only when it lays out its book; the settings only ask for that. Up to alpha2 the line asked the view for its place, and that laid the view out; alpha3 gives the place itself (the bar was never filled), so the view kept the font it was made with. The view is laid out each time the settings are given to it.
+- **Checked on the PC** (`headtest.cpp`, the engine of the clone in the bench tree `a18`, the view set as `setupHead` sets it): the size 18 and then 36, the face Arial and then Georgia, bold off and then on, changed on the same view one after another. As in alpha3: the letters did not change (3 checks of 44 failed); now: 0 failed, the letters of the size 36 are 22 rows high against 6.
 
 ### Another book opened with a menu left open over the book before (alpha3)
 
