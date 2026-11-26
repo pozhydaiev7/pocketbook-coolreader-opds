@@ -878,7 +878,10 @@ public:
     /// set info line font
     void setInfoFont( font_ref_t font ) { m_infoFont = font; }
     /// draw page header to buffer
-    virtual void drawPageHeader( LVDrawBuf * drawBuf, const lvRect & headerRc, int pageIndex, int headerInfoFlags, int pageCount );
+    /// percent: the place in 1/100 of a percent for the bar and the percent of the header; -1: the
+    /// place of the book of this view. A view that holds no book (the status line over the pages
+    /// of a PDF or a DjVu) gives the place of its file.
+    virtual void drawPageHeader( LVDrawBuf * drawBuf, const lvRect & headerRc, int pageIndex, int headerInfoFlags, int pageCount, int percent = -1 );
     /// draw battery state to buffer
     virtual void drawBatteryState(LVDrawBuf * drawBuf, const lvRect & rc);
 

@@ -31,6 +31,7 @@
 #include "pb_kosync.h"
 #include "pb_pagesearch.h"
 #include "pb_marknames.h"
+#include "pb_pagecommon.h"
 #include "viewdlg.h"
 
 extern V3DocViewWin * main_win;
@@ -349,7 +350,8 @@ bool PbPageWindow::open(CRGUIWindowManager * wm, const lString32 & path)
 
 PbPageWindow::PbPageWindow(CRGUIWindowManager * wm, PbPageDoc * doc, const lString32 & path, const lString8 & stateFile)
     : CRGUIWindowBase(wm), _doc(doc), _path(path), _stateFile(stateFile), _page(0), _frame(0),
-      _scale(PB_PAGE_SCALE_PAGE), _leafing(PB_PAGE_LEAF_PAGE), _showNumber(true), _mode(PB_PAGE_MODE_AUTO),
+      _scale(PB_PAGE_SCALE_PAGE), _leafing(PB_PAGE_LEAF_PAGE), _commonScale(PB_PAGE_SCALE_AUTO), _showNumber(true),
+      _mode(PB_PAGE_MODE_AUTO),
       _direction(1), _stamp(1),
       _adjust(false), _adjAngle(0), _touchStarted(false), _head(NULL), _tocRead(false), _bookAngle(-1),
       _wordsPage(-1), _wordsFrame(-1), _wordsStamp(0), _word(-1),
@@ -411,18 +413,45 @@ void PbPageWindow::closing()
     _bookAngle = -1;
 }
 
-/// The settings of the group "PDF and DjVu": what a file opened for the first time starts with,
-/// and whether the page number is shown.
+/// The settings of the group "PDF and DjVu": the scale and the leafing, one for every file
+/// (pb_pagecommon.h), and whether the page number is shown.
 void PbPageWindow::readDefaults()
 {
     CRPropRef props = main_win->getProps();
-    // the default is every page levelled by itself (the owner's word): a scan is crooked more often than not
-    _scale = props->getIntDef(PROP_POCKETBOOK_PAGES_SCALE, PB_PAGE_SCALE_AUTO);
-    _leafing = props->getIntDef(PROP_POCKETBOOK_PAGES_LEAFING, PB_PAGE_LEAF_PAGE);
+    // the default is every page levelled by itself (the owner's word): a scan is crooked more often
+    // than not; the own frame belongs to a file, it is no value of the settings
+    _commonScale = pbPageCommonScale(props->getIntDef(PROP_POCKETBOOK_PAGES_SCALE, PB_PAGE_SCALE_AUTO));
+    _scale = _commonScale;
+    _leafing = pbPageCommonLeafing(props->getIntDef(PROP_POCKETBOOK_PAGES_LEAFING, PB_PAGE_LEAF_PAGE));
     _showNumber = props->getIntDef(PROP_POCKETBOOK_PAGES_PAGE_NUMBER, 1) != 0;
-    // the own frame belongs to a file, it is no value of the settings
-    if (_scale < 0 || _scale >= PB_PAGE_SCALE_COUNT || _scale == PB_PAGE_SCALE_OWN)
-        _scale = PB_PAGE_SCALE_AUTO;
+}
+
+// The scale or the leafing chosen in the list of a file goes to the settings: the group "PDF and
+// DjVu" shows it, and every other file is shown with it.
+static void setCommon(const char * name, int value)
+{
+    CRPropRef props = main_win->getProps();
+    if (props->getIntDef(name, -1) == value)
+        return;
+    props->setInt(name, value);
+    main_win->saveSettings(lString32::empty_str);
+}
+
+/// Back from the settings menu: the scale and the leafing of the settings are those of this file.
+void PbPageWindow::followSettings()
+{
+    CRPropRef props = main_win->getProps();
+    const int common = props->getIntDef(PROP_POCKETBOOK_PAGES_SCALE, PB_PAGE_SCALE_AUTO);
+    const int scale = pbPageScaleAfterSettings(_scale, _commonScale, common);
+    const int leafing = pbPageCommonLeafing(props->getIntDef(PROP_POCKETBOOK_PAGES_LEAFING, PB_PAGE_LEAF_PAGE));
+    _commonScale = pbPageCommonScale(common);
+    if (scale == _scale && leafing == _leafing)
+        return;
+    _scale = scale;
+    _leafing = leafing;
+    _frame = 0;
+    saveState();
+    changed();
 }
 
 void PbPageWindow::loadState()
@@ -430,12 +459,14 @@ void PbPageWindow::loadState()
     FILE * f = fopen(_stateFile.c_str(), "r");
     if (f == NULL)
         return;
+    // the scale and the leafing the state was written with
+    int keptScale = -1, keptLeafing = -1;
     char key[32];
     while (fscanf(f, "%31s", key) == 1) {
         if (strcmp(key, "page") == 0) {
             if (fscanf(f, "%d %d", &_page, &_frame) != 2) break;
         } else if (strcmp(key, "scale") == 0) {
-            if (fscanf(f, "%d %d", &_scale, &_leafing) != 2) break;
+            if (fscanf(f, "%d %d", &keptScale, &keptLeafing) != 2) break;
         } else if (strcmp(key, "angle") == 0) {
             if (fscanf(f, "%f %f", &_angle[0], &_angle[1]) != 2) break;
         } else if (strcmp(key, "frame0") == 0 || strcmp(key, "frame1") == 0) {
@@ -467,11 +498,12 @@ void PbPageWindow::loadState()
     fclose(f);
     if (_page < 0 || _page >= _doc->pageCount())
         _page = 0;
-    if (_scale < 0 || _scale >= PB_PAGE_SCALE_COUNT)
-        _scale = PB_PAGE_SCALE_AUTO;
-    if (_leafing != PB_PAGE_LEAF_FRAMES && _leafing != PB_PAGE_LEAF_RIBBON)
-        _leafing = PB_PAGE_LEAF_PAGE;
-    if (_frame < 0)
+    // The scale and the leafing are those of the settings, one for every file (readDefaults); of
+    // the file is its own frame alone, when the reader has chosen it. The place inside the page
+    // was counted with the scale and the leafing of the state: with other ones the page starts
+    // from its beginning.
+    _scale = pbPageScaleOfFile(keptScale, _own[0].set || _own[1].set, _commonScale);
+    if (_frame < 0 || !pbPageFrameKept(keptScale, keptLeafing, _scale, _leafing))
         _frame = 0;
 }
 
@@ -481,6 +513,8 @@ void PbPageWindow::saveState()
     FILE * f = fopen(temp.c_str(), "w");
     if (f == NULL)
         return;
+    // the scale and the leafing: what the place inside the page was counted with, and whether the
+    // own frame of the file is the one chosen (loadState)
     fprintf(f, "mode %d\npage %d %d\nscale %d %d\nangle %.2f %.2f\n", _mode, _page, _frame, _scale, _leafing,
             _angle[0], _angle[1]);
     for (int i = 0; i < 2; i++)
@@ -521,6 +555,8 @@ void PbPageWindow::reactivated()
     // back from a list or from the settings menu: the page number may be turned on or off
     CRPropRef props = main_win->getProps();
     _showNumber = props->getIntDef(PROP_POCKETBOOK_PAGES_PAGE_NUMBER, 1) != 0;
+    // the scale and the leafing may be other ones
+    followSettings();
     // and the status line may be another one
     setupHead();
     // and the orientation of the pages (the settings menu)
@@ -1155,6 +1191,11 @@ bool PbPageWindow::onCommand(int command, int params)
     }
     if (command >= PB_PAGEVIEW_CMD_SCALE && command < PB_PAGEVIEW_CMD_SCALE + PB_PAGE_SCALE_COUNT) {
         _scale = command - PB_PAGEVIEW_CMD_SCALE;
+        // a scale of the list is the scale of every file; the own frame is of this file alone
+        if (_scale != PB_PAGE_SCALE_OWN) {
+            _commonScale = _scale;
+            setCommon(PROP_POCKETBOOK_PAGES_SCALE, _scale);
+        }
         _frame = 0;
         saveState();
         changed();
@@ -1215,9 +1256,10 @@ bool PbPageWindow::onCommand(int command, int params)
         showScaleList();
         return true;
     case PB_PAGEVIEW_CMD_LEAFING:
-        // next page at once, by frames, as a ribbon, and round again
+        // next page at once, by frames, as a ribbon, and round again; the leafing of every file
         _leafing = _leafing == PB_PAGE_LEAF_PAGE ? PB_PAGE_LEAF_FRAMES
                    : _leafing == PB_PAGE_LEAF_FRAMES ? PB_PAGE_LEAF_RIBBON : PB_PAGE_LEAF_PAGE;
+        setCommon(PROP_POCKETBOOK_PAGES_LEAFING, _leafing);
         _frame = 0;
         saveState();
         changed();
@@ -1523,7 +1565,7 @@ void PbPageWindow::setupHead()
         PROP_STATUS_LINE, PROP_STATUS_FONT_COLOR, PROP_STATUS_FONT_FACE, PROP_STATUS_FONT_SIZE,
         PROP_STATUS_FONT_EMBOLDEN, PROP_SHOW_TIME, PROP_SHOW_TIME_12HOURS, PROP_TIME_FORMAT, PROP_SHOW_TITLE,
         PROP_STATUS_CHAPTER_MARKS, PROP_SHOW_BATTERY, PROP_SHOW_BATTERY_PERCENT, PROP_SHOW_PAGE_COUNT,
-        PROP_SHOW_PAGE_NUMBER, PROP_SHOW_CHAPTER_PAGES_REMAIN, NULL
+        PROP_SHOW_PAGE_NUMBER, PROP_SHOW_CHAPTER_PAGES_REMAIN, PROP_SHOW_POS_PERCENT, NULL
     };
     CRPropRef all = main_win->getProps();
     CRPropRef part = LVCreatePropsContainer();
@@ -1584,8 +1626,12 @@ void PbPageWindow::drawHead(LVDrawBuf * canvas)
     rc.right += _rect.left;
     rc.top += _rect.top;
     rc.bottom += _rect.top;
-    // the place in percent is that of the empty book of the view: left out
-    _head->drawPageHeader(canvas, rc, _page, _head->getPageHeaderInfo() & ~PGHDR_PERCENT, _doc->pageCount());
+    // The place in the file is given to the view, counted as that of a book is (the page from 0
+    // by the number of pages): its own place is that of the empty book it holds, with which the
+    // bar of the line was never filled and the percent had to be left out.
+    const int count = _doc->pageCount();
+    _head->drawPageHeader(canvas, rc, _page, _head->getPageHeaderInfo(), count,
+                          count > 0 ? (int)((lInt64)_page * 10000 / count) : 0);
 }
 
 /// What the file tells of itself, as "Book info" of a book does.

@@ -2688,14 +2688,6 @@ msgid "DjVu view settings"
 msgstr "Настройки просмотра DjVu"
 
 #: ../src/settings.cpp
-msgid "Scale of a new file"
-msgstr "Масштаб нового файла"
-
-#: ../src/settings.cpp
-msgid "Leafing of a new file"
-msgstr "Листание нового файла"
-
-#: ../src/settings.cpp
 msgid "Page number in the corner"
 msgstr "Номер страницы в углу"
 

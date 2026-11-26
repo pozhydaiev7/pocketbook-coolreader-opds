@@ -132,6 +132,25 @@ public:
         return text.substr(0, end);
     }
 
+    /// The program is back on the screen: are the windows left open over the book (the settings
+    /// menu, the touch menu, a list) closed before anything is shown?
+    ///   handed         another start has left a book for this copy: the reader has chosen a book
+    ///                  in the library, so the book is shown, whatever was open and however short
+    ///                  the way through the home screen was (the owner, with alpha3: the settings
+    ///                  menu open over a DjVu, Home, another book tapped at once; the menu was
+    ///                  shown again, and the new book came only after it was left);
+    ///   awayUs         how long the program was off the screen, microseconds; below 0: it was
+    ///                  not. Two seconds or more: the reader has left the book and comes back to
+    ///                  it. Less: a window of the firmware was over the program for a moment;
+    ///   netConnecting  a window of the program has asked the firmware for the dialog of the
+    ///                  networks and waits for it: its windows stay.
+    static bool closeMenusOnReturn(bool handed, long long awayUs, bool netConnecting)
+    {
+        if (netConnecting)
+            return false;
+        return handed || awayUs >= 2000000LL;
+    }
+
     /// Is a process this program, by its command line (/proc/<pid>/cmdline, the words parted by
     /// zero bytes): a word of it ends in the name of the program. The launcher script and the
     /// program have the same name; a process number is given to another program when the copy that

@@ -2231,9 +2231,12 @@ CRSettingsMenu::CRSettingsMenu( CRGUIWindowManager * wm, CRPropRef newProps, int
         // menu of the book, "View as a book" in the menu of the picture mode) goes before it.
         createSettingsMenuItem(pageMenu, mm_pagesText, _("A new file with text"),
                                "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_TEXT, pdf_text_options);
-        createSettingsMenuItem(pageMenu, mm_pagesScale, _("Scale of a new file"),
+        // The scale and the leafing of every file, the open one too: the same two values the list
+        // of a file shows and changes (pb_pagecommon.h). They were "of a new file", each file
+        // keeping its own, and a tester took the item for the leafing of the pages on the screen.
+        createSettingsMenuItem(pageMenu, mm_pagesScale, _("Scale"),
                                "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_SCALE, page_scale_options);
-        createSettingsMenuItem(pageMenu, mm_pagesLeafing, _("Leafing of a new file"),
+        createSettingsMenuItem(pageMenu, mm_pagesLeafing, _("Leafing"),
                                "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_LEAFING, page_leafing_options);
         createSettingsMenuItem(pageMenu, mm_pagesPageNumber, _("Page number in the corner"),
                                "cr3_option_pages", valueFont, PROP_POCKETBOOK_PAGES_PAGE_NUMBER,

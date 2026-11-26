@@ -2016,7 +2016,7 @@ void LVDocView::setPageHeaderOverride(lString32 s) {
 
 /// draw page header to buffer
 void LVDocView::drawPageHeader(LVDrawBuf * drawbuf, const lvRect & headerRc,
-		int pageIndex, int phi, int pageCount) {
+		int pageIndex, int phi, int pageCount, int percentOfCaller) {
 	int w = GetWidth();
 	int h = GetHeight();
 	if (w > h)
@@ -2050,7 +2050,9 @@ void LVDocView::drawPageHeader(LVDrawBuf * drawbuf, const lvRect & headerRc,
 //        CRLog::trace("Status color = TRANSPARENT, textColor=%06x", getTextColor());
 //    }
 	lUInt32 cl1 = m_statusColor!=0xFF000000 ? m_statusColor : getTextColor();
-	int percent = getPosPercent();
+	// The place the caller gives goes before that of the view: over the pages of a PDF or a DjVu
+	// the view holds no book, its own place is always the beginning, and the bar was never filled.
+	int percent = percentOfCaller >= 0 ? percentOfCaller : getPosPercent();
 
 	// draw navbar
 	bool leftPage = (getVisiblePageCount() == 2 && !(pageIndex & 1));
@@ -2241,12 +2243,15 @@ void LVDocView::drawPageHeader(LVDrawBuf * drawbuf, const lvRect & headerRc,
 		}
 		int w = info.width() - 10;
 		if (authorsw + titlew + 10 > w) {
-			if ((pageIndex & 1))
-				text = title;
-			else {
+			// The two do not fit together: the author on the even pages, the title on the odd
+			// ones. A book that has only one of them shows it on every page: with a long title
+			// and no author (a PDF named by its file) the line had no text on every second page.
+			if (title.empty() || (!(pageIndex & 1) && !authors.empty())) {
 				text = authors;
 				if (!text.empty() && text[text.length() - 1] == '.')
 					text = text.substr(0, text.length() - 1);
+			} else {
+				text = title;
 			}
 		} else {
             text = authors + "  " + title;

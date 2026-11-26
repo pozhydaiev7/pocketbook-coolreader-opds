@@ -133,9 +133,10 @@ enum CRPbCommands {
 // the contents open with the first level seen and the branch of the page read (1, the default),
 // or with every level (0); a branch opens and closes by its triangle (pb_toctree.h)
 #define PROP_POCKETBOOK_TOC_COLLAPSED "cr3.pocketbook.toc.collapsed"
-// The picture mode of PDF and DjVu files (pb_pageview.h), the settings group "PDF and DjVu": what a
-// file opened for the first time starts with (the scale: PbPageScale without the own frame; the
-// leafing: PbPageLeafing), and whether the page number is shown in the corner. One set of values
+// The picture mode of PDF and DjVu files (pb_pageview.h), the settings group "PDF and DjVu": the
+// scale (PbPageScale without the own frame) and the leafing (PbPageLeafing) of every file, changed
+// in the list of a file too (pb_pagecommon.h; before 0.0.8.2-opds-alpha3 they were what a file
+// opened for the first time started with), and whether the page number is shown in the corner. One set of values
 // for both kinds of files since 0.0.8-opds-alpha10 (the owner, after a tester); before, each kind
 // had its own, "cr3.pocketbook.pdf.*" and "cr3.pocketbook.djvu.*": those of PDF are taken over at
 // the first start (PB_OLD_PDF_* in cr3pocketbook.cpp), those of DjVu are read no more.
@@ -157,8 +158,8 @@ enum CRPbCommands {
 
 #define PB_CR3_CACHE_SIZE (0x100000 * 64)
 
-#define CR_PB_VERSION "0.0.8.2-opds-alpha2"
-#define CR_PB_BUILD_DATE "2026-11-25"
+#define CR_PB_VERSION "0.0.8.2-opds-alpha3"
+#define CR_PB_BUILD_DATE "2026-11-26"
 
 #define PB_ROTATE_MODE_360 0
 #define PB_ROTATE_MODE_180 1

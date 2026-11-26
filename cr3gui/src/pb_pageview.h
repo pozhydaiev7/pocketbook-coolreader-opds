@@ -20,7 +20,9 @@
  *             beginning of the next one are read from one screen).
  * A turn of the picture (a crooked scan, a page lying on its side) belongs to the frame. The own
  * frame and the angle are kept apart for odd and even pages: a photographed book has its margins
- * mirrored. Scale, leafing, frames, angles, the page and the bookmarks are remembered for the file.
+ * mirrored. The frames, the angles, the page and the bookmarks are remembered for the file. The
+ * scale and the leafing are one for every file, shown and changed both in the list of a file and
+ * in the settings group "PDF and DjVu" (pb_pagecommon.h).
  */
 #ifndef PB_PAGEVIEW_H_INCLUDED
 #define PB_PAGEVIEW_H_INCLUDED
@@ -174,6 +176,7 @@ private:
     lString8 _stateFile;
     int _page, _frame;
     int _scale, _leafing;
+    int _commonScale;       // the scale of the settings as the window saw it last (followSettings)
     float _angle[2];        // by the parity of the page index: [0] the first, the third... page
     OwnFrame _own[2];
     std::vector<int> _marks;
@@ -269,6 +272,7 @@ private:
     void loadState();
     void saveState();
     void readDefaults();
+    void followSettings();
     void changed();         // the frames drawn are no longer good
     /// The frames of a page in the order they are read; at least one.
     void framesOfPage(int page, std::vector<PbPageView> & frames);

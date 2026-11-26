@@ -9100,26 +9100,27 @@ static bool pbOpenHandedBook(const lString32 & fn, const char * & why)
     return true;
 }
 
-// This copy comes to the screen: a start of the program may have left it a book to open
-static void pbTakeOpenRequest()
+// This copy comes to the screen: a start of the program may have left it a book to open.
+// True when the screen was drawn here (the book opened, or the one that was open shown again).
+static bool pbTakeOpenRequest()
 {
     if (access(PB_OPEN_FILE, F_OK) != 0)
-        return;
+        return false;
     const std::string book = PbSingleCopy::parseOpen(pbSmallFile(PB_OPEN_FILE));
     unlink(PB_OPEN_FILE);
     const int pid = (int)getpid();
     if (book.empty()) {
         CRLog::info("one copy: process %d: the request to open a book names no book", pid);
-        return;
+        return false;
     }
     const lString32 fn(book.c_str());
     if (fn == pbGlobals->getFileName()) {
         CRLog::info("one copy: process %d is given the book it has open: %s", pid, book.c_str());
-        return;
+        return false;
     }
     if (exiting || pbQuitStage != 0) {
         CRLog::info("one copy: process %d is given the book %s and does not open it: it is ending", pid, book.c_str());
-        return;
+        return false;
     }
     CRLog::info("one copy: process %d is given the book %s by another start of the program", pid, book.c_str());
     const long long t = pbPerfNow();
@@ -9131,6 +9132,7 @@ static void pbTakeOpenRequest()
         CRPocketBookWindowManager::instance->update(true);
     CRLog::info("one copy: process %d: the book is %s in %.0f ms%s%s", pid, opened ? "opened" : "NOT opened",
                 PB_PERF_MS(pbPerfNow() - t), opened ? "" : ": ", opened ? "" : why);
+    return CRPocketBookWindowManager::instance != NULL;
 }
 #endif
 
@@ -9214,10 +9216,13 @@ int main_handler(int type, int par1, int par2)
         // a question of the firmware left without an answer when the program left the screen:
         // the screen is drawn anew now, and the window of the question would stay open, unseen
         pbQuestionClose("the program is back on the screen");
-        // back after two seconds or more: to the book, not to a menu left open over it
-        // (not from the dialog of the networks of the firmware, which a window of ours asked for
-        // and waits for: pbNetConnecting)
-        if (pbBackgroundAt != 0 && pbPerfNow() - pbBackgroundAt >= 2000000LL && !pbNetConnecting)
+        // back after two seconds or more, or with a book another start has left for this copy:
+        // to the book, not to a menu left open over it (not from the dialog of the networks of
+        // the firmware, which a window of ours asked for and waits for: pbNetConnecting). The
+        // windows are closed before the book left is opened (pbTakeOpenRequest, below): it was
+        // opened under the menu, which was then shown over it.
+        if (PbSingleCopy::closeMenusOnReturn(access(PB_OPEN_FILE, F_OK) == 0,
+                                             pbBackgroundAt != 0 ? pbPerfNow() - pbBackgroundAt : -1, pbNetConnecting))
             pbMenusClosedOnReturn = pbCloseMenusOverBook() > 0;
         pbBackgroundAt = 0;
         pbQuitForegrounded();
@@ -9356,7 +9361,11 @@ int main_handler(int type, int par1, int par2)
         break;
     case EVT_FOREGROUND:
         // one copy of the program: a start of it may have left a book for this copy to open
-        pbTakeOpenRequest();
+        // (the screen is drawn with it then, and not once more for the menus closed)
+        if (pbTakeOpenRequest() && pbMenusClosedOnReturn) {
+            pbMenusClosedOnReturn = false;
+            restartStandByTimer();
+        }
         // the menus over the book were closed: the page goes to the canvas and to the screen
         if (pbMenusClosedOnReturn) {
             pbMenusClosedOnReturn = false;
