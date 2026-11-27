@@ -16,7 +16,7 @@ package target is `pro5` (firmware 5 and 6, toolchain `SDK_481`).
 
 | Line | Branch | Versions | State |
 |---|---|---|---|
-| current | `master` | `0.0.8.x-opds`, test builds `-alphaN` | released: `0.0.8.1-opds` |
+| current | `master` | `0.0.8.x-opds`, test builds `-alphaN` | released: `0.0.8.2-opds` |
 
 The version is `CR_PB_VERSION` and `CR_PB_BUILD_DATE` in `cr3gui/src/cr3pocketbook.h`. A test build
 is a GitHub pre-release; the update screen of the program offers pre-releases only with *Test

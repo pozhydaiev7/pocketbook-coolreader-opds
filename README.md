@@ -65,6 +65,8 @@ Since 0.0.8-opds.
 - **Levels that fold.** A long contents list opens with its first level and the branch you are reading; a tap on the triangle opens or closes a branch. *Display settings → Contents: levels closed* shows every level as before. A book without a contents list gets one made of its headings. *End* is the last entry of every contents list.
 - **Main menu of your own.** *Control settings → Main menu*: choose what each of its items does.
 - **OPDS catalogs with a login.** A catalog closed by a password (a Calibre library, for example) opens with the login and the password set in its card.
+- **Bookmark names** (since 0.0.8.2). A bookmark set from the list of the bookmarks gets a name typed on the keyboard, shown in the list; *Bookmark name* of the menu of a long press changes it. A page has one bookmark.
+- **One CoolReader for all books** (since 0.0.8.2). A book opened while CoolReader waits in the background is taken by that CoolReader, as KOReader does, instead of a second copy of the program.
 
 ### Program update
 

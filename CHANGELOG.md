@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.0.8.2-opds (test versions)
+## 0.0.8.2-opds — 2026-11-27
 
-Test builds: `0.0.8.2-opds-alpha1`, `0.0.8.2-opds-alpha2`, `0.0.8.2-opds-alpha3`, `0.0.8.2-opds-alpha4`.
+The release: the code of `0.0.8.2-opds-alpha4` with the version of the release, nothing else changed in the program; the README names the bookmark names and the one copy of the program. Test builds: `0.0.8.2-opds-alpha1`, `0.0.8.2-opds-alpha2`, `0.0.8.2-opds-alpha3`, `0.0.8.2-opds-alpha4`.
 
 ### The word list leafed by a tap again; the font of the status line over the pages (alpha4)
 
